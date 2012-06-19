@@ -16,9 +16,9 @@
   }
 
   /*initialize reference counting base data*/
-  initObj(&(new_instance->base), &destroy%CODECLASSNAME%);
+  initBase((obj *)new_instance, &dealloc%CODECLASSNAME%);
 
-  /* ADD ADDITIONAL INITIALIZATION HERE */
+  /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
   return new_instance;
 }
@@ -28,9 +28,12 @@
 
 /* PRIVATE METHODS */
 
-void destroy%CODECLASSNAME%(%CODECLASSNAME% *to_destroy){
+void dealloc%CODECLASSNAME%(obj *to_dealloc){
 
-  /* RELEASE ANY OBJECTS CONTAINED BY to_destroy HERE */
+  /*cast generic obj to specific class*/
+  %CODECLASSNAME% *instance = (%CODECLASSNAME% *)to_dealloc;
+
+  /*PERFORM CLASS SPECIFIC MEMORY MANAGEMENT HERE*/
 
   free(to_destroy);
   return;

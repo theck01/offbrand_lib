@@ -1,25 +1,33 @@
 
-#include "../include/OBObj.h"
-#include "../include/private/OBObj_Private.h"
+#include "../include/obj.h"
+#include "../include/private/obj_private.h"
 
-void initObj(OBObj *o, destroy_fptr dealloc){
-  o->references = 1;
-  o->dealloc = dealloc;
-  return;
+void initBase(obj *instance, dealloc_fptr dealloc){
+  *instance = malloc(sizeof(obj_struct));
+  if(!(*instance)){
+    return 1;
+  }
+  (*instance)->references = 1;
+  (*instance)->dealloc = dealloc;
+  return 0;
 }
 
-OBObj * releaseObj(OBObj *o){
+obj * release(obj *instance){
+
+  dealloc_ptr destructor;
 
   /* if no other part of the program references the instance, destroy it */
-  if(--(o->references) <= 0){
-    o->dealloc(o); /*calls designated destructor on current OBObj instance*/
+  if(--((*instance)->references) <= 0){
+    destructor = (*instance)->dealloc; /*save pointer to class deallocator */
+    free(*instance); /*free reference counted portion of object*/
+    destructor(instance); /*class specific memory cleanup called*/
     return NULL;
   }
 
-  return o;
+  return instance;
 }
 
-void retainObj(OBObj *o){
-  ++(o->references);
+void retain(obj *instance){
+  ++((*instance)->references);
   return;
 }

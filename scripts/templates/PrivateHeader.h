@@ -11,16 +11,16 @@
 /* DATA */
 
 struct %CODECLASSNAME%_struct{
-  OBObj base; /*always first member of struct, always statically allocated*/
-  /* Additional private data added here, MUST COME AFTER THE SBObj */
+  obj base;
+  /* Additional private data added here, MUST COME AFTER THE obj */
 };
 
 
 /* PRIVATE METHODS */
 
-/* destructor, frees instance of class back to memory. Should not be called
+/* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */
-void destroy%CODECLASSNAME%(%CODECLASSNAME% *to_destroy);
+void dealloc%CODECLASSNAME%(obj *to_dealloc);
 
 /*PRIVATE METHOD DECLARATIONS HERE*/
 
