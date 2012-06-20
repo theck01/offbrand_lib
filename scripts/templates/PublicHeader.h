@@ -7,7 +7,7 @@
 #ifndef %MACROCLASSNAME%_H
 #define %MACROCLASSNAME%_H
 
-#include "OffBrand.h"
+#include "offbrand.h"
 
 /* Class type declaration */
 typedef struct %CODECLASSNAME%_struct %CODECLASSNAME%;

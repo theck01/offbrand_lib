@@ -2,8 +2,8 @@
 #include "../include/obj.h"
 #include "../include/private/obj_private.h"
 
-void initBase(obj *instance, dealloc_fptr dealloc){
-  *instance = malloc(sizeof(obj_struct));
+uint8_t initBase(obj *instance, dealloc_fptr dealloc){
+  *instance = malloc(sizeof(struct obj_struct));
   if(!(*instance)){
     return 1;
   }
@@ -14,7 +14,7 @@ void initBase(obj *instance, dealloc_fptr dealloc){
 
 obj * release(obj *instance){
 
-  dealloc_ptr destructor;
+  dealloc_fptr destructor;
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){

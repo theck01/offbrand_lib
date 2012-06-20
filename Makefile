@@ -13,17 +13,22 @@ CFLAGS = -Wall -Wextra
 OFLAGS = $(CFLAGS) -c
 
 # Groups
-ALL_DEPEND = $(PUBLIC)/OffBrand.h $(PUBLIC)/OBObj.h
+ALL_DEPEND = $(PUBLIC)/offbrand.h $(PUBLIC)/obj.h
 
 # START BUILD
-all_tests: $(BIN_TEST)/OBObj_test $(ALL_DEPEND)
+all_tests: $(BIN_TEST)/obj_test
 
-$(BIN_TEST)/OBObj_test: $(BIN_LIB)/OBObj.o $(TESTS)/OBObj_test.c $(ALL_DEPEND)
-	$(CC) $(CFLAGS) $(BIN_LIB)/OBObj.o $(TESTS)/OBObj_test.c -o \
-		$(BIN_TEST)/OBObj_test
+$(BIN_TEST)/obj_test: $(ALL_DEPEND) $(BIN_LIB)/obj.o $(BIN_LIB)/OBTest.o \
+	$(TESTS)/obj_test.c
+	$(CC) $(CFLAGS) $(BIN_LIB)/obj.o $(BIN_LIB)/OBTest.o $(TESTS)/obj_test.c -o \
+		$(BIN_TEST)/obj_test
 
-$(BIN_LIB)/OBObj.o: $(SRC)/OBObj.c $(ALL_DEPEND)
-	$(CC) $(OFLAGS) $(SRC)/OBObj.c -o $(BIN_LIB)/OBObj.o
+$(BIN_LIB)/OBTest.o: $(ALL_DEPEND) $(BIN_LIB)/obj.o $(SRC)/OBTest.c  \
+	$(PUBLIC)/OBTest.h $(PRIVATE)/OBTest_Private.h
+	$(CC) $(OFLAGS) $(SRC)/OBTest.c -o $(BIN_LIB)/OBTest.o
+
+$(BIN_LIB)/obj.o: $(ALL_DEPEND) $(SRC)/obj.c $(PRIVATE)/obj_private.h
+	$(CC) $(OFLAGS) $(SRC)/obj.c -o $(BIN_LIB)/obj.o
 
 
 # Clean previous build

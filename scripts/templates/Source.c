@@ -15,7 +15,7 @@
     return NULL;
   }
 
-  /*initialize reference counting base data*/
+  /* initialize reference counting base data */
   initBase((obj *)new_instance, &dealloc%CODECLASSNAME%);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
@@ -30,12 +30,12 @@
 
 void dealloc%CODECLASSNAME%(obj *to_dealloc){
 
-  /*cast generic obj to specific class*/
+  /* cast generic obj to %CODECLASSNAME% */
   %CODECLASSNAME% *instance = (%CODECLASSNAME% *)to_dealloc;
 
-  /*PERFORM CLASS SPECIFIC MEMORY MANAGEMENT HERE*/
+  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE */
 
-  free(to_destroy);
+  free(instance);
   return;
 }
 

@@ -7,7 +7,7 @@ bash scripts to assist in the creation and testing of classes compatible with
 the framework.
 
 
-OffBrand Structure:
+File Structure:
 
 The OffBrand library is composed of entirely of incomplete types, to create C 
 style "classes". Each class is composed of three files:
@@ -27,10 +27,10 @@ data structure allocation on the heap.
 
 OffBrand Compatible Class Creation:
 
-A OffBrand compatible class should be created using the OBClass command included
-in the installation of the OffBrand library. Run the OBClass command with the
-following syntax:
-  $ OBClass <class name>
+A OffBrand compatible class should be created using the mkobc (MaKe OffBrand
+Class) command included in the installation of the OffBrand library. Run the 
+mkobc script with the following syntax:
+  $ mkobc <class name>
 The command will create three files for the class in the current directory with
 some basic boiler plate code already included. DO NOT ALTER THE CODE ALREADY
 INCLUDED! The code is essential for creating a class that will work with the
