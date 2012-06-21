@@ -2,7 +2,8 @@
 #ifndef OBJ_H
 #define OBJ_H
 
-#include "offbrand.h" /*header required by all offbrand classes*/
+#include <stdlib.h>
+#include <stdint.h>
 
 typedef struct obj_struct * obj;
 
@@ -21,5 +22,11 @@ obj * release(obj *instance);
 
 /* increments reference count on OBObj by one */
 void retain(obj *instance);
+
+/* compares dealloc functions for the arguments to determine that they are from
+ * the same class. Depends on a class having a single unique deallocation,
+ * which is required for all Offbrand compatible classes. returns 1 if instances
+ * of same class, 0 if not */
+uint8_t sameClass(const obj *a, const obj *b);
 
 #endif

@@ -37,6 +37,8 @@ INCLUDED! The code is essential for creating a class that will work with the
 OffBrand framework. All additional code should be added to the created source
 files in the appropriate locations, indicated by comments in the files.
 
+If additional constructors need be created copy the code provided in the default
+constructor and add code in the designated areas as needed.
 
 obj:
 

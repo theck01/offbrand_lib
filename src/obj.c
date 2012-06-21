@@ -31,3 +31,11 @@ void retain(obj *instance){
   ++((*instance)->references);
   return;
 }
+
+uint8_t sameClass(const obj *a, const obj *b){
+  if((*a)->dealloc == (*b)->dealloc){
+    return 1;
+  }
+
+  return 0;
+}
