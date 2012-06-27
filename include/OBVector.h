@@ -44,8 +44,9 @@ void replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index);
 obj * objAtVectorIndex(OBVector *v, const uint32_t index);
 
 /* checks to see if object, or equivalent as determined by compare function
- * pointer for specific class, can be found within vector. returns 1 if found,
- * 0 if not */
+ * pointer for specific class, can be found within vector. If compare function
+ * argument it NULL then pointer comparisons are used. Returns 1 if found, 0 if 
+ * not */
 uint8_t findObjInVector(const OBVector *v, const obj *to_find,
                         const compare_fptr compare);
 

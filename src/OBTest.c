@@ -21,6 +21,6 @@ void deallocOBTest(obj *to_dealloc){
 
   /*cast generic obj to OBTest class*/
   OBTest *instance = (OBTest *)to_dealloc;
-  free(instance);
+  free(to_dealloc);
   return;
 }

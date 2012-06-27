@@ -35,7 +35,7 @@ void dealloc%CODECLASSNAME%(obj *to_dealloc){
 
   /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE */
 
-  free(instance);
+  free(to_dealloc);
   return;
 }
 

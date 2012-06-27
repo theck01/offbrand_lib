@@ -4,6 +4,7 @@
 
 /* PUBLIC METHODS */
 
+
 OBVector * createOBVector(const uint32_t initial_capacity){
 
   OBVector *new_instance = malloc(sizeof(OBVector));
@@ -29,6 +30,7 @@ OBVector * createOBVector(const uint32_t initial_capacity){
 
   return new_instance;
 }
+
 
 OBVector * copyVector(const OBVector *to_copy){
 
@@ -63,6 +65,8 @@ OBVector * copyVector(const OBVector *to_copy){
 
   for(i=0; i<to_copy->num_objs; i++){
     new_vec->array[i] = to_copy->array[i];
+    retain((obj *)new_vec->array[i]); /*retain all objects, the new vector also
+                                        references them */
   }
 
   return new_vec;
@@ -77,17 +81,73 @@ uint32_t sizeOfVector(const OBVector *v){
 }
 
 
+uint8_t fitVectorToContents(OBVector *v){
+
+  int i;
+  obj *new_array = malloc(sizeof(obj)*v->num_objs);
+  if(new_array){
+    fprintf(stderr, "OBVector: Could not allocate internal array in new "
+                    "instance\n");
+    return 1;
+  }
+
+  for(i=0; i<v->num_items; i++){
+    new_array[i] = v->array[i];
+  }
+
+  v->capacity = v->num_objs;
+  free(v->array);
+  v->array = new_array;
+
+  return 0;
+}
+
+
+uint8_t addToVector(OBVector *v, const obj *to_add){
+
+  /* resizes vector if needed, processing error if one occured */
+  if(resizeVector(v)){
+    fprintf(stderr, "OBVector: resize failed, cannot add new obj\n");
+    return 1;
+  }
+
+  v->array[v->num_objs++] = (obj *)to_add;
+  retain(obj);
+
+  return 0;
+}
+
+uint8_t replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index){
+
+  if(index >= v->num_objs){
+    fprintf(stderr, "OBVector: attempting to access %i, which is out of vector\n"
+                    "item range, 0-%i\n", index, v->num_objs);
+    return 1;
+  }
+
+  release(v->array[index]);
+  retain(new_obj);
+  v->array[index] = new_obj;
+
+  return 0;
+}
 
 /* PRIVATE METHODS */
 
 void deallocVector(obj *to_dealloc){
 
+  uint32_t i;
+
   /* cast generic obj to OBVector */
   OBVector *instance = (OBVector *)to_dealloc;
 
-  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE */
+  /* release all objects stored inside vector */
+  for(i=0; i<to_dealloc->num_objs; i++){
+    release((obj *)to_dealloc->array[i]);
+  }
 
-  free(instance);
+  free(to_dealloc->array);
+  free(to_dealloc);
   return;
 }
 

@@ -25,6 +25,12 @@ other classes should have access. This enforces data protection and forces all
 data structure allocation on the heap.
 
 
+Conventions:
+
+Much like the Linux system interface, OffBrand classes and functions return 0 
+when they succeed, and a non zero value when they fail.
+
+
 OffBrand Compatible Class Creation:
 
 A OffBrand compatible class should be created using the mkobc (MaKe OffBrand
