@@ -84,7 +84,14 @@ uint32_t sizeOfVector(const OBVector *v){
 uint8_t fitVectorToContents(OBVector *v){
 
   int i;
-  obj *new_array = malloc(sizeof(obj)*v->num_objs);
+  obj *new_array;
+  
+  if(!v){
+    fprintf(stderr, "OBVector: NULL argument passed to fitVectorToContents\n");
+    return 1;
+  }
+
+  new_array= malloc(sizeof(obj)*v->num_objs);
   if(new_array){
     fprintf(stderr, "OBVector: Could not allocate internal array in new "
                     "instance\n");
@@ -105,6 +112,11 @@ uint8_t fitVectorToContents(OBVector *v){
 
 uint8_t addToVector(OBVector *v, const obj *to_add){
 
+  if(!v || !a){
+    fprintf(stderr, "OBVector: NULL argument(s) passed to addToVector\n");
+    return 1;
+  }
+
   /* resizes vector if needed, processing error if one occured */
   if(resizeVector(v)){
     fprintf(stderr, "OBVector: resize failed, cannot add new obj\n");
@@ -119,6 +131,11 @@ uint8_t addToVector(OBVector *v, const obj *to_add){
 
 uint8_t replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index){
 
+  if(!v || !a){
+    fprintf(stderr, "OBVector: NULL argument(s) passed to replaceInVector\n");
+    return 1;
+  }
+
   if(index >= v->num_objs){
     fprintf(stderr, "OBVector: attempting to access %i, which is out of vector\n"
                     "item range, 0-%i\n", index, v->num_objs);
@@ -130,6 +147,56 @@ uint8_t replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index){
   v->array[index] = new_obj;
 
   return 0;
+}
+
+
+obj * objAtVectorIndex(const OBVector *v, const uint32_t index){
+
+  if(!v){
+    fprintf(stderr, "OBVector: NULL argument passed to objAtVectorIndex\n");
+    return NULL;
+  }
+
+  if(index < v->num_objs){
+    fprintf(stderr, "OBVector: attempting to access %i, which is out of vector\n"
+                    "item range, 0-%i\n", index, v->num_objs);
+    return NULL;
+  }
+
+  return v->array[index];
+}
+
+
+uint8_t findObjInVector(const OBVector *v, const obj *to_find,
+                        const compare_fptr compare){
+
+  int i;
+
+  if(!v || !to_find){
+    fprintf(stderr, "OBVector: Unexpected NULL argument(s) passed to "
+                    "findObjInVector\n");
+    return 0;
+  }
+
+  if(compare == NULL){
+    compare = &defaultCompare;
+  }
+
+  for(i=0; i<v->num_objs; i++){
+    /* if the object exists in the vector */
+    if(compare(to_find, v->array[i]) == 0){
+      return 1;
+    }
+  }
+
+  /* object not found */
+  return 0;
+}
+
+
+void removeFromVectorEnd(OBVector *v){
+  release((obj *)v->array[--v->num_objs]);
+  return
 }
 
 /* PRIVATE METHODS */

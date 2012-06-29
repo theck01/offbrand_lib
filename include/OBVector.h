@@ -41,7 +41,7 @@ void replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index);
 
 /* returns the object stored in the OBVector at index. Returns NULL if index is
  * out of bounds */
-obj * objAtVectorIndex(OBVector *v, const uint32_t index);
+obj * objAtVectorIndex(const OBVector *v, const uint32_t index);
 
 /* checks to see if object, or equivalent as determined by compare function
  * pointer for specific class, can be found within vector. If compare function
@@ -57,10 +57,8 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
  * sort algorithm */
 void sortVector(OBVector *v, const compare_fptr compare, const uint8_t order);
 
-/* remove obj at end of vector. returns object AFTER releasing it once, so it 
- * will be dealloc'd if the OBVector is the only obj maintaining a reference to
- * the returned obj. In this case the function returns NULL */
-obj * removeFromVector(OBVector *v);
+/* remove obj at end of vector, releasing the vectors reference on the obj */
+void removeFromVectorEnd(OBVector *v);
 
 /* releases all objs contained within OBVector, and sets it to empty */
 void clearVector(OBVector *v);
