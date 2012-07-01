@@ -4,8 +4,7 @@
 
 /* PUBLIC METHODS */
 
-
-OBVector * createOBVector(const uint32_t initial_capacity){
+OBVector * createVector(uint32_t initial_capacity){
 
   OBVector *new_instance = malloc(sizeof(OBVector));
   if(!new_instance){
@@ -17,7 +16,12 @@ OBVector * createOBVector(const uint32_t initial_capacity){
   /* initialize reference counting base data */
   initBase((obj *)new_instance, &deallocVector);
 
-  new_instance->array = malloc(sizeof(obj)*initial_capacity);
+  /* a vector with zero capacity cannot be created, create one with one*/
+  if(initial_capacity == 0){
+    initial_capacity = 1;
+  }
+
+  new_instance->array = malloc(sizeof(obj *)*initial_capacity);
   if(!new_instance->array){
     fprintf(stderr, "OBVector: Could not allocate internal array in new "
                     "instance\n");
@@ -52,7 +56,7 @@ OBVector * copyVector(const OBVector *to_copy){
   /* initialize reference counting base data */
   initBase((obj *)new_vec, &deallocVector);
 
-  new_vec->array = malloc(sizeof(obj)*to_copy->capacity);
+  new_vec->array = malloc(sizeof(obj *)*to_copy->capacity);
   if(!new_vec->array){
     fprintf(stderr, "OBVector: Could not allocate internal array in new "
                     "instance\n");
@@ -91,7 +95,7 @@ uint8_t fitVectorToContents(OBVector *v){
     return 1;
   }
 
-  new_array= malloc(sizeof(obj)*v->num_objs);
+  new_array= malloc(sizeof(obj *)*v->num_objs);
   if(new_array){
     fprintf(stderr, "OBVector: Could not allocate internal array in new "
                     "instance\n");
@@ -137,7 +141,7 @@ uint8_t replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index){
   }
 
   if(index >= v->num_objs){
-    fprintf(stderr, "OBVector: attempting to access %i, which is out of vector\n"
+    fprintf(stderr, "OBVector: attempting to access %i, which is out of vector "
                     "item range, 0-%i\n", index, v->num_objs);
     return 1;
   }
@@ -157,8 +161,8 @@ obj * objAtVectorIndex(const OBVector *v, const uint32_t index){
     return NULL;
   }
 
-  if(index < v->num_objs){
-    fprintf(stderr, "OBVector: attempting to access %i, which is out of vector\n"
+  if(index >= v->num_objs){
+    fprintf(stderr, "OBVector: attempting to access %i, which is out of vector "
                     "item range, 0-%i\n", index, v->num_objs);
     return NULL;
   }
@@ -178,6 +182,7 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
     return 0;
   }
 
+  /* custom comparison function was not added, use simple pointer comparator */
   if(compare == NULL){
     compare = &defaultCompare;
   }
@@ -194,10 +199,34 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
 }
 
 
+uint8_t sortVector(OBVector *v, const compare_fptr compare,
+                   const int8_t order){
+
+  obj **sorted;
+
+  if(!v || !compare){
+    fprintf(stderr, "OBVector: Unexpected NULL argument(s) passed to "
+                    "findObjInVector\n");
+    return 1;
+  }
+
+  sorted = recursiveSortContents(v->array, v->num_objs, compare, order);
+  if(!sorted){
+    fprintf(stderr, "OBVector: Sorting operation failed\n");
+    return 1;
+  }
+
+  free(v->array);
+  v->array = sorted;
+
+  return 0;
+}
+
 void removeFromVectorEnd(OBVector *v){
   release((obj *)v->array[--v->num_objs]);
   return
 }
+
 
 /* PRIVATE METHODS */
 
@@ -218,4 +247,112 @@ void deallocVector(obj *to_dealloc){
   return;
 }
 
-/* DEFINE ADDITIONAL PRIVATE METHODS HERE */
+
+uint8_t resizeVector(OBVector *v){
+
+  uint32_t i, new_cap;
+  obj **array;
+  if(v->num_objs == v->capacity){
+    
+    /* if maximum size has been reached print msg */
+    if(v->capacity == UINT32_MAX){
+      fprintf(stderr, "OBVector: Maximum vector capacity of 2^32 objs "
+                      "reached\n");
+      return 1;
+    }
+    
+    new_cap = v->capacity*2;
+
+    if(new_cap > UINT32_MAX){
+      new_cap = UINT32_MAX;
+    }
+    
+    array = malloc(sizeof(obj *)*new_cap);
+    if(!array){
+      fprintf(stderr, "OBVector: Could not allocate larger internal array for "
+                      "resize\n");
+      return 1;
+    }
+
+    for(i=0; i<v->num_objs; i++){
+      array[i] = v->array[i];
+    }
+
+    free(v->array);
+    v->array = array;
+    v->capacity = new_cap;
+  }
+
+  return 0;
+}
+
+obj ** recursiveSortContents(obj **to_sort, uint32_t size,
+                             const compare_fptr compare, int8_t order){
+  
+  uint32_t i,j, split;
+  obj **left_sorted, **right_sorted;
+
+  obj ** sorted = malloc(sizeof(obj *)*size);
+  if(!sorted){
+    fprintf(stderr, "OBVector: Could not allocate internal array during "
+                    "sort\n");
+    return NULL;
+  }
+
+  /* base case, if the vector is of size one, its sorted */
+  if(size <= 1){
+    *sorted = *to_sort;
+    return sorted;
+  }
+  
+  split = size/2;
+
+  /* sort left half and right half of array */
+  left_sorted = recursiveSortContents(to_sort, split, compare, order);
+  right_sorted = recursiveSortContents(to_sort+split, size-split, compare, 
+                                       order);
+  
+  /* if sorting a half failed, return NULL */
+  if(!left_sorted || !right_sorted){
+    return NULL;
+  }
+
+  /* merge sorted halves */
+  i=0;
+  j=0;
+
+  /* while there are elements in both halves to be added to sorted */
+  while(i < split && j < (size-split)){
+    
+    /* if the comparison of the left to the right matches the desired order,
+     * then the next item to go in the sorted array is from the left */
+    if(compare(left_sorted[i], right_sorted[j]) == order){
+      sorted[i+j] = left_sorted[i];
+      i++;
+    }
+    else{
+      sorted[i+j] = right_sorted[j];
+      j++
+    }
+  }
+
+  /* place remaining elements from remaining half in sorted */
+  if(i == split){
+    while(j<(size - split)){
+      sorted[i+j] = right_sorted[j];
+      j++;
+    }
+  }
+  else{
+    while(i<split){
+      sorted[i+j] = left_sorted[i];
+      i++;
+    }
+  }
+
+  /* free sorted half arrays */
+  free(left_sorted);
+  free(right_sorted);
+
+  return sorted;
+}

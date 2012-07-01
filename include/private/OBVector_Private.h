@@ -11,7 +11,7 @@
 /* DATA */
 struct OBVector_struct{
   obj base;
-  obj *array;
+  obj **array;
   uint32_t num_objs;
   uint32_t capacity;
 };
@@ -26,5 +26,10 @@ void deallocVector(obj *to_dealloc);
 /* resizes vector if num_objs == capacity, does nothing if not. Returns 0 on
  * success, 1 on failure. Doubles vector capacity */
 uint8_t resizeVector(OBVector *v);
+
+/* recusive implementation of the merge sort algorithm to be applied to the
+ * OBVector */
+obj ** recursiveSortContents(obj **to_sort, uint32_t size,
+                             const compare_fptr compare, int8_t order);
 
 #endif

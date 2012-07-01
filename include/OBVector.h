@@ -17,7 +17,7 @@ typedef struct OBVector_struct OBVector;
 
 /* constructor allocates and initializes an instance of OBVector with the
  * initial capacity specified*/
-OBVector * createVector(const uint32_t initial_capacity);
+OBVector * createVector(uint32_t initial_capacity);
 
 /* creates a new OBVector that contains the same pointer so obj's. The OBVector
  * data is copied, but the objects contained within are not */
@@ -54,8 +54,8 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
  * THAT ALL OBJ INSIDE ARE OF THE SAME CLASS, partial sort may occur if classes
  * found to be different at runtime. Order (lowest to highest or highest to 
  * lowest) specified by sorting macros defined in sort_obj.h. Uses the merge 
- * sort algorithm */
-void sortVector(OBVector *v, const compare_fptr compare, const uint8_t order);
+ * sort algorithm. Returns 0 on success, 1 on error */
+uint8_t sortVector(OBVector *v, const compare_fptr compare, const int8_t order);
 
 /* remove obj at end of vector, releasing the vectors reference on the obj */
 void removeFromVectorEnd(OBVector *v);

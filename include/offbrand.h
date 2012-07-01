@@ -13,6 +13,12 @@
 
 #include "obj.h" /*generic pointer for all OffBrand data structures*/
 
+/* Global Constants */
+
+/* sorting order */
+#define OB_LEAST_TO_GREATEST -1
+#define OB_GREATEST_TO_LEAST 1
+
 /* Global Types */
 
 /* Pointer to function that compares two instances of the same Offbrand
