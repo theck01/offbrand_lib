@@ -13,7 +13,17 @@
 typedef struct OBTest_struct OBTest;
 
 /* constructor allocates and initializes and instance of OBTest */
-OBTest * createOBTest(void);
+OBTest * createTest(uint32_t id);
+
+/* gets the assigned id from OBTest *a */
+uint32_t getTestID(OBTest *a);
+
+/* compares the assigned ids of OBTest a and b. Returns -1 for a < b, 0 for 
+ * a == b, and 1 for a > b */
+int8_t compareTests(OBTest *a, OBTest *b);
+
+/* returns the reference count of OBTest a */
+int getTestReferences(OBTest *a);
 
 #endif
 

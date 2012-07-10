@@ -223,8 +223,8 @@ uint8_t sortVector(OBVector *v, const compare_fptr compare,
 }
 
 void removeFromVectorEnd(OBVector *v){
-  release((obj *)v->array[--v->num_objs]);
-  return
+  if (v->num_objs > 0) release((obj *)v->array[--v->num_objs]);
+  return;
 }
 
 

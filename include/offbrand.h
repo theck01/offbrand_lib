@@ -19,6 +19,10 @@
 #define OB_LEAST_TO_GREATEST -1
 #define OB_GREATEST_TO_LEAST 1
 
+/* error codes */
+#define OB_COMPARE_ERR 2 /* comparision failed */
+
+
 /* Global Types */
 
 /* Pointer to function that compares two instances of the same Offbrand
@@ -33,7 +37,7 @@ typedef int8_t (*compare_fptr)(const obj *, const obj*);
 /* default comparision, checks to see that the two pointer values are equal.
  * Used in sorting and finding algorithms for basic containers. Returns 0 if
  * equal, 1 if false */
-uint8_t defaultCompare(obj *a, obj *b);
+int8_t defaultCompare(obj *a, obj *b);
 
 #endif
 

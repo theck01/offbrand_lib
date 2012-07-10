@@ -8,6 +8,7 @@
 #define OBVECTOR_H
 
 #include "offbrand.h"
+#include <stdio.h>
 
 /* Class type declaration */
 typedef struct OBVector_struct OBVector;
