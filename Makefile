@@ -12,28 +12,24 @@ CC = gcc
 CFLAGS = -Wall -Wextra
 OFLAGS = $(CFLAGS) -c
 
-# Groups
-ALL_DEPEND = $(PUBLIC)/offbrand.h $(PUBLIC)/obj.h
-BIN_DEPEND = $(BIN_LIB)/obj.o $(BIN_LIB)/offbrand_stdlib.o
+# Find Dependencies
+OBJ_SOURCES := $(wildcard $(SRC)/*.c)
+OBJECTS = $(patsubst $(SRC)/%.c, $(BIN_LIB)/%.o, $(OBJ_SOURCES))
+
+TEST_SOURCES := $(wildcard $(TESTS)/*.c)
+TEST_EXE = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
 # START BUILD
-all_tests: $(BIN_TEST)/obj_test
+all: $(OBJECTS) $(TEST_EXE)
 
-$(BIN_TEST)/obj_test: $(ALL_DEPEND) $(BIN_DEPEND) $(BIN_LIB)/OBTest.o \
-	$(TESTS)/obj_test.c
-	$(CC) $(CFLAGS) $(BIN_LIB)/obj.o $(BIN_LIB)/OBTest.o $(TESTS)/obj_test.c -o \
-		$(BIN_TEST)/obj_test
+# Build class objects
+$(BIN_LIB)/%.o: $(SRC)/%.c
+	$(CC) $(OFLAGS) $^ -o $@
 
-$(BIN_LIB)/OBTest.o: $(ALL_DEPEND) $(BIN_DEPEND) $(SRC)/OBTest.c  \
-	$(PUBLIC)/OBTest.h $(PRIVATE)/OBTest_Private.h
-	$(CC) $(OFLAGS) $(SRC)/OBTest.c -o $(BIN_LIB)/OBTest.o
+# Build tests
+$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_LIB)/%.o  $(BIN_LIB)/OBTest.o
+	$(CC) $(CFLAGS) $^ -o $@
 
-$(BIN_LIB)/offbrand_stdlib.o: $(ALL_DEPEND) \
-	$(SRC)/offbrand_stdlib.c
-	$(CC) $(OFLAGS) $(SRC)/offbrand_stdlib.c -o $(BIN_LIB)/offbrand_stdlib.o
-
-$(BIN_LIB)/obj.o: $(ALL_DEPEND) $(SRC)/obj.c $(PRIVATE)/obj_private.h
-	$(CC) $(OFLAGS) $(SRC)/obj.c -o $(BIN_LIB)/obj.o
 
 # Clean previous build
 clean:
@@ -41,3 +37,18 @@ clean:
 	mkdir $(BIN_LIB)
 	rm -rf $(BIN_TEST)
 	mkdir $(BIN_TEST)
+
+print:
+	@echo "BIN_LIB: $(BIN_LIB)"
+	@echo "BIN_TEST: $(BIN_TEST)"
+	@echo "PUBLIC: $(PUBLIC)"
+	@echo "PRIVATE: $(PRIVATE)"
+	@echo "SRC: $(SRC)"
+	@echo "TESTS: $(TESTS)"
+	@echo
+	@echo "Compiler: $(CC)"
+	@echo "CFLAGS: $(CFLAGS)"
+	@echo "OFLAGS: $(OFLAGS)"
+	@echo
+	@echo "Objects: $(OBJECTS)"
+	@echo "Tests: $(TEST_EXE)"
