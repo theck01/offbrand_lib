@@ -1,21 +1,26 @@
 
 /*
- * Offbrand Library with pthread support
+ * THREAD SYNCHRONIZATION LIBRARY
  * 
- * NOTE: The locking methods declared below are intended to benefit the creation
+ * The locking methods declared below are intended to benefit the creation
  * of threadsafe classes. These locking methods are called internally in all
- * Offbrand classes if this header file is included in a build. Thread safety is
- * the default on all Offbrand builtins, locking methods do not (and should not
- * for performance reasons) need be called on Offbrand builtins directly.
+ * Offbrand classes. Thread safety is the default on all Offbrand builtins,
+ * locking methods do not (and should not) need be called on Offbrand builtins
+ * directly. This convention should be followed when creating any Offbrand
+ * compatible classes.
+ *
+ * Methods do nothing but return 0 if OB_THREADED is undefined (threading is not
+ * desired) so that program resources are not wasted locking and unlocking objs
+ * for the single thread. if OB_THREADED is defined then methods perform 
+ * described function*
  */
 
 #ifndef OFFBRAND_THREADED_H
 #define OFFBRAND_THREADED_H
 
+#ifdef OB_THREADED
 #include <pthread.h>
-#include "offbrand.h"
-
-/* PUBLIC THREADSAFETY METHODS */
+#endif
 
 /* lock an obj for reading. Multiple threads can obtain a read lock on the same
  * obj at the same time. A call to readUnlock is required when read operations

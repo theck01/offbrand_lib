@@ -12,4 +12,7 @@ struct OBLock_struct{
   pthread_cond_t write_rdy;
 }
 
+/* PRIVATE METHOD */
+int initLock(OBLock *to_init);
+
 #endif

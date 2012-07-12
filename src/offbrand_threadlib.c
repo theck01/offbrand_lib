@@ -1,14 +1,17 @@
 
-#include "../include/offbrand_threaded.h"
+#include "../include/offbrand.h"
 #include "../include/private/obj_private.h"
-#include "../include/OBLock.h"
-#include "../include/private/OBLock_private.h"
 
 /* NOTES: NEED OBLOCK INIT METHOD (DECLARED IN OBLock_private, used in initBase
- * if threaded lib used */
+ * if threaded lib used
+ * Wrap all internals (except returns) in OB_THREADED macro conditionals, so
+ * locking commands do nothing if OB_THREADED is not defined */
+
 
 int readLock(obj *to_read_lock){
 
+#ifdef OB_THREADED
+  
   if(!to_read_lock){
     fprintf(stderr, "Offbrand Lock Lib: Unexpected NULL argument passed to "
                     "readLock\n");
@@ -48,12 +51,16 @@ int readLock(obj *to_read_lock){
     return 1;
   }
 
+#endif
+
   return 0;
 }
 
 
 int readUnlock(obj *to_read_unlock){
 
+#ifdef OB_THREADED
+  
   uint8_t signal_write = 0; /* booleans to signal writes and reads at end of */
   uint8_t signal_read = 0;  /* readUnlock */
                                         
@@ -95,11 +102,15 @@ int readUnlock(obj *to_read_unlock){
   else if(signal_read) 
     pthread_cond_broadcast(&((*to_read_unlock)->lock.read_rdy));
 
+#endif
+
   return 0;
 }
 
 
 int writeLock(obj *to_write_lock){
+
+#ifdef OB_THREADED
 
   if(!to_write_lock){
     fprintf(stderr, "Offbrand Lock Lib: Unexpected NULL argument passed to "
@@ -135,11 +146,15 @@ int writeLock(obj *to_write_lock){
     return 1;
   }
  
+#endif
+
   return 0;
 }
 
 
 int writeUnlock(obj *to_write_unlock){
+
+#ifdef OB_THREADED
 
   uint8_t signal_read = 0;  /* Boolean indicating whether any threads waiting */
   uint8_t signal_write = 0; /* should be signlaed */
@@ -178,7 +193,18 @@ int writeUnlock(obj *to_write_unlock){
   if(signal_read) pthread_cond_broadcast(&((*to_read_unlock)->lock.read_rdy));
   else if(signal_write)
     pthread_cond_signal(&((*to_read_unlock)->lock.write_rdy));
+  
+#endif
 
+  return 0;
+}
+
+int initLock(OBLock *to_init){
+
+#ifdef OB_THREADED
+
+#endif
+  
   return 0;
 }
 
