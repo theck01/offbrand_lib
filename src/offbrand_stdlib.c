@@ -54,7 +54,7 @@ void retain(obj *instance){
   }
 
   writeLock(instance);
-  ++((*instance)->references);
+  if((*instance)->references < UINT32_MAX) ++((*instance)->references);
   writeUnlock(instance);
 
   return;
