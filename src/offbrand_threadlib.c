@@ -7,6 +7,20 @@
  * Wrap all internals (except returns) in OB_THREADED macro conditionals, so
  * locking commands do nothing if OB_THREADED is not defined */
 
+#ifdef OB_THREADED
+int initLock(OBLock *to_init){
+
+  if(pthread_mutex_init(&(to_init->mutex), NULL) || 
+     pthread_cond_init(&(to_init->read_rdy), NULL) ||
+     pthread_cond_init(&(to_init->write_rdy), NULL)){
+    perror("initLock");
+    return 1;
+  }
+
+  return 0;
+}
+#endif
+
 
 int readLock(obj *to_read_lock){
 
@@ -199,12 +213,17 @@ int writeUnlock(obj *to_write_unlock){
   return 0;
 }
 
-int initLock(OBLock *to_init){
 
 #ifdef OB_THREADED
+void deallocLock(OBLock *to_dealloc){
 
-#endif
-  
+  if(pthread_mutex_destroy(&(to_dealloc->mutex)) ||
+     pthread_cond_destroy(&(to_dealloc->read_rdy)) ||
+     pthread_cond_destroy(&(to_dealloc->write_rdy))){
+    perror("deallocLock");
+    return 1;
+  }
+
   return 0;
 }
-
+#endif

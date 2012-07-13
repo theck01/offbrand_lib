@@ -14,5 +14,6 @@ struct OBLock_struct{
 
 /* PRIVATE METHOD */
 int initLock(OBLock *to_init);
+int deallocLock(OBLock *to__dealloc);
 
 #endif

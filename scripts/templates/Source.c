@@ -33,9 +33,9 @@ void dealloc%CODECLASSNAME%(obj *to_dealloc){
   /* cast generic obj to %CODECLASSNAME% */
   %CODECLASSNAME% *instance = (%CODECLASSNAME% *)to_dealloc;
 
-  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE */
+  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE,
+   * ONLY FREE MEMBERS OF to_dealloc, DO NOT FREE to_dealloc */
 
-  free(to_dealloc);
   return;
 }
 

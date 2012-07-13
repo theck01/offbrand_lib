@@ -24,6 +24,7 @@ TEST_SOURCES := $(wildcard $(TESTS)/*.c)
 TEST_EXE = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
 # START BUILD
+# NEED TO BUILD offbrand_stdlib.o and offbrand_threadlib.o separately
 all: $(OBJECTS) $(TEST_EXE)
 
 # Build non threaded class objects

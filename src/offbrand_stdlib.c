@@ -10,37 +10,82 @@ uint8_t initBase(obj *instance, dealloc_fptr dealloc){
   }
   (*instance)->references = 1;
   (*instance)->dealloc = dealloc;
+
+#ifdef OB_THREADED
+  initLock(&((*instance)->lock));
+#endif
+
   return 0;
 }
 
 obj * release(obj *instance){
 
-  dealloc_fptr destructor;
+  if(!instance){
+    fprintf(stderr, "release: Cannot release NULL\n");
+    return NULL;
+  }
+
+  writeLock(instance);
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
-    destructor = (*instance)->dealloc; /*save pointer to class deallocator */
+    (*instance)->dealloc(instance); /*class specific memory cleanup called*/
+
+#ifdef OB_THREADED
+    deallocLock(&((*instance)->lock)); /* free mutex / conds in lock if
+                                          threaded */
+#endif
+
     free(*instance); /*free reference counted portion of object*/
     destructor(instance); /*class specific memory cleanup called*/
     return NULL;
   }
 
+  writeUnlock(instance);
+
   return instance;
 }
 
 void retain(obj *instance){
+
+  if(!instance){
+    fprintf(stderr, "offbrand_stdlib: Cannot release NULL\n");
+    return NULL;
+  }
+
+  writeLock(instance);
   ++((*instance)->references);
+  writeUnlock(instance);
+
   return;
 }
 
 uint8_t sameClass(const obj *a, const obj *b){
-  if((*a)->dealloc == (*b)->dealloc){
-    return 1;
+  
+  uint8_t retval = 0;
+
+  if(!a || !b){
+    fprintf(stderr, "offbrand_stdlib: Cannot compare NULL(s) in sameClass\n");
+    return 0;
   }
 
-  return 0;
+  readLock(a);
+  readLock(b);
+
+  if((*a)->dealloc == (*b)->dealloc){
+    retval = 1;
+  }
+
+  readUnlock(a);
+  readUnlock(b);
+
+  return retval;
 }
-uint8_t defaultCompare(obj *a, obj *b){
+
+
+uint8_t defaultCompare(const obj *a, const obj *b){
+
+  uint8_t retval = 0;
 
   if(!a || !b){
     fprintf(stderr, "offbrand_stdlib: NULL argument(s) passed to "
@@ -48,9 +93,15 @@ uint8_t defaultCompare(obj *a, obj *b){
     return OB_COMPARE_ERR;
   }
 
-  if(a == b){
-    return 0;
+  readLock(a);
+  readLock(b);
+
+  if(a != b){
+    retval = 1;
   }
 
-  return 1;
+  readUnlock(a);
+  readUnlock(b);
+
+  return retval;
 }

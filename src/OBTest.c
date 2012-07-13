@@ -61,9 +61,5 @@ int getTestReferences(OBTest *a){
 /* PRIVATE METHODS */
 
 void deallocOBTest(obj *to_dealloc){
-
-  /*cast generic obj to OBTest class*/
-  OBTest *instance = (OBTest *)to_dealloc;
-  free(to_dealloc);
   return;
 }

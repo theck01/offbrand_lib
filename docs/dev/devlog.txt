@@ -140,6 +140,10 @@ when a variable status changes.
   structure needs to be considered for where to apply the locking scheme.
   Another new issue created below to deal with the questions.
 
+07-12-2012: Locking to be applied internally, regardless of threaded
+  implementaion or not. If non-threaded locking API calls will just return 0 and
+  do nothing else.
+
 STATUS:
 Implementation draft. Testing to occur.
 
@@ -176,9 +180,13 @@ Study examples of Makefiles designed to build multiple versions of the same
 library, such as one that can work on both Windows and Linux.
 
 07-08-2012: Dependency on Lock Application discovered, simple solution outlined.
+07-12-2012: Difficult solution used. Define a macro with gcc flag -D at library
+  compile that indicates whether full threaded functionallity should be compiled
+  in code. This is abstracted away from normal use in the offbrand_stdlib and 
+  offbrand_threadlib files.
 
 STATUS:
-Under consideration.
+Solution following the Difficult path chosen.
 
 --------------------------------------------------------------------------------
 
