@@ -14,7 +14,7 @@ int initLock(OBLock *to_init){
      pthread_cond_init(&(to_init->read_rdy), NULL) ||
      pthread_cond_init(&(to_init->write_rdy), NULL)){
     perror("initLock");
-    return 1;
+    exit(1);
   }
 
   return 0;
@@ -35,7 +35,7 @@ int readLock(obj *to_read_lock){
   /* Lock the OBLock mutex to change shared lock data */
   if(pthread_mutex_lock(&((*to_read_lock)->lock.mutex))){
     perror("readLock pthread_mutex_lock\n");
-    return 1;
+    exit(1);
   }
 
   /* Wait (block) if a write is currently happening, or if a write is waiting to
@@ -62,7 +62,7 @@ int readLock(obj *to_read_lock){
 
   if(pthread_mutex_unlock(&((*to_read_lock)->lock.mutex))){
     perror("readLock pthread_mutex_unlock\n");
-    return 1;
+    exit(1);
   }
 
 #endif
@@ -88,7 +88,7 @@ int readUnlock(obj *to_read_unlock){
   /* Lock the OBLock mutex to change shared lock data */
   if(pthread_mutex_lock(&((*to_read_unlock)->lock.mutex))){
     perror("readUnlock pthread_mutex_lock\n");
-    return 1;
+    exit(1);
   }
 
   /* check count for error */
@@ -108,7 +108,7 @@ int readUnlock(obj *to_read_unlock){
   
   if(pthread_mutex_unlock(&((*to_read_unlock)->lock.mutex))){
     perror("readUnlock pthread_mutex_unlock\n");
-    return 1;
+    exit(1);
   }
 
   /* if should signal waiting threads */

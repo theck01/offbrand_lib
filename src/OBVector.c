@@ -16,7 +16,8 @@ OBVector * createVector(uint32_t initial_capacity){
   /* initialize reference counting base data */
   initBase((obj *)new_instance, &deallocVector);
 
-  /* a vector with zero capacity cannot be created, create one with one*/
+  /* a vector with zero capacity cannot be created, create one with a capacity
+   * of one */
   if(initial_capacity == 0){
     initial_capacity = 1;
   }
@@ -56,6 +57,8 @@ OBVector * copyVector(const OBVector *to_copy){
   /* initialize reference counting base data */
   initBase((obj *)new_vec, &deallocVector);
 
+  readLock(to_copy);
+
   new_vec->array = malloc(sizeof(obj *)*to_copy->capacity);
   if(!new_vec->array){
     fprintf(stderr, "OBVector: Could not allocate internal array in new "
@@ -73,15 +76,24 @@ OBVector * copyVector(const OBVector *to_copy){
                                         references them */
   }
 
+  readUnlock(to_copy);
+
   return new_vec;
 }
 
 uint32_t sizeOfVector(const OBVector *v){
+
+  uint32_t retval;
+
   if(!v){
     return 0;
   }
 
-  return v->num_objs;
+  readLock(v);
+  retval = v->num_objs;
+  readUnlock(v);
+
+  return retval;
 }
 
 
@@ -95,6 +107,8 @@ uint8_t fitVectorToContents(OBVector *v){
     return 1;
   }
 
+  readLock(v);
+
   new_array= malloc(sizeof(obj *)*v->num_objs);
   if(new_array){
     fprintf(stderr, "OBVector: Could not allocate internal array in new "
@@ -106,9 +120,14 @@ uint8_t fitVectorToContents(OBVector *v){
     new_array[i] = v->array[i];
   }
 
+  readUnlock(v);
+  writeLock(v);
+
   v->capacity = v->num_objs;
   free(v->array);
   v->array = new_array;
+
+  writeUnlock(v);
 
   return 0;
 }
@@ -127,8 +146,11 @@ uint8_t addToVector(OBVector *v, const obj *to_add){
     return 1;
   }
 
-  v->array[v->num_objs++] = (obj *)to_add;
   retain(obj);
+
+  writeLock(v);
+  v->array[v->num_objs++] = (obj *)to_add;
+  writeUnlock(v);
 
   return 0;
 }
@@ -140,15 +162,22 @@ uint8_t replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index){
     return 1;
   }
 
+  readLock(v);
+
   if(index >= v->num_objs){
     fprintf(stderr, "OBVector: attempting to access %i, which is out of vector "
                     "item range, 0-%i\n", index, v->num_objs);
     return 1;
   }
 
-  release(v->array[index]);
   retain(new_obj);
+
+  writeLock(v);
+  
+  release(v->array[index]);
   v->array[index] = new_obj;
+
+  writeUnlock(v);
 
   return 0;
 }
@@ -161,19 +190,26 @@ obj * objAtVectorIndex(const OBVector *v, const uint32_t index){
     return NULL;
   }
 
+  readLock(v);
+
   if(index >= v->num_objs){
     fprintf(stderr, "OBVector: attempting to access %i, which is out of vector "
                     "item range, 0-%i\n", index, v->num_objs);
     return NULL;
   }
 
-  return v->array[index];
+  retval = v->array[index];
+  
+  readUnlock(v);
+
+  return retval;
 }
 
 
 uint8_t findObjInVector(const OBVector *v, const obj *to_find,
                         const compare_fptr compare){
 
+  uint8_t retval = 0; /* By default obj is not found */
   int i;
 
   if(!v || !to_find){
@@ -187,15 +223,19 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
     compare = &defaultCompare;
   }
 
+  readLock(v);
+
   for(i=0; i<v->num_objs; i++){
     /* if the object exists in the vector */
     if(compare(to_find, v->array[i]) == 0){
-      return 1;
+      retval = 1;
+      break;
     }
   }
 
-  /* object not found */
-  return 0;
+  readUnlock(v);
+
+  return retval;
 }
 
 
@@ -210,20 +250,29 @@ uint8_t sortVector(OBVector *v, const compare_fptr compare,
     return 1;
   }
 
+  writeLock(v);
+
   sorted = recursiveSortContents(v->array, v->num_objs, compare, order);
   if(!sorted){
     fprintf(stderr, "OBVector: Sorting operation failed\n");
+    writeUnlock(v);
     return 1;
   }
 
+
   free(v->array);
   v->array = sorted;
+
+  writeUnlock(v);
 
   return 0;
 }
 
 void removeFromVectorEnd(OBVector *v){
+  writeLock(v);
+  /*if objects exist in the array, release last object and decrement num_objs */
   if (v->num_objs > 0) release((obj *)v->array[--v->num_objs]);
+  writeUnlock(v);
   return;
 }
 
@@ -246,17 +295,20 @@ void deallocVector(obj *to_dealloc){
   return;
 }
 
-
 uint8_t resizeVector(OBVector *v){
 
   uint32_t i, new_cap;
   obj **array;
+
+  writeLock(v);
+
   if(v->num_objs == v->capacity){
     
     /* if maximum size has been reached print msg */
     if(v->capacity == UINT32_MAX){
       fprintf(stderr, "OBVector: Maximum vector capacity of 2^32 objs "
                       "reached\n");
+      writeUnlock(v);
       return 1;
     }
     
@@ -270,6 +322,7 @@ uint8_t resizeVector(OBVector *v){
     if(!array){
       fprintf(stderr, "OBVector: Could not allocate larger internal array for "
                       "resize\n");
+      writeUnlock(v);
       return 1;
     }
 
@@ -282,24 +335,28 @@ uint8_t resizeVector(OBVector *v){
     v->capacity = new_cap;
   }
 
+  writeUnlock(v);
+
   return 0;
 }
 
+/* locking code omitted, private function is only called when vector is 
+ * already locked */
 obj ** recursiveSortContents(obj **to_sort, uint32_t size,
                              const compare_fptr compare, int8_t order){
   
   uint32_t i,j, split;
   obj **left_sorted, **right_sorted;
+  obj **sorted;
 
-  obj ** sorted = malloc(sizeof(obj *)*size);
-  if(!sorted){
-    fprintf(stderr, "OBVector: Could not allocate internal array during "
-                    "sort\n");
-    return NULL;
-  }
-
-  /* base case, if the vector is of size one, its sorted */
+   /* base case, if the vector is of size one, its sorted */
   if(size <= 1){
+    sorted = malloc(sizeof(obj *)*size);
+    if(!sorted){
+      fprintf(stderr, "OBVector: Could not allocate internal array during "
+                      "sort\n");
+      return NULL;
+    }
     *sorted = *to_sort;
     return sorted;
   }
@@ -313,6 +370,13 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size,
   
   /* if sorting a half failed, return NULL */
   if(!left_sorted || !right_sorted){
+    return NULL;
+  }
+
+  sorted = malloc(sizeof(obj *)*size);
+  if(!sorted){
+    fprintf(stderr, "OBVector: Could not allocate internal array during "
+                    "sort\n");
     return NULL;
   }
 
