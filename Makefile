@@ -1,10 +1,12 @@
 
 # Directories
-BIN_LIB = bin/lib
+BIN = bin
+BIN_CLASS = bin/classes
 BIN_TEST = bin/tests
 PUBLIC = include
 PRIVATE = include/private
 SRC = src
+CLASSES = src/classes
 TESTS = src/tests
 
 # Compiler Info
@@ -13,35 +15,45 @@ CFLAGS = -Wall -Wextra #Common flags for all
 OFLAGS = $(CFLAGS) -c	 #Flags for .o output files
 TFLAGS = -lpthread -D OB_THREADED #Extra flags for threaded programs
 
-# Common dependencies for all Offbrand lib/tests
-COMMON_DEP = $(BIN_LIB)/offbrand_stdlib.o $(BIN_LIB)/offbrand_threadlib.o
+# common dependencies for many classes/tests
+CLASS_DEP = $(BIN)/offbrand_stdlib.o
+TEST_DEP = $(CLASS_DEP) $(BIN_CLASS)/OBTest.o
+THREAD_DEP = $(BIN)/offbrand_t_stdlib.o $(BIN)/offbrand_threadlib.o
 
-# Find Dependencies
-OBJ_SOURCES := $(wildcard $(SRC)/*.c)
-OBJECTS = $(patsubst $(SRC)/%.c, $(BIN_LIB)/%.o, $(OBJ_SOURCES))
+# Enumerate/Find Objects to build
+STD_LIBS = $(BIN)/offbrand_stdlib.o $(BIN)/offbrand_t_stdlib.o \
+					 $(BIN)/offbrand_threadlib.o
+
+CLASS_SOURCES := $(wildcard $(CLASSES)/*.c)
+ALL_CLASSES = $(patsubst $(CLASSES)/%.c, $(BIN_CLASS)/%.o, $(CLASS_SOURCES))
 
 TEST_SOURCES := $(wildcard $(TESTS)/*.c)
-TEST_EXE = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
+ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
 # START BUILD
-# NEED TO BUILD offbrand_stdlib.o and offbrand_threadlib.o separately
-all: $(OBJECTS) $(TEST_EXE)
+all: $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
 
-# Build non threaded class objects
-$(BIN_LIB)/%.o: $(SRC)/%.c $(COMMON_DEP)
+# Hand builds
+$(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c
+	$(CC) $(OFLAGS) $^ -o $@
+$(BIN)/offbrand_t_stdlib.o: $(SRC)/offbrand_stdlib.c
+	$(CC) $(OFLAGS) $(TFLAGS) $^ -o $@
+$(BIN)/offbrand_threadlib.o: $(SRC)/offbrand_threadlib.c 
+	$(CC) $(OFLAGS) $(TFLAGS) $^ -o $@
+
+# Build class objects
+$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(CLASS_DEP)
 	$(CC) $(OFLAGS) $^ -o $@
 
-# Build non threaded tests
-$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_LIB)/%.o  $(BIN_LIB)/OBTest.o \
-	$(COMMON_DEP)
+# Build tests executables
+$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
-
 
 # Clean previous build
 clean:
-	rm -rf $(BIN_LIB)
-	mkdir $(BIN_LIB)
-	rm -rf $(BIN_TEST)
+	rm -rf $(BIN)
+	mkdir $(BIN)
+	mkdir $(BIN_CLASS)
 	mkdir $(BIN_TEST)
 
 print:
@@ -57,5 +69,5 @@ print:
 	@echo "OFLAGS: $(OFLAGS)"
 	@echo "TFLAGS: $(TFLAGS)"
 	@echo
-	@echo "Objects: $(OBJECTS)"
-	@echo "Tests: $(TEST_EXE)"
+	@echo "Classes: $(ALL_CLASSES)"
+	@echo "Tests: $(ALL_TESTS)"

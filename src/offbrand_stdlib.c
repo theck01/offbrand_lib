@@ -1,8 +1,12 @@
 
+#ifndef OB_THREADED
 #include "../include/offbrand.h"
+#else
+#include "../include/offbrand_threaded.h"
+#endif
+
 #include "../include/private/obj_private.h"
 
-/* NOTE: init OBLock if OB_THREADED defined in method */
 uint8_t initBase(obj *instance, dealloc_fptr dealloc){
   *instance = malloc(sizeof(struct obj_struct));
   if(!(*instance)){
@@ -25,8 +29,6 @@ obj * release(obj *instance){
     return NULL;
   }
 
-  writeLock(instance);
-
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
     (*instance)->dealloc(instance); /*class specific memory cleanup called*/
@@ -37,11 +39,8 @@ obj * release(obj *instance){
 #endif
 
     free(*instance); /*free reference counted portion of object*/
-    destructor(instance); /*class specific memory cleanup called*/
     return NULL;
   }
-
-  writeUnlock(instance);
 
   return instance;
 }
@@ -50,42 +49,30 @@ void retain(obj *instance){
 
   if(!instance){
     fprintf(stderr, "offbrand_stdlib: Cannot release NULL\n");
-    return NULL;
+    return;
   }
 
-  writeLock(instance);
   if((*instance)->references < UINT32_MAX) ++((*instance)->references);
-  writeUnlock(instance);
 
   return;
 }
 
 uint8_t sameClass(const obj *a, const obj *b){
   
-  uint8_t retval = 0;
-
   if(!a || !b){
     fprintf(stderr, "offbrand_stdlib: Cannot compare NULL(s) in sameClass\n");
     return 0;
   }
 
-  readLock(a);
-  readLock(b);
-
   if((*a)->dealloc == (*b)->dealloc){
-    retval = 1;
+    return 1;
   }
 
-  readUnlock(a);
-  readUnlock(b);
-
-  return retval;
+  return 0;
 }
 
 
 uint8_t defaultCompare(const obj *a, const obj *b){
-
-  uint8_t retval = 0;
 
   if(!a || !b){
     fprintf(stderr, "offbrand_stdlib: NULL argument(s) passed to "
@@ -93,15 +80,9 @@ uint8_t defaultCompare(const obj *a, const obj *b){
     return OB_COMPARE_ERR;
   }
 
-  readLock(a);
-  readLock(b);
-
   if(a != b){
-    retval = 1;
+    return 1;
   }
 
-  readUnlock(a);
-  readUnlock(b);
-
-  return retval;
+  return 0;
 }

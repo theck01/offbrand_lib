@@ -6,7 +6,7 @@
 #ifndef OBVECTOR_PRIVATE_H
 #define OBVECTOR_PRIVATE_H
 
-#include "OBVector.h"
+#include "../OBVector.h"
 
 /* DATA */
 struct OBVector_struct{

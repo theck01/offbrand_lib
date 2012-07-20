@@ -8,6 +8,6 @@
 #ifndef OBLOCK_H
 #define OBLOCK_H
 
-typedef OBLock OBLock_struct;
+typedef struct OBLock_struct OBLock;
 
 #endif

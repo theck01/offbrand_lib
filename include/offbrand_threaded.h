@@ -18,9 +18,8 @@
 #ifndef OFFBRAND_THREADED_H
 #define OFFBRAND_THREADED_H
 
-#ifdef OB_THREADED
 #include <pthread.h>
-#endif
+#include "offbrand.h"
 
 /* lock an obj for reading. Multiple threads can obtain a read lock on the same
  * obj at the same time. A call to readUnlock is required when read operations
