@@ -144,8 +144,13 @@ when a variable status changes.
   implementaion or not. If non-threaded locking API calls will just return 0 and
   do nothing else.
 
+07-21-2012: Locking to be applied externally, simplifying the build of the
+  entire library and the usage of classes. Specifically the current API of the
+  OBVector cannot be safely implemented as is with internal thread safety
+  mechanisms.
+
 STATUS:
-Implementation draft. Testing to occur.
+Compiled implementation. Testing to occur.
 
 --------------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 
 #include "../include/offbrand_threaded.h"
-#include "../include/private/obj_private.h"
+#include "../include/private/obj_Private.h"
 
 void initLock(OBLock *to_init){
 

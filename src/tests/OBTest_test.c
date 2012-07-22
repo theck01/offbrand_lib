@@ -6,16 +6,22 @@
 int main(){
 
   int i;
-  OBTest *test_obj = createOBTest();
+  OBTest *test_obj = createTest(1);
   if(!test_obj){
     fprintf(stderr, "OBTest_test: could not allocate memory for test, TEST "
-                    "FAILD\n");
+                    "FAILED\n");
     exit(1);
   }
 
   /* retain object, reference count should be 4 */
   for(i=0; i<3; i++){
     retain((obj *)test_obj);
+  }
+
+  if(getTestReferences(test_obj) != 4){
+    fprintf(stderr, "OBTest_test: reference count not incrememted correctly by "
+                    "retain\nTEST FAILED\n");
+    exit(1);
   }
 
   /* release object until test_obj is deallocated or until release has been

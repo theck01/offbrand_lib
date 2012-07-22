@@ -1,7 +1,10 @@
 
 /*
- * Basic header for Offbrand Library. For pthread support include
- * offbrand_threaded.h
+ * OFFBRAND STANDARD LIBRARY
+ *
+ * Includes all data structures required reference counting, as well as common
+ * types required by most/all Offbrand classes. Defines the interface for the 
+ * reference counting API and other common functions.
  */
 
 #ifndef OFFBRAND_LIB
@@ -56,7 +59,7 @@ uint8_t sameClass(const obj *a, const obj *b);
 /* default comparision, checks to see that the two pointer values are equal.
  * Used in sorting and finding algorithms for basic containers. Returns 0 if
  * equal, 1 if false */
-int8_t objCompare(obj *a, obj *b);
+int8_t objCompare(const obj *a, const obj *b);
 
 #endif
 

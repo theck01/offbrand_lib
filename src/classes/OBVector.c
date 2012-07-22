@@ -39,7 +39,7 @@ OBVector * createVector(uint32_t initial_capacity){
 
 OBVector * copyVector(const OBVector *to_copy){
 
-  int i;
+  uint32_t i;
   OBVector *new_vec;
 
   /* if there is nothing to copy, do nothing */
@@ -88,8 +88,8 @@ uint32_t sizeOfVector(const OBVector *v){
 
 uint8_t fitVectorToContents(OBVector *v){
 
-  int i;
-  obj *new_array;
+  uint32_t i;
+  obj **new_array;
   
   if(!v){
     fprintf(stderr, "OBVector: NULL argument passed to fitVectorToContents\n");
@@ -97,13 +97,13 @@ uint8_t fitVectorToContents(OBVector *v){
   }
 
   new_array= malloc(sizeof(obj *)*v->num_objs);
-  if(new_array){
+  if(!new_array){
     fprintf(stderr, "OBVector: Could not allocate internal array in new "
                     "instance\n");
     return 1;
   }
 
-  for(i=0; i<v->num_items; i++){
+  for(i=0; i<v->num_objs; i++){
     new_array[i] = v->array[i];
   }
 
@@ -115,9 +115,9 @@ uint8_t fitVectorToContents(OBVector *v){
 }
 
 
-uint8_t addToVector(OBVector *v, const obj *to_add){
+uint8_t addToVector(OBVector *v, obj *to_add){
 
-  if(!v || !a){
+  if(!v || !to_add){
     fprintf(stderr, "OBVector: NULL argument(s) passed to addToVector\n");
     return 1;
   }
@@ -134,9 +134,9 @@ uint8_t addToVector(OBVector *v, const obj *to_add){
   return 0;
 }
 
-uint8_t replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index){
+uint8_t replaceInVector(OBVector *v, obj *new_obj, const uint32_t index){
 
-  if(!v || !a){
+  if(!v || !new_obj){
     fprintf(stderr, "OBVector: NULL argument(s) passed to replaceInVector\n");
     return 1;
   }
@@ -174,9 +174,9 @@ obj * objAtVectorIndex(const OBVector *v, const uint32_t index){
 
 
 uint8_t findObjInVector(const OBVector *v, const obj *to_find,
-                        const compare_fptr compare){
+                        compare_fptr compare){
 
-  int i;
+  uint32_t i;
 
   if(!v || !to_find){
     fprintf(stderr, "OBVector: Unexpected NULL argument(s) passed to "
@@ -186,7 +186,7 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
 
   /* custom comparison function was not added, use simple pointer comparator */
   if(compare == NULL){
-    compare = &defaultCompare;
+    compare = &objCompare;
   }
 
   for(i=0; i<v->num_objs; i++){
@@ -240,11 +240,11 @@ void deallocVector(obj *to_dealloc){
   OBVector *instance = (OBVector *)to_dealloc;
 
   /* release all objects stored inside vector */
-  for(i=0; i<to_dealloc->num_objs; i++){
-    release((obj *)to_dealloc->array[i]);
+  for(i=0; i<instance->num_objs; i++){
+    release((obj *)instance->array[i]);
   }
 
-  free(to_dealloc->array);
+  free(instance->array);
   return;
 }
 
@@ -340,7 +340,7 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size,
     }
     else{
       sorted[i+j] = right_sorted[j];
-      j++
+      j++;
     }
   }
 

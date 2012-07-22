@@ -1,14 +1,14 @@
 
 #include "../../include/offbrand.h"
 #include "../../include/OBVector.h"
-#include "../../include/private/OBVector_private.h" /* For testing purposes
+#include "../../include/private/OBVector_Private.h" /* For testing purposes
                                                        only */
 #include "../../include/OBTest.h"
 
 
 int main(){
 
-  int i, id;
+  uint32_t i, id;
   OBTest *tests[6], *singleton, *tmp;
   OBVector *main_vec, *copy_vec;
 
@@ -33,7 +33,7 @@ int main(){
       exit(1);
     }
 
-    if(addToVector(main_vec, tests[i])){
+    if(addToVector(main_vec, (obj *)tests[i])){
       fprintf(stderr, "OBVector_test: could add elements to vector, "
                       "TEST FAILED\n");
       exit(1);
@@ -67,14 +67,14 @@ int main(){
     }
   }
 
-  if(addToVector(main_vec, singleton)){
+  if(addToVector(main_vec, (obj *)singleton)){
     fprintf(stderr, "OBVector_test: could add singleton to vector, "
                     "TEST FAILED\n");
     exit(1);
   }
 
-  removeFromVector(main_vec);
-  if(sizeOfVector(main_vec != 6)){
+  removeFromVectorEnd(main_vec);
+  if(sizeOfVector(main_vec) != 6){
     fprintf(stderr, "OBVector_test: remove did not properly get rid of element "
                     "TEST FAILED\n");
     exit(1);
@@ -93,14 +93,14 @@ int main(){
   }
 
   retain((obj *)tmp);
-  replaceInVector(main_vec, singleton, 3);
+  replaceInVector(main_vec, (obj *)singleton, 3);
   if(getTestReferences(tmp) != 1){
     fprintf(stderr, "OBVector_test: vector did not release element on "
                     "replacement, TEST FAILED\n");
     exit(1);
   }
 
-  if(!findObjInVector(main_vec, singleton, &compareTests)){
+  if(!findObjInVector(main_vec, (obj *)singleton, &compareTests)){
     fprintf(stderr, "OBVector_test: vector did not replace element correctly, "
                     "or was not found\nTEST FAILED\n");
     exit(1);
@@ -144,8 +144,8 @@ int main(){
   release((obj *)singleton); /* release singleton once so it is only referenced
                                 by containing vectors */
   for(i=0; i<sizeOfVector(main_vec); i++){
-    if(compareTests((OBTest *)objAtVectorIndex(main_vec, i),
-                    (OBTest *)objAtVectorIndex(copy_vec, i))){
+    if(compareTests(objAtVectorIndex(main_vec, i),
+                    objAtVectorIndex(copy_vec, i))){
       fprintf(stderr, "OBVector_test: vector contents not copied correctly, "
                       "TEST FAILED\n");
       exit(1);

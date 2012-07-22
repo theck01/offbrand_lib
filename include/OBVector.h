@@ -1,7 +1,8 @@
 
 /*
  * OBVector:
- * Automatically resizing array of obj's
+ * Automatically resizing array of obj's (any Offbrand builtin or compatible
+ * class
  */
 
 #ifndef OBVECTOR_H
@@ -34,11 +35,11 @@ uint32_t sizeOfVector(const OBVector *v);
 uint8_t fitVectorToContents(OBVector *v); 
 
 /* adds obj to end of vector, returns 0 if successful, 1 if error */
-uint8_t addToVector(OBVector *v, const obj *to_add);
+uint8_t addToVector(OBVector *v, obj *to_add);
 
 /* replace obj at index. Does nothing if index is not less than number of items
  * contained within vector. Returns 0 if object is replaced, 1 if out of range*/
-void replaceInVector(OBVector *v, const obj *new_obj, const uint32_t index);
+uint8_t replaceInVector(OBVector *v, obj *new_obj, const uint32_t index);
 
 /* returns the object stored in the OBVector at index. Returns NULL if index is
  * out of bounds */
@@ -49,7 +50,7 @@ obj * objAtVectorIndex(const OBVector *v, const uint32_t index);
  * argument it NULL then pointer comparisons are used. Returns 1 if found, 0 if 
  * not */
 uint8_t findObjInVector(const OBVector *v, const obj *to_find,
-                        const compare_fptr compare);
+                        compare_fptr compare);
 
 /* sorts vector using the compare function passed in as an argument. ASSUMES
  * THAT ALL OBJ INSIDE ARE OF THE SAME CLASS, partial sort may occur if classes

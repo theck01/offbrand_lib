@@ -16,9 +16,9 @@ OFLAGS = $(CFLAGS) -c	 #Flags for .o output files
 TFLAGS = -lpthread -D OB_THREADED #Extra flags for threaded programs
 
 # common dependencies for many classes/tests
-CLASS_DEP = $(BIN)/offbrand_stdlib.o
-TEST_DEP = $(CLASS_DEP) $(BIN_CLASS)/OBTest.o
-THREAD_DEP = $(BIN)/offbrand_t_stdlib.o $(BIN)/offbrand_threadlib.o
+TEST_DEP = $(BIN)/offbrand_stdlib.o $(BIN_CLASS)/OBTest.o
+THREAD_DEP = $(BIN)/offbrand_t_stdlib.o $(BIN)/offbrand_threadlib.o \
+						 $(BIN_CLASS)/OBTest.o
 
 # Enumerate/Find Objects to build
 STD_LIBS = $(BIN)/offbrand_stdlib.o $(BIN)/offbrand_t_stdlib.o \
@@ -34,16 +34,17 @@ ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 all: $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
 
 # Hand builds
-$(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c
-	$(CC) $(OFLAGS) $^ -o $@
-$(BIN)/offbrand_t_stdlib.o: $(SRC)/offbrand_stdlib.c
-	$(CC) $(OFLAGS) $(TFLAGS) $^ -o $@
-$(BIN)/offbrand_threadlib.o: $(SRC)/offbrand_threadlib.c 
-	$(CC) $(OFLAGS) $(TFLAGS) $^ -o $@
+$(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
+	$(CC) $(OFLAGS) $< -o $@
+$(BIN)/offbrand_t_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
+	$(CC) $(OFLAGS) $(TFLAGS) $< -o $@
+$(BIN)/offbrand_threadlib.o: $(SRC)/offbrand_threadlib.c \
+	$(PUBLIC)/offbrand_threaded.h
+	$(CC) $(OFLAGS) $(TFLAGS) $< -o $@
 
 # Build class objects
-$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(CLASS_DEP)
-	$(CC) $(OFLAGS) $^ -o $@
+$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
+	$(CC) $(OFLAGS) $< -o $@
 
 # Build tests executables
 $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)

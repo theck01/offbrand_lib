@@ -5,7 +5,7 @@
 #include "../include/offbrand_threaded.h"
 #endif
 
-#include "../include/private/obj_private.h"
+#include "../include/private/obj_Private.h"
 
 uint8_t initBase(obj *instance, dealloc_fptr dealloc){
   *instance = malloc(sizeof(struct obj_struct));
@@ -72,7 +72,7 @@ uint8_t sameClass(const obj *a, const obj *b){
 }
 
 
-uint8_t defaultCompare(const obj *a, const obj *b){
+int8_t objCompare(const obj *a, const obj *b){
 
   if(!a || !b){
     fprintf(stderr, "offbrand_stdlib: NULL argument(s) passed to "
@@ -80,9 +80,13 @@ uint8_t defaultCompare(const obj *a, const obj *b){
     return OB_COMPARE_ERR;
   }
 
-  if(a != b){
+  if(a > b){
     return 1;
   }
-
-  return 0;
+  else if(a == b){
+    return 0;
+  }
+  else{
+    return -1;
+  }
 }

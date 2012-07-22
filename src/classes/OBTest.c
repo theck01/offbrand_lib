@@ -1,6 +1,7 @@
 
 #include "../../include/OBTest.h"
 #include "../../include/private/OBTest_Private.h"
+#include "../../include/private/obj_Private.h"
 
 
 /* PUBLIC METHODS */
@@ -33,7 +34,7 @@ uint32_t getTestID(OBTest *a){
 }
 
 
-int8_t compareTests(OBTest *a, OBTest *b){
+int8_t compareTests(const obj *a, const obj *b){
 
   if(!a || !b){
     fprintf(stderr, "OBTest: Unexpected NULL value(s) passed to "
@@ -41,12 +42,12 @@ int8_t compareTests(OBTest *a, OBTest *b){
     return OB_COMPARE_ERR;
   }
 
-  if(a->id > b->id) return 1;
-  if(a->id == b->id) return 0;
+  if(((OBTest *)a)->id >((OBTest *)b)->id) return 1;
+  if(((OBTest *)a)->id == ((OBTest *)b)->id) return 0;
   return -1;
 }
 
-int getTestReferences(OBTest *a){
+uint32_t getTestReferences(OBTest *a){
 
   if(!a){
     fprintf(stderr, "OBTest: Unexpected NULL arguments passed to "
@@ -54,12 +55,14 @@ int getTestReferences(OBTest *a){
     return -1;
   }
 
-  return (int)(*a)->references;
+  /* complex dereferencing to access reference count. FOR TESTING ONLY! */
+  return (uint32_t)((*((obj *)a))->references);
 }
 
 
 /* PRIVATE METHODS */
 
 void deallocOBTest(obj *to_dealloc){
+  to_dealloc++; /* does nothing except suppress compiler warning */
   return;
 }

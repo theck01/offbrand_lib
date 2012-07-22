@@ -19,6 +19,10 @@ typedef struct %CODECLASSNAME%_struct %CODECLASSNAME%;
 /* expand with additional arguments as needed */
 %CODECLASSNAME% * create%CODECLASSNAME%(void);
 
+/* compare two instances of the class, return 1 if a > b, 0 if a == b, and -1 if
+ * a < b */
+int8_t compare%CODECLASSNAME%(const obj *a, const obj *b);
+
 /* DECLARE ADDITIONAL PUBLIC METHODS HERE */
 
 #endif
