@@ -2,9 +2,9 @@
 
 The OffBrand library is composed of entirely of incomplete types, to create C 
 style "classes". Each class is composed of three files:
-  - Public Header
-  - Private Header
-  - Source File
+  * Public Header
+  * Private Header
+  * Source File
 The public header acts as an interface, any declarations in the public header
 can be used by any other module. The private header contains the definitions
 of the data stored in the incomplete type, and declarations of all private

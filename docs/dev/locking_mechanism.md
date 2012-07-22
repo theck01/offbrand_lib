@@ -2,18 +2,18 @@
 
 The locking mechanism will consist of the following parts:
 
-  - A 'lock' mutex. Must be locked when locking mechanim state changes.
-  - A 'waiting to read' count. This integer count keeps track of the number of
+  * A 'lock' mutex. Must be locked when locking mechanim state changes.
+  * A 'waiting to read' count. This integer count keeps track of the number of
     threads waiting to be notified that reading operations can occur.
-  - A 'currently reading' count. This integer counts the number of threads that
+  * A 'currently reading' count. This integer counts the number of threads that
     currently have read-only access to the protected data.
-  - A 'waiting to write' count. This integer counts the number of threads
+  * A 'waiting to write' count. This integer counts the number of threads
     waiting to perform write operations on the protected data.
-  - A 'currently writing flag. This uint8_t indicates whether the data is
+  * A 'currently writing flag. This uint8_t indicates whether the data is
     currently granting write access to a single thread.
-  - A 'allow read operation(s)' condition, which signals threads intending to
+  * A 'allow read operation(s)' condition, which signals threads intending to
     read that access may be allowed.
-  - A 'allow a write operation' condition, which signals a thread intending to
+  * A 'allow a write operation' condition, which signals a thread intending to
     write that access to data may be allowed.
 
 Lock initially grants access on a first come first served basis, read or write.
@@ -49,4 +49,3 @@ operation to occur before being granted read access.
   that lock failed in contention.
 * `writeUnlock(obj *)` - Unlocks the given object, reseting the 'writing' flag and
   signaling to any waiting read threads that access should be granted.
-

@@ -10,18 +10,18 @@ implementation). Ideally this common element would be a statically allocated
 incomplete type, which cannot be achieved directly.
 
 ###PROPOSED SOLUTION(s):
-*A:* Implement this base element as a struct type only. This allows for easy
+**A:** Implement this base element as a struct type only. This allows for easy
    static allocation, but sacrifices data encapsulation entirely. Trades off
    data protection for ease of implementaion and use.
 
-*B:* Implement this base element as an incomplete type only. This allows for
+**B:** Implement this base element as an incomplete type only. This allows for
    complete data encapsulation, preventing direct manipulation of reference
    counts. Adds a large layer of complexity; the generic data type would now
    be a pointer to a pointer (the class must be dereferenced to allow access
    to the first data member of the class, a pointer to the base element).
    Complete encapsulation provided, but too much complexity added.
 
-*C:* A hybrid of A&B. The base element is a struct (statically allocated) that
+**C:** A hybrid of A&B. The base element is a struct (statically allocated) that
    contains a single pointer to an incomplete type encapsulating the reference
    counting information. Users could interact with this base element as they
    would with the base element in A, while being prevented from altering key
@@ -29,7 +29,7 @@ incomplete type, which cannot be achieved directly.
    the scenes, and a small amount of data is left bare to the user (the pointer
    to the encapsulating incomplete type that is contained within the struct).
 
-*D:* Similar to C, but instead of an enclosing struct a typedef is used to combat
+**D:** Similar to C, but instead of an enclosing struct a typedef is used to combat
    the "pointer to pointer" complexity. Besided that the same idea, an
    incomplete type is hidden from the user by typedefing a pointer to an
    instance of the incomplete type to a type that appears not to be a pointer.
@@ -108,7 +108,7 @@ has completed. Threads already reading finish their normal usage with the data
 before a write occurs.
 
 ##SOLUTIONS:
-*A:* 
+**A:** 
 A single queue-like data structure would be ideal for the locking mechanism,
 lock requests would be stored in the queue and be processed in order of
 appearance. An additional mutex or two would be needed to protect the locking
@@ -120,7 +120,7 @@ Condition variables can be used to monitor counts, where signals are sent every
 time a count variable returns to zero. This trades read an write operations to
 trade places (with additional work).
 
-*B:* 
+**B:** 
 SEE locking_mechanism.txt FOR MORE DETAILS ON THE INTERNALS OF THE LOCKING 
 MECHANISM
 
@@ -198,13 +198,13 @@ Solution following the Difficult path chosen.
 
 ##PROBLEM:
 There are two valid methods of lock application at this time:
-*A:*  Apply locks internally to all Offbrand classes. This simplifies the use of
+**A:**  Apply locks internally to all Offbrand classes. This simplifies the use of
    Offbrand library data structures in threaded environments, the all thread
    safety is removed from users responsibility. Depends heavily on the user to 
    apply the locking conventions to the internals of any new classes developed
    to maintain thread safety. User attempting to control thread safety 
    on Offbrand builtins will cause problems.
-*B:*  Apply locks externally to all Offbrand classes. This simplifies the build
+**B:**  Apply locks externally to all Offbrand classes. This simplifies the build
    process and programming of new classes at the expense of placing all thread
    safety libraries in the hands of the user.
 The issue is deciding which method to use, or to determine other methods that
