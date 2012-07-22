@@ -69,7 +69,9 @@ Programs wishing to take advantage of the thread synchronization capabilities of
 the Offbrand library should include "offbrand_threaded.h" header file rather
 than the usual "offbrand.h" file. Programs should also be compiled with the
 following gcc flags:
-  ###-lpthread -D OB_THREADED
+
+  `-lpthread -D OB_THREADED`
+
 -lpthread is the usual pthread compilation flag, and -D OB_THREADED defines a
 macro that compiles the threaded version of the standard library file(s).
 
