@@ -1,16 +1,15 @@
+##06-18-2012 Design Issue:
 
-06-18-2012 Design Issue:
+  #HOW TO IMPLEMENT GENERIC TYPE
 
-  HOW TO IMPLEMENT GENERIC TYPE
-
-PROBLEM:
+##PROBLEM:
 To allow for generic reference counted data structures, all OffBrand compatible
 "classes" must contain a common struct or incomplete type as the first member of
 the data object for that class (the private struct in the incomplete type
 implementation). Ideally this common element would be a statically allocated
 incomplete type, which cannot be achieved directly.
 
-PROPOSED SOLUTION(s):
+##PROPOSED SOLUTION(s):
 A: Implement this base element as a struct type only. This allows for easy
    static allocation, but sacrifices data encapsulation entirely. Trades off
    data protection for ease of implementaion and use.
@@ -37,11 +36,11 @@ D: Similar to C, but instead of an enclosing struct a typedef is used to combat
    UPDATE: Typedef the type, but do not use it in the incomplete type code,
    instead use it as the generic reference only.
 
-PROGRESS/DECISION:
+##PROGRESS/DECISION:
 Solution C chosen for initial implementation. Will complete in following days.
 (06-18-2012)
 
-Updated with new proposed solution, D. (06-19-2012)
+###Updated with new proposed solution, D. (06-19-2012)
 
 Both solutions C and D aren't great. C takes extra memory (space for a pointer
 must be allocated in addition to the actual reference data), and the D syntax
@@ -52,7 +51,7 @@ any ne (06-19-2012)
 Chose obj as generic type name. Pointers to compatible classes can be cast to
 and from a pointer to an obj instance. A version of solution D (06-19-2012)
 
-STATUS:
+##STATUS:
 Completed.
 
 --------------------------------------------------------------------------------
@@ -63,7 +62,7 @@ Completed.
   CLASS REGISTRY
 
 All compatible classes have a dealloc function predefined in created source
-files that takes the name "dealloc[CLASSNAME]". This function takes an obj *
+files that takes the name `dealloc[CLASSNAME]`. This function takes an obj *
 as an argument, so that it can be called by the reference counting mechanism. It
 might be useful to dynamically build a "class register" that keeps track of what
 types are being used in the current program, allow for dynamic class checking in
@@ -87,9 +86,9 @@ comparison implemented.
 
 --------------------------------------------------------------------------------
 
-06-29-2012 Design Issue:
+###06-29-2012 Design Issue:
 
-  LOCKING MECHANISM
+  #LOCKING MECHANISM
 
 All Offbrand classes require a locking mechanism to guarantee threadsafety. To
 ensure a uniform interface the locking mechanism will be uniform to all Offbrand
@@ -97,7 +96,7 @@ classes (and it helps to remove some of the threadsafe procedures from user
 maintenance). This mechanism should retain the object on a successful lock, and
 release it before a successful unlock.
 
-DESIGN SPECS:
+##DESIGN SPECS:
 Two different locking modes are desired: READ-ONLY and WRITE-ONLY. All methods
 that access and obj as a const qualify for the READ-ONLY, which only locks the
 data for long enough to increment an internal counter that monitors the number
@@ -108,7 +107,7 @@ lock on an obj no more threads may qualify for a READ-ONLY lock until the WRITE
 has completed. Threads already reading finish their normal usage with the data
 before a write occurs.
 
-SOLUTIONS:
+##SOLUTIONS:
 A)
 A single queue-like data structure would be ideal for the locking mechanism,
 lock requests would be stored in the queue and be processed in order of
@@ -125,7 +124,7 @@ B)
 SEE locking_mechanism.txt FOR MORE DETAILS ON THE INTERNALS OF THE LOCKING 
 MECHANISM
 
-PROGRESS
+##PROGRESS
 Read more about locking/threads in the Linux Programming Interface to determine
 what structures are available and how to best meet design specs. Perhaps look
 into select() system call to notify when lock status changes.
@@ -149,14 +148,14 @@ when a variable status changes.
   OBVector cannot be safely implemented as is with internal thread safety
   mechanisms.
 
-STATUS:
+##STATUS:
 Compiled implementation. Testing to occur.
 
 --------------------------------------------------------------------------------
 
 07-03-2012 Build Design
 
-PROBLEM: 
+#PROBLEM: 
 
 Two Offbrand libraries should exist, one with threaded support (extra lib space
 and runtime requirements) and one without. These two libraries need to be built
@@ -165,22 +164,22 @@ headers). A system needs to be put in place for easy organization of threaded
 and non-threaded libs. Most classes will just need to be compiled twice, once
 with the offbrand_threaded.h lib macro and once without the macro.
 
-SOLUTIONS:
+##SOLUTIONS:
 
 Dependent upon the solution to the Locking Application issue below.
 
-Simple:
+###Simple:
 If all locking is to be done externally, by explicit calls from the user, then
 a single library can be complied without slowing non-threaded applications. A
 slight memory overhead for all unused locking data would be required, but for
 simplicities sake this may be the best course of action.
 
-Difficult:
+###Difficult:
 If all locking is to be done internally within Offbrand classes then two
 libraries should be compiled to eliminated performance and memory overheads for
 non-threaded applications. Solution Pending....
 
-PROGRESS:
+###PROGRESS:
 Study examples of Makefiles designed to build multiple versions of the same
 library, such as one that can work on both Windows and Linux.
 
@@ -190,14 +189,14 @@ library, such as one that can work on both Windows and Linux.
   in code. This is abstracted away from normal use in the offbrand_stdlib and 
   offbrand_threadlib files.
 
-STATUS:
+###STATUS:
 Solution following the Difficult path chosen.
 
 --------------------------------------------------------------------------------
 
 07-08-2012 Lock Application
 
-PROBLEM:
+##PROBLEM:
 There are two valid methods of lock application at this time:
 A) Apply locks internally to all Offbrand classes. This simplifies the use of
    Offbrand library data structures in threaded environments, the all thread
@@ -211,12 +210,12 @@ B) Apply locks externally to all Offbrand classes. This simplifies the build
 The issue is deciding which method to use, or to determine other methods that
 have yet to be considered.
 
-PROGRESS:
+##PROGRESS:
 07-09-2012
 Method A chosen. Method A moves locking into internal methods so that they just
 work in practice. Method B requires that programs keep track of when locks are
 required and when they are not, when an unlock is needed, etc. The added 
 bookeeping is not worth the small gains in simplicity.
 
-STATUS:
+##STATUS:
 Decision made. Complete.

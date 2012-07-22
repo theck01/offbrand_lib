@@ -1,5 +1,4 @@
-
-  LOCKING MECHANISM DESIGN OUTLINE
+##LOCKING MECHANISM DESIGN OUTLINE
 
 The locking mechanism will consist of the following parts:
 
@@ -35,7 +34,7 @@ All read accessing threads are given access to the data as soon as possible,
 unless one or more threads are waiting to write. They then wait for one write
 operation to occur before being granted read access.
 
-LOCK API:
+##LOCK API:
 
 readLock(obj *) - Attempts to lock the given object so that a read operation
   may occur. Multiple readLocks can be granted at the same time. May also have
