@@ -36,17 +36,17 @@ operation to occur before being granted read access.
 
 ##LOCK API:
 
-readLock(obj *) - Attempts to lock the given object so that a read operation
+* `readLock(obj *)` - Attempts to lock the given object so that a read operation
   may occur. Multiple readLocks can be granted at the same time. May also have
   a flag that indicates whether blocking should occur, or if the call should
   return with a indication that lock failed in contention.
-readUnlock(obj *) - Unlocks the given object, decrementing the current reading
+* `readUnlock(obj *)` - Unlocks the given object, decrementing the current reading
   count and possibly signaling that a write operation may occur if no other
   threads are reading.
-writeLock(obj *) - Attempts to lock the given object so that the thread may
+* `writeLock(obj *)` - Attempts to lock the given object so that the thread may
   perform a write operation on the data. May also have a flag that indicates
   whether blocking should occur, or if the call should return with a indication
   that lock failed in contention.
-writeUnlock(obj *) - Unlocks the given object, reseting the 'writing' flag and
+* `writeUnlock(obj *)` - Unlocks the given object, reseting the 'writing' flag and
   signaling to any waiting read threads that access should be granted.
 
