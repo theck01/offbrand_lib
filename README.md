@@ -5,6 +5,13 @@ structures with hooks for thread synchronization implemented in the C
 programming language. The library includes bash scripts to assist in the
 creation and testing of classes compatible with the framework.
 
+## Requirements:
+
+The Offbrand library requires a reasonably current version of GCC and make to be
+installed on the users system. The library also utilizes the pthread library for
+threading, so the user must be running a system with pthreads installed as well.
+
+Windows is currently unsupported.
 
 ## Documentaion:
 
