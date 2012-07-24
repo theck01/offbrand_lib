@@ -63,6 +63,6 @@ uint32_t getTestReferences(OBTest *a){
 /* PRIVATE METHODS */
 
 void deallocOBTest(obj *to_dealloc){
-  to_dealloc++; /* does nothing except suppress compiler warning */
+  free((OBTest *)to_dealloc);
   return;
 }

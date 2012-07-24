@@ -1,8 +1,9 @@
 #!/bin/bash
 
-HEADER_TEMPLATE=~/OffBrand/scripts/templates/PublicHeader.h
-RESTRICTED_TEMPLATE=~/OffBrand/scripts/templates/PrivateHeader.h
-SOURCE_TEMPLATE=~/OffBrand/scripts/templates/Source.c
+HEADER_TEMPLATE=templates/PublicHeader.h
+RESTRICTED_TEMPLATE=templates/PrivateHeader.h
+SOURCE_TEMPLATE=templates/Source.c
+TEST_TEMPLATE=templates/Test.c
 
 function print_usage() {
   echo "Usage:"
@@ -16,7 +17,7 @@ function print_usage() {
   echo
   echo "[class name] should not have any file extensions"
   echo
-  echo "See README for more information on OffBrand library"
+  echo "See doc directory for more information on OffBrand library"
 }
 
 #check usage
@@ -40,7 +41,7 @@ macroClassName=$(echo $1 | tr '[a-z]' '[A-Z]') #capitalize class name
 publicHeader=$codeClassName".h"
 privateHeader=$codeClassName"_Private.h"
 sourceFile=$codeClassName".c"
-
+testFile=$codeClassName"_test.c"
 
 #substitute class name into template files and write files with proper file
 #names to the current directory
@@ -55,6 +56,10 @@ echo "$privateHeader created"
 cat $SOURCE_TEMPLATE | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
   sed "s/%MACROCLASSNAME%/$macroClassName/g" > $sourceFile
 echo "$sourceFile created"
+
+cat $TEST_TEMPLATE | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+  sed "s/%MACROCLASSNAME%/$macroClassName/g" > $testFile
+echo "$testFile created"
 
 echo ""
 echo "New class created, ready for editing"

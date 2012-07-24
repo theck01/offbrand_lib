@@ -6,7 +6,7 @@
 #ifndef %MACROCLASSNAME%_PRIVATE_H
 #define %MACROCLASSNAME%_PRIVATE_H
 
-#include "%CODECLASSNAME%.h"
+#include "../%CODECLASSNAME%.h"
 
 /* DATA */
 

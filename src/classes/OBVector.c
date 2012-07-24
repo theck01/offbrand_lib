@@ -245,6 +245,7 @@ void deallocVector(obj *to_dealloc){
   }
 
   free(instance->array);
+  free(instance);
   return;
 }
 

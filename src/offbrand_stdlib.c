@@ -31,14 +31,12 @@ obj * release(obj *instance){
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
-    (*instance)->dealloc(instance); /*class specific memory cleanup called*/
-
 #ifdef OB_THREADED
     deallocLock(&((*instance)->lock)); /* free mutex / conds in lock if
                                           threaded */
 #endif
-
-    free(*instance); /*free reference counted portion of object*/
+    free((struct obj_struct *)*instance); /* free reference counted base */ 
+    (*instance)->dealloc(instance); /*class specific memory cleanup called*/
     return NULL;
   }
 
