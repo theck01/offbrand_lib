@@ -116,20 +116,40 @@ uint8_t fitVectorToContents(OBVector *v){
 
 
 uint8_t addToVector(OBVector *v, obj *to_add){
+  return addAtVectorIndex(v, to_add, v->num_objs);
+}
+
+uint8_t addAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
+
+  uint32_t i;
 
   if(!v || !to_add){
     fprintf(stderr, "OBVector: NULL argument(s) passed to addToVector\n");
     return 1;
   }
 
-  /* resizes vector if needed, processing error if one occured */
+  /* if the index is beyond the end of the current vector, display error but
+   * attempt to add to the end */
+  if(index > v->num_objs){
+    fprintf(stderr, "OBVector: Attempting to add obj beyond valid range. "
+                    "Adding to the end instead\n");
+    index = v->num_objs;
+  }
+
   if(resizeVector(v)){
-    fprintf(stderr, "OBVector: resize failed, cannot add new obj\n");
+    fprintf(stderr, "OBVector: Could not resize vector to accommadate new "
+                    "obj\n");
     return 1;
   }
 
+  /* shift all entries at or after index by 1 */
+  for(i=v->num_objs; i>index; i--){
+    v->array[i] = v->array[i-1];
+  }
+
   retain(to_add);
-  v->array[v->num_objs++] = (obj *)to_add;
+  v->array[index] = to_add;
+  v->num_objs++;
 
   return 0;
 }

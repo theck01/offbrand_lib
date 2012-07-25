@@ -37,6 +37,10 @@ uint8_t fitVectorToContents(OBVector *v);
 /* adds obj to end of vector, returns 0 if successful, 1 if error */
 uint8_t addToVector(OBVector *v, obj *to_add);
 
+/* adds obj to the vector at specified index, returns 0 if successful, 1 if
+ * error */
+uint8_t addAtVectorIndex(OBVector *v, obj *to_add, uint32_t index);
+
 /* replace obj at index. Does nothing if index is not less than number of items
  * contained within vector. Returns 0 if object is replaced, 1 if out of range*/
 uint8_t replaceInVector(OBVector *v, obj *new_obj, const uint32_t index);

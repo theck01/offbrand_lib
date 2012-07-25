@@ -178,7 +178,7 @@ simplicities sake this may be the best course of action.
 Difficult:
 If all locking is to be done internally within Offbrand classes then two
 libraries should be compiled to eliminated performance and memory overheads for
-non-threaded applications. Solution Pending....
+non-threaded applications. 
 
 PROGRESS:
 Study examples of Makefiles designed to build multiple versions of the same
@@ -220,3 +220,37 @@ bookeeping is not worth the small gains in simplicity.
 
 STATUS:
 Decision made. Complete.
+
+--------------------------------------------------------------------------------
+
+07-23-2012 Primitives Handling
+
+PROBLEM:
+All Offbrand container classes can only store other Offbrand compatible classes.
+If a container of primitives, such as integers, is needed then entirely new
+constructs must be created.
+
+SOLUTIONS(s);
+A) Implement Offbrand class wrappers around all primitives, creating numerous
+   int and char based classes. Could create two classes, an int style class
+   constructed around a union of the various integer types (or just a 64 bit
+   integer) that could be typecast to the desired size integer. Large memory
+   overhead of 64 bits per int, plus reference counting and possibly lock data.
+B) Force new classes to be created as needed, such as a IntVector. Specialized,
+   gains in performance and memory (hopefully) vs added complexity of numerous
+   similar types and the cost of implementing all of them.
+C) Cast pointers to obj to integers and store that way. Dangerous, but allows
+   for the reuse of existing containers without the overhead of an entire class
+   wrapper around the primitives.
+
+PROGRESS:
+07-23-2012
+Gathering opinions of others.
+07-24-2012
+Tentatively decided to implement solution A, while making it clear in all
+documentation that primitive specific data structures (like B) should be created
+when performance is key. B will be implemented in an application specific
+manner.
+
+STATUS:
+Under consideration. Mulling over tentative decision.

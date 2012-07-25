@@ -12,16 +12,20 @@
 
 struct OBBigUInt_struct{
   obj base;
-  /* Additional private data added here, MUST COME AFTER THE obj */
+  uint32_t *byte_array;
+  uint64_t num_ints;
+  uint64_t capacity;
 };
 
 
 /* PRIVATE METHODS */
 
+/* constructor allocates an new OBBigUInt with specified capacity. Used for
+ * internal allocation in most public arithmetic and bitwise operations */
+OBBigUInt * createBigUIntWithCap(uint64_t capacity);
+
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */
 void deallocBigUInt(obj *to_dealloc);
-
-/*PRIVATE METHOD DECLARATIONS HERE*/
 
 #endif

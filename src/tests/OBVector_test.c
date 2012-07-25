@@ -100,6 +100,22 @@ int main(){
     exit(1);
   }
 
+  if(addAtVectorIndex(main_vec, (obj *)tmp, 4)){
+    fprintf(stderr, "OBVector_test: could add element at specified index, "
+                    "TEST FAILED\n");
+    exit(1);
+  }
+
+  if(sizeOfVector(main_vec) != 7 ||
+     getTestID((OBTest *)objAtVectorIndex(main_vec, 4)) != getTestID(tmp)){
+    fprintf(stderr, "OBVector_test: element was not added properly to vector "
+                    "at index\nTEST FAILED\n");
+    exit(1);
+  }
+
+  /* reduce reference count to 1, so only vector holds reference to obj */
+  release((obj *)tmp);
+
   if(!findObjInVector(main_vec, (obj *)singleton, &compareTests)){
     fprintf(stderr, "OBVector_test: vector did not replace element correctly, "
                     "or was not found\nTEST FAILED\n");
