@@ -116,10 +116,10 @@ uint8_t fitVectorToContents(OBVector *v){
 
 
 uint8_t addToVector(OBVector *v, obj *to_add){
-  return addAtVectorIndex(v, to_add, v->num_objs);
+  return insertAtVectorIndex(v, to_add, v->num_objs);
 }
 
-uint8_t addAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
+uint8_t insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
 
   uint32_t i;
 
@@ -244,8 +244,40 @@ uint8_t sortVector(OBVector *v, const compare_fptr compare,
 }
 
 void removeFromVectorEnd(OBVector *v){
-  /*if objects exist in the array, release last object and decrement num_objs */
-  if (v->num_objs > 0) release((obj *)v->array[--v->num_objs]);
+  return removeFromVectorIndex(v, v->num_objs-1);
+}
+
+void removeFromVectorIndex(OBVector *v, uint32_t index){
+  
+  uint32_t i;
+
+  if(!v){
+    fprintf(stderr, "OBVector: NULL argument passed to removeFromVector\n");
+    return;
+  }
+
+  /* if the index is beyond the end of the current vector, display error but
+   * attempt to add to the end */
+  if(index >= v->num_objs){
+    fprintf(stderr, "OBVector: Attempting to remove obj beyond valid range\n");
+    return;
+  }
+
+  /* if the vector is empty, do nothing */
+  if(v->num_objs < 1){
+    fprintf(stderr, "OBVector: Cannot remove element from empty array\n");
+    return;
+  }
+
+  /* release object being removed */
+  release(v->array[index]);
+  
+  for(i=index+1; i<v->num_objs; i++){
+    v->array[i-1] = v->array[i];
+  }
+
+  v->num_objs--;
+
   return;
 }
 

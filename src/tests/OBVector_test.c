@@ -100,7 +100,7 @@ int main(){
     exit(1);
   }
 
-  if(addAtVectorIndex(main_vec, (obj *)tmp, 4)){
+  if(insertAtVectorIndex(main_vec, (obj *)tmp, 4)){
     fprintf(stderr, "OBVector_test: could add element at specified index, "
                     "TEST FAILED\n");
     exit(1);
@@ -170,6 +170,20 @@ int main(){
     if(getTestReferences((OBTest *)objAtVectorIndex(main_vec, i)) != 2){
       fprintf(stderr, "OBVector_test: vector contents not retained on copy, "
                       "TEST FAILED\n");
+      exit(1);
+    }
+  }
+
+  /* get obj at index and retain it so it isnt deallocated */
+  tmp = (OBTest *)objAtVectorIndex(main_vec, 3);
+  retain((obj *)tmp);
+
+  removeFromVectorIndex(main_vec, 3);
+
+  for(i=0; i<sizeOfVector(main_vec); i++){
+    if(getTestID((OBTest *)objAtVectorIndex(main_vec,i)) == getTestID(tmp)){
+      fprintf(stderr, "OBVector_test: Item was not removed properly from vector"
+                      "index, TEST FAILED\n");
       exit(1);
     }
   }
