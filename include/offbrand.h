@@ -16,6 +16,11 @@
 
 /* OFFBRAND CONSTANTS */
 
+/* comparison constants */
+#define OB_EQUAL_TO 0
+#define OB_GREATER_THAN 1
+#define OB_LESS_THAN -1
+
 /* sorting order */
 #define OB_LEAST_TO_GREATEST -1
 #define OB_GREATEST_TO_LEAST 1
