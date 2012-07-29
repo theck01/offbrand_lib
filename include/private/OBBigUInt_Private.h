@@ -12,7 +12,7 @@
 
 struct OBBigUInt_struct{
   obj base;
-  uint32_t *byte_array;
+  uint32_t *uint_array;
   uint64_t num_ints;
   uint64_t capacity;
 };

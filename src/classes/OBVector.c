@@ -47,21 +47,9 @@ OBVector * copyVector(const OBVector *to_copy){
     return NULL;
   }
 
-  new_vec = malloc(sizeof(OBVector));
+  new_vec = createVector(to_copy->capacity);
   if(!new_vec){
-    fprintf(stderr, "OBVector: Could not allocate memory for "
-                    "copy of vector\n");
-    return NULL;
-  }
-
-  /* initialize reference counting base data */
-  initBase((obj *)new_vec, &deallocVector);
-
-  new_vec->array = malloc(sizeof(obj *)*to_copy->capacity);
-  if(!new_vec->array){
-    fprintf(stderr, "OBVector: Could not allocate internal array in new "
-                    "instance\n");
-    free(new_vec);
+    fprintf(stderr, "OBVector: Could not create vector copy\n");
     return NULL;
   }
   

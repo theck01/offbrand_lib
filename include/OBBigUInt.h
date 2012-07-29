@@ -10,6 +10,7 @@
 #define OBBIGUINT_H
 
 #include "offbrand.h"
+#include <string.h>
 
 /* Class type declaration */
 typedef struct OBBigUInt_struct OBBigUInt;
@@ -27,7 +28,7 @@ OBBigUInt * createBigUIntFromNum(uint32_t number);
 
 /* constructor allocates and initializes an instance of OBBigUInt from a number
  * represented by the null terminated character string */
-OBBigUInt * createBigUIntFromStr(char *number);
+OBBigUInt * createBigUIntFromStr(char *num_str);
 
 /* constructor allocates and initializes an instance a copy of the OBBigUInt
  * argument */
