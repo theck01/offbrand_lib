@@ -78,6 +78,12 @@ OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
   uint64_t i, sum, carry, mask_hi, maxcap;
   OBBigUInt  *largest, *smallest, *result;
   
+  if(!a || !b){
+    fprintf(stderr, "OBBigUInt: Unexpected NULL argument(s) passed to "
+                    "addBigUInts\n");
+    return NULL;
+  }
+
   if(a->num_ints > b->num_ints) maxcap = a->num_ints + 1;
   else maxcap = b->num_ints + 1;
 
@@ -93,7 +99,7 @@ OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
     smallest = a;
   }
 
-  result = createBigUIntWithCap(a->num_ints + 1);
+  result = createBigUIntWithCap(maxcap);
   if(!result){
     fprintf(stderr, "OBBigUInt: Could not create result OBBigUInt during "
                     "addition\n");
@@ -125,9 +131,14 @@ OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
 
 OBBigUInt * subtractBigUInts(OBBigUInt *minuend, OBBigUInt *subtrahend){
 
-  uint64_t i, diff, carry, mask_hi, maxcap;
   OBBigUInt  *twos_comp, *result, *fitted_result;
   
+  if(!minuend || !subtrahend){
+    fprintf(stderr, "OBBigUInt: Unexpected NULL argument(s) passed to "
+                    "subtractBigUInts\n");
+    return NULL;
+  }
+
   if(compareBigUInts((obj *)minuend, (obj *)subtrahend) != OB_GREATER_THAN){
     result = createZeroBigUInt();
     if(!result){
@@ -172,11 +183,28 @@ OBBigUInt * subtractBigUInts(OBBigUInt *minuend, OBBigUInt *subtrahend){
 
 int8_t compareBigUInt(const obj *a, const obj *b){
   
+  uint64_t i;
   OBBigUInt comp_a = (OBBigUInt *)a;  
   OBBigUInt comp_b = (OBBigUInt *)b;  
 
-  /* add specific comparison logic, following the description in the header
-   * file */
+  if(!a || !b){
+    fprintf(stderr, "OBBigUInt: Unexpected NULL argument(s) passed to "
+                    "compareBigUInts\n");
+    return NULL;
+  }
+
+  /* compare size of BigUInts first */
+  if(a->num_ints > b->num_ints) return OB_GREATER_THAN;
+  else if(a->num_ints < b->num_ints) return OB_LESS_THAN;
+  else{ /*if size is equivalent, compare each individual element */
+    for(i = a->num_ints - 1; i>=0; i++){
+      if(a->int_array[i] > b->int_array[i]) return OB_GREATER_THAN;
+      else if(a->int_array[i] < b->int_array[i]) return OB_LESS_THAN;
+    }
+  }
+
+  /* all entries in BigUInts must be equal to reach this point */
+  return OB_EQUAL_TO;
 }
 
 

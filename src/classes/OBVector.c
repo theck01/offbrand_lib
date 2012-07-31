@@ -65,6 +65,7 @@ OBVector * copyVector(const OBVector *to_copy){
   return new_vec;
 }
 
+
 uint32_t sizeOfVector(const OBVector *v){
   if(!v){
     return 0;

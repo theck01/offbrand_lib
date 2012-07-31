@@ -63,7 +63,6 @@ int readUnlock(obj *to_read_unlock){
 
   uint8_t signal_write = 0; /* booleans to signal writes and reads at end of */
   uint8_t signal_read = 0;  /* readUnlock */
-                                        
 
   if(!to_read_unlock){
     fprintf(stderr, "Offbrand Lock Lib: Unexpected NULL argument passed to "
