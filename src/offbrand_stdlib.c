@@ -24,8 +24,8 @@ uint8_t initBase(obj *instance, dealloc_fptr dealloc){
 
 obj * release(obj *instance){
 
+  /* quitely do nothing if attempting to release NULL */
   if(!instance){
-    fprintf(stderr, "release: Cannot release NULL\n");
     return NULL;
   }
 

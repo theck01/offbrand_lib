@@ -26,9 +26,9 @@ OBBigUInt * createZeroBigUInt(void);
  * integer value specified */
 OBBigUInt * createBigUIntFromNum(uint32_t number);
 
-/* constructor allocates and initializes an instance of OBBigUInt from a number
- * represented by the null terminated character string */
-OBBigUInt * createBigUIntFromStr(char *num_str);
+/* constructor allocates and initializes an instance of OBBigUInt from the
+ * array of integers, which are in little endian order */
+OBBigUInt * createBigUIntFromIntArray(uint32_t *int_str, uint64_t num_uints);
 
 /* constructor allocates and initializes an instance a copy of the OBBigUInt
  * argument */
@@ -68,7 +68,7 @@ OBigUInt * shiftBigUIntLeft(OBBigUInt *a, OBBigUInt *shift_size);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
  * OBBigUInt a binary shifted to the right by shift_size binary digits */
-OBBigUInt * shiftBigUIntLeft(OBBigUInt *a, OBBigUInt *shift_size);
+OBBigUInt * shiftBigUIntRight(OBBigUInt *a, OBBigUInt *shift_size);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
  * bitwise ANDing the two OBBigUInt arguments */

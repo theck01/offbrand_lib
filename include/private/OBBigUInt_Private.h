@@ -13,7 +13,7 @@
 struct OBBigUInt_struct{
   obj base;
   uint32_t *uint_array;
-  uint64_t num_ints;
+  uint64_t num_uints;
   uint64_t capacity;
 };
 
@@ -30,7 +30,10 @@ uint64_t sigIntsInBigUInt(OBBigUInt *a);
 
 /* generates the twos compliment version of the OBBigUInt, with total_len digits
  * if sign needs to be extended*/
-OBBigUInt * twosCompBigUInt(OBBigUInt * a, uint64_t total_len);
+OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len);
+
+/* shifts the to_shift argument uint_array by num_uints */
+OBBigUInt * multShift(OBBigUint *to_shift, uint64_t num_uints);
 
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */
