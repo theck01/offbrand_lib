@@ -32,8 +32,15 @@ uint64_t sigIntsInBigUInt(OBBigUInt *a);
  * if sign needs to be extended*/
 OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len);
 
-/* shifts the to_shift argument uint_array by num_uints */
+/* shifts the to_shift argument uint_array by num_uints to the more significant
+ * direction */
 OBBigUInt * multShift(OBBigUint *to_shift, uint64_t num_uints);
+
+/* recursively divides dividend by divisor, continually adding approximates to
+ * quotient until true result is found. The value returned by the function is 
+ * the remainder */
+OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
+                            OBBigUInt *quotient, uint8_t return_quotient);
 
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */

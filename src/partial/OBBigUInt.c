@@ -304,6 +304,12 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
 }
 
 
+OBBigUInt * divideBigUInts(OBBigUInts *dividend, OBBigUInt *divisor){
+
+
+}
+
+
 int8_t compareBigUInt(const obj *a, const obj *b){
   
   uint64_t i;
@@ -426,6 +432,39 @@ OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len){
   return twos_comp;
 }
 
+
+OBBigUInt * multShift(OBBigUInt *to_shift, uint64_t num_uints){
+
+  uint64_t i;
+  OBBigUInt *result = createBigUIntWithCap(to_shift->num_uints + num_uints);
+  if(!result){
+    fprintf(stderr, "OBBigUInt: Could not create the result of the "
+                    "multShift\n");
+    return NULL;
+  }
+
+  for(i=0; i<to_shift->num_uints; i++){
+    result->uint_array[i+num_ints] = to_shift->uint_array[i];
+  }
+
+  return result;
+}
+
+OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
+                            OBBigUInt *quotient, uint8_t return_quotient){
+  
+  OBBigUInt *result;
+  if(compareBigUInts(dividend, divisor) == OB_LESS_THAN){
+    /* if returning quotient seed result with 0, else return current dividend */
+    if(return_quotient){
+      result = createZeroBigUInt();
+    }
+    else{
+      result = copyBigUInt(dividend);
+    }
+    return result;
+  }
+}
 
 void deallocBigUInt(obj *to_dealloc){
 
