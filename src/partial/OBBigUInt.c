@@ -13,7 +13,7 @@ OBBigUInt * createZeroBigUInt(void){
 
   OBBigUInt *new_instance = createBigUIntWithCap(1);
   if(!new_instance){
-    fprintf(stderr, "OBBigUInt: Could not create new_instance\n");
+    fprintf(stderr, "OBBigUInt: Could not create new 0 BigUInt\n");
     return NULL;
   }
   
@@ -28,7 +28,7 @@ OBBigUInt * createBigUIntFromNum(uint32_t number){
 
   OBBigUInt *new_instance = createBigUIntWithCap(1);
   if(!new_instance){
-    fprintf(stderr, "OBBigUInt: Could not create new_instance\n");
+    fprintf(stderr, "OBBigUInt: Could not create new_instance from number\n");
     return NULL;
   }
 
@@ -45,7 +45,7 @@ OBBigUInt * createBigUIntFromIntArray(uint32_t *uint_array, uint64_t num_uints){
   OBBigUInt *new_instance;
   
   if(!int_str, || num_uints == 0){
-    fprintf(stderr, "OBBigUInt: Could not create BigUInt from NULL "
+    fprintf(stderr, "OBBigUInt: Could not create BigUInt from empty "
                     "uint_array\n");
     return NULL;
   }
@@ -53,7 +53,7 @@ OBBigUInt * createBigUIntFromIntArray(uint32_t *uint_array, uint64_t num_uints){
   new_instance = createBigUIntWithCap(num_uints);
   if(!new_intstance){
     fprintf(stderr, "OBBigUInt: Could not create new instance in "
-                    "createBigUIntFromIntStr\n");
+                    "createBigUIntFromIntArray\n");
     return NULL;
   }
 
@@ -156,7 +156,8 @@ OBBigUInt * subtractBigUInts(OBBigUInt *minuend, OBBigUInt *subtrahend){
   if(compareBigUInts((obj *)minuend, (obj *)subtrahend) != OB_GREATER_THAN){
     result = createZeroBigUInt();
     if(!result){
-      fprintf(stderr, "OBBigUInt: Could not create zero OBBigUInt as result\n");
+      fprintf(stderr, "OBBigUInt: Could not create zero OBBigUInt as result "
+                      "in subtractBigUInts\n");
     }
     return result;
   }
@@ -306,9 +307,46 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
 
 OBBigUInt * divideBigUInts(OBBigUInts *dividend, OBBigUInt *divisor){
 
+  OBBigUInt *quotient, *seed;
+  
+  if(!dividend || !divisor){
+    fprintf(stderr, "OBBigUInt: Unexpected NULL arguments passed to "
+                    "divideBigUInts\n");
+    return NULL;
+  }
 
+  seed = createZeroBigUInt();
+  if(!seed){
+    fprintf(stderr, "OBBigUInt: Could not create 0 seed for quotient in "
+                    "divideBigUints\n");
+    return NULL;
+  }
+
+  if(!(quotient = recursiveDivide(dividend, divisor, seed))){
+    fprintf(stderr, "OBBigUInt: divideBigUInt failed\n");
+  }
+
+  release((obj *)seed);
+  return quotient;
 }
 
+
+OBBigUInt * modBigUInts(OBBigUInts *dividend, OBBigUInt *divisor){
+
+  OBBigUInt *remainder;
+  
+  if(!dividend || !divisor){
+    fprintf(stderr, "OBBigUInt: Unexpected NULL arguments passed to "
+                    "modBigUInts\n");
+    return NULL;
+  }
+
+  if(!(remainder = recursiveDivide(dividend, divisor, NULL))){
+    fprintf(stderr, "OBBigUInt: modBigUInt failed\n");
+  }
+
+  return remainder;
+}
 
 int8_t compareBigUInt(const obj *a, const obj *b){
   
@@ -319,7 +357,7 @@ int8_t compareBigUInt(const obj *a, const obj *b){
   if(!a || !b){
     fprintf(stderr, "OBBigUInt: Unexpected NULL argument(s) passed to "
                     "compareBigUInts\n");
-    return NULL;
+    return OB_COMPARE_ERR;
   }
 
   /* compare size of BigUInts first */
@@ -451,19 +489,93 @@ OBBigUInt * multShift(OBBigUInt *to_shift, uint64_t num_uints){
 }
 
 OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
-                            OBBigUInt *quotient, uint8_t return_quotient){
+                            OBBigUInt *quotient){
   
-  OBBigUInt *result;
-  if(compareBigUInts(dividend, divisor) == OB_LESS_THAN){
-    /* if returning quotient seed result with 0, else return current dividend */
-    if(return_quotient){
-      result = createZeroBigUInt();
+  uint64_t approx_quotient, approx_dividend, approx_divisor, approx_capacity;
+  OBBigUInt *result, *approximate, *check_num, *new_divisor;
+  
+  result = approximate = check_num = new_divisor = NULL;
+
+  /*base case, dividend is smaller than divisor, result is 0 */
+  if(compareBigUInts((obj *)dividend, (obj *)divisor) == OB_LESS_THAN){
+    if(quotient){
+      result = copyBigUInt(quotient);
     }
     else{
       result = copyBigUInt(dividend);
     }
     return result;
   }
+
+  /* approximate dividend with first two significant digits, and divisor with
+   * first significant digit */
+  approx_dividend = (uint64_t)dividend->uint_array[dividend->num_uints-1];
+  approx_dividend <<= 32;
+  approx_dividend += dividend->uint_array[dividend->num_uints-2];
+  approx_divisor = (uint64_t)divisor->uint_array[divisor->num_uints-1];
+  
+  /* compute the approximate solution */
+  approx_quotient = approx_dividend/approx_divisor - 1;
+  if(approx_quotient == 0) approx_quotient = 1; /*fix case when approximations 
+                                                  nearly equally or do divide*/
+  approx_capacity = dividend->num_uints - divisor->num_uints;
+
+  do{
+    /* release previous bad approximates, or NULL if first iteration */
+    release((obj *)approximate);
+    release((obj *)check_num);
+
+    /* create approximate with one extra space for large approx_quotient */
+    approximate = createBigUIntWithCap(approx_capacity + 1);
+    if(!approximate){
+      fprintf(stderr, "OBBigUInt: Could not create approximate solution "
+                      "in recursiveDivide\n");
+      return NULL;
+    }
+    approximate->uint_array[approx_capacity - 1] = (uint32_t)approx_quotient;
+    approximate->uint_array[approx_capacity] = (uint32_t)(approx_quotient>>32);
+    approx_quotient--; /* lower approx quotient in case approximate division is
+                          too great */
+    approximate->num_uints = sigIntsInBigUInt(approximate);
+
+    check_num = multiplyBigUInts(divisor, approximate);
+    if(!check_num){
+      fprintf(stderr, "OBBigUInt: Could not create check against dividend "
+                      "in recursiveDivide\n");
+      release((obj *)approximate);
+      return NULL;
+    }
+  }while(compareBigUInts((obj *)check_num, (obj *)dividend) != OB_GREATER_THAN);
+
+  /* if returning quotient then add approximate to current quotient, else dont
+   * bother for modulus operation*/
+  if(quotient){
+    result = addBigUInts(quotient, approximate);
+    if(!result){
+      fprintf(stderr, "OBBigUInt: Could not create newer quotient "
+                      "approximation in recursiveDivide\n");
+      release((obj *)approximate);
+      release((obj *)check_num);
+      return NULL;
+    }
+  }
+  
+  release((obj *)approximate);
+  
+  new_dividend = subtractBigUInts(dividend, check_num);
+  release((obj *)check_num);
+  if(!new_dividend){
+    fprintf(stderr, "OBBigUInt: Could not create newest dividend in "
+                    "recursiveDivide\n");
+    release(result);
+    return NULL;
+  }
+
+  approximate = result;
+  result = recursiveDivide(new_dividend, divisor, approximate);
+  release((obj *)approximate);
+  release((obj *)new_dividend);
+  return result;
 }
 
 void deallocBigUInt(obj *to_dealloc){

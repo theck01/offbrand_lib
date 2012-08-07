@@ -38,9 +38,10 @@ OBBigUInt * multShift(OBBigUint *to_shift, uint64_t num_uints);
 
 /* recursively divides dividend by divisor, continually adding approximates to
  * quotient until true result is found. The value returned by the function is 
- * the remainder */
+ * the either the quotient or the remainder, depending on if the intial call was
+ * made with quotient equaling a valid value or NULL */
 OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
-                            OBBigUInt *quotient, uint8_t return_quotient);
+                            OBBigUInt *quotient);
 
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */

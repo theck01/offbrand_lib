@@ -12,16 +12,18 @@ The algorithm:
    state of flag. If so continue to next step.
 2) Combine the two most significant uint32_t's of the dividend into one uint64_t
    Divide this uint64_t with the single most significant uint32_t to get a
-   a resulting uint64_t, refered to as the 'prefix'. Subtract 1 from the prefix
-   to account for potential affects of less significant digits in the divisor.
+   a resulting uint64_t, refered to as the ' approx_quotient'. Subtract 1 from
+   the approx_quotient to account for potential affects of less significant
+   digits in the divisor.
 3) Create a new OBBigUInt, refered to as the 'approximate'. The least
-   significant 32 bits of the prefix occupy the uint32_t found at array index
-   = dividend->num_uints - divisor->num_uints. The most significant bits of the
-   prefix occupy the next highest index. All others are zero.
+   significant 32 bits of the  approx_quotient occupy the uint32_t found at
+   array index = dividend->num_uints - divisor->num_uints - 1. The most
+   significant bits of the approx_quotient occupy the next highest index. All
+   others are zero.
 4) Multiply the approximate by the divisor to get a new OBBigUInt, refered to as
    the 'check_num'. If the check_num is greater than the dividend return to step
-   3, after subtracting an additional 1 from the prefix. If less than or equal
-   to proceed to the next step.
+   3, after subtracting an additional 1 from the approx_quotient. If less than
+   or equal to proceed to the next step.
 5) Add the approximate to the quotient. Release approximate.
 6) Subtract check_num from the dividend to create a new OBBigUInt, refered to as
    the 'new_dividend'. Release old dividend and then return the recursive call
