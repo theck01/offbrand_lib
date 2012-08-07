@@ -32,8 +32,10 @@ ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
 # START BUILD
 all: $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
+	@echo "Running tests on data structures after successful compilation..."
+	@run-parts $(BIN_TEST)
 
-# Hand builds
+# Hand builds (STD_LIBS)
 $(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
 	$(CC) $(OFLAGS) $< -o $@
 $(BIN)/offbrand_t_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
