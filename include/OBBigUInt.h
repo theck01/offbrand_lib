@@ -63,12 +63,22 @@ OBBigUInt * modBigUInts(OBBigUInt *dividend, OBBigUInt *divisor);
 /* BITWISE OPERATIONS */
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
- * OBBigUInt a binary shifted to the left by shift_size binary digits */
-OBigUInt * shiftBigUIntLeft(OBBigUInt *a, OBBigUInt *shift_size);
+ * OBBigUInt a binary shifted to the left by 32_bit_shifts number of 
+ * uint32_t digits, and bit_shift number of individual bits. 32_bit_shifts
+ * can be any number, but the actual bit shift will be bit_shift%32. Add
+ * additional values to 32_bit_shifts for single bit shifts greater than
+ * 32*/
+OBigUInt * shiftBigUIntLeft(OBBigUInt *a, uint64_t 32_bit_shifts,
+                            uint8_t bit_shift);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
- * OBBigUInt a binary shifted to the right by shift_size binary digits */
-OBBigUInt * shiftBigUIntRight(OBBigUInt *a, OBBigUInt *shift_size);
+ * OBBigUInt a binary shift to the right by 32_bit_shifts number of 
+ * uint32_t digits, and bit_shift number of individual bits. 32_bit_shifts
+ * can be any number, but the actual bit shift will be bit_shift%32. Add
+ * additional values to 32_bit_shifts for single bit shifts greater than
+ * 32*/
+OBBigUInt * shiftBigUIntRight(OBBigUInt *a, uint64_t 32_bit_shifts,
+                              uint8_t bit_shift);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
  * bitwise ANDing the two OBBigUInt arguments */

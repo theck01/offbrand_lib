@@ -336,7 +336,7 @@ OBBigUInt * modBigUInts(OBBigUInts *dividend, OBBigUInt *divisor){
   OBBigUInt *remainder;
   
   if(!dividend || !divisor){
-    fprintf(stderr, "OBBigUInt: Unexpected NULL arguments passed to "
+    fprintf(stderr, "OBBigUInt: Unexpected NULL argument(s) passed to "
                     "modBigUInts\n");
     return NULL;
   }
@@ -347,6 +347,41 @@ OBBigUInt * modBigUInts(OBBigUInts *dividend, OBBigUInt *divisor){
 
   return remainder;
 }
+
+
+OBBigUInt * shiftBigUInt(OBBigUInt *a, int64_t 32_bit_shifts,
+                         uint8_t bit_shift, int8_t direction){
+
+  uint64_t capacity, i;
+  OBBigUInt *result;
+
+  if(!a){
+    fprintf(stderr, "OBBigUInt: Unexpected NULL argument passed to "
+                    "shiftBigUIntLeft\n");
+    return NULL;
+  }
+
+  capacity = a->num_uints + direction * 32_bit_shifts;
+  if(capacity < a->num_uints && direction == 1){
+    fprintf(stderr, "OBBigUInt: shiftBigUIntLeft exceeds past max capacity,  "
+                    "attempting to return 0\n");
+    return createZeroBigUInt();
+  }
+
+  /* allocate one extra space for capacity so that bit_shift can be taken into
+   * account */
+  result = createBigUIntWithCap(capacity+1);
+  if(!result){
+    fprintf(stderr, "OBBigUInt: Could not create result BigUInt in "
+                    "shiftBigUIntLeft\n");
+    return NULL;
+  }
+
+  for(i=a->num_uints; i>=0; i++){
+    destination = i + direction 
+
+  
+
 
 int8_t compareBigUInt(const obj *a, const obj *b){
   
