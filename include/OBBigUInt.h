@@ -28,36 +28,38 @@ OBBigUInt * createBigUIntFromNum(uint32_t number);
 
 /* constructor allocates and initializes an instance of OBBigUInt from the
  * array of integers, which are in little endian order */
-OBBigUInt * createBigUIntFromIntArray(uint32_t *int_str, uint64_t num_uints);
+OBBigUInt * createBigUIntFromIntArray(const uint32_t *int_str,
+                                      uint64_t num_uints);
 
 /* constructor allocates and initializes an instance a copy of the OBBigUInt
  * argument */
-OBBigUInt * copyBigUInt(OBBigUInt *to_copy);
+OBBigUInt * copyBigUInt(const OBBigUInt *to_copy);
 
 
 /* ARITHMETIC OPERATIONS */
 
 /* allocates and initializes an instance of OBBigUInt that is the
  * sum of the two OBBigUInt arguments */
-OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b);
+OBBigUInt * addBigUInts(const OBBigUInt *a, const OBBigUInt *b);
 
 /* allocates and initializes an instance of OBBigUInt that is the
  * difference of the OBBigUInt minuend and subtrahend. If the result is negative
  * then return an OBBigUInt representing 0 */
-OBBigUInt * subtractBigUInts(OBBigUInt *minuend, OBBigUInt *subtrahend);
+OBBigUInt * subtractBigUInts(const OBBigUInt *minuend,
+                             const OBBigUInt *subtrahend);
 
 /* allocates and initializes an instance of OBBigUInt that is the
  * product of the OBBigUInt arguments */
-OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b);
+OBBigUInt * multiplyBigUInts(const OBBigUInt *a, const OBBigUInt *b);
 
 /* allocates and initializes an instance of OBBigUInt that is the
  * quotient of the OBBigUInt dividend divided by divisor. Performs integer
  * division, all results are rounded down to the next lowest integer */
-OBBigUInt * divideBigUInts(OBBigUInt *dividend, OBBigUInt *divisor);
+OBBigUInt * divideBigUInts(const OBBigUInt *dividend, const OBBigUInt *divisor);
 
 /* allocates and initializes an instance of OBBigUInt that is the
  * remainter of the OBBigUInt dividend divided by divisor. */
-OBBigUInt * modBigUInts(OBBigUInt *dividend, OBBigUInt *divisor);
+OBBigUInt * modBigUInts(const OBBigUInt *dividend, const OBBigUInt *divisor);
 
 
 /* BITWISE OPERATIONS */
@@ -68,7 +70,7 @@ OBBigUInt * modBigUInts(OBBigUInt *dividend, OBBigUInt *divisor);
  * can be any number, but the actual bit shift will be bit_shift%32. Add
  * additional values to 32_bit_shifts for single bit shifts greater than
  * 32*/
-OBigUInt * shiftBigUIntLeft(OBBigUInt *a, uint64_t 32_bit_shifts,
+OBigUInt * shiftBigUIntLeft(const OBBigUInt *a, uint64_t 32_bit_shifts,
                             uint8_t bit_shift);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
@@ -77,24 +79,24 @@ OBigUInt * shiftBigUIntLeft(OBBigUInt *a, uint64_t 32_bit_shifts,
  * can be any number, but the actual bit shift will be bit_shift%32. Add
  * additional values to 32_bit_shifts for single bit shifts greater than
  * 32*/
-OBBigUInt * shiftBigUIntRight(OBBigUInt *a, uint64_t 32_bit_shifts,
+OBBigUInt * shiftBigUIntRight(const OBBigUInt *a, uint64_t 32_bit_shifts,
                               uint8_t bit_shift);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
  * bitwise ANDing the two OBBigUInt arguments */
-OBBigUInt * andBigUInts(OBBigUInt *a, OBBigUInt *b);
+OBBigUInt * andBigUInts(const OBBigUInt *a, const OBBigUInt *b);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
  * bitwise ORing the two OBBigUInt arguments */
-OBBigUInt * orBigUInts(OBBigUInt *a, OBBigUInt *b);
+OBBigUInt * orBigUInts(const OBBigUInt *a, const OBBigUInt *b);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
  * bitwise XORing the two OBBigUInt arguments */
-OBBigUInt * xorBigUInts(OBBigUInt *a, OBBigUInt *b);
+OBBigUInt * xorBigUInts(const OBBigUInt *a, const OBBigUInt *b);
 
 /* allocates and initializes an instance of OBBigUInt that is the result of
  * bitwise NOT of a */
-OBBigUInt * notBigUInts(OBBigUInt *a);
+OBBigUInt * notBigUInts(const OBBigUInt *a);
 
 
 /* MISC OPERATIONS */
