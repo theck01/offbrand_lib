@@ -103,7 +103,7 @@ OBBigUInt * notBigUInts(const OBBigUInt *a);
 
 /* compare two instances of the OBBigUInt, return 1 if a > b, 0 if a == b, and 
  * -1 if a < b */
-int8_t compareBigUInt(const obj *a, const obj *b);
+int8_t compareBigUInts(const obj *a, const obj *b);
 
 #endif
 

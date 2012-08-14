@@ -567,7 +567,7 @@ OBBigUInt * notBigUInt(const OBBigUInt *a){
   return result;
 }
 
-int8_t compareBigUInt(const obj *a, const obj *b){
+int8_t compareBigUInts(const obj *a, const obj *b){
   
   uint64_t i;
   OBBigUInt comp_a = (OBBigUInt *)a;  
