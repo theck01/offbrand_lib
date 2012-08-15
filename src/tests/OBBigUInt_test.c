@@ -13,7 +13,7 @@ int main (){
   OBBigUInt *xor_result, *not_result;
 
   uint32_t num1[3] = {1234567890, 987654321, 2910};
-  uint32_t num2[3] = {2143658709, 5162738490, 982647};
+  uint32_t num2[3] = {2143658709, 4162738490, 982647};
 
   two = createBigUIntFromNum(2);
   zero = createBigUIntFromNum(0);
@@ -31,19 +31,19 @@ int main (){
     exit(1);
   }
 
-  if(compareBigUInts(a, b) != OB_LESS_THAN){
+  if(compareBigUInts((obj *)a, (obj *)b) != OB_LESS_THAN){
     fprintf(stderr, "OBBigUInt_test: Less than comparision failed, "
                     "TEST FAILED\n");
     exit(1);
   }
 
-  if(compareBigUInts(b, c) != OB_GREATER_THAN){
+  if(compareBigUInts((obj *)b, (obj *)c) != OB_GREATER_THAN){
     fprintf(stderr, "OBBigUInt_test: Greater than comparision failed, "
                     "TEST FAILED\n");
     exit(1);
   }
 
-  if(compareBigUInts(a,c) != OB_EQUAL_TO){
+  if(compareBigUInts((obj *)a,(obj *)c) != OB_EQUAL_TO){
     fprintf(stderr, "OBBigUInt_test: Equal to comparision failed, "
                     "TEST FAILED\n");
     exit(1);
@@ -64,7 +64,12 @@ int main (){
     exit(1);
   }
 
-  if(compareBigUInts(b,sub_result) != OB_EQUAL_TO){
+  if(compareBigUInts((obj *)b, (obj *)sub_result) != OB_EQUAL_TO){
+    printf("\nOriginal b value:\n");
+    printBigUInt(b);
+    printf("\nSub result:\n");
+    printBigUInt(sub_result);
+    printf("\n");
     fprintf(stderr, "OBBigUInt_test: addition and subtraction did not form "
                     "inverse operations\nTEST FAILED\n");
     exit(1);
@@ -82,7 +87,7 @@ int main (){
     exit(1);
   }
 
-  if(compareBigUInts(a, div_result)){
+  if(compareBigUInts((obj *)a, (obj *)div_result)){
     fprintf(stderr, "OBBigUInt_test: Divided and multiply are not inverse "
                     "operations, TEST FAILED\n");
     exit(1);
@@ -101,7 +106,7 @@ int main (){
     exit(1);
   }
 
-  if(compareBigUInts(a, mod_result) != OB_EQUAL_TO){
+  if(compareBigUInts((obj *)a, (obj *)mod_result) != OB_EQUAL_TO){
     fprintf(stderr, "OBBigUInt_test: Mod operation did not return expected "
                     "value, TEST FAILED\n");
     exit(1);

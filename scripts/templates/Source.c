@@ -26,8 +26,8 @@
 /* function can be deleted if unneeded */
 int8_t compare%CODECLASSNAME%(const obj *a, const obj *b){
   
-  %CODECLASSNAME% comp_a = (%CODECLASSNAME% *)a;  
-  %CODECLASSNAME% comp_b = (%CODECLASSNAME% *)b;  
+  %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
+  %CODECLASSNAME% *comp_b = (%CODECLASSNAME% *)b;  
 
   /* add specific comparison logic, following the description in the header
    * file */

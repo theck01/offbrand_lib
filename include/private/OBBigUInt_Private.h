@@ -26,17 +26,17 @@ OBBigUInt * createBigUIntWithCap(uint64_t capacity);
 
 /* determines the number of significant ints in OBBigUInt that will matter in 
  * arithmetic operations */
-uint64_t sigIntsInBigUInt(const OBBigUInt *a);
+uint64_t sigIntsInBigUInt(OBBigUInt *a);
 
 /* generates the twos compliment version of the OBBigUInt, with total_len digits
  * if sign needs to be extended*/
-OBBigUInt * twosCompBigUInt(const OBBigUInt *a, uint64_t total_len);
+OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len);
 
 /* recursively divides dividend by divisor, continually adding approximates to
  * quotient until true result is found. The value returned by the function is 
  * the either the quotient or the remainder, depending on if the intial call was
  * made with quotient equaling a valid value or NULL */
-OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
+OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
                             OBBigUInt *quotient);
 
 /* deallocator, frees instance of class back to memory. Should not be called

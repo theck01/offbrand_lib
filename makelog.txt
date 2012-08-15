@@ -1,0 +1,17 @@
+src/classes/OBBigUInt.c:631:10: error: conflicting types for 'sigIntsInBigUInt'
+In file included from src/classes/OBBigUInt.c:3:0:
+src/classes/../../include/private/OBBigUInt_Private.h:29:10: note: previous declaration of 'sigIntsInBigUInt' was here
+src/classes/OBBigUInt.c:645:13: error: conflicting types for 'twosCompBigUInt'
+In file included from src/classes/OBBigUInt.c:3:0:
+src/classes/../../include/private/OBBigUInt_Private.h:33:13: note: previous declaration of 'twosCompBigUInt' was here
+src/classes/OBBigUInt.c:690:13: error: conflicting types for 'recursiveDivide'
+In file included from src/classes/OBBigUInt.c:3:0:
+src/classes/../../include/private/OBBigUInt_Private.h:39:13: note: previous declaration of 'recursiveDivide' was here
+src/classes/OBBigUInt.c: In function 'recursiveDivide':
+src/classes/OBBigUInt.c:767:3: error: 'new_dividend' undeclared (first use in this function)
+src/classes/OBBigUInt.c:767:3: note: each undeclared identifier is reported only once for each function it appears in
+src/classes/OBBigUInt.c:772:5: warning: passing argument 1 of 'release' from incompatible pointer type [enabled by default]
+In file included from src/classes/../../include/OBBigUInt.h:12:0,
+                 from src/classes/OBBigUInt.c:2:
+src/classes/../../include/offbrand.h:53:7: note: expected 'struct obj_struct **' but argument is of type 'struct OBBigUInt *'
+make: *** [bin/classes/OBBigUInt.o] Error 1

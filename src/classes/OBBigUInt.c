@@ -2,8 +2,8 @@
 #include "../../include/OBBigUInt.h"
 #include "../../include/private/OBBigUInt_Private.h"
 
-#define OBBIGUINT_MEM_USAGE_RATIO 0.5 /* num_int to capacity ratio before
-                                         refit OBBigUInt *//
+#define MEM_USAGE_RATIO 0.5 /* num_int to capacity ratio before
+                                         refit OBBigUInt */
 
 /* PUBLIC METHODS */
 
@@ -39,20 +39,20 @@ OBBigUInt * createBigUIntFromNum(uint32_t number){
 }
 
 
-OBBigUInt * createBigUIntFromIntArray(const uint32_t *uint_array
+OBBigUInt * createBigUIntFromIntArray(uint32_t *uint_array,
                                       uint64_t num_uints){
 
   uint64_t i;
   OBBigUInt *new_instance;
   
-  if(!int_str, || num_uints == 0){
+  if(!uint_array || num_uints == 0){
     fprintf(stderr, "OBBigUInt: Could not create BigUInt from empty "
                     "uint_array\n");
     return NULL;
   }
 
   new_instance = createBigUIntWithCap(num_uints);
-  if(!new_intstance){
+  if(!new_instance){
     fprintf(stderr, "OBBigUInt: Could not create new instance in "
                     "createBigUIntFromIntArray\n");
     return NULL;
@@ -69,7 +69,7 @@ OBBigUInt * createBigUIntFromIntArray(const uint32_t *uint_array
 }
 
 
-OBBigUInt * copyBigUInt(const OBBigUInt *to_copy){
+OBBigUInt * copyBigUInt(OBBigUInt *to_copy){
 
   uint64_t i;
 
@@ -88,9 +88,9 @@ OBBigUInt * copyBigUInt(const OBBigUInt *to_copy){
   return new_instance;
 }
 
-OBBigUInt * addBigUInts(const OBBigUInt *a, const OBBigUInt *b){
+OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
 
-  uint64_t i, sum, carry, mask_hi, maxcap;
+  uint64_t i, sum, carry, maxcap;
   OBBigUInt  *largest, *smallest, *result;
   
   if(!a || !b){
@@ -144,8 +144,8 @@ OBBigUInt * addBigUInts(const OBBigUInt *a, const OBBigUInt *b){
 }
   
 
-OBBigUInt * subtractBigUInts(const OBBigUInt *minuend,
-                             const OBBigUInt *subtrahend){
+OBBigUInt * subtractBigUInts(OBBigUInt *minuend,
+                             OBBigUInt *subtrahend){
 
   OBBigUInt  *twos_comp, *result, *fitted_result;
   
@@ -172,7 +172,7 @@ OBBigUInt * subtractBigUInts(const OBBigUInt *minuend,
   }
 
   result = addBigUInts(minuend, twos_comp);
-  release(twos_comp); /* destroy now unneeded twos_comp */
+  release((obj *)twos_comp); /* destroy now unneeded twos_comp */
   if(!result){
     fprintf(stderr, "OBBigUInt: Could not get result from twos compliment "
                     "addition (subtraction)\n");
@@ -186,7 +186,7 @@ OBBigUInt * subtractBigUInts(const OBBigUInt *minuend,
 
   /* if subtraction results in a large amount of unused space, refit with a 
    * copy operation */
-  if(((double)result->num_uints)/result->capacity < OBBIGUINT_MEM_USAGE_RATIO){
+  if(((double)result->num_uints)/result->capacity < MEM_USAGE_RATIO){
     fitted_result = copyBigUInt(result);
     release((obj *)result); /* destroy original with wasted space */
   }
@@ -200,12 +200,12 @@ OBBigUInt * subtractBigUInts(const OBBigUInt *minuend,
 /* Performs Multiplication using the Karatsuba Multiplication algorithm. This
  * algorithm reduces the complexity of the multiplication from O(n^2) to
  * O(3n^log(3)) */
-OBBigUInt * multiplyBigUInts(const OBBigUInt *a, const OBBigUInt *b){
+OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
 
   uint64_t mult_result, m;
 
   /* OBBigUInts resulting from partial multiplcations */
-  OBBigUInt *x, *shift_x, *y, *shift_y, *z, tmp;
+  OBBigUInt *x, *shift_x, *y, *shift_y, *z, *tmp;
 
   /* OBBigUInts equalling halves of a and b */
   OBBigUInt *a1, *a0, *b1, *b0;
@@ -214,7 +214,7 @@ OBBigUInt * multiplyBigUInts(const OBBigUInt *a, const OBBigUInt *b){
   OBBigUInt *result;
 
   /* init pointers */
-  u = v = x = y = z = a1 = b1 = a0 = b0 = result = NULL;
+  tmp = shift_x = shift_y = x = y = z = a1 = b1 = a0 = b0 = result = NULL;
 
   if(!a || !b){
     fprintf(stderr, "OBBigUInt: Cannot multiply NULL argument(s)\n");
@@ -225,7 +225,8 @@ OBBigUInt * multiplyBigUInts(const OBBigUInt *a, const OBBigUInt *b){
   if(a->num_uints <= 1 && b->num_uints <= 1){
     result = createBigUIntWithCap(2);
     if(!result){
-      goto MULT_ERR;  
+      fprintf(stderr, "OBBigUInt: Could not create result\n");
+      return NULL;
     }
     mult_result = ((uint64_t)a->uint_array[0])*((uint64_t)b->uint_array[0]);
     result->uint_array[0] = (uint32_t)mult_result;
@@ -266,9 +267,9 @@ OBBigUInt * multiplyBigUInts(const OBBigUInt *a, const OBBigUInt *b){
    * possible */ 
 
   /* get the y = (a0 + a1)(b0 + b1) part */
-  x = sumBigUInts(a1,a0);
-  z = sumBigUints(b1,b0);
-  y = multiplyBigUInts(u,w);
+  x = addBigUInts(a1,a0);
+  z = addBigUInts(b1,b0);
+  y = multiplyBigUInts(x,z);
   release((obj *)x);
   release((obj *)z);
 
@@ -281,7 +282,7 @@ OBBigUInt * multiplyBigUInts(const OBBigUInt *a, const OBBigUInt *b){
   release((obj *)b0);
 
   /* refine y part to y = (a0 + a1)(b0 + b1) - a1*b1 - a0*b0 */
-  tmp = subtractBigUints(y,x);
+  tmp = subtractBigUInts(y,x);
   release((obj *)y);
   y = subtractBigUInts(tmp,z);
   release((obj *)tmp);
@@ -291,10 +292,10 @@ OBBigUInt * multiplyBigUInts(const OBBigUInt *a, const OBBigUInt *b){
   release((obj *)x);
   shift_y = shiftBigUIntLeft(y, m, 0);
   release((obj *)y);
-  tmp = sumBigUInts(shift_x, shift_y);
+  tmp = addBigUInts(shift_x, shift_y);
   release((obj *)shift_x);
   release((obj *)shift_y);
-  result = sumBigUInts(tmp, z);
+  result = addBigUInts(tmp, z);
   release((obj *)tmp);
   release((obj *)z);
 
@@ -307,7 +308,7 @@ OBBigUInt * multiplyBigUInts(const OBBigUInt *a, const OBBigUInt *b){
 }
 
 
-OBBigUInt * divideBigUInts(const OBBigUInt *dividend, const OBBigUInt *divisor){
+OBBigUInt * divideBigUInts(OBBigUInt *dividend, OBBigUInt *divisor){
 
   OBBigUInt *quotient, *seed;
   
@@ -320,7 +321,7 @@ OBBigUInt * divideBigUInts(const OBBigUInt *dividend, const OBBigUInt *divisor){
   seed = createZeroBigUInt();
   if(!seed){
     fprintf(stderr, "OBBigUInt: Could not create 0 seed for quotient in "
-                    "divideBigUints\n");
+                    "divideBigUInts\n");
     return NULL;
   }
 
@@ -333,7 +334,7 @@ OBBigUInt * divideBigUInts(const OBBigUInt *dividend, const OBBigUInt *divisor){
 }
 
 
-OBBigUInt * modBigUInts(const OBBigUInts *dividend, const OBBigUInt *divisor){
+OBBigUInt * modBigUInts(OBBigUInt *dividend, OBBigUInt *divisor){
 
   OBBigUInt *remainder;
   
@@ -351,7 +352,7 @@ OBBigUInt * modBigUInts(const OBBigUInts *dividend, const OBBigUInt *divisor){
 }
 
 
-OBBigUInt * shiftBigUIntLeft(const OBBigUInt *a, uint64_t 32_bit_shifts,
+OBBigUInt * shiftBigUIntLeft(OBBigUInt *a, uint64_t uint32_shifts,
                              uint8_t bit_shift){
 
   uint64_t capacity, i;
@@ -363,12 +364,12 @@ OBBigUInt * shiftBigUIntLeft(const OBBigUInt *a, uint64_t 32_bit_shifts,
     return NULL;
   }
 
-  /* force bit_shift to be a value from 0-31, add extra to 32_bit_shifts */
-  32_bit_shifts += bit_shift/32;
+  /* force bit_shift to be a value from 0-31, add extra to uint32_shifts */
+  uint32_shifts += bit_shift/32;
   bit_shift %= bit_shift%32;
 
   /* if direction is positive, do a left shift (increase bit significance) */
-  capacity = a->num_uints + 32_bit_shifts + 1;
+  capacity = a->num_uints + uint32_shifts + 1;
   /* if addition overflow occured */
   if(capacity < a->num_uints){
     fprintf(stderr, "OBBigUInt: shiftBigUIntLeft exceeds past max capacity,  "
@@ -383,9 +384,10 @@ OBBigUInt * shiftBigUIntLeft(const OBBigUInt *a, uint64_t 32_bit_shifts,
     return NULL;
   }
 
-  for(i=a->num_uints-1; i>=0; i--){
-    result->uint_array[i+32_bit_shifts+1] += a->uint_array[i] >> (32-bit_shift);
-    result->uint_array[i+32_bit_shifts] += a->uint_array[i] << bit_shift;
+  /* for all values less than a (i cycles after 0, back to UINT64_MAX */
+  for(i=a->num_uints-1; i<a->num_uints; i--){
+    result->uint_array[i+uint32_shifts+1] += a->uint_array[i] >> (32-bit_shift);
+    result->uint_array[i+uint32_shifts] += a->uint_array[i] << bit_shift;
   }
   
   result->num_uints = sigIntsInBigUInt(result);
@@ -393,7 +395,7 @@ OBBigUInt * shiftBigUIntLeft(const OBBigUInt *a, uint64_t 32_bit_shifts,
 }
 
 
-OBBigUInt * shiftBigUIntRight(const OBBigUInt *a, uint64_t 32_bit_shifts,
+OBBigUInt * shiftBigUIntRight(OBBigUInt *a, uint64_t uint32_shifts,
                               uint8_t bit_shift){
 
   uint64_t capacity, i;
@@ -405,11 +407,11 @@ OBBigUInt * shiftBigUIntRight(const OBBigUInt *a, uint64_t 32_bit_shifts,
     return NULL;
   }
 
-  /* force bit_shift to be a value from 0-31, add extra to 32_bit_shifts */
-  32_bit_shifts += bit_shift/32;
+  /* force bit_shift to be a value from 0-31, add extra to uint32_shifts */
+  uint32_shifts += bit_shift/32;
   bit_shift %= 32;
 
-  capacity = a->num_uints - 32_bit_shifts;
+  capacity = a->num_uints - uint32_shifts;
   /* if subtraction overflow occured */
   if(capacity > a->num_uints){
     return createZeroBigUInt();
@@ -422,19 +424,19 @@ OBBigUInt * shiftBigUIntRight(const OBBigUInt *a, uint64_t 32_bit_shifts,
     return NULL;
   }
 
-  for(i=a->num_uints-1; i>32_bit_shifts; i--){
-    result->uint_array[i-32_bit_shifts] += a->uint_array[i] >> bit_shift;
-    result->uint_array[i-32_bit_shifts-1] += a->uint_array[i] << (32-bit_shift);
+  for(i=a->num_uints-1; i>uint32_shifts; i--){
+    result->uint_array[i-uint32_shifts] += a->uint_array[i] >> bit_shift;
+    result->uint_array[i-uint32_shifts-1] += a->uint_array[i] << (32-bit_shift);
   }
   
   /* include final bits missed in for loop */
-  result->uint_array[0] += a->uint_array[32_bit_shifts] >> bit_shift;
+  result->uint_array[0] += a->uint_array[uint32_shifts] >> bit_shift;
 
   result->num_uints = sigIntsInBigUInt(result);
   return result;
 }
 
-OBBigUInt * andBigUInts(const OBBigUInt *a, const OBBigUInt *b){
+OBBigUInt * andBigUInts(OBBigUInt *a, OBBigUInt *b){
 
   OBBigUInt *result;
   uint64_t i, capacity;
@@ -464,7 +466,7 @@ OBBigUInt * andBigUInts(const OBBigUInt *a, const OBBigUInt *b){
 }
   
 
-OBBigUInt * orBigUInts(const OBBigUInt *a, const OBBigUInt *b){
+OBBigUInt * orBigUInts(OBBigUInt *a, OBBigUInt *b){
 
   OBBigUInt *result, *largest, *smallest;
   uint64_t i;
@@ -476,11 +478,10 @@ OBBigUInt * orBigUInts(const OBBigUInt *a, const OBBigUInt *b){
   }
 
   if(a->num_uints > b->num_uints){
-    capacity = a->num_uints;
     largest = a;
     smallest = b;
+  }
   else{
-    capacity = b->num_uints;
     largest = b;
     smallest = a;
   }
@@ -503,7 +504,7 @@ OBBigUInt * orBigUInts(const OBBigUInt *a, const OBBigUInt *b){
 }
 
 
-OBBigUInt * xorBigUInts(const OBBigUInt *a, const OBBigUInt *b){
+OBBigUInt * xorBigUInts(OBBigUInt *a, OBBigUInt *b){
 
   OBBigUInt *result, *largest, *smallest;
   uint64_t i;
@@ -515,11 +516,10 @@ OBBigUInt * xorBigUInts(const OBBigUInt *a, const OBBigUInt *b){
   }
 
   if(a->num_uints > b->num_uints){
-    capacity = a->num_uints;
     largest = a;
     smallest = b;
+  }
   else{
-    capacity = b->num_uints;
     largest = b;
     smallest = a;
   }
@@ -541,7 +541,7 @@ OBBigUInt * xorBigUInts(const OBBigUInt *a, const OBBigUInt *b){
   return result;
 }
 
-OBBigUInt * notBigUInt(const OBBigUInt *a){
+OBBigUInt * notBigUInt(OBBigUInt *a){
 
   OBBigUInt *result;
   uint64_t i;
@@ -567,11 +567,11 @@ OBBigUInt * notBigUInt(const OBBigUInt *a){
   return result;
 }
 
-int8_t compareBigUInts(const obj *a, const obj *b){
+int8_t compareBigUInts(obj *a, obj *b){
   
   uint64_t i;
-  OBBigUInt comp_a = (OBBigUInt *)a;  
-  OBBigUInt comp_b = (OBBigUInt *)b;  
+  OBBigUInt *comp_a = (OBBigUInt *)a;  
+  OBBigUInt *comp_b = (OBBigUInt *)b;  
 
   if(!a || !b){
     fprintf(stderr, "OBBigUInt: Unexpected NULL argument(s) passed to "
@@ -580,18 +580,33 @@ int8_t compareBigUInts(const obj *a, const obj *b){
   }
 
   /* compare size of BigUInts first */
-  if(a->num_uints > b->num_uints) return OB_GREATER_THAN;
-  else if(a->num_uints < b->num_uints) return OB_LESS_THAN;
+  if(comp_a->num_uints > comp_b->num_uints) return OB_GREATER_THAN;
+  else if(comp_a->num_uints < comp_b->num_uints) return OB_LESS_THAN;
   else{ /*if size is equivalent, compare each individual element */
-    for(i = a->num_uints - 1; i>=0; i++){
-      if(a->uint_array[i] > b->uint_array[i]) return OB_GREATER_THAN;
-      else if(a->uint_array[i] < b->uint_array[i]) return OB_LESS_THAN;
+    for(i = comp_a->num_uints - 1; i<comp_a->num_uints; i++){
+      if(comp_a->uint_array[i] > comp_b->uint_array[i]) return OB_GREATER_THAN;
+      else if(comp_a->uint_array[i] < comp_b->uint_array[i]) 
+        return OB_LESS_THAN;
     }
   }
 
   /* all entries in BigUInts must be equal to reach this point */
   return OB_EQUAL_TO;
 }
+
+void printBigUInt(OBBigUInt *a){
+  
+  uint64_t i;
+  char most_sig[] =  " Most Sig 32 Bit Word:";
+  char blanks[] =    "                      ";
+
+  printf("%s %x\n", most_sig, a->uint_array[a->num_uints-1]);
+  for(i=a->num_uints-2; i<a->num_uints; i++){
+    printf("%s %x\n", blanks, a->uint_array[i]);
+  }
+  return;
+}
+
 
 /* PRIVATE METHODS */
 
@@ -627,7 +642,7 @@ OBBigUInt * createBigUIntWithCap(uint64_t capacity){
 }
 
 
-uint64_t sigIntsInBigUInt(const OBBigUInt *a){
+uint64_t sigIntsInBigUInt(OBBigUInt *a){
 
   uint64_t i;
   for(i=a->capacity-1; i>0; i--){
@@ -641,7 +656,7 @@ uint64_t sigIntsInBigUInt(const OBBigUInt *a){
 }
 
 
-OBBigUInt * twosCompBigUInt(const OBBigUInt *a, uint64_t total_len){
+OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len){
   
   uint64_t i, maxcap, sign_extend;
   OBBigUInt *twos_comp;
@@ -686,13 +701,13 @@ OBBigUInt * twosCompBigUInt(const OBBigUInt *a, uint64_t total_len){
 }
 
 
-OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
+OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
                             OBBigUInt *quotient){
   
   uint64_t approx_quotient, approx_dividend, approx_divisor, approx_capacity;
-  OBBigUInt *result, *approximate, *check_num, *new_divisor;
+  OBBigUInt *result, *approximate, *check_num, *new_dividend;
   
-  result = approximate = check_num = new_divisor = NULL;
+  result = approximate = check_num = new_dividend = NULL;
 
   /*base case, dividend is smaller than divisor, result is 0 */
   if(compareBigUInts((obj *)dividend, (obj *)divisor) == OB_LESS_THAN){
@@ -768,7 +783,7 @@ OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
   if(!new_dividend){
     fprintf(stderr, "OBBigUInt: Could not create newest dividend in "
                     "recursiveDivide\n");
-    release(result);
+    release((obj *)result);
     return NULL;
   }
 
