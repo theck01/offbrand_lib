@@ -118,7 +118,7 @@ OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
 
   carry = 0;
   for(i=0; i<smallest->num_uints; i++){
-    sum = largest->uint_array[i] + smallest->uint_array[i] + carry;
+    sum = ((uint64_t)largest->uint_array[i]) + smallest->uint_array[i] + carry;
     carry = sum >> 32;
     result->uint_array[i] = (uint32_t)sum;
   }
@@ -164,11 +164,6 @@ OBBigUInt * subtractBigUInts(OBBigUInt *minuend,
   }
 
   result = addBigUInts(minuend, twos_comp);
-
-  printf("\n\n");
-  printBigUInt(subtrahend);
-  printBigUInt(twos_comp);
-  printf("\n\n");
 
   release((obj *)twos_comp); /* destroy now unneeded twos_comp */
   if(!result){

@@ -64,13 +64,7 @@ int main (){
     exit(1);
   }
 
-  printBigUInt(add_result);
-
   if(compareBigUInts((obj *)b, (obj *)sub_result) != OB_EQUAL_TO){
-    printf("B\n");
-    printBigUInt(b);
-    printf("\nSub Result\n");
-    printBigUInt(sub_result);
     fprintf(stderr, "OBBigUInt_test: addition and subtraction did not form "
                     "inverse operations\nTEST FAILED\n");
     exit(1);
@@ -82,12 +76,15 @@ int main (){
     exit(1);
   }
 
+  printf("Passed mult\n");
+
   div_result = divideBigUInts(mult_result, b);
   if(!div_result){
     fprintf(stderr, "OBBigUInt_test: Divide returns NULL, TEST FAILED\n");
     exit(1);
   }
 
+  printf("Passed div\n");
   if(compareBigUInts((obj *)a, (obj *)div_result)){
     fprintf(stderr, "OBBigUInt_test: Divided and multiply are not inverse "
                     "operations, TEST FAILED\n");
