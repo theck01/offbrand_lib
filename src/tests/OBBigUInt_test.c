@@ -64,12 +64,13 @@ int main (){
     exit(1);
   }
 
+  printBigUInt(add_result);
+
   if(compareBigUInts((obj *)b, (obj *)sub_result) != OB_EQUAL_TO){
-    printf("\nOriginal b value:\n");
+    printf("B\n");
     printBigUInt(b);
-    printf("\nSub result:\n");
+    printf("\nSub Result\n");
     printBigUInt(sub_result);
-    printf("\n");
     fprintf(stderr, "OBBigUInt_test: addition and subtraction did not form "
                     "inverse operations\nTEST FAILED\n");
     exit(1);

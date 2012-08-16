@@ -117,18 +117,15 @@ OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
   }
 
   carry = 0;
-  for(i=0; i<largest->num_uints; i++){
-    /* if all ints of the smaller number have been added do not include smaller
-     * in calculation */
-    if(i>=smallest->num_uints){
-      sum = largest->uint_array[i] + carry;
-      carry = 0;
-    }
-    else{
-      sum = largest->uint_array[i] + smallest->uint_array[i] + carry;
-      carry = sum >> 32;
-    }
+  for(i=0; i<smallest->num_uints; i++){
+    sum = largest->uint_array[i] + smallest->uint_array[i] + carry;
+    carry = sum >> 32;
+    result->uint_array[i] = (uint32_t)sum;
+  }
 
+  for( ; i<largest->num_uints; i++){
+    sum = largest->uint_array[i] + carry;
+    carry = 0;
     result->uint_array[i] = (uint32_t)sum;
   }
 
@@ -167,6 +164,12 @@ OBBigUInt * subtractBigUInts(OBBigUInt *minuend,
   }
 
   result = addBigUInts(minuend, twos_comp);
+
+  printf("\n\n");
+  printBigUInt(subtrahend);
+  printBigUInt(twos_comp);
+  printf("\n\n");
+
   release((obj *)twos_comp); /* destroy now unneeded twos_comp */
   if(!result){
     fprintf(stderr, "OBBigUInt: Could not get result from twos compliment "
@@ -684,7 +687,7 @@ OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len){
   }
 
   /* not all remaining ints in a */
-  for( ; i<a->num_uints; i++){
+  for(i++; i<a->num_uints; i++){
     twos_comp->uint_array[i] = ~(a->uint_array[i]);
   }
 
