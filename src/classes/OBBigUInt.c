@@ -90,7 +90,7 @@ OBBigUInt * copyBigUInt(OBBigUInt *to_copy){
 
 OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
 
-  uint64_t i, sum, carry, maxcap;
+  uint64_t i, sum, carry;
   OBBigUInt  *largest, *smallest, *result;
   
   if(!a || !b){
@@ -99,22 +99,17 @@ OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
     return NULL;
   }
 
-  if(a->num_uints > b->num_uints) maxcap = a->num_uints + 1;
-  else maxcap = b->num_uints + 1;
-
   /* allocate result array with the maximum possible size for the answer */
   if(a->num_uints > b->num_uints){
-    maxcap = a->num_uints + 1;
     largest = a;
     smallest = b;
   }
   else{
-    maxcap = b->num_uints + 1;
     largest = b;
     smallest = a;
   }
 
-  result = createBigUIntWithCap(maxcap);
+  result = createBigUIntWithCap(largest->num_uints + 1);
   if(!result){
     fprintf(stderr, "OBBigUInt: Could not create result OBBigUInt during "
                     "addition\n");
@@ -596,14 +591,19 @@ int8_t compareBigUInts(obj *a, obj *b){
 
 void printBigUInt(OBBigUInt *a){
   
-  uint64_t i;
-  char most_sig[] =  " Most Sig 32 Bit Word:";
-  char blanks[] =    "                      ";
+  uint64_t i, j;
+  char hex[9];
 
-  printf("%s %x\n", most_sig, a->uint_array[a->num_uints-1]);
-  for(i=a->num_uints-2; i<a->num_uints; i++){
-    printf("%s %x\n", blanks, a->uint_array[i]);
+  printf("Most Significant 32 Bit Word\n");
+  for(i=a->num_uints-1; i<a->num_uints; i--){
+    sprintf(hex, "%x", a->uint_array[i]);
+    printf("0x");
+    for(j=0; j<8-strlen(hex); j++){
+      printf("0");
+    }
+    printf("%s\n", hex);
   }
+  printf("Least Significant 32 Bit Word\n");
   return;
 }
 
@@ -676,7 +676,7 @@ OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len){
   for(i=0; i<a->num_uints; i++){
     /* if reached least significant non-zero int, take its twos compliment */
     if(a->uint_array[i] > 0){
-      twos_comp->uint_array[i] = (~(a->uint_array[i])) + 1;
+      twos_comp->uint_array[i] = (~a->uint_array[i]) + 1;
       break;
     }
     /* havent found least significant non-zero int */
@@ -684,7 +684,7 @@ OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len){
   }
 
   /* not all remaining ints in a */
-  for(++i; i<a->num_uints; i++){
+  for( ; i<a->num_uints; i++){
     twos_comp->uint_array[i] = ~(a->uint_array[i]);
   }
 
