@@ -76,16 +76,23 @@ int main (){
     exit(1);
   }
 
-  printf("Passed mult\n");
-
   div_result = divideBigUInts(mult_result, b);
   if(!div_result){
     fprintf(stderr, "OBBigUInt_test: Divide returns NULL, TEST FAILED\n");
     exit(1);
   }
 
-  printf("Passed div\n");
-  if(compareBigUInts((obj *)a, (obj *)div_result)){
+  printf("\n\n\nA\n");
+  printBigUInt(a);
+  printf("\n\nB\n");
+  printBigUInt(b);
+  printf("\n\nMult Result\n");
+  printBigUInt(mult_result);
+  printf("\n\nDiv Result\n");
+  printBigUInt(div_result);
+  printf("\n\n\n");
+
+  if(compareBigUInts((obj *)a, (obj *)div_result) != OB_EQUAL_TO){
     fprintf(stderr, "OBBigUInt_test: Divided and multiply are not inverse "
                     "operations, TEST FAILED\n");
     exit(1);

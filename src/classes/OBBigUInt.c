@@ -7,23 +7,6 @@
 
 /* PUBLIC METHODS */
 
-/* add arguments to complete initialization as needed, modify OBBigUInt.h
- * as well if modifications are made */
-OBBigUInt * createZeroBigUInt(void){
-
-  OBBigUInt *new_instance = createBigUIntWithCap(1);
-  if(!new_instance){
-    fprintf(stderr, "OBBigUInt: Could not create new 0 BigUInt\n");
-    return NULL;
-  }
-  
-  new_instance->uint_array[0] = 0;
-  new_instance->num_uints = 1;
-
-  return new_instance;
-}
-
-
 OBBigUInt * createBigUIntFromNum(uint32_t number){
 
   OBBigUInt *new_instance = createBigUIntWithCap(1);
@@ -148,7 +131,7 @@ OBBigUInt * subtractBigUInts(OBBigUInt *minuend,
   }
 
   if(compareBigUInts((obj *)minuend, (obj *)subtrahend) != OB_GREATER_THAN){
-    result = createZeroBigUInt();
+    result = createBigUIntFromNum(0);
     if(!result){
       fprintf(stderr, "OBBigUInt: Could not create zero OBBigUInt as result "
                       "in subtractBigUInts\n");
@@ -215,7 +198,7 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
   }
 
   /* base case, BigUInts are small enough to compute directly */
-  if(a->num_uints <= 1 && b->num_uints <= 1){
+  if(a->num_uints == 1 && b->num_uints == 1){
     result = createBigUIntWithCap(2);
     if(!result){
       fprintf(stderr, "OBBigUInt: Could not create result\n");
@@ -224,6 +207,7 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
     mult_result = ((uint64_t)a->uint_array[0])*((uint64_t)b->uint_array[0]);
     result->uint_array[0] = (uint32_t)mult_result;
     result->uint_array[1] = (uint32_t)(mult_result>>32);
+    result->num_uints = sigIntsInBigUInt(result);
     return result;
   }
 
@@ -232,8 +216,8 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
    * NULL */
 
   /* determine the position where a and b should be split in half*/
-  if(a->num_uints > b->num_uints) m=a->num_uints/2+1;
-  else m=b->num_uints/2+1;
+  if(a->num_uints > b->num_uints) m=a->num_uints/2;
+  else m=b->num_uints/2;
 
   /* split into halves depending on the size of a */
   if(a->num_uints > m){
@@ -243,17 +227,18 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
   }
   else{
     a0 = copyBigUInt(a);
-    a1 = createZeroBigUInt();
+    a1 = createBigUIntFromNum(0);
   }
+
   /* do the same for b */
   if(b->num_uints > m){
     b0 = createBigUIntFromIntArray(b->uint_array, m); 
-    b1 = createBigUIntFromIntArray(b->uint_array + m,
+    b1 = createBigUIntFromIntArray((b->uint_array) + m,
                                    b->num_uints - m);
   }
   else{
     b0 = copyBigUInt(b);
-    b1 = createZeroBigUInt();
+    b1 = createBigUIntFromNum(0);
   }
   
   /* calculate partial multiplications, freeing unneeded memory as soon as
@@ -263,17 +248,23 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
   x = addBigUInts(a1,a0);
   z = addBigUInts(b1,b0);
   y = multiplyBigUInts(x,z);
+  printf("\n\nY\n");
+  printBigUInt(y);
   release((obj *)x);
   release((obj *)z);
 
   /* get the x = a1*b1 and z = a0*b0 part */
   x = multiplyBigUInts(a1,b1);
+  printf("\n\nX\n");
+  printBigUInt(x);
   z = multiplyBigUInts(a0,b0);
+  printf("\n\nZ\n");
+  printBigUInt(z);
   release((obj *)a1);
   release((obj *)a0);
   release((obj *)b1);
   release((obj *)b0);
-
+  
   /* refine y part to y = (a0 + a1)(b0 + b1) - a1*b1 - a0*b0 */
   tmp = subtractBigUInts(y,x);
   release((obj *)y);
@@ -311,7 +302,7 @@ OBBigUInt * divideBigUInts(OBBigUInt *dividend, OBBigUInt *divisor){
     return NULL;
   }
 
-  seed = createZeroBigUInt();
+  seed = createBigUIntFromNum(0);
   if(!seed){
     fprintf(stderr, "OBBigUInt: Could not create 0 seed for quotient in "
                     "divideBigUInts\n");
@@ -359,7 +350,7 @@ OBBigUInt * shiftBigUIntLeft(OBBigUInt *a, uint64_t uint32_shifts,
 
   /* force bit_shift to be a value from 0-31, add extra to uint32_shifts */
   uint32_shifts += bit_shift/32;
-  bit_shift %= bit_shift%32;
+  bit_shift %= 32;
 
   /* if direction is positive, do a left shift (increase bit significance) */
   capacity = a->num_uints + uint32_shifts + 1;
@@ -367,7 +358,7 @@ OBBigUInt * shiftBigUIntLeft(OBBigUInt *a, uint64_t uint32_shifts,
   if(capacity < a->num_uints){
     fprintf(stderr, "OBBigUInt: shiftBigUIntLeft exceeds past max capacity,  "
                     "attempting to return 0\n");
-    return createZeroBigUInt();
+    return createBigUIntFromNum(0);
   }
 
   result = createBigUIntWithCap(capacity);
@@ -407,7 +398,7 @@ OBBigUInt * shiftBigUIntRight(OBBigUInt *a, uint64_t uint32_shifts,
   capacity = a->num_uints - uint32_shifts;
   /* if subtraction overflow occured */
   if(capacity > a->num_uints){
-    return createZeroBigUInt();
+    return createBigUIntFromNum(0);
   }
 
   result = createBigUIntWithCap(capacity);
@@ -576,7 +567,7 @@ int8_t compareBigUInts(obj *a, obj *b){
   if(comp_a->num_uints > comp_b->num_uints) return OB_GREATER_THAN;
   else if(comp_a->num_uints < comp_b->num_uints) return OB_LESS_THAN;
   else{ /*if size is equivalent, compare each individual element */
-    for(i = comp_a->num_uints - 1; i<comp_a->num_uints; i++){
+    for(i = comp_a->num_uints - 1; i<comp_a->num_uints; i--){
       if(comp_a->uint_array[i] > comp_b->uint_array[i]) return OB_GREATER_THAN;
       else if(comp_a->uint_array[i] < comp_b->uint_array[i]) 
         return OB_LESS_THAN;
@@ -592,10 +583,11 @@ void printBigUInt(OBBigUInt *a){
   uint64_t i, j;
   char hex[9];
 
+  printf("OBBigUInt with %llu 32 bit words\n", a->num_uints);
   printf("Most Significant 32 Bit Word\n");
   for(i=a->num_uints-1; i<a->num_uints; i--){
     sprintf(hex, "%x", a->uint_array[i]);
-    printf("0x");
+    printf("  0x");
     for(j=0; j<8-strlen(hex); j++){
       printf("0");
     }

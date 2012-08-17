@@ -18,10 +18,6 @@ typedef struct OBBigUInt_struct OBBigUInt;
 
 /* BASIC CONSTRUCTORS */
 
-/* constructor allocates and initializes an instance of OBBigUInt */
-/* with initial value of 0 */
-OBBigUInt * createZeroBigUInt(void);
-
 /* constructor allocates and initializes an instance of OBBigUInt with the
  * integer value specified */
 OBBigUInt * createBigUIntFromNum(uint32_t number);
