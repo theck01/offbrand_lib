@@ -204,10 +204,12 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
       fprintf(stderr, "OBBigUInt: Could not create result\n");
       return NULL;
     }
+
     mult_result = ((uint64_t)a->uint_array[0])*((uint64_t)b->uint_array[0]);
     result->uint_array[0] = (uint32_t)mult_result;
     result->uint_array[1] = (uint32_t)(mult_result>>32);
     result->num_uints = sigIntsInBigUInt(result);
+
     return result;
   }
 
@@ -233,7 +235,7 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
   /* do the same for b */
   if(b->num_uints > m){
     b0 = createBigUIntFromIntArray(b->uint_array, m); 
-    b1 = createBigUIntFromIntArray((b->uint_array) + m,
+    b1 = createBigUIntFromIntArray(b->uint_array + m,
                                    b->num_uints - m);
   }
   else{
@@ -244,22 +246,36 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
   /* calculate partial multiplications, freeing unneeded memory as soon as
    * possible */ 
 
+  printf("\n\na\n");
+  printBigUInt(a);
+  printf("\n\na0\n");
+  printBigUInt(a0);
+  printf("\n\na1\n");
+  printBigUInt(a1);
+  printf("\n\nb\n");
+  printBigUInt(b);
+  printf("\n\nb0\n");
+  printBigUInt(b0);
+  printf("\n\nb1\n");
+  printBigUInt(b1);
+  
+
   /* get the y = (a0 + a1)(b0 + b1) part */
   x = addBigUInts(a1,a0);
   z = addBigUInts(b1,b0);
   y = multiplyBigUInts(x,z);
-  printf("\n\nY\n");
-  printBigUInt(y);
+//  printf("\n\nY\n");
+//  printBigUInt(y);
   release((obj *)x);
   release((obj *)z);
 
   /* get the x = a1*b1 and z = a0*b0 part */
   x = multiplyBigUInts(a1,b1);
-  printf("\n\nX\n");
-  printBigUInt(x);
+//  printf("\n\nX\n");
+//  printBigUInt(x);
   z = multiplyBigUInts(a0,b0);
-  printf("\n\nZ\n");
-  printBigUInt(z);
+//  printf("\n\nZ\n");
+//  printBigUInt(z);
   release((obj *)a1);
   release((obj *)a0);
   release((obj *)b1);
