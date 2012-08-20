@@ -30,10 +30,8 @@ ALL_CLASSES = $(patsubst $(CLASSES)/%.c, $(BIN_CLASS)/%.o, $(CLASS_SOURCES))
 TEST_SOURCES := $(wildcard $(TESTS)/*.c)
 ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
-# START BUILD
+# MAIN BUILD
 all: $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
-	@echo "Running tests on data structures after successful compilation..."
-	@run-parts $(BIN_TEST)
 
 # Hand builds (STD_LIBS)
 $(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
@@ -52,12 +50,21 @@ $(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
 $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
+# OPTIONAL BUILDS
+release: all
+
+test: clean debug
+	@echo "Running tests on data structures after successful compilation..."
+	@run-parts $(BIN_TEST)
+
+debug: CFLAGS += -g
+debug: all
+
 # Clean previous build
 clean:
-	rm -rf $(BIN)
-	mkdir $(BIN)
-	mkdir $(BIN_CLASS)
-	mkdir $(BIN_TEST)
+	rm -f $(STD_LIBS)
+	rm -f $(ALL_TESTS)
+	rm -f $(ALL_CLASSES)
 
 print:
 	@echo "BIN_LIB: $(BIN_LIB)"
