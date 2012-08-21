@@ -10,8 +10,8 @@ int main (){
   /* various OBBigUInts needed for testing */
   OBBigUInt *two, *zero, *a, *b, *c, *add_result, *sub_result, *mult_result;
   OBBigUInt *div_result, *mod_result, *shift_left_result, *shift_right_result;
-  OBBigUInt *and_result, *or_result;
-  OBBigUInt *xor_result, *not_result;
+//  OBBigUInt *and_result, *or_result;
+//  OBBigUInt *xor_result, *not_result;
 
   uint32_t num1[3] = {1234567890, 987654321, 2910};
   uint32_t num2[3] = {2143658709, 4162738490, 982647};

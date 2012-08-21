@@ -101,14 +101,15 @@ OBBigUInt * addBigUInts(OBBigUInt *a, OBBigUInt *b){
 
   carry = 0;
   for(i=0; i<smallest->num_uints; i++){
-    sum = ((uint64_t)largest->uint_array[i]) + smallest->uint_array[i] + carry;
+    sum = ((uint64_t)largest->uint_array[i]) + 
+          ((uint64_t)smallest->uint_array[i]) + carry;
     carry = sum >> 32;
     result->uint_array[i] = (uint32_t)sum;
   }
 
   for( ; i<largest->num_uints; i++){
-    sum = largest->uint_array[i] + carry;
-    carry = 0;
+    sum = ((uint64_t)largest->uint_array[i]) + carry;
+    carry = sum >> 32;
     result->uint_array[i] = (uint32_t)sum;
   }
 
@@ -246,36 +247,16 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
   /* calculate partial multiplications, freeing unneeded memory as soon as
    * possible */ 
 
-  printf("\n\na\n");
-  printBigUInt(a);
-  printf("\n\na0\n");
-  printBigUInt(a0);
-  printf("\n\na1\n");
-  printBigUInt(a1);
-  printf("\n\nb\n");
-  printBigUInt(b);
-  printf("\n\nb0\n");
-  printBigUInt(b0);
-  printf("\n\nb1\n");
-  printBigUInt(b1);
-  
-
-  /* get the y = (a0 + a1)(b0 + b1) part */
+ /* get the y = (a0 + a1)(b0 + b1) part */
   x = addBigUInts(a1,a0);
   z = addBigUInts(b1,b0);
   y = multiplyBigUInts(x,z);
-//  printf("\n\nY\n");
-//  printBigUInt(y);
   release((obj *)x);
   release((obj *)z);
 
   /* get the x = a1*b1 and z = a0*b0 part */
   x = multiplyBigUInts(a1,b1);
-//  printf("\n\nX\n");
-//  printBigUInt(x);
   z = multiplyBigUInts(a0,b0);
-//  printf("\n\nZ\n");
-//  printBigUInt(z);
   release((obj *)a1);
   release((obj *)a0);
   release((obj *)b1);
@@ -384,12 +365,12 @@ OBBigUInt * shiftBigUIntLeft(OBBigUInt *a, uint64_t uint32_shifts,
     return NULL;
   }
 
-  /* for all values less than a (i cycles after 0, back to UINT64_MAX */
-  for(i=a->num_uints-1; i<a->num_uints; i--){
+  /* for all values less than a (i cycles after 0, back to UINT64_MAX) */
+  for(i=a->num_uints-1; i<UINT64_MAX; i--){
     result->uint_array[i+uint32_shifts+1] += a->uint_array[i] >> (32-bit_shift);
     result->uint_array[i+uint32_shifts] += a->uint_array[i] << bit_shift;
   }
-  
+
   result->num_uints = sigIntsInBigUInt(result);
   return result;
 }
@@ -641,7 +622,7 @@ OBBigUInt * createBigUIntWithCap(uint64_t capacity){
     new_instance->uint_array[i] = 0;
   }
 
-  new_instance->num_uints = 0;
+  new_instance->num_uints = 1;
   new_instance->capacity = capacity;
 
   return new_instance;
@@ -664,10 +645,10 @@ uint64_t sigIntsInBigUInt(OBBigUInt *a){
 
 OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len){
   
-  uint64_t i, maxcap, sign_extend;
+  uint64_t i, maxcap;
   OBBigUInt *twos_comp;
 
-  if(total_len > a->capacity) maxcap = total_len;
+  if(total_len > a->num_uints) maxcap = total_len;
   else maxcap = a->capacity;
 
   twos_comp = createBigUIntWithCap(maxcap);
@@ -694,12 +675,9 @@ OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len){
     twos_comp->uint_array[i] = ~(a->uint_array[i]);
   }
 
-  /* set any extra capacity space to all 1's (sign extension) if twos_comp of a
-   * has a 1 in the most significan bit posistion */
-  sign_extend = 0;
-  if((twos_comp->uint_array[i-1] >> 31) == 1) sign_extend = UINT32_MAX;
+  /* set any extra capacity space to all 1's (sign extension */
   for(; i<twos_comp->capacity; i++){
-    twos_comp->uint_array[i] = sign_extend;
+    twos_comp->uint_array[i] = UINT32_MAX;
   }
 
   twos_comp->num_uints = sigIntsInBigUInt(twos_comp);
