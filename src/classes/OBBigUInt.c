@@ -757,7 +757,7 @@ OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
       release((obj *)approximate);
       return NULL;
     }
-  }while(compareBigUInts((obj *)check_num, (obj *)dividend) != OB_LESS_THAN);
+  }while(compareBigUInts((obj *)check_num, (obj *)dividend) == OB_GREATER_THAN);
 
   /* if returning quotient then add approximate to current quotient, else dont
    * bother for modulus operation*/
