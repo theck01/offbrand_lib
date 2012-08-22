@@ -367,8 +367,11 @@ OBBigUInt * shiftBigUIntLeft(OBBigUInt *a, uint64_t uint32_shifts,
 
   /* for all values less than a (i cycles after 0, back to UINT64_MAX) */
   for(i=a->num_uints-1; i<UINT64_MAX; i--){
-    result->uint_array[i+uint32_shifts+1] += a->uint_array[i] >> (32-bit_shift);
-    result->uint_array[i+uint32_shifts] += a->uint_array[i] << bit_shift;
+    if(bit_shift){
+      result->uint_array[i+uint32_shifts+1] += a->uint_array[i]>>(32-bit_shift);
+      result->uint_array[i+uint32_shifts] += a->uint_array[i] << bit_shift;
+    }
+    else result->uint_array[i+uint32_shifts] = a->uint_array[i];
   }
 
   result->num_uints = sigIntsInBigUInt(result);
@@ -406,12 +409,17 @@ OBBigUInt * shiftBigUIntRight(OBBigUInt *a, uint64_t uint32_shifts,
   }
 
   for(i=a->num_uints-1; i>uint32_shifts; i--){
-    result->uint_array[i-uint32_shifts] += a->uint_array[i] >> bit_shift;
-    result->uint_array[i-uint32_shifts-1] += a->uint_array[i] << (32-bit_shift);
+    if(bit_shift){
+      result->uint_array[i-uint32_shifts] += a->uint_array[i] >> bit_shift;
+      result->uint_array[i-uint32_shifts-1] += a->uint_array[i]<<(32-bit_shift);
+    }
+    else result->uint_array[i-uint32_shifts] = a->uint_array[i];
   }
   
   /* include final bits missed in for loop */
-  result->uint_array[0] += a->uint_array[uint32_shifts] >> bit_shift;
+  if(bit_shift)
+    result->uint_array[0] += a->uint_array[uint32_shifts] >> bit_shift;
+  else result->uint_array[0] = a->uint_array[uint32_shifts];
 
   result->num_uints = sigIntsInBigUInt(result);
   return result;
@@ -708,11 +716,11 @@ OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
    * first significant digit */
   approx_dividend = (uint64_t)dividend->uint_array[dividend->num_uints-1];
   approx_dividend <<= 32;
-  approx_dividend += dividend->uint_array[dividend->num_uints-2];
+  approx_dividend += (uint64_t)dividend->uint_array[dividend->num_uints-2];
   approx_divisor = (uint64_t)divisor->uint_array[divisor->num_uints-1];
   
   /* compute the approximate solution */
-  approx_quotient = approx_dividend/approx_divisor - 1;
+  approx_quotient = approx_dividend/approx_divisor;
   if(approx_quotient == 0) approx_quotient = 1; /*fix case when approximations 
                                                   nearly equally or do divide*/
   approx_capacity = dividend->num_uints - divisor->num_uints;
@@ -731,10 +739,17 @@ OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
     }
     approximate->uint_array[approx_capacity - 1] = (uint32_t)approx_quotient;
     approximate->uint_array[approx_capacity] = (uint32_t)(approx_quotient>>32);
-    approx_quotient--; /* lower approx quotient in case approximate division is
-                          too great */
     approximate->num_uints = sigIntsInBigUInt(approximate);
 
+    /* lower approx quotient in case approximate division is too great. Decrease
+     * by about 1/64 of approx quotient, extra terms help maintain approximate
+     * proportions as approx approaches 1*/
+    approx_quotient -=(approx_quotient/2 - approx_quotient/4 - approx_quotient/8
+                      - approx_quotient/16 - approx_quotient/32
+                      - approx_quotient/64);
+    if(approx_quotient == 0) approx_quotient = 1; /* fix case when approximation
+                                                     should be 1 but misses */
+    
     check_num = multiplyBigUInts(divisor, approximate);
     if(!check_num){
       fprintf(stderr, "OBBigUInt: Could not create check against dividend "
@@ -742,7 +757,7 @@ OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
       release((obj *)approximate);
       return NULL;
     }
-  }while(compareBigUInts((obj *)check_num, (obj *)dividend) != OB_GREATER_THAN);
+  }while(compareBigUInts((obj *)check_num, (obj *)dividend) != OB_LESS_THAN);
 
   /* if returning quotient then add approximate to current quotient, else dont
    * bother for modulus operation*/
@@ -778,12 +793,11 @@ OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
   return result;
 }
 
-void deallocBigUInt(obj *to_dealloc){
 
+void deallocBigUInt(obj *to_dealloc){
   /* cast generic obj to OBBigUInt */
   OBBigUInt *instance = (OBBigUInt *)to_dealloc;
   free(instance->uint_array);
   free(instance);
   return;
 }
-
