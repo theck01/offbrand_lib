@@ -8,7 +8,7 @@
 #ifndef NCUBE_H
 #define NCUBE_H
 
-#include "offbrand.h"
+#include "../../../include/offbrand.h"
 
 /* Class type declaration */
 typedef struct NCube_struct NCube;
@@ -23,7 +23,7 @@ NCube * createNCube(uint32_t term);
 /* constructor allocates and initializes an instance of NCube with by merging
  * the two NCubes into a single higher order cube. If cubes cannot be merged
  * return NULL */
-NCube * mergeNCubes(const NCube *a, const NCube *b); 
+NCube * mergeNCubes(NCube *a, NCube *b); 
 
 /* compare two instances of NCube, return 0 if they are equal, 1 if they are not
  * NCubes cannot be considered greater than or less than each other */

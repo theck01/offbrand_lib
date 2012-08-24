@@ -30,6 +30,7 @@ ALL_CLASSES = $(patsubst $(CLASSES)/%.c, $(BIN_CLASS)/%.o, $(CLASS_SOURCES))
 TEST_SOURCES := $(wildcard $(TESTS)/*.c)
 ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
+
 # MAIN BUILD
 all: $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
 
@@ -50,9 +51,8 @@ $(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
 $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
-# OPTIONAL BUILDS
-release: all
 
+# OPTIONAL BUILDS
 test: clean debug
 	@echo "Running tests on data structures after successful compilation..."
 	@run-parts $(BIN_TEST)

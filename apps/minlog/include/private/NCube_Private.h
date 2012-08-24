@@ -12,8 +12,11 @@
 
 struct NCube_struct{
   obj base;
-  uint32_t *terms;         /* array of all minterms or maxterms  contained in */
-  uint32_t order;          /* the NCube */
+  uint32_t *terms;         /* array of all minterms or maxterms  contained in
+                              the NCube */
+  uint32_t dont_cares;     /* each bit of the uint32_t is associated with a
+                              single dont care bit */
+  uint8_t order;
   uint8_t prime_implicant; /* boolean, indicates if term is a prime implicant */
 };
 

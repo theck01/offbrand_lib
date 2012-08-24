@@ -191,7 +191,7 @@ OBBigUInt * multiplyBigUInts(OBBigUInt *a, OBBigUInt *b){
   OBBigUInt *result;
 
   /* init pointers */
-  tmp = shift_x = shift_y = x = y = z = a1 = b1 = a0 = b0 = result = NULL;
+  x = y = z = a1 = b1 = a0 = b0 = result = tmp = shift_x = shift_y = NULL;
 
   if(!a || !b){
     fprintf(stderr, "OBBigUInt: Cannot multiply NULL argument(s)\n");
@@ -702,7 +702,7 @@ OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
   uint64_t approx_quotient, approx_dividend, approx_divisor, approx_capacity;
   OBBigUInt *result, *approximate, *check_num, *new_dividend;
   
-  result = approximate = check_num = new_dividend = NULL;
+  result = (approximate = (check_num = (new_dividend = NULL)));
 
   /*base case, dividend is smaller than divisor, result is 0 */
   if(compareBigUInts((obj *)dividend, (obj *)divisor) == OB_LESS_THAN){
