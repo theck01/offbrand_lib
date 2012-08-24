@@ -14,7 +14,10 @@ OBVector * createVector(uint32_t initial_capacity){
   }
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocVector);
+  if(initBase((obj *)new_instance, &deallocVector)){
+    fprintf(stderr, "OBVector: Could not initialize base obj\n");
+    return NULL;
+  }
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */

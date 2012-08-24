@@ -1,9 +1,9 @@
 #!/bin/bash
 
-HEADER_TEMPLATE=templates/PublicHeader.h
-RESTRICTED_TEMPLATE=templates/PrivateHeader.h
-SOURCE_TEMPLATE=templates/Source.c
-TEST_TEMPLATE=templates/Test.c
+HEADER_TEMPLATE=scripts/templates/PublicHeader.h
+RESTRICTED_TEMPLATE=scripts/templates/PrivateHeader.h
+SOURCE_TEMPLATE=scripts/templates/Source.c
+TEST_TEMPLATE=scripts/templates/Test.c
 
 function print_usage() {
   echo "Usage:"

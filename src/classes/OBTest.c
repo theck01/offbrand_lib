@@ -16,7 +16,10 @@ OBTest * createTest(uint32_t id){
   }
 
   /*initialize reference counting base data*/
-  initBase((obj *)new_instance, &deallocOBTest);
+  if(initBase((obj *)new_instance, &deallocOBTest)){
+    fprintf(stderr, "OBTest: Could not initialize base obj\n");
+    return NULL;
+  }
 
   new_instance->id = id;
   return new_instance;

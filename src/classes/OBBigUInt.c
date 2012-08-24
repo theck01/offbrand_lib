@@ -616,7 +616,10 @@ OBBigUInt * createBigUIntWithCap(uint64_t capacity){
   }
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocBigUInt);
+  if(initBase((obj *)new_instance, &deallocBigUInt)){
+    fprintf(stderr, "OBBigUInt: Could not initialize base obj\n");
+    return NULL;
+  }
 
   new_instance->uint_array = malloc(sizeof(uint32_t)*capacity);
   if(!new_instance->uint_array){

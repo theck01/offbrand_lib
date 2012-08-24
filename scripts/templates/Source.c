@@ -16,7 +16,10 @@
   }
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &dealloc%CODECLASSNAME%);
+  if(initBase((obj *)new_instance, &dealloc%CODECLASSNAME%)){
+    fprintf(stderr, "%CODECLASSNAME%: Could not initialize base obj\n");
+    return NULL;
+  }
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
