@@ -12,7 +12,7 @@
 
 struct Term_struct{
   obj base;
-  /* Additional private data added here, MUST COME AFTER THE obj */
+  uint32_t term;
 };
 
 
@@ -22,6 +22,5 @@ struct Term_struct{
  * manually, instance will be destroyed when reference count reaches 0 */
 void deallocTerm(obj *to_dealloc);
 
-/*PRIVATE METHOD DECLARATIONS HERE*/
 
 #endif

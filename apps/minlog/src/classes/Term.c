@@ -6,7 +6,7 @@
 
 /* add arguments to complete initialization as needed, modify Term.h
  * as well if modifications are made */
-Term * createTerm(void){
+Term * createTerm(uint32_t term){
 
   Term *new_instance = malloc(sizeof(Term));
   if(!new_instance){
@@ -21,8 +21,7 @@ Term * createTerm(void){
     return NULL;
   }
 
-  /* ADD CLASS SPECIFIC INITIALIZATION HERE */
-
+  new_instance->term = term;
   return new_instance;
 }
 
@@ -32,26 +31,21 @@ int8_t compareTerm(const obj *a, const obj *b){
   Term *comp_a = (Term *)a;  
   Term *comp_b = (Term *)b;  
 
-  /* add specific comparison logic, following the description in the header
-   * file */
+  if(comp_a->term > comp_b->term) return OB_GREATER_THAN;
+  else if(comp_a->term < comp_b->term) return OB_LESS_THAN;
+  else return OB_EQUAL_TO;
 }
 
-
-/* DEFINE ADDITIONAL PUBLIC METHODS HERE */
-
+int32_t getTermValue(Term *a){
+  if(!a) return -1;
+  else return a->term;
+}
 
 /* PRIVATE METHODS */
 
 void deallocTerm(obj *to_dealloc){
-
   /* cast generic obj to Term */
   Term *instance = (Term *)to_dealloc;
-
-  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE */
-
   free(instance);
-
   return;
 }
-
-/* DEFINE ADDITIONAL PRIVATE METHODS HERE */

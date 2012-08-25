@@ -17,14 +17,15 @@ CFLAGS = -Wall -Wextra
 OFLAGS = $(CFLAGS) -c
 
 # Executable Dependencies
-EXE_DEP = ../../bin/offbrand_stdlib.o
+ALL_DEP = $(BIN_FUNCT)/misc_functions.o
+EXE_DEP = ../../bin/offbrand_stdlib.o $(ALL_DEP)
 
 # Enumerate/Find Objects to build
 CLASS_SOURCES := $(wildcard $(CLASSES)/*.c)
 ALL_CLASSES = $(patsubst $(CLASSES)/%.c, $(BIN_CLASS)/%.o, $(CLASS_SOURCES))
 
 TEST_SOURCES := $(wildcard $(TESTS)/*.c)
-ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%.o, $(TEST_SOURCES))
+ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
 FUNCT_SOURCES := $(wildcard $(FUNCTS)/*.c)
 ALL_FUNCTS = $(patsubst $(FUNCTS)/%.c, $(BIN_FUNCT)/%.o, $(FUNCT_SOURCES))
@@ -38,8 +39,9 @@ $(BIN_FUNCT)/%.o: $(FUNCTS)/%.c $(PUBLIC)/%.h
 	$(CC) $(OFLAGS) $< -o $@
 
 # Build class objects
-$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
-	$(CC) $(OFLAGS) $< -o $@
+$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h \
+	$(ALL_DEP)
+	$(CC) $(OFLAGS) $< $(ALL_DEP) -o $@
 
 # Build test executables
 $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(EXE_DEP)

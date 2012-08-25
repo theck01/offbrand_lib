@@ -1,6 +1,7 @@
 
 #include "../../include/NCube.h"
 #include "../../include/private/NCube_Private.h"
+#include "../../include/misc_functions.h"
 
 /* PUBLIC METHODS */
 
@@ -38,7 +39,7 @@ NCube * mergeNCubes(NCube *a, NCube *b){
   /* if the terms do not differ by only a single bit (a power of two), do
    * not merge */
   xor_term = a->terms[0] ^ b->terms[0];
-  if(!powerOfTwo(xor_term)){
+  if(numOneBits(xor_term) != 1){
     return NULL;
   }
 
