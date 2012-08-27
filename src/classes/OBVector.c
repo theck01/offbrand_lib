@@ -14,8 +14,8 @@ OBVector * createVector(uint32_t initial_capacity){
   }
 
   /* initialize reference counting base data */
-  if(initBase((obj *)new_instance, &deallocVector)){
-    fprintf(stderr, "OBVector: Could not initialize base obj\n");
+  if(initVectorBase(new_instance)){
+    fprintf(stderr, "OBVector: Could not initialize new instance\n");
     return NULL;
   }
 
@@ -275,6 +275,32 @@ void removeFromVectorIndex(OBVector *v, uint32_t index){
 
 
 /* PRIVATE METHODS */
+
+uint8_t initVectorBase(OBVector *to_init){
+
+  /* Classname for the this specific class */
+  static char *classname = NULL;
+  const char stack_classname[] = "OBVector";
+
+  if(!classname){
+    classname = malloc(sizeof(char) * strlen(stack_classname));
+    if(!classname){
+      fprintf(stderr, "OBVector: Could not allocate static classname "
+                      "for all instances\nClass checking functions will not "
+                      "work until classname allocated\n");
+      return 1;
+    }
+    else strcpy(classname, stack_classname);
+  }
+
+  /* initialize reference counting base data */
+  if(initBase((obj *)to_init, &deallocVector, classname)){
+    fprintf(stderr, "OBVector: Could not initialize base obj\n");
+    return 1;
+  }
+
+  return 0;
+}
 
 void deallocVector(obj *to_dealloc){
 

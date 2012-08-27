@@ -11,6 +11,4 @@
 
 typedef struct obj_struct * obj;
 
-typedef uint32_t ref_count_t; /* reference count */
-
 #endif

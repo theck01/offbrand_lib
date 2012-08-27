@@ -7,13 +7,16 @@
 
 #include "../include/private/obj_Private.h"
 
-uint8_t initBase(obj *instance, dealloc_fptr dealloc){
+uint8_t initBase(obj *instance, dealloc_fptr dealloc, const char *classname){
+
   *instance = malloc(sizeof(struct obj_struct));
+
   if(!(*instance)){
     return 1;
   }
   (*instance)->references = 1;
   (*instance)->dealloc = dealloc;
+  (*instance)->classname = classname;
 
 #ifdef OB_THREADED
   initLock(&((*instance)->lock));
@@ -55,6 +58,17 @@ void retain(obj *instance){
   return;
 }
 
+uint8_t objIsOfClass(const obj *a, const char *classname){
+  if(!a){
+    fprintf(stderr, "offbrand_stdlib: NULL is not of any class\n");
+    return 1;
+  }
+
+  if(strcmp((*a)->classname, classname) == 0) return 0;
+  else return 1;
+}
+
+
 uint8_t sameClass(const obj *a, const obj *b){
   
   if(!a || !b){
@@ -62,11 +76,7 @@ uint8_t sameClass(const obj *a, const obj *b){
     return 0;
   }
 
-  if((*a)->dealloc == (*b)->dealloc){
-    return 1;
-  }
-
-  return 0;
+  return objIsOfClass(a, (*b)->classname);
 }
 
 

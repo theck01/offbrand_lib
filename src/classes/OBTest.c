@@ -16,7 +16,7 @@ OBTest * createTest(uint32_t id){
   }
 
   /*initialize reference counting base data*/
-  if(initBase((obj *)new_instance, &deallocOBTest)){
+  if(initTestBase(new_instance)){
     fprintf(stderr, "OBTest: Could not initialize base obj\n");
     return NULL;
   }
@@ -65,7 +65,34 @@ uint32_t getTestReferences(OBTest *a){
 
 /* PRIVATE METHODS */
 
-void deallocOBTest(obj *to_dealloc){
+uint8_t initTestBase(OBTest *to_init){
+
+  /* Classname for the this specific class */
+  static char *classname = NULL;
+  const char stack_classname[] = "OBTest";
+
+  if(!classname){
+    classname = malloc(sizeof(char) * strlen(stack_classname) + 1);
+    if(!classname){
+      fprintf(stderr, "OBTest: Could not allocate static classname "
+                      "for all instances\nClass checking functions will not "
+                      "work until classname allocated\n");
+      return 1;
+    }
+    strncpy(classname, stack_classname, strlen(stack_classname));
+    classname[strlen(stack_classname)] = '\0';
+  }
+
+  /* initialize reference counting base data */
+  if(initBase((obj *)to_init, &deallocTest, classname)){
+    fprintf(stderr, "OBTest: Could not initialize base obj\n");
+    return 1;
+  }
+
+  return 0;
+}
+
+void deallocTest(obj *to_dealloc){
   free((OBTest *)to_dealloc);
   return;
 }

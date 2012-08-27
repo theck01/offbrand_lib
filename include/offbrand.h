@@ -11,6 +11,7 @@
 #define OFFBRAND_LIB
 
 #include <stdio.h>
+#include <string.h>
 
 #include "obj.h" /*generic pointer for all OffBrand data structures*/
 
@@ -43,9 +44,10 @@ typedef int8_t (*compare_fptr)(const obj *, const obj*);
 
 /* OFFBRAND STANDARD LIB */
 
-/* initializes an instance of any class with specified dealloc function and
- * default reference count of 1. Returns 0 on success, 1 on failure */
-uint8_t initBase(obj *instance, dealloc_fptr dealloc);
+/* initializes an instance of any class with specified dealloc function,
+ * default reference count of 1, and classname. Returns 0 on success, 1 on 
+ * failure */
+uint8_t initBase(obj *instance, dealloc_fptr dealloc, const char *classname);
 
 /* decrements reference count on OBObj, frees memory if reference count is
  * reduced to 0. Returns a pointer to the object if it still exists, NULL if
@@ -55,10 +57,14 @@ obj * release(obj *instance);
 /* increments reference count on OBObj by one */
 void retain(obj *instance);
 
-/* compares dealloc functions for the arguments to determine that they are from
- * the same class. Depends on a class having a single unique deallocation,
- * which is required for all Offbrand compatible classes. returns 1 if instances
- * of same class, 0 if not */
+/* performs string comparision on classname of object a and the provided null
+ * terminated character string, returns 0 if they are equal, 1 if the classnames
+ * do not match */
+uint8_t objIsOfClass(const obj *a, const char *classname);
+
+/* performs string comparision on classnames of objects a and b, returns 0 if
+ * they have the same classname (and are of the same class), or 1 if they have
+ * differing classnames */
 uint8_t sameClass(const obj *a, const obj *b);
 
 /* default comparision, checks to see that the two pointer values are equal.

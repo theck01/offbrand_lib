@@ -81,9 +81,17 @@ Simple solution implemented that check so see if two obj have the same dealloc
 function, if so said to be equal. Depends on each class having one unique
 dealloc function, which is not a terrible assumption to make.
 
+UPDATE (08-27-2012):
+Each obj could contain a pointer to a string with the name of the class, all
+obj of that class would point to the same string. This string should be lazily
+instantiated, the first object of that type would create it, and all subsequent
+objects would just use that same string. Types could then be checked by checking
+whether the classname string of the object and the supplied string (either by
+the programmer or another object) are equivalent.
+
 STATUS:
-Registry still theoretical, basic protection scheme based on dealloc function
-comparison implemented.
+Registry still theoretical, protection scheme based on string comparision of
+classnames implemented.
 
 --------------------------------------------------------------------------------
 

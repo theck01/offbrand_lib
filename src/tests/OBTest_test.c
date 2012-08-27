@@ -6,8 +6,11 @@
 int main(){
 
   int i;
-  OBTest *test_obj = createTest(1);
-  if(!test_obj){
+  OBTest *test_obj, *compare_obj;
+  test_obj = createTest(1);
+  compare_obj = createTest(3);
+
+  if(!test_obj || !compare_obj){
     fprintf(stderr, "OBTest_test: could not allocate memory for test, TEST "
                     "FAILED\n");
     exit(1);
@@ -39,9 +42,19 @@ int main(){
                     "reached zero\n");
     exit(1);
 	}
-  else{
-    printf("OBTest_test: TEST PASSED\n");
+
+  if(sameClass((obj *)test_obj, (obj *)compare_obj)){
+    fprintf(stderr, "OBTest_test: Two OBTest objects were not of the same "
+                    "class, TEST FAILED\n");
+    exit(1);
   }
 
+  if(objIsOfClass((obj *)test_obj, "OBTest")){
+    fprintf(stderr, "OBTest_test: An OBTest object was not considered to be an "
+                    "OBTest object during check, TEST FAILED\n");
+    exit(1);
+  }
+
+  printf("OBTest_test: TEST PASSED\n");
   return 0;
 }

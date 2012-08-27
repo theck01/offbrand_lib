@@ -605,6 +605,33 @@ void printBigUInt(OBBigUInt *a){
 
 /* PRIVATE METHODS */
 
+uint8_t initBigUIntBase(OBBigUInt *to_init){
+
+  /* Classname for the this specific class */
+  static char *classname = NULL;
+  const char stack_classname[] = "OBBigUInt";
+
+  if(!classname){
+    classname = malloc(sizeof(char) * strlen(stack_classname));
+    if(!classname){
+      fprintf(stderr, "OBBigUInt: Could not allocate static classname "
+                      "for all instances\nClass checking functions will not "
+                      "work until classname allocated\n");
+      return 1;
+    }
+    else strcpy(classname, stack_classname);
+  }
+
+  /* initialize reference counting base data */
+  if(initBase((obj *)to_init, &deallocBigUInt, classname)){
+    fprintf(stderr, "OBBigUInt: Could not initialize base obj\n");
+    return 1;
+  }
+
+  return 0;
+}
+
+
 OBBigUInt * createBigUIntWithCap(uint64_t capacity){
 
   uint64_t i;
@@ -616,7 +643,7 @@ OBBigUInt * createBigUIntWithCap(uint64_t capacity){
   }
 
   /* initialize reference counting base data */
-  if(initBase((obj *)new_instance, &deallocBigUInt)){
+  if(initBigUIntBase(new_instance)){
     fprintf(stderr, "OBBigUInt: Could not initialize base obj\n");
     return NULL;
   }
