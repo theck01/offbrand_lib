@@ -79,8 +79,7 @@ uint8_t initTestBase(OBTest *to_init){
                       "work until classname allocated\n");
       return 1;
     }
-    strncpy(classname, stack_classname, strlen(stack_classname));
-    classname[strlen(stack_classname)] = '\0';
+    strcpy(classname, stack_classname); 
   }
 
   /* initialize reference counting base data */

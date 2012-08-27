@@ -1,0 +1,6 @@
+
+Best practice, when releasing objects, use:
+
+to_release = release((obj *)to_release);
+
+So that NULL is passed on to the external variable if object is deallocated

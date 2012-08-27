@@ -1,5 +1,5 @@
 
-#include "../../include/misc_functions.h"
+#include "../../include/minlog_funct.h"
 
 uint8_t numOneBits(uint32_t num){
 

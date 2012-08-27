@@ -1,11 +1,11 @@
 
 #include "../../include/NCube.h"
 #include "../../include/private/NCube_Private.h"
-#include "../../include/misc_functions.h"
+#include "../../include/minlog_funct.h"
 
 /* PUBLIC METHODS */
 
-NCube * createNCube(uint32_t term){
+NCube * createNCube(uint32_t term, uint8_t is_dont_care){
 
   NCube *new_instance;
   
@@ -22,6 +22,11 @@ NCube * createNCube(uint32_t term){
   }
 
   new_instance->terms[0] = term;
+  if(is_dont_care){
+    new_instance->prime_implicant = 0;
+    new_instance->all_dont_cares = 1;
+  }
+
   return new_instance;
 }
 
@@ -79,6 +84,13 @@ NCube * mergeNCubes(NCube *a, NCube *b){
   /* set a and b as non prime implicants */
   a->prime_implicant = 0;
   b->prime_implicant = 0;
+
+  /* if new cube is composed of sub cubes of all dont cares, new cube is not a
+   * prime implicant, and it is composed entirely of dont cares as well */
+  if(a->all_dont_cares && b->all_dont_cares){
+    result->prime_implicant = 0;
+    result->all_dont_cares = 1;
+  }
 
   return result;
 }
@@ -144,7 +156,7 @@ NCube * createNCubeWithOrder(uint8_t order){
   }
 
   /* initialize reference counting base data */
-  if(initBase((obj *)new_cube, &deallocNCube)){
+  if(initNCubeBase(new_cube)){
     fprintf(stderr, "NCube: Base obj could not be initialized\n");
     return NULL;
   }
@@ -159,7 +171,36 @@ NCube * createNCubeWithOrder(uint8_t order){
   new_cube->dont_cares = 0;
   new_cube->order = order;
   new_cube->prime_implicant = 1;
+  new_cube->all_dont_cares = 0;
+
   return new_cube;
+}
+
+
+uint8_t initNCubeBase(NCube *to_init){
+
+  /* Classname for the this specific class */
+  static char *classname = NULL;
+  const char stack_classname[] = "NCube";
+
+  if(!classname){
+    classname = malloc(sizeof(char) * strlen(stack_classname));
+    if(!classname){
+      fprintf(stderr, "NCube: Could not allocate static classname "
+                      "for all instances\nClass checking functions will not "
+                      "work until classname allocated\n");
+      return 1;
+    }
+    else strcpy(classname, stack_classname);
+  }
+
+  /* initialize reference counting base data */
+  if(initBase((obj *)to_init, &deallocNCube, classname)){
+    fprintf(stderr, "NCube: Could not initialize base obj\n");
+    return 1;
+  }
+
+  return 0;
 }
 
 

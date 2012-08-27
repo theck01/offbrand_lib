@@ -17,7 +17,7 @@ CFLAGS = -Wall -Wextra
 OFLAGS = $(CFLAGS) -c
 
 # Executable Dependencies
-ALL_DEP = $(BIN_FUNCT)/misc_functions.o
+ALL_DEP = $(BIN_FUNCT)/minlog_funct.o
 EXE_DEP = ../../bin/offbrand_stdlib.o $(ALL_DEP)
 
 # Enumerate/Find Objects to build

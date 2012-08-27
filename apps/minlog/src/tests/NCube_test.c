@@ -8,18 +8,24 @@ int main (){
   NCube *c01, *c23, *c57, *c1315;
   NCube *c0123, *c571315;
 
-  c0 = createNCube(0);
-  c1 = createNCube(1);
-  c2 = createNCube(2);
-  c3 = createNCube(3);
-  c5 = createNCube(5);
-  c7 = createNCube(7);
-  c13 = createNCube(13);
-  c15 = createNCube(15);
+  c0 = createNCube(0, 0);
+  c1 = createNCube(1, 0);
+  c2 = createNCube(2, 0);
+  c3 = createNCube(3, 1);
+  c5 = createNCube(5, 1);
+  c7 = createNCube(7, 1);
+  c13 = createNCube(13, 1);
+  c15 = createNCube(15, 1);
 
   if(!c0 || !c1 || !c2 || !c3 || !c5 || !c7 || !c13 || !c15){
     fprintf(stderr, "NCube_test: Could not create one of the NCubes required "
                     "for testing, TEST FAILED\n");
+    exit(1);
+  }
+
+  if(isNCubePrimeImplicant(c3)){
+    fprintf(stderr, "NCube_test: Dont care cube is considered prime implicant, "
+                    "TEST FAILED\n");
     exit(1);
   }
 
@@ -34,7 +40,7 @@ int main (){
                     "FAILED\n");
     exit(1);
   }
-  
+
   if((c57 = mergeNCubes(c5, c15))){
     fprintf(stderr, "NCube_test: Terms 5 and 15 were falsely merged, TEST "
                     "FAILED\n");
@@ -87,6 +93,12 @@ int main (){
      !isNCubePrimeImplicant(c0123)){
     fprintf(stderr, "NCube_test: Prime implicant status not properly "
                     "transferred, TEST FAILED\n");
+    exit(1);
+  }
+
+  if(isNCubePrimeImplicant(c571315)){
+    fprintf(stderr, "NCube_test: Large NCube of dont cares is considered a "
+                    "prime implicant, TEST FAILED\n");
     exit(1);
   }
 

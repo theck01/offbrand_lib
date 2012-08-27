@@ -18,6 +18,8 @@ struct NCube_struct{
                               single dont care bit */
   uint8_t order;
   uint8_t prime_implicant; /* boolean, indicates if term is a prime implicant */
+  uint8_t all_dont_cares;  /* boolean, indicates if the term is composed of only
+                              dont cares */
 };
 
 
@@ -25,6 +27,11 @@ struct NCube_struct{
 
 /* default constructor, other constructors will call this one */
 NCube * createNCubeWithOrder(uint8_t order);
+
+/* function performs all initialization on new instances NCube, MUST
+ * BE CALLED IMMEDIATELY AFTER INSTANTIATION. This function may be called by a
+ * default constructor that all other constructors build off of */
+uint8_t initNCubeBase(NCube *to_init);
 
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */

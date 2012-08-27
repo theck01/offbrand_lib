@@ -16,7 +16,7 @@ Term * createTerm(uint32_t term){
   }
 
   /* initialize reference counting base data */
-  if(initBase((obj *)new_instance, &deallocTerm)){
+  if(initTermBase(new_instance)){
     fprintf(stderr, "Term: Could not initialize base obj\n");
     return NULL;
   }
@@ -42,6 +42,33 @@ int32_t getTermValue(Term *a){
 }
 
 /* PRIVATE METHODS */
+
+uint8_t initTermBase(Term *to_init){
+
+  /* Classname for the this specific class */
+  static char *classname = NULL;
+  const char stack_classname[] = "Term";
+
+  if(!classname){
+    classname = malloc(sizeof(char) * strlen(stack_classname));
+    if(!classname){
+      fprintf(stderr, "Term: Could not allocate static classname "
+                      "for all instances\nClass checking functions will not "
+                      "work until classname allocated\n");
+      return 1;
+    }
+    else strcpy(classname, stack_classname);
+  }
+
+  /* initialize reference counting base data */
+  if(initBase((obj *)to_init, &deallocTerm, classname)){
+    fprintf(stderr, "Term: Could not initialize base obj\n");
+    return 1;
+  }
+
+  return 0;
+}
+
 
 void deallocTerm(obj *to_dealloc){
   /* cast generic obj to Term */

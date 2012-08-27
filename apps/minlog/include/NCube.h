@@ -18,7 +18,7 @@ typedef struct NCube_struct NCube;
 
 /* constructor allocates and initializes an instance of NCube with the term
  * (minterm or maxterm) specified */
-NCube * createNCube(uint32_t term);
+NCube * createNCube(uint32_t term, uint8_t is_dont_care);
 
 /* constructor allocates and initializes an instance of NCube with by merging
  * the two NCubes into a single higher order cube. If cubes cannot be merged
