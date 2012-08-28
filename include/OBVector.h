@@ -30,20 +30,18 @@ uint32_t sizeOfVector(const OBVector *v);
 
 /* resizes the vector to the current number of elements, so no extra array space
  * is wasted. Should be used only after a vector will remain constant for the
- * duration of its lifespan, if memory is tight. Returns 0 on success, 1 on
- * failure */
-uint8_t fitVectorToContents(OBVector *v); 
+ * duration of its lifespan, if memory is tight. */
+void fitVectorToContents(OBVector *v); 
 
-/* adds obj to end of vector, returns 0 if successful, 1 if error */
-uint8_t addToVector(OBVector *v, obj *to_add);
+/* adds obj to end of vector */
+void addToVector(OBVector *v, obj *to_add);
 
-/* adds obj to the vector at specified index, returns 0 if successful, 1 if
- * error */
-uint8_t insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index);
+/* adds obj to the vector at specified index */ 
+void insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index);
 
 /* replace obj at index. Does nothing if index is not less than number of items
  * contained within vector. Returns 0 if object is replaced, 1 if out of range*/
-uint8_t replaceInVector(OBVector *v, obj *new_obj, const uint32_t index);
+void replaceInVector(OBVector *v, obj *new_obj, const uint32_t index);
 
 /* returns the object stored in the OBVector at index. Returns NULL if index is
  * out of bounds */
@@ -61,7 +59,7 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
  * found to be different at runtime. Order (lowest to highest or highest to 
  * lowest) specified by sorting macros defined in sort_obj.h. Uses the merge 
  * sort algorithm. Returns 0 on success, 1 on error */
-uint8_t sortVector(OBVector *v, const compare_fptr compare, const int8_t order);
+void sortVector(OBVector *v, const compare_fptr compare, const int8_t order);
 
 /* remove obj at end of vector, releasing the vectors reference on the obj */
 void removeFromVectorEnd(OBVector *v);

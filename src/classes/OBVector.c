@@ -7,17 +7,10 @@
 OBVector * createVector(uint32_t initial_capacity){
 
   OBVector *new_instance = malloc(sizeof(OBVector));
-  if(!new_instance){
-    fprintf(stderr, "OBVector: Could not allocate memory for "
-                    "new_instance\n");
-    return NULL;
-  }
+  assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  if(initVectorBase(new_instance)){
-    fprintf(stderr, "OBVector: Could not initialize new instance\n");
-    return NULL;
-  }
+  initVectorBase(new_instance);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
@@ -26,12 +19,7 @@ OBVector * createVector(uint32_t initial_capacity){
   }
 
   new_instance->array = malloc(sizeof(obj *)*initial_capacity);
-  if(!new_instance->array){
-    fprintf(stderr, "OBVector: Could not allocate internal array in new "
-                    "instance\n");
-    free(new_instance);
-    return NULL;
-  }
+  assert(new_instance->array != NULL);
 
   new_instance->capacity = initial_capacity;
   new_instance->num_objs = 0;
@@ -46,16 +34,9 @@ OBVector * copyVector(const OBVector *to_copy){
   OBVector *new_vec;
 
   /* if there is nothing to copy, do nothing */
-  if(!to_copy){
-    return NULL;
-  }
+  assert(to_copy);
 
   new_vec = createVector(to_copy->capacity);
-  if(!new_vec){
-    fprintf(stderr, "OBVector: Could not create vector copy\n");
-    return NULL;
-  }
-  
   new_vec->num_objs = to_copy->num_objs;
   new_vec->capacity = to_copy->capacity;
 
@@ -70,30 +51,20 @@ OBVector * copyVector(const OBVector *to_copy){
 
 
 uint32_t sizeOfVector(const OBVector *v){
-  if(!v){
-    return 0;
-  }
-
+  assert(v != NULL);
   return v->num_objs;
 }
 
 
-uint8_t fitVectorToContents(OBVector *v){
+void fitVectorToContents(OBVector *v){
 
   uint32_t i;
   obj **new_array;
   
-  if(!v){
-    fprintf(stderr, "OBVector: NULL argument passed to fitVectorToContents\n");
-    return 1;
-  }
+  assert(v);
 
   new_array= malloc(sizeof(obj *)*v->num_objs);
-  if(!new_array){
-    fprintf(stderr, "OBVector: Could not allocate internal array in new "
-                    "instance\n");
-    return 1;
-  }
+  assert(new_array);
 
   for(i=0; i<v->num_objs; i++){
     new_array[i] = v->array[i];
@@ -103,36 +74,26 @@ uint8_t fitVectorToContents(OBVector *v){
   free(v->array);
   v->array = new_array;
 
-  return 0;
+  return;
 }
 
 
-uint8_t addToVector(OBVector *v, obj *to_add){
-  return insertAtVectorIndex(v, to_add, v->num_objs);
+void addToVector(OBVector *v, obj *to_add){
+  assert(v != NULL && to_add != NULL);
+  insertAtVectorIndex(v, to_add, v->num_objs);
+  return;
 }
 
-uint8_t insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
+void insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
 
   uint32_t i;
 
-  if(!v || !to_add){
-    fprintf(stderr, "OBVector: NULL argument(s) passed to addToVector\n");
-    return 1;
-  }
+  assert(v != NULL && to_add != NULL && index <= v->num_objs);
 
   /* if the index is beyond the end of the current vector, display error but
    * attempt to add to the end */
-  if(index > v->num_objs){
-    fprintf(stderr, "OBVector: Attempting to add obj beyond valid range. "
-                    "Adding to the end instead\n");
-    index = v->num_objs;
-  }
 
-  if(resizeVector(v)){
-    fprintf(stderr, "OBVector: Could not resize vector to accommadate new "
-                    "obj\n");
-    return 1;
-  }
+  resizeVector(v);
 
   /* shift all entries at or after index by 1 */
   for(i=v->num_objs; i>index; i--){
@@ -143,44 +104,23 @@ uint8_t insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
   v->array[index] = to_add;
   v->num_objs++;
 
-  return 0;
+  return;
 }
 
-uint8_t replaceInVector(OBVector *v, obj *new_obj, const uint32_t index){
+void replaceInVector(OBVector *v, obj *new_obj, const uint32_t index){
 
-  if(!v || !new_obj){
-    fprintf(stderr, "OBVector: NULL argument(s) passed to replaceInVector\n");
-    return 1;
-  }
-
-  if(index >= v->num_objs){
-    fprintf(stderr, "OBVector: attempting to access %i, which is out of vector "
-                    "item range, 0-%i\n", index, v->num_objs);
-    return 1;
-  }
+  assert(v != NULL && new_obj != NULL && index < v->num_objs);
 
   retain(new_obj);
   release(v->array[index]);
   v->array[index] = new_obj;
 
-  return 0;
+  return;
 }
 
 
 obj * objAtVectorIndex(const OBVector *v, const uint32_t index){
-
-  if(!v){
-    fprintf(stderr, "OBVector: NULL argument passed to objAtVectorIndex\n");
-    return NULL;
-  }
-
-
-  if(index >= v->num_objs){
-    fprintf(stderr, "OBVector: attempting to access %i, which is out of vector "
-                    "item range, 0-%i\n", index, v->num_objs);
-    return NULL;
-  }
-
+  assert(v != NULL && index < v->num_objs);
   return v->array[index];
 }
 
@@ -190,16 +130,10 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
 
   uint32_t i;
 
-  if(!v || !to_find){
-    fprintf(stderr, "OBVector: Unexpected NULL argument(s) passed to "
-                    "findObjInVector\n");
-    return 0;
-  }
+  assert(v != NULL && to_find != NULL);
 
   /* custom comparison function was not added, use simple pointer comparator */
-  if(compare == NULL){
-    compare = &objCompare;
-  }
+  if(!compare) compare = &objCompare;
 
   for(i=0; i<v->num_objs; i++){
     /* if the object exists in the vector */
@@ -212,30 +146,26 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
 }
 
 
-uint8_t sortVector(OBVector *v, const compare_fptr compare,
+void sortVector(OBVector *v, const compare_fptr compare,
                    const int8_t order){
 
   obj **sorted;
 
-  if(!v || !compare){
-    fprintf(stderr, "OBVector: Unexpected NULL argument(s) passed to "
-                    "findObjInVector\n");
-    return 1;
-  }
+  assert(v != NULL);
+
+  /* custom comparison function was not added, use simple pointer comparator */
+  if(!compare) compare = &objCompare;
 
   sorted = recursiveSortContents(v->array, v->num_objs, compare, order);
-  if(!sorted){
-    fprintf(stderr, "OBVector: Sorting operation failed\n");
-    return 1;
-  }
 
   free(v->array);
   v->array = sorted;
 
-  return 0;
+  return;
 }
 
 void removeFromVectorEnd(OBVector *v){
+  assert(v != NULL);
   return removeFromVectorIndex(v, v->num_objs-1);
 }
 
@@ -243,21 +173,10 @@ void removeFromVectorIndex(OBVector *v, uint32_t index){
   
   uint32_t i;
 
-  if(!v){
-    fprintf(stderr, "OBVector: NULL argument passed to removeFromVector\n");
-    return;
-  }
-
-  /* if the index is beyond the end of the current vector, display error but
-   * attempt to add to the end */
-  if(index >= v->num_objs){
-    fprintf(stderr, "OBVector: Attempting to remove obj beyond valid range\n");
-    return;
-  }
+  assert(v != NULL && index < v->num_objs);
 
   /* if the vector is empty, do nothing */
   if(v->num_objs < 1){
-    fprintf(stderr, "OBVector: Cannot remove element from empty array\n");
     return;
   }
 
@@ -276,35 +195,30 @@ void removeFromVectorIndex(OBVector *v, uint32_t index){
 
 /* PRIVATE METHODS */
 
-uint8_t initVectorBase(OBVector *to_init){
+void initVectorBase(OBVector *to_init){
 
   /* Classname for the this specific class */
   static char *classname = NULL;
   const char stack_classname[] = "OBVector";
 
+  assert(to_init != NULL);
+
   if(!classname){
     classname = malloc(sizeof(char) * strlen(stack_classname));
-    if(!classname){
-      fprintf(stderr, "OBVector: Could not allocate static classname "
-                      "for all instances\nClass checking functions will not "
-                      "work until classname allocated\n");
-      return 1;
-    }
-    else strcpy(classname, stack_classname);
+    assert(classname != NULL);
+    strcpy(classname, stack_classname);
   }
 
   /* initialize reference counting base data */
-  if(initBase((obj *)to_init, &deallocVector, classname)){
-    fprintf(stderr, "OBVector: Could not initialize base obj\n");
-    return 1;
-  }
-
-  return 0;
+  initBase((obj *)to_init, &deallocVector, classname);
+  return;
 }
 
 void deallocVector(obj *to_dealloc){
 
   uint32_t i;
+
+  assert(to_dealloc != NULL);
 
   /* cast generic obj to OBVector */
   OBVector *instance = (OBVector *)to_dealloc;
@@ -319,7 +233,7 @@ void deallocVector(obj *to_dealloc){
   return;
 }
 
-uint8_t resizeVector(OBVector *v){
+void resizeVector(OBVector *v){
 
   uint32_t i, new_cap;
   obj **array;
@@ -327,11 +241,7 @@ uint8_t resizeVector(OBVector *v){
   if(v->num_objs == v->capacity){
     
     /* if maximum size has been reached print msg */
-    if(v->capacity == UINT32_MAX){
-      fprintf(stderr, "OBVector: Maximum vector capacity of 2^32 objs "
-                      "reached\n");
-      return 1;
-    }
+    assert(v->capacity != UINT32_MAX);
     
     new_cap = v->capacity*2;
 
@@ -340,11 +250,7 @@ uint8_t resizeVector(OBVector *v){
     }
     
     array = malloc(sizeof(obj *)*new_cap);
-    if(!array){
-      fprintf(stderr, "OBVector: Could not allocate larger internal array for "
-                      "resize\n");
-      return 1;
-    }
+    assert(array != NULL);
 
     for(i=0; i<v->num_objs; i++){
       array[i] = v->array[i];
@@ -355,7 +261,7 @@ uint8_t resizeVector(OBVector *v){
     v->capacity = new_cap;
   }
 
-  return 0;
+  return;
 }
 
 obj ** recursiveSortContents(obj **to_sort, uint32_t size,
@@ -368,11 +274,7 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size,
    /* base case, if the vector is of size one, its sorted */
   if(size <= 1){
     sorted = malloc(sizeof(obj *)*size);
-    if(!sorted){
-      fprintf(stderr, "OBVector: Could not allocate internal array during "
-                      "sort\n");
-      return NULL;
-    }
+    assert(sorted != NULL);
     *sorted = *to_sort;
     return sorted;
   }
@@ -384,17 +286,8 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size,
   right_sorted = recursiveSortContents(to_sort+split, size-split, compare, 
                                        order);
   
-  /* if sorting a half failed, return NULL */
-  if(!left_sorted || !right_sorted){
-    return NULL;
-  }
-
   sorted = malloc(sizeof(obj *)*size);
-  if(!sorted){
-    fprintf(stderr, "OBVector: Could not allocate internal array during "
-                    "sort\n");
-    return NULL;
-  }
+  assert(sorted != NULL);
 
   /* merge sorted halves */
   i=0;

@@ -23,19 +23,19 @@ struct OBBigUInt_struct{
 /* function performs all initialization on new instances OBBigUInt, MUST
  * BE CALLED IMMEDIATELY AFTER INSTANTIATION. This function may be called by a
  * default constructor that all other constructors build off of */
-uint8_t initBigUIntBase(OBBigUInt *to_init);
+void initBigUIntBase(OBBigUInt *to_init);
 
 /* constructor allocates an new OBBigUInt with specified capacity. Used for
  * internal allocation in most public arithmetic and bitwise operations */
-OBBigUInt * createBigUIntWithCap(uint64_t capacity);
+OBBigUInt * createBigUIntWithCap(const uint64_t capacity);
 
 /* determines the number of significant ints in OBBigUInt that will matter in 
  * arithmetic operations */
-uint64_t sigIntsInBigUInt(OBBigUInt *a);
+uint64_t sigIntsInBigUInt(const OBBigUInt *a);
 
 /* generates the twos compliment version of the OBBigUInt, with total_len digits
  * if sign needs to be extended*/
-OBBigUInt * twosCompBigUInt(OBBigUInt *a, uint64_t total_len);
+OBBigUInt * twosCompBigUInt(const OBBigUInt *a, const uint64_t total_len);
 
 /* recursively divides dividend by divisor, continually adding approximates to
  * quotient until true result is found. The value returned by the function is 

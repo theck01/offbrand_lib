@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 #include "obj.h" /*generic pointer for all OffBrand data structures*/
 
@@ -25,10 +26,6 @@
 /* sorting order */
 #define OB_LEAST_TO_GREATEST -1
 #define OB_GREATEST_TO_LEAST 1
-
-/* error codes */
-#define OB_COMPARE_ERR 2 /* comparision failed */
-
 
 /* OFFBRAND PRIMITIVE TYPES */
 
@@ -45,9 +42,8 @@ typedef int8_t (*compare_fptr)(const obj *, const obj*);
 /* OFFBRAND STANDARD LIB */
 
 /* initializes an instance of any class with specified dealloc function,
- * default reference count of 1, and classname. Returns 0 on success, 1 on 
- * failure */
-uint8_t initBase(obj *instance, dealloc_fptr dealloc, const char *classname);
+ * default reference count of 1, and classname */
+void initBase(obj *instance, dealloc_fptr dealloc, const char *classname);
 
 /* decrements reference count on OBObj, frees memory if reference count is
  * reduced to 0. Returns a pointer to the object if it still exists, NULL if

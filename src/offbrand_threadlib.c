@@ -14,14 +14,10 @@ void initLock(OBLock *to_init){
   return;
 }
 
-int readLock(obj *to_read_lock){
+void readLock(obj *to_read_lock){
 
-  if(!to_read_lock){
-    fprintf(stderr, "Offbrand Lock Lib: Unexpected NULL argument passed to "
-                    "readLock\n");
-    return 1;
-  }
-  
+  assert(to_read_lock != NULL);
+
   /* Lock the OBLock mutex to change shared lock data */
   if(pthread_mutex_lock(&((*to_read_lock)->lock.mutex))){
     perror("readLock pthread_mutex_lock\n");
@@ -55,20 +51,16 @@ int readLock(obj *to_read_lock){
     exit(1);
   }
 
-  return 0;
+  return; 
 }
 
 
-int readUnlock(obj *to_read_unlock){
+void readUnlock(obj *to_read_unlock){
 
   uint8_t signal_write = 0; /* booleans to signal writes and reads at end of */
   uint8_t signal_read = 0;  /* readUnlock */
 
-  if(!to_read_unlock){
-    fprintf(stderr, "Offbrand Lock Lib: Unexpected NULL argument passed to "
-                    "readUnlock\n");
-    return 1;
-  }
+  assert(to_read_unlock != NULL);
 
   /* Lock the OBLock mutex to change shared lock data */
   if(pthread_mutex_lock(&((*to_read_unlock)->lock.mutex))){
@@ -77,11 +69,7 @@ int readUnlock(obj *to_read_unlock){
   }
 
   /* check count for error */
-  if((*to_read_unlock)->lock.reads_active == 0){
-    fprintf(stderr, "Offbrand Lock Lib: Cannot readUnlock the provided obj, "
-                    "there are no threads holding a read lock\n");
-    return 1;
-  }
+  assert((*to_read_unlock)->lock.reads_active != 0);
 
   /* if thread was last thread with read lock */
   if(--((*to_read_unlock)->lock.reads_active) == 0){
@@ -101,22 +89,18 @@ int readUnlock(obj *to_read_unlock){
   else if(signal_read) 
     pthread_cond_broadcast(&((*to_read_unlock)->lock.read_rdy));
 
-  return 0;
+  return;
 }
 
 
-int writeLock(obj *to_write_lock){
+void writeLock(obj *to_write_lock){
 
-  if(!to_write_lock){
-    fprintf(stderr, "Offbrand Lock Lib: Unexpected NULL argument passed to "
-                    "writeLock\n");
-    return 1;
-  }
-  
+  assert(to_write_unlock != NULL); 
+
   /* Lock the OBLock mutex to change shared lock data */
   if(pthread_mutex_lock(&((*to_write_lock)->lock.mutex))){
     perror("writeLock pthread_mutex_lock\n");
-    return 1;
+    exit(1);
   }
 
   /* increment waiting before check */
@@ -138,35 +122,27 @@ int writeLock(obj *to_write_lock){
   /* unlock the OBLock mutex to change shared lock data */
   if(pthread_mutex_unlock(&((*to_write_lock)->lock.mutex))){
     perror("writeLock pthread_mutex_unlock\n");
-    return 1;
+    exit(1);
   }
  
-  return 0;
+  return;
 }
 
 
-int writeUnlock(obj *to_write_unlock){
+void writeUnlock(obj *to_write_unlock){
 
   uint8_t signal_read = 0;  /* Boolean indicating whether any threads waiting */
   uint8_t signal_write = 0; /* should be signlaed */
 
-  if(!to_write_unlock){
-    fprintf(stderr, "Offbrand Lock Lib: Unexpected NULL argument passed to "
-                    "writeLock\n");
-    return 1;
-  }
+  assert(to_write_unlock != NULL);
 
   /* Lock the mutex to change shared lock data */
   if(pthread_mutex_lock(&((*to_write_unlock)->lock.mutex))){
     perror("writeUnlock pthread_mutex_lock\n");
-    return 1;
+    exit(1);
   }
 
-  if(!(*to_write_unlock)->lock.write_active == 0){
-    fprintf(stderr, "Offbrand Lock Lib: Cannot writeUnlock the provided obj, "
-                    "there are no threads holding a read lock\n");
-    return 1;
-  }
+  assert((*to_write_unlock)->lock.write_active != 0);
 
   (*to_write_unlock)->lock.write_active = 0;
 
@@ -177,7 +153,7 @@ int writeUnlock(obj *to_write_unlock){
 
   if(pthread_mutex_unlock(&((*to_write_unlock)->lock.mutex))){
     perror("writeUnlock pthread_mutex_unlock\n");
-    return 1;
+    exit(1);
   }
 
   /* if should signal waiting threads */
@@ -185,7 +161,7 @@ int writeUnlock(obj *to_write_unlock){
   else if(signal_write)
     pthread_cond_signal(&((*to_write_unlock)->lock.write_rdy));
   
-  return 0;
+  return;
 }
 
 

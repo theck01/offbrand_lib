@@ -7,13 +7,14 @@
 
 #include "../include/private/obj_Private.h"
 
-uint8_t initBase(obj *instance, dealloc_fptr dealloc, const char *classname){
+void initBase(obj *instance, dealloc_fptr dealloc, const char *classname){
+
+  assert(classname != NULL);
 
   *instance = malloc(sizeof(struct obj_struct));
 
-  if(!(*instance)){
-    return 1;
-  }
+  assert((*instance) != NULL);
+
   (*instance)->references = 1;
   (*instance)->dealloc = dealloc;
   (*instance)->classname = classname;
@@ -27,10 +28,7 @@ uint8_t initBase(obj *instance, dealloc_fptr dealloc, const char *classname){
 
 obj * release(obj *instance){
 
-  /* quitely do nothing if attempting to release NULL */
-  if(!instance){
-    return NULL;
-  }
+  assert(instance != NULL);
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
@@ -48,10 +46,7 @@ obj * release(obj *instance){
 
 void retain(obj *instance){
 
-  if(!instance){
-    fprintf(stderr, "offbrand_stdlib: Cannot release NULL\n");
-    return;
-  }
+  assert(instance != NULL);
 
   if((*instance)->references < UINT32_MAX) ++((*instance)->references);
 
@@ -59,34 +54,21 @@ void retain(obj *instance){
 }
 
 uint8_t objIsOfClass(const obj *a, const char *classname){
-  if(!a){
-    fprintf(stderr, "offbrand_stdlib: NULL is not of any class\n");
-    return 1;
-  }
-
+  assert(a != NULL && classname != NULL);
   if(strcmp((*a)->classname, classname) == 0) return 0;
   else return 1;
 }
 
 
 uint8_t sameClass(const obj *a, const obj *b){
-  
-  if(!a || !b){
-    fprintf(stderr, "offbrand_stdlib: Cannot compare NULL(s) in sameClass\n");
-    return 0;
-  }
-
+  assert(a != NULL && b != NULL);
   return objIsOfClass(a, (*b)->classname);
 }
 
 
 int8_t objCompare(const obj *a, const obj *b){
 
-  if(!a || !b){
-    fprintf(stderr, "offbrand_stdlib: NULL argument(s) passed to "
-                    "defaultCompare\n");
-    return OB_COMPARE_ERR;
-  }
+  assert(a != NULL && b != NULL);
 
   if(a > b){
     return 1;

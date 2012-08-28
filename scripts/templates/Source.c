@@ -9,17 +9,10 @@
 %CODECLASSNAME% * create%CODECLASSNAME%(void){
 
   %CODECLASSNAME% *new_instance = malloc(sizeof(%CODECLASSNAME%));
-  if(!new_instance){
-    fprintf(stderr, "%CODECLASSNAME%: Could not allocate memory for "
-                    "new_instance\n");
-    return NULL;
-  }
+  assert(new_instance != NULL);
 
   /* initialize reference counting base of class */
-  if(init%CODECLASSNAME%Base((obj *)new_instance)){
-    fprintf(stderr, "%CODECLASSNAME%: Could not initialize new instance\n");
-    return NULL;
-  }
+  init%CODECLASSNAME%Base((obj *)new_instance);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
@@ -29,8 +22,8 @@
 /* function can be deleted if unneeded */
 int8_t compare%CODECLASSNAME%(const obj *a, const obj *b){
   
-  %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
-  %CODECLASSNAME% *comp_b = (%CODECLASSNAME% *)b;  
+  const %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
+  const %CODECLASSNAME% *comp_b = (%CODECLASSNAME% *)b;  
 
   /* add specific comparison logic, following the description in the header
    * file */
@@ -42,34 +35,30 @@ int8_t compare%CODECLASSNAME%(const obj *a, const obj *b){
 
 /* PRIVATE METHODS */
 
-uint8_t init%CODECLASSNAME%Base(%CODECLASSNAME% *to_init){
+void init%CODECLASSNAME%Base(%CODECLASSNAME% *to_init){
 
   /* Classname for the this specific class */
   static char *classname = NULL;
   const char stack_classname[] = "%CODECLASSNAME%";
 
+  assert(to_init != NULL);
+
   if(!classname){
     classname = malloc(sizeof(char) * strlen(stack_classname));
-    if(!classname){
-      fprintf(stderr, "%CODECLASSNAME%: Could not allocate static classname "
-                      "for all instances\nClass checking functions will not "
-                      "work until classname allocated\n");
-      return 1;
-    }
+    assert(classname != NULL);
     else strcpy(classname, stack_classname);
   }
 
   /* initialize reference counting base data */
-  if(initBase((obj *)to_init, &dealloc%CODECLASSNAME%, classname)){
-    fprintf(stderr, "%CODECLASSNAME%: Could not initialize base obj\n");
-    return 1;
-  }
+  initBase((obj *)to_init, &dealloc%CODECLASSNAME%, classname);
 
-  return 0;
+  return;
 }
 
 
 void dealloc%CODECLASSNAME%(obj *to_dealloc){
+
+  assert(to_dealloc);
 
   /* cast generic obj to %CODECLASSNAME% */
   %CODECLASSNAME% *instance = (%CODECLASSNAME% *)to_dealloc;

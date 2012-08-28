@@ -28,14 +28,14 @@
  * obtained a write lock on that obj, resuming when a read lock can be obtained.
  * Returns 0 if successfully locked, prints system error and returns 1 on
  * failure */
-int readLock(obj *to_read_lock);
+void readLock(obj *to_read_lock);
 
 /* unlock an obj that previously obtained a read lock. readUnlock must be called
  * once for each readLock call to fully unlock the obj. Calling readUnlock from 
  * a thread that does not have at least one pending read lock results in 
  * undefined behavior. Returns 0 on success, prints system error and returns 1
  * on failure */
-int readUnlock(obj *to_read_unlock);
+void readUnlock(obj *to_read_unlock);
 
 /* lock an obj for writing. Only one thread may obtain a write lock on an obj at
  * any given time. A call to writeUnlock is required when write operations have
@@ -44,13 +44,13 @@ int readUnlock(obj *to_read_unlock);
  * lock or any read locks are held on the obj until a write lock can be obtained
  * Returns 0 if successfully locked, prints system error and returns 1 on
  * failure */
-int writeLock(obj *to_write_lock);
+void writeLock(obj *to_write_lock);
 
 /* unlock an obj that previously obtained a write lock. writeUnlock must be 
  * called once for each readLock call to fully unlock the obj. Calling
  * writeUnlock from a thread that does not have an active write lock results in
  * undefined behavior. Returns 0 if successfully locked, prints system error and
  * returns 1 on failure */
-int writeUnlock(obj *to_write_unlock);
+void writeUnlock(obj *to_write_unlock);
 
 #endif
