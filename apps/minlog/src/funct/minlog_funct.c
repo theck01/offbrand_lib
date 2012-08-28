@@ -123,7 +123,7 @@ OBVector * findLargestPrimeImplicants(OBVector *terms, OBVector *dont_cares){
   }
 
   /* release cur_cube_vector so only cube_vectors maintains valid reference */
-  release((obj *cur_cube_vector));
+  release((obj *)cur_cube_vector);
 
   /* while cubes can still be merged into larger cubes */
   k = 0;
@@ -131,10 +131,10 @@ OBVector * findLargestPrimeImplicants(OBVector *terms, OBVector *dont_cares){
   while(loop>0){
 
     /* by default set loop to stop after this run */
-
     loop = -1; 
+
     /* get previous cube vector, and create new vector for next order of cubes*/
-    prev_cube_vector = objAtVectorIndex(cube_vectors, k);
+    prev_cube_vector = (OBVector *)objAtVectorIndex(cube_vectors, k);
     cur_cube_vector = createVector(sizeOfVector(prev_cube_vector)/4);
     if(!cur_cube_vector){
       fprintf(stderr, "findLargestPrimeImplicants: Could not create vector for "
@@ -148,13 +148,14 @@ OBVector * findLargestPrimeImplicants(OBVector *terms, OBVector *dont_cares){
     for(i=0; i<maxi-1; i++){
 
       a = (NCube *)objAtVectorIndex(prev_cube_vector, i);
+
       for(j=i+1; j<maxi; j++){
 
         b = (NCube *)objAtVectorIndex(prev_cube_vector, i);
         
         /*if cubes can be merged */
         if((tmp_cube = mergeNCubes(a, b))){
-          if(addToVector(cur_cube_vector, tmp_cube)){
+          if(addToVector(cur_cube_vector, (obj *)tmp_cube)){
             fprintf(stderr, "findLargestPrimeImplicants: Could not add new "
                             "cube to vector, returning NULL\n");
             release((obj *)tmp_cube);
@@ -163,17 +164,61 @@ OBVector * findLargestPrimeImplicants(OBVector *terms, OBVector *dont_cares){
             return NULL;
           }
 
+          /* release tmp_cube so that vector has only valid reference */
+          release((obj *)tmp_cube);
+
           /* increment loop to indicate that another larger cube was created */
           loop++;
         }
       }
     }
     
-    /* add new cube vector to cube_vectors, increment k */
+    if(addToVector(cube_vectors, (obj *)cur_cube_vector)){
+      fprintf(stderr, "findLargestPrimeImplicants: Could not add new "
+                      "cube vector to matrix, returning NULL\n");
+      release((obj *)cur_cube_vector);
+      release((obj *)cube_vectors);
+      return NULL;
+    }
+
+    /* release cur_cube_vector so cube_vectors maintains only valid reference */
+    release((obj *)cur_cube_vector);
+
+    /* increment k to work on next order of cube vectors */
+    k++;
   }
 
   /* Create final vector of only prime implicant cubes */
-  
+  result = createVector(4);
+  if(!result){
+    fprintf(stderr, "findLargestPrimeImplicants: Could not create result "
+                    "vector, returning NULL\n");
+    release((obj *)cube_vectors);
+  }
+
+  maxi = sizeOfVector(cube_vectors);
+  for(i=0; i<maxi; i++){
+
+    cur_cube_vector = (OBVector *)objAtVectorIndex(cube_vectors, i);
+    
+    maxj = sizeOfVector(cur_cube_vector);
+    for(j=0; j<maxj; j++){
+
+      tmp_cube = (NCube *)objAtVectorIndex(cur_cube_vector, j);
+      if(isNCubePrimeImplicant(tmp_cube)){
+        if(addToVector(result, (obj *)tmp_cube)){
+          fprintf(stderr, "findLargestPrimeImplicants: Could not add prime "
+                          "implicant to result vector, returning NULL\n");
+          release((obj *)result);
+          release((obj *)cube_vectors);
+          return NULL;
+        }
+      }
+    }
+  }
+
+  release((obj *)cube_vectors);
+  return result;
 }
 
 
