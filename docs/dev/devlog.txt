@@ -199,7 +199,8 @@ library, such as one that can work on both Windows and Linux.
   offbrand_threadlib files.
 
 STATUS:
-Solution following the Difficult path chosen.
+Solution following the Difficult path chosen, although locking mechanism is not
+performed this way. See below.
 
 --------------------------------------------------------------------------------
 
@@ -225,6 +226,12 @@ Method A chosen. Method A moves locking into internal methods so that they just
 work in practice. Method B requires that programs keep track of when locks are
 required and when they are not, when an unlock is needed, etc. The added 
 bookeeping is not worth the small gains in simplicity.
+
+08-28-2012
+Method B implemented in practice some time ago. Method A required a large amount
+of complex overhead and redesign of API's that would largely complicate the use
+of classes (deviates from expectation). External locking allows usual APIs at
+expense of complexity fostered on the user.
 
 STATUS:
 Decision made. Complete.
@@ -262,3 +269,26 @@ manner.
 
 STATUS:
 Under consideration. Mulling over tentative decision.
+
+--------------------------------------------------------------------------------
+
+08-28-2012 "Exception" Handling
+
+PROBLEM:
+Currently all Offbrand libraries propagate NULL values (or some bad integer) if
+an error occurs within a function. This allows functions to tolerate as much
+failure as possible, but places a lot of error checking responsibility on the
+user. A graceful exit of the program would be the preferred method for handling
+these "exceptions".
+
+SOLUTION(s):
+assert statements should be used at failure points rather than return NULLs.
+This also makes freeing partial memory from functions easier. In some instances
+returning NULL may make more sense in some instances, but rapid failure will
+assist in creating mostly bug free programs.
+
+PROGRESS:
+Library update underway...
+
+STATUS:
+In progress.

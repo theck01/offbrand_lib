@@ -1,5 +1,7 @@
 
 #include "../../include/minlog_funct.h"
+#include "../../include/NCube.h"
+#include "../../include/Term.h"
 
 uint8_t numOneBits(uint32_t num){
 
@@ -12,7 +14,8 @@ uint8_t numOneBits(uint32_t num){
 }
 
 
-OBVector * findLargestPrimeImplicants(OBVector *terms, OBVector *dont_cares){
+OBVector * findLargestPrimeImplicants(const OBVector *terms, 
+                                      const OBVector *dont_cares){
 
   uint32_t i, j, k, maxi, maxj;
   int32_t loop;
@@ -26,7 +29,7 @@ OBVector * findLargestPrimeImplicants(OBVector *terms, OBVector *dont_cares){
   }
 
   maxi = sizeOfVector(terms);
-  if(maxi = 0){
+  if(maxi == 0){
     fprintf(stderr, "findLargestPrimeImplicants: Cannot find prime implicants "
                     "not given any terms\n");
     return NULL;
@@ -71,7 +74,7 @@ OBVector * findLargestPrimeImplicants(OBVector *terms, OBVector *dont_cares){
     release((obj *)tmp_cube);
   }
 
-  maxi = sizeOfVector(dont_cares)
+  maxi = sizeOfVector(dont_cares);
 
   /* create all cubes associated with dont cares */
   for(i=0; i<maxi; i++){

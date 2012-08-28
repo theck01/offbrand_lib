@@ -12,6 +12,7 @@ uint8_t numOneBits(uint32_t num);
  * represent the unminimized function (either minterms or maxterms), and returns
  * a vector of the largest possible NCubes that completely cover all of the
  * terms */
-OBVector * findLargestPrimeImplicants(OBVector *terms);
+OBVector * findLargestPrimeImplicants(const OBVector *terms,
+                                      const OBVector *dont_cares);
 
 #endif
