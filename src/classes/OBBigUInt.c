@@ -571,7 +571,7 @@ OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
   uint64_t approx_quotient, approx_dividend, approx_divisor, approx_capacity;
   OBBigUInt *result, *approximate, *check_num, *new_dividend;
   
-  result = (approximate = (check_num = (new_dividend = NULL)));
+  result = approximate = check_num = new_dividend = NULL;
 
   assert(dividend != NULL && divisor != NULL);
 
@@ -595,23 +595,26 @@ OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
   approx_capacity = dividend->num_uints - divisor->num_uints;
 
   do{
-    /* release previous bad approximates, or NULL if first iteration */
-    release((obj *)approximate);
-    release((obj *)check_num);
+    /* release past approximates, if they were computed */
+    if(approximate) release((obj *)approximate);
+    if(check_num) release((obj *)check_num);
 
     /* create approximate with one extra space for large approx_quotient */
     approximate = createBigUIntWithCap(approx_capacity + 1);
 
-    approximate->uint_array[approx_capacity - 1] = (uint32_t)approx_quotient;
-    approximate->uint_array[approx_capacity] = (uint32_t)(approx_quotient>>32);
+    /* fill in approximate values to create new BigUInt */
+    if(approx_capacity > 0){
+      approximate->uint_array[approx_capacity - 1] = (uint32_t)approx_quotient;
+      approximate->uint_array[approx_capacity] =(uint32_t)(approx_quotient>>32);
+    }
+    else approximate->uint_array[0] = (uint32_t)approx_quotient;
+
     approximate->num_uints = sigIntsInBigUInt(approximate);
 
     /* lower approx quotient in case approximate division is too great. Decrease
-     * by about 1/64 of approx quotient, extra terms help maintain approximate
-     * proportions as approx approaches 1*/
-    approx_quotient -=(approx_quotient/2 - approx_quotient/4 - approx_quotient/8
-                      - approx_quotient/16 - approx_quotient/32
-                      - approx_quotient/64);
+     * by about 1/64 of approx quotient, extra 1 continues decreasing approx
+     * when it is <= 64 */
+    approx_quotient -= (approx_quotient/64) + 1;
     if(approx_quotient == 0) approx_quotient = 1; /* fix case when approximation
                                                      should be 1 but misses */
     
@@ -622,7 +625,6 @@ OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
    * bother for modulus operation*/
   if(quotient){
     result = addBigUInts(quotient, approximate);
-    release((obj *)quotient);
   }
   
   release((obj *)approximate);
