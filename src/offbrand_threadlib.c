@@ -95,7 +95,7 @@ void readUnlock(obj *to_read_unlock){
 
 void writeLock(obj *to_write_lock){
 
-  assert(to_write_unlock != NULL); 
+  assert(to_write_lock != NULL); 
 
   /* Lock the OBLock mutex to change shared lock data */
   if(pthread_mutex_lock(&((*to_write_lock)->lock.mutex))){

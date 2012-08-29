@@ -149,14 +149,16 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
 void sortVector(OBVector *v, const compare_fptr compare,
                    const int8_t order){
 
+  compare_fptr compare_funct;
   obj **sorted;
 
   assert(v != NULL);
 
   /* custom comparison function was not added, use simple pointer comparator */
-  if(!compare) compare = &objCompare;
+  if(!compare) compare_funct = &objCompare;
+  else compare_funct = compare;
 
-  sorted = recursiveSortContents(v->array, v->num_objs, compare, order);
+  sorted = recursiveSortContents(v->array, v->num_objs, compare_funct, order);
 
   free(v->array);
   v->array = sorted;
@@ -218,10 +220,9 @@ void deallocVector(obj *to_dealloc){
 
   uint32_t i;
 
-  assert(to_dealloc != NULL);
-
   /* cast generic obj to OBVector */
   OBVector *instance = (OBVector *)to_dealloc;
+  assert(instance != NULL);
 
   /* release all objects stored inside vector */
   for(i=0; i<instance->num_objs; i++){

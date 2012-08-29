@@ -41,7 +41,7 @@ OBBigUInt * twosCompBigUInt(const OBBigUInt *a, const uint64_t total_len);
  * quotient until true result is found. The value returned by the function is 
  * the either the quotient or the remainder, depending on if the intial call was
  * made with quotient equaling a valid value or NULL */
-OBBigUInt * recursiveDivide(OBBigUInt *dividend, OBBigUInt *divisor,
+OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
                             OBBigUInt *quotient);
 
 /* deallocator, frees instance of class back to memory. Should not be called

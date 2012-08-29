@@ -11,12 +11,6 @@ int main(){
   a = createTest(3);
   b = createTest(3);
 
-  if(!test_obj || !a || !b){
-    fprintf(stderr, "OBTest_test: could not allocate memory for test, TEST "
-                    "FAILED\n");
-    exit(1);
-  }
-
   /* retain object, reference count should be 4 */
   for(i=0; i<3; i++){
     retain((obj *)test_obj);

@@ -24,9 +24,9 @@ struct OBVector_struct{
  * default constructor that all other constructors build off of */
 void initVectorBase(OBVector *to_init);
 
-/* resizes vector if num_objs == capacity, does nothing if not. Returns 0 on
- * success, 1 on failure. Doubles vector capacity */
-uint8_t resizeVector(OBVector *v);
+/* resizes vector if num_objs == capacity, does nothing if not. Doubles vector 
+ * capacity */
+void resizeVector(OBVector *v);
 
 /* recusive implementation of the merge sort algorithm to be applied to the
  * OBVector */

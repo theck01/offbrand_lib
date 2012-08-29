@@ -23,7 +23,7 @@ void initBase(obj *instance, dealloc_fptr dealloc, const char *classname){
   initLock(&((*instance)->lock));
 #endif
 
-  return 0;
+  return;
 }
 
 obj * release(obj *instance){

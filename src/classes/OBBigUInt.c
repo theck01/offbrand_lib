@@ -407,18 +407,9 @@ OBBigUInt * notBigUInt(const OBBigUInt *a){
   OBBigUInt *result;
   uint64_t i;
 
-  if(!a){
-    fprintf(stderr, "OBBigUInt: Unexpected NULL arguments passed to "
-                    "notBigUInt\n");
-    return NULL;
-  }
-
+  assert(a != NULL);
+  
   result = createBigUIntWithCap(a->num_uints);
-  if(!result){
-    fprintf(stderr, "OBBigUInt: Could not create result BigUInt in "
-                    "andBigUInts\n");
-    return NULL;
-  }
 
   for(i=0; i<a->num_uints; i++){
     result->uint_array[i] = ~(a->uint_array[i]);
@@ -434,11 +425,7 @@ int8_t compareBigUInts(const obj *a, const obj *b){
   const OBBigUInt *comp_a = (OBBigUInt *)a;  
   const OBBigUInt *comp_b = (OBBigUInt *)b;  
 
-  if(!a || !b){
-    fprintf(stderr, "OBBigUInt: Unexpected NULL argument(s) passed to "
-                    "compareBigUInts\n");
-    return OB_COMPARE_ERR;
-  }
+  assert(a != NULL && b != NULL);
 
   /* compare size of BigUInts first */
   if(comp_a->num_uints > comp_b->num_uints) return OB_GREATER_THAN;
@@ -459,6 +446,8 @@ void printBigUInt(const OBBigUInt *a){
   
   uint64_t i, j;
   char hex[9];
+
+  assert(a != NULL);
 
   printf("OBBigUInt with %llu 32 bit words\n", a->num_uints);
   printf("Most Significant 32 Bit Word\n");

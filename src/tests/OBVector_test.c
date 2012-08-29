@@ -13,31 +13,11 @@ int main(){
   OBVector *main_vec, *copy_vec;
 
   main_vec = createVector(1);
-  if(!main_vec){
-    fprintf(stderr, "OBVector_test: could not allocated memory for OBVector, "
-                    "TEST FAILED\n");
-    exit(1);
-  }
-
-  if(!(singleton = createTest(7))){
-    fprintf(stderr, "OBVector_test: could not allocated memory for OBTest, "
-                    "TEST FAILED\n");
-    exit(1);
-  }
+  singleton = createTest(7);
 
   for(i=0; i<6; i++){
     tests[i] = createTest(i);
-    if(!tests[i]){
-      fprintf(stderr, "OBVector_test: could not allocated memory for OBTest, "
-                      "TEST FAILED\n");
-      exit(1);
-    }
-
-    if(addToVector(main_vec, (obj *)tests[i])){
-      fprintf(stderr, "OBVector_test: could add elements to vector, "
-                      "TEST FAILED\n");
-      exit(1);
-    }
+    addToVector(main_vec, (obj *)tests[i]);
 
     if(getTestReferences(tests[i]) != 2){
       fprintf(stderr, "OBVector_test: vector did not properly retain element "
@@ -53,7 +33,8 @@ int main(){
     exit(1);
   }
 
-  if(fitVectorToContents(main_vec) || main_vec->capacity != 6){
+  fitVectorToContents(main_vec);
+  if(main_vec->capacity != 6){
     fprintf(stderr, "OBVector_test: vector did not fit size to contents, "
                     "TEST FAILED\n");
     exit(1);
@@ -67,11 +48,7 @@ int main(){
     }
   }
 
-  if(addToVector(main_vec, (obj *)singleton)){
-    fprintf(stderr, "OBVector_test: could add singleton to vector, "
-                    "TEST FAILED\n");
-    exit(1);
-  }
+  addToVector(main_vec, (obj *)singleton);
 
   removeFromVectorEnd(main_vec);
   if(sizeOfVector(main_vec) != 6){
@@ -86,13 +63,9 @@ int main(){
     exit(1);
   }
 
-  if(!(tmp = (OBTest *)objAtVectorIndex(main_vec, 3))){
-    fprintf(stderr, "OBVector_test: could not access obj in vector properly "
-                    "TEST FAILED\n");
-    exit(1);
-  }
-
+  tmp = (OBTest *)objAtVectorIndex(main_vec, 3);
   retain((obj *)tmp);
+
   replaceInVector(main_vec, (obj *)singleton, 3);
   if(getTestReferences(tmp) != 1){
     fprintf(stderr, "OBVector_test: vector did not release element on "
@@ -100,11 +73,7 @@ int main(){
     exit(1);
   }
 
-  if(insertAtVectorIndex(main_vec, (obj *)tmp, 4)){
-    fprintf(stderr, "OBVector_test: could add element at specified index, "
-                    "TEST FAILED\n");
-    exit(1);
-  }
+  insertAtVectorIndex(main_vec, (obj *)tmp, 4);
 
   if(sizeOfVector(main_vec) != 7 ||
      getTestID((OBTest *)objAtVectorIndex(main_vec, 4)) != getTestID(tmp)){
@@ -122,10 +91,7 @@ int main(){
     exit(1);
   }
   
-  if(sortVector(main_vec, &compareTests, OB_LEAST_TO_GREATEST)){
-    fprintf(stderr, "OBVector_test: vector could not be sorted, TEST FAILED\n");
-    exit(1);
-  }
+  sortVector(main_vec, &compareTests, OB_LEAST_TO_GREATEST);
 
   id = 0;
   for(i=0; i<sizeOfVector(main_vec); i++){
@@ -137,10 +103,7 @@ int main(){
     id = getTestID((OBTest *)objAtVectorIndex(main_vec, i));
   }
 
-  if(sortVector(main_vec, &compareTests, OB_GREATEST_TO_LEAST)){
-    fprintf(stderr, "OBVector_test: vector could not be sorted, TEST FAILED\n");
-    exit(1);
-  }
+  sortVector(main_vec, &compareTests, OB_GREATEST_TO_LEAST);
 
   id = 10;
   for(i=0; i<sizeOfVector(main_vec); i++){
@@ -152,13 +115,11 @@ int main(){
     id = getTestID((OBTest *)objAtVectorIndex(main_vec, i));
   }
   
-  if(!(copy_vec = copyVector(main_vec))){
-    fprintf(stderr, "OBVector_test: vector could not be copied, TEST FAILED\n");
-    exit(1);
-  }
+  copy_vec = copyVector(main_vec);
 
   release((obj *)singleton); /* release singleton once so it is only referenced
                                 by containing vectors */
+
   for(i=0; i<sizeOfVector(main_vec); i++){
     if(compareTests(objAtVectorIndex(main_vec, i),
                     objAtVectorIndex(copy_vec, i))){
