@@ -25,7 +25,7 @@ Term * createTerm(uint32_t term);
 int8_t compareTerms(const obj *a, const obj *b);
 
 /* get term value as an integer */
-int32_t getTermValue(Term *a);
+uint32_t getTermValue(Term *a);
 
 #endif
 

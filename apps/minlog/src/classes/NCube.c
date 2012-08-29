@@ -9,17 +9,10 @@ NCube * createNCube(uint32_t term, uint8_t is_dont_care){
 
   NCube *new_instance;
   
-  if(term >= (1 << 27)){
-    fprintf(stderr, "NCube: Cannot create NCube for term %i, which is too "
-                    "large\n", term);
-    return NULL;
-  }
+  assert(term < (1 << 27));
 
   new_instance = createNCubeWithOrder(0);
-  if(!new_instance){
-    fprintf(stderr, "NCube: Could not create new NCube\n");
-    return NULL;
-  }
+  assert(new_instance != NULL);
 
   new_instance->terms[0] = term;
   if(is_dont_care){
@@ -36,6 +29,8 @@ NCube * mergeNCubes(NCube *a, NCube *b){
   uint32_t xor_term, i, j, numterms;
   NCube *result;
 
+  assert(a != NULL && b != NULL);
+
   /* if dont care bits are not the same, do not merge */
   if(a->dont_cares != b->dont_cares){
     return NULL;
@@ -49,15 +44,10 @@ NCube * mergeNCubes(NCube *a, NCube *b){
   }
 
   result = createNCubeWithOrder(a->order + 1);
-  if(!result){
-    fprintf(stderr, "NCube: Could not create new cube when mergining\n");
-    return NULL;
-  }
-  
+
   i=0;
   j=0;
   numterms = 1 << a->order;
-
   /* merge sort terms into new resultant term, lowest to highest */
   while(i<numterms && j<numterms){
     if(a->terms[i] < b->terms[j]){
@@ -103,6 +93,8 @@ int8_t compareNCube(const obj *a, const obj *b){
   NCube *comp_a = (NCube *)a;  
   NCube *comp_b = (NCube *)b;  
 
+  assert(a != NULL && b != NULL);
+
   if(comp_a->order != comp_b->order){
     return 1;
   }
@@ -121,6 +113,8 @@ int8_t compareNCube(const obj *a, const obj *b){
 uint8_t nCubeCoversTerm(const NCube *a, uint32_t term){
 
   uint32_t i, max_i;
+
+  assert(a != NULL);
   
   max_i = 1 << a->order;
   for(i=0; i<max_i; i++){
@@ -134,6 +128,7 @@ uint8_t nCubeCoversTerm(const NCube *a, uint32_t term){
 
 
 uint8_t isNCubePrimeImplicant(const NCube *a){
+  assert(a != NULL);
   return a->prime_implicant;
 }
 
@@ -144,29 +139,16 @@ NCube * createNCubeWithOrder(uint8_t order){
   
   NCube *new_cube;
 
-  if(order > 27){
-    fprintf(stderr, "NCube: Cannot create an NCube of order greater than 27\n");
-    return NULL;
-  }
+  assert(order <= 27);
 
   new_cube = malloc(sizeof(NCube));
-  if(!new_cube){
-    fprintf(stderr, "NCube: Could not allocate memory for new NCube\n");
-    return NULL;
-  }
+  assert(new_cube != NULL);
 
   /* initialize reference counting base data */
-  if(initNCubeBase(new_cube)){
-    fprintf(stderr, "NCube: Base obj could not be initialized\n");
-    return NULL;
-  }
+  initNCubeBase(new_cube);
 
   new_cube->terms = malloc(sizeof(uint32_t)*(1<<order));
-  if(!new_cube){
-    fprintf(stderr, "NCube: Could not allocate memory for term array in new "
-                    "NCube\n");
-    return NULL;
-  }
+  assert(new_cube->terms != NULL);
 
   new_cube->dont_cares = 0;
   new_cube->order = order;
@@ -177,36 +159,31 @@ NCube * createNCubeWithOrder(uint8_t order){
 }
 
 
-uint8_t initNCubeBase(NCube *to_init){
+void initNCubeBase(NCube *to_init){
 
   /* Classname for the this specific class */
   static char *classname = NULL;
   const char stack_classname[] = "NCube";
 
+  assert(to_init != NULL);
+
   if(!classname){
     classname = malloc(sizeof(char) * strlen(stack_classname));
-    if(!classname){
-      fprintf(stderr, "NCube: Could not allocate static classname "
-                      "for all instances\nClass checking functions will not "
-                      "work until classname allocated\n");
-      return 1;
-    }
-    else strcpy(classname, stack_classname);
+    assert(classname != NULL);
+    strcpy(classname, stack_classname);
   }
 
   /* initialize reference counting base data */
-  if(initBase((obj *)to_init, &deallocNCube, classname)){
-    fprintf(stderr, "NCube: Could not initialize base obj\n");
-    return 1;
-  }
+  initBase((obj *)to_init, &deallocNCube, classname);
 
-  return 0;
+  return;
 }
 
 
 void deallocNCube(obj *to_dealloc){
   /* cast generic obj to NCube */
   NCube *instance = (NCube *)to_dealloc;
+  assert(instance != NULL);
   free(instance->terms);
   free(instance);
   return;
