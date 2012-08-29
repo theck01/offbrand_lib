@@ -582,19 +582,24 @@ OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
   }
 
   /* approximate dividend with first two significant digits, and divisor with
-   * first significant digit */
+   * first significant digit. First two most significant digits of dividend 
+   * will always be greater than the single divisor digit */
   approx_dividend = (uint64_t)dividend->uint_array[dividend->num_uints-1];
-  approx_dividend <<= 32;
-  approx_dividend += (uint64_t)dividend->uint_array[dividend->num_uints-2];
+  if(dividend->num_uints > divisor->num_uints){
+    approx_dividend <<= 32;
+    approx_dividend += (uint64_t)dividend->uint_array[dividend->num_uints-2];
+  }
   approx_divisor = (uint64_t)divisor->uint_array[divisor->num_uints-1];
   
   /* compute the approximate solution */
   approx_quotient = approx_dividend/approx_divisor;
-  if(approx_quotient == 0) approx_quotient = 1; /*fix case when approximations 
-                                                  nearly equally or do divide*/
   approx_capacity = dividend->num_uints - divisor->num_uints;
 
   do{
+
+    /* ensure that a valid approximation will be reached */
+    assert(approx_quotient > 0);
+
     /* release past approximates, if they were computed */
     if(approximate) release((obj *)approximate);
     if(check_num) release((obj *)check_num);
@@ -615,8 +620,6 @@ OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
      * by about 1/64 of approx quotient, extra 1 continues decreasing approx
      * when it is <= 64 */
     approx_quotient -= (approx_quotient/64) + 1;
-    if(approx_quotient == 0) approx_quotient = 1; /* fix case when approximation
-                                                     should be 1 but misses */
     
     check_num = multiplyBigUInts(divisor, approximate);
   }while(compareBigUInts((obj *)check_num, (obj *)dividend) == OB_GREATER_THAN);
