@@ -17,8 +17,9 @@ CFLAGS = -Wall -Wextra
 OFLAGS = $(CFLAGS) -c
 
 # Executable Dependencies
-ALL_DEP = $(BIN_FUNCT)/minlog_funct.o
-EXE_DEP = ../../bin/offbrand_stdlib.o $(ALL_DEP)
+ALL_DEP = ../../bin/offbrand_stdlib.o
+EXE_DEP = $(ALL_DEP) $(BIN_CLASS)/NCube.o $(BIN_CLASS)/Term.o \
+					$(BIN_FUNCT)/minlog_funct.o ../../bin/classes/OBVector.o
 
 # Enumerate/Find Objects to build
 CLASS_SOURCES := $(wildcard $(CLASSES)/*.c)
@@ -34,17 +35,20 @@ ALL_FUNCTS = $(patsubst $(FUNCTS)/%.c, $(BIN_FUNCT)/%.o, $(FUNCT_SOURCES))
 # MAIN BUILD
 all: $(ALL_CLASSES) $(ALL_TESTS) $(ALL_FUNCTS)
 
-# Build function objects
+# Functions Build 
 $(BIN_FUNCT)/%.o: $(FUNCTS)/%.c $(PUBLIC)/%.h
 	$(CC) $(OFLAGS) $< -o $@
 
-# Build class objects
-$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h \
-	$(ALL_DEP)
-	$(CC) $(OFLAGS) $< $(ALL_DEP) -o $@
+# Generic Class Build
+$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
+	$(CC) $(OFLAGS) $< -o $@
 
-# Build test executables
-$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(EXE_DEP)
+# NCube_test build
+$(BIN_TEST)/NCube_test: $(TESTS)/NCube_test.c $(EXE_DEP)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Generic Test Build
+$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(ALL_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
 

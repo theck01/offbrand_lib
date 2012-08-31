@@ -1,3 +1,4 @@
 
 bin/
 *.o
+apps/minlog/bin/
