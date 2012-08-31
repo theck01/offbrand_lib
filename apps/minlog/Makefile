@@ -32,7 +32,7 @@ ALL_FUNCTS = $(patsubst $(FUNCTS)/%.c, $(BIN_FUNCT)/%.o, $(FUNCT_SOURCES))
 
 
 # MAIN BUILD
-all: $(ALL_FUNCTS) $(ALL_CLASSES) $(ALL_TESTS)
+all: $(ALL_CLASSES) $(ALL_TESTS) $(ALL_FUNCTS)
 
 # Build function objects
 $(BIN_FUNCT)/%.o: $(FUNCTS)/%.c $(PUBLIC)/%.h

@@ -50,15 +50,15 @@ obj * objAtVectorIndex(const OBVector *v, const uint32_t index);
 /* checks to see if object, or equivalent as determined by compare function
  * pointer for specific class, can be found within vector. If compare function
  * argument it NULL then pointer comparisons are used. Returns 1 if found, 0 if 
- * not */
+ * not. Compare function should be specified only if vector is homogenous, else
+ * the function will fail and halt the program */
 uint8_t findObjInVector(const OBVector *v, const obj *to_find,
                         compare_fptr compare);
 
 /* sorts vector using the compare function passed in as an argument. ASSUMES
- * THAT ALL OBJ INSIDE ARE OF THE SAME CLASS, partial sort may occur if classes
- * found to be different at runtime. Order (lowest to highest or highest to 
- * lowest) specified by sorting macros defined in sort_obj.h. Uses the merge 
- * sort algorithm. Returns 0 on success, 1 on error */
+ * THAT ALL OBJ INSIDE ARE OF THE SAME CLASS, assertions will fail if not.
+ * Order (lowest to highest or highest to lowest) specified by sorting macros
+ * defined in sort_obj.h. Uses the merge sort algorithm. */
 void sortVector(OBVector *v, const compare_fptr compare, const int8_t order);
 
 /* remove obj at end of vector, releasing the vectors reference on the obj */

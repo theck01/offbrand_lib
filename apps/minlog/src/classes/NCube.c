@@ -94,6 +94,7 @@ int8_t compareNCube(const obj *a, const obj *b){
   NCube *comp_b = (NCube *)b;  
 
   assert(a != NULL && b != NULL);
+  assert(objIsOfClass(a, "NCube") && objIsOfClass(b, "NCube"));
 
   if(comp_a->order != comp_b->order){
     return 1;
@@ -184,6 +185,7 @@ void deallocNCube(obj *to_dealloc){
   /* cast generic obj to NCube */
   NCube *instance = (NCube *)to_dealloc;
   assert(instance != NULL);
+  assert(objIsOfClass(to_dealloc, "NCube"));
   free(instance->terms);
   free(instance);
   return;

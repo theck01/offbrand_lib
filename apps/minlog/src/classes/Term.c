@@ -25,6 +25,7 @@ int8_t compareTerm(const obj *a, const obj *b){
   Term *comp_b = (Term *)b;  
 
   assert(a != NULL && b != NULL);
+  assert(objIsOfClass(a, "Term") && objIsOfClass(b, "Term"));
 
   if(comp_a->term > comp_b->term) return OB_GREATER_THAN;
   else if(comp_a->term < comp_b->term) return OB_LESS_THAN;
@@ -63,6 +64,7 @@ void deallocTerm(obj *to_dealloc){
   /* cast generic obj to Term */
   Term *instance = (Term *)to_dealloc;
   assert(instance != NULL);
+  assert(objIsOfClass(to_dealloc, "Term"));
   free(instance);
   return;
 }

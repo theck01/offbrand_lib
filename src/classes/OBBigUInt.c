@@ -426,6 +426,7 @@ int8_t compareBigUInts(const obj *a, const obj *b){
   const OBBigUInt *comp_b = (OBBigUInt *)b;  
 
   assert(a != NULL && b != NULL);
+  assert(objIsOfClass(a, "OBBigUInt") && objIsOfClass(b, "OBBigUInt"));
 
   /* compare size of BigUInts first */
   if(comp_a->num_uints > comp_b->num_uints) return OB_GREATER_THAN;
@@ -646,10 +647,11 @@ OBBigUInt * recursiveDivide(const OBBigUInt *dividend, const OBBigUInt *divisor,
 
 
 void deallocBigUInt(obj *to_dealloc){
-  /* cast generic obj to OBBigUInt */
-  assert(to_dealloc != NULL);
 
+  /* cast generic obj to OBBigUInt */
   OBBigUInt *instance = (OBBigUInt *)to_dealloc;
+  assert(to_dealloc != NULL && objIsOfClass(to_dealloc, "OBBigUInt"));
+
   free(instance->uint_array);
   free(instance);
   return;

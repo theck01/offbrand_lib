@@ -25,6 +25,9 @@ int8_t compare%CODECLASSNAME%(const obj *a, const obj *b){
   const %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
   const %CODECLASSNAME% *comp_b = (%CODECLASSNAME% *)b;  
 
+  assert(objIsOfClass(a, "%CODECLASSNAME") && 
+         objIsOfClass(b, "%CODECLASSNAME%"));
+
   /* add specific comparison logic, following the description in the header
    * file */
 }
@@ -58,10 +61,10 @@ void init%CODECLASSNAME%Base(%CODECLASSNAME% *to_init){
 
 void dealloc%CODECLASSNAME%(obj *to_dealloc){
 
-  assert(to_dealloc);
-
   /* cast generic obj to %CODECLASSNAME% */
   %CODECLASSNAME% *instance = (%CODECLASSNAME% *)to_dealloc;
+
+  assert(to_dealloc && objIsOfClass(to_dealloc, "%CODECLASSNAME%");
 
   /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE */
 

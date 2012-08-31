@@ -26,7 +26,10 @@ uint32_t getTestID(OBTest *a){
 
 
 int8_t compareTests(const obj *a, const obj *b){
+
   assert(a != NULL && b != NULL);
+  assert(objIsOfClass(a, "OBTest") && objIsOfClass(b, "OBTest"));
+
   if(((OBTest *)a)->id >((OBTest *)b)->id) return 1;
   if(((OBTest *)a)->id == ((OBTest *)b)->id) return 0;
   return -1;
@@ -62,7 +65,7 @@ void initTestBase(OBTest *to_init){
 }
 
 void deallocTest(obj *to_dealloc){
-  assert(to_dealloc != NULL);
+  assert(to_dealloc != NULL && objIsOfClass(to_dealloc, "OBTest"));
   free((OBTest *)to_dealloc);
   return;
 }

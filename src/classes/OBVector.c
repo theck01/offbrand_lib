@@ -222,7 +222,7 @@ void deallocVector(obj *to_dealloc){
 
   /* cast generic obj to OBVector */
   OBVector *instance = (OBVector *)to_dealloc;
-  assert(instance != NULL);
+  assert(instance != NULL && objIsOfClass(to_dealloc, "OBVector"));
 
   /* release all objects stored inside vector */
   for(i=0; i<instance->num_objs; i++){

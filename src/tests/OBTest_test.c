@@ -38,13 +38,13 @@ int main(){
     exit(1);
 	}
 
-  if(sameClass((obj *)a, (obj *)b)){
+  if(!sameClass((obj *)a, (obj *)b)){
     fprintf(stderr, "OBTest_test: Two OBTest objects were not of the same "
                     "class, TEST FAILED\n");
     exit(1);
   }
 
-  if(objIsOfClass((obj *)a, "OBTest")){
+  if(!objIsOfClass((obj *)a, "OBTest")){
     fprintf(stderr, "OBTest_test: An OBTest object was not considered to be an "
                     "OBTest object during check, TEST FAILED\n");
     exit(1);

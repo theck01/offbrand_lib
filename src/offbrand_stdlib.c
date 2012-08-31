@@ -55,8 +55,8 @@ void retain(obj *instance){
 
 uint8_t objIsOfClass(const obj *a, const char *classname){
   assert(a != NULL && classname != NULL);
-  if(strcmp((*a)->classname, classname) == 0) return 0;
-  else return 1;
+  if(strcmp((*a)->classname, classname) == 0) return 1;
+  else return 0;
 }
 
 

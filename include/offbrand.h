@@ -54,18 +54,18 @@ obj * release(obj *instance);
 void retain(obj *instance);
 
 /* performs string comparision on classname of object a and the provided null
- * terminated character string, returns 0 if they are equal, 1 if the classnames
+ * terminated character string, returns 1 if they are equal, 0 if the classnames
  * do not match */
 uint8_t objIsOfClass(const obj *a, const char *classname);
 
-/* performs string comparision on classnames of objects a and b, returns 0 if
- * they have the same classname (and are of the same class), or 1 if they have
+/* performs string comparision on classnames of objects a and b, returns 1 if
+ * they have the same classname (and are of the same class), or 0 if they have
  * differing classnames */
 uint8_t sameClass(const obj *a, const obj *b);
 
 /* default comparision, checks to see that the two pointer values are equal.
  * Used in sorting and finding algorithms for basic containers. Returns 0 if
- * equal, 1 if false */
+ * equal, 1 if not equal */
 int8_t objCompare(const obj *a, const obj *b);
 
 #endif
