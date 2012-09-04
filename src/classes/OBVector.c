@@ -84,9 +84,10 @@ void addToVector(OBVector *v, obj *to_add){
   return;
 }
 
+
 void insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
 
-  uint32_t i;
+  uint64_t i;
 
   assert(v != NULL && to_add != NULL && index <= v->num_objs);
 
@@ -106,6 +107,44 @@ void insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
 
   return;
 }
+
+
+void catVectors(OBVector *destination, OBVector *to_append){
+
+  uint64_t i, new_cap;
+  obj **new_array;
+
+  assert(destination != NULL && to_append != NULL);
+
+  new_cap = destination->capacity;
+  while(new_cap < destination->num_objs + to_append->num_objs){
+    new_cap *= new_cap;
+    /* assert that overflow did not occur */
+    assert(new_cap > destination->capacity); 
+  }
+
+  new_array = malloc(sizeof(obj *)*new_cap);
+  assert(new_array != NULL);
+
+  /* copy contents of destination first, without retaining because objs are
+   * still held in the same container */
+  for(i=0; i<destination->num_objs; i++){
+    new_array[i] = destination->array[i];
+  }
+
+  /* copy contents of to_append, retaining this time as objs are now held by a
+   * new container */
+  for(i=0 ; i<to_append->num_objs); i++){
+    retain((obj *)to_append->array[i]);
+    new_array[i+destination->num_objs] = to_append->array[i];
+  }
+
+  destination->num_objs += to_append->num_objs;
+  destination->capacity = new_cap;
+
+  return;
+}
+
 
 void replaceInVector(OBVector *v, obj *new_obj, const uint32_t index){
 
@@ -185,6 +224,7 @@ void removeFromVectorIndex(OBVector *v, uint32_t index){
   /* release object being removed */
   release(v->array[index]);
   
+  /* fill in space left by object removal */
   for(i=index+1; i<v->num_objs; i++){
     v->array[i-1] = v->array[i];
   }
