@@ -4,21 +4,6 @@
 
 /* PUBLIC METHODS */
 
-/* add arguments to complete initialization as needed, modify %CODECLASSNAME%.h
- * as well if modifications are made */
-%CODECLASSNAME% * create%CODECLASSNAME%(void){
-
-  %CODECLASSNAME% *new_instance = malloc(sizeof(%CODECLASSNAME%));
-  assert(new_instance != NULL);
-
-  /* initialize reference counting base of class */
-  init%CODECLASSNAME%Base((obj *)new_instance);
-
-  /* ADD CLASS SPECIFIC INITIALIZATION HERE */
-
-  return new_instance;
-}
-
 /* function can be deleted if unneeded */
 int8_t compare%CODECLASSNAME%(const obj *a, const obj *b){
   
@@ -38,6 +23,22 @@ int8_t compare%CODECLASSNAME%(const obj *a, const obj *b){
 
 /* PRIVATE METHODS */
 
+/* add arguments to complete initialization as needed, modify 
+ * %CODECLASSNAME%_Private.h as well if modifications are made */
+%CODECLASSNAME% * createDefault%CODECLASSNAME%(void){
+
+  %CODECLASSNAME% *new_instance = malloc(sizeof(%CODECLASSNAME%));
+  assert(new_instance != NULL);
+
+  /* initialize reference counting base of class */
+  init%CODECLASSNAME%Base((obj *)new_instance);
+
+  /* ADD CLASS SPECIFIC INITIALIZATION HERE */
+
+  return new_instance;
+}
+
+
 void init%CODECLASSNAME%Base(%CODECLASSNAME% *to_init){
 
   /* Classname for the this specific class */
@@ -49,7 +50,7 @@ void init%CODECLASSNAME%Base(%CODECLASSNAME% *to_init){
   if(!classname){
     classname = malloc(sizeof(char) * strlen(stack_classname));
     assert(classname != NULL);
-    else strcpy(classname, stack_classname);
+    strcpy(classname, stack_classname);
   }
 
   /* initialize reference counting base data */

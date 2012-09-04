@@ -15,9 +15,8 @@ typedef struct %CODECLASSNAME%_struct %CODECLASSNAME%;
 
 /* PUBLIC METHODS */
 
-/* constructor allocates and initializes an instance of %CODECLASSNAME% */
-/* expand with additional arguments as needed */
-%CODECLASSNAME% * create%CODECLASSNAME%(void);
+/* DEFINE AT LEAST ONE PUBLIC CONSTRUCTOR METHOD THAT CALLS PRIVATE DEFAULT
+ * CONSTRUCTOR */
 
 /* compare two instances of %CODECLASSNAME%, return 1 if a > b, 0 if a == b, 
  * and -1 if a < b */
