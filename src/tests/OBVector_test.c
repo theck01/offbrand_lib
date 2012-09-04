@@ -149,6 +149,18 @@ int main(){
     }
   }
 
+  catVectors(main_vec, copy_vec);
+  sortVector(main_vec, &compareTests, OB_GREATEST_TO_LEAST);
+
+  for(i=0; i<sizeOfVector(main_vec)-1; i+=2){
+    if(getTestID((OBTest *)objAtVectorIndex(main_vec,i)) !=
+       getTestID((OBTest *)objAtVectorIndex(main_vec,i))){
+      fprintf(stderr, "OBVector_test: Copy of vector not appended properly, "
+                      "TEST FAILED\n");
+      exit(1);
+    }
+  }
+
   printf("OBVector_test: TESTS PASSED\n");
   return 0;
 }

@@ -134,11 +134,13 @@ void catVectors(OBVector *destination, OBVector *to_append){
 
   /* copy contents of to_append, retaining this time as objs are now held by a
    * new container */
-  for(i=0 ; i<to_append->num_objs); i++){
+  for(i=0; i<to_append->num_objs; i++){
     retain((obj *)to_append->array[i]);
     new_array[i+destination->num_objs] = to_append->array[i];
   }
 
+  free(destination->array);
+  destination->array = new_array;
   destination->num_objs += to_append->num_objs;
   destination->capacity = new_cap;
 
