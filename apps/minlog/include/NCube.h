@@ -17,7 +17,8 @@ typedef struct NCube_struct NCube;
 /* PUBLIC METHODS */
 
 /* constructor allocates and initializes an instance of NCube with the term
- * (minterm or maxterm) specified */
+ * (minterm or maxterm) specified, which is by default non essential but a
+ * prime implicant */
 NCube * createNCube(uint32_t term, uint8_t is_dont_care);
 
 /* constructor allocates and initializes an instance of NCube with by merging
@@ -34,6 +35,12 @@ uint8_t nCubeCoversTerm(const NCube *a, uint32_t term);
 
 /* boolean function, returns 1 if NCube is a prime implicant, 0 if not */
 uint8_t isNCubePrimeImplicant(const NCube *a);
+
+/* function sets a flag that marks the NCube as essential */
+void markNCubeAsEssential(NCube *a);
+
+/* boolean function, returns 1 if NCube is marked as essential, 0 if not */
+uint8_t isNCubeEssential(const NCube *a);
 
 #endif
 

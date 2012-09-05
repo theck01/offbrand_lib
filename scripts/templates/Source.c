@@ -30,8 +30,8 @@ int8_t compare%CODECLASSNAME%(const obj *a, const obj *b){
   %CODECLASSNAME% *new_instance = malloc(sizeof(%CODECLASSNAME%));
   assert(new_instance != NULL);
 
-  /* initialize reference counting base of class */
-  init%CODECLASSNAME%Base((obj *)new_instance);
+  /* initialize base of class */
+  init%CODECLASSNAME%Base((new_instance);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 

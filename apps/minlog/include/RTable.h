@@ -13,7 +13,8 @@
 #ifndef RTABLE_H
 #define RTABLE_H
 
-#include "offbrand.h"
+#include "../../../include/offbrand.h"
+#include "../../../include/OBVector.h"
 
 /* Class type declaration */
 typedef struct RTable_struct RTable;

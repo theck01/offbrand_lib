@@ -134,6 +134,19 @@ uint8_t isNCubePrimeImplicant(const NCube *a){
 }
 
 
+void markNCubeAsEssential(NCube *a){
+  assert(a != NULL);
+  a->essential = 1;
+  return;
+}
+
+
+uint8_t isNCubeEssential(const NCube *a){
+  assert(a != NULL);
+  return a->essential;
+}
+
+
 /* PRIVATE METHODS */
 
 NCube * createNCubeWithOrder(uint8_t order){
@@ -155,6 +168,7 @@ NCube * createNCubeWithOrder(uint8_t order){
   new_cube->order = order;
   new_cube->prime_implicant = 1;
   new_cube->all_dont_cares = 0;
+  new_cube->essential = 0;
 
   return new_cube;
 }

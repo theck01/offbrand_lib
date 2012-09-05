@@ -102,6 +102,19 @@ int main (){
     exit(1);
   }
 
+  if(isNCubeEssential(c0123)){
+    fprintf(stderr, "NCube_test: NCube should not be considered essential but "
+                    "still is, TEST FAILED\n");
+    exit(1);
+  }
+
+  markNCubeAsEssential(c0123);
+  if(!isNCubeEssential(c0123)){
+    fprintf(stderr, "NCube_test: NCube should be considered essential but "
+                    "is not, TEST FAILED\n");
+    exit(1);
+  }
+
   printf("NCube_test: TESTS PASSED\n");
   return 0;
 }

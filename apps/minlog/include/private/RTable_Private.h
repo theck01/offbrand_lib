@@ -33,6 +33,8 @@ void initRTableBase(RTable *to_init);
  * manually, instance will be destroyed when reference count reaches 0 */
 void deallocRTable(obj *to_dealloc);
 
-/*PRIVATE METHOD DECLARATIONS HERE*/
+/* used in constructor to determine which Terms covered by which NCubes and
+ * which NCubes can be determined to be essential without extra effort */
+void processTermCoverArray(OBVector *cubes, uint32_t term, uint8_t *array);
 
 #endif

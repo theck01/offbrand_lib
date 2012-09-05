@@ -47,6 +47,10 @@ $(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
 $(BIN_TEST)/NCube_test: $(TESTS)/NCube_test.c $(EXE_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
+# RTable_test build
+$(BIN_TEST)/RTable_test: $(TESTS)/RTable_test.c $(EXE_DEP)
+	$(CC) $(CFLAGS) $^ -o $@
+
 # Generic Test Build
 $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(ALL_DEP)
 	$(CC) $(CFLAGS) $^ -o $@

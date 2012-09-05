@@ -20,6 +20,7 @@ struct NCube_struct{
   uint8_t prime_implicant; /* boolean, indicates if term is a prime implicant */
   uint8_t all_dont_cares;  /* boolean, indicates if the term is composed of only
                               dont cares */
+  uint8_t essential;
 };
 
 
