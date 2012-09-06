@@ -208,6 +208,7 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
 
   NCube ***petricks_cubes, *tmp;
   uint32_t i, num_terms, *counts, *cur_idxs;
+  uint64_t total_combos;
   OBVector *cur_group, *best_group; /* group of NCubes that completely covers
                                        given terms */
   double cur_avg_order, best_avg_order; /* the better the avg_order, the better
@@ -226,6 +227,16 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
   }
 
   petricks_cubes = initPetricksData(unresolved_cubes, unresolved_terms, counts);
+
+  /* calculate problem space, notify user for time estimate */
+  total_combos = 1;
+  for(i=0; i<num_terms; i++){
+    total_combos *= counts[i];
+  }
+  fprintf(stderr, "Resorting to brute force Petricks method to find final "
+                  "essential terms\n"
+                  "Searching for best coverage from %llu possible coverages",
+                  total_combos);
 
   best_avg_order = -1;
 
@@ -298,6 +309,8 @@ NCube *** initPetricksData(const OBVector *unresolved_cubes,
       if(nCubeCoversTerm((NCube *)objAtVectorIndex(unresolved_cubes, j),
                          cur_term)) counts[i]++;
     }
+    
+    assert(counts[i] > 0);
 
     petricks_cubes[i] = malloc(sizeof(NCube *)*counts[i]);
     assert(petricks_cubes[i] != NULL);
