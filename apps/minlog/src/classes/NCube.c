@@ -147,6 +147,10 @@ uint8_t isNCubeEssential(const NCube *a){
 }
 
 
+uint8_t orderOfNCube(const NCube *a){
+  return a->order;
+}
+
 /* PRIVATE METHODS */
 
 NCube * createNCubeWithOrder(uint8_t order){

@@ -42,5 +42,9 @@ void markNCubeAsEssential(NCube *a);
 /* boolean function, returns 1 if NCube is marked as essential, 0 if not */
 uint8_t isNCubeEssential(const NCube *a);
 
+/* function returns the number of variables whos value is a don't care 
+ * in NCube */
+uint8_t orderOfNCube(const NCube *a);
+
 #endif
 

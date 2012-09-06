@@ -25,7 +25,7 @@ typedef struct RTable_struct RTable;
 /* constructor allocates and initializes an instance of RTable, fails if a the
  * OBVector prime_implicants contains anything but NCubes, and terms contains
  * anything but Terms */
-RTable * createRTable(OBVector *prime_implicants, OBVector *terms);
+RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms);
 
 /* Function initializes the reduction process and returns an OBVector containing
  * all essential prime implicants (NCube objects). Returns a unique OBVector of

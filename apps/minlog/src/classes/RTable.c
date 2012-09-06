@@ -1,14 +1,14 @@
 
 #include "../../include/RTable.h"
 #include "../../include/private/RTable_Private.h"
-#include "../../include/NCube.h"
 #include "../../include/Term.h"
+#include "../../include/minlog_funct.h"
 
 /* PUBLIC METHODS */
 
 /* add arguments to complete initialization as needed, modify RTable.h
  * as well if modifications are made */
-RTable * createRTable(OBVector *prime_implicants, OBVector *terms){
+RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
 
   uint64_t i, num_pis, num_terms;
   uint32_t term_num;
@@ -91,7 +91,7 @@ OBVector * findEssentialPIs(RTable *table){
     /* if cube is not covered by a known essential cube, add it to the vector
      * of unresolved terms */
     if(!is_resolved){
-      addToVector(objAtVectorIndex(table->terms, i));
+      addToVector(unresolved_terms, objAtVectorIndex(table->terms, i));
     }
   }
 
@@ -118,6 +118,8 @@ OBVector * findEssentialPIs(RTable *table){
     catVectors(table->essential_pis, sub_essentials);
     release((obj *)sub_essentials);
   }
+
+  /* all terms are resolved, and all essential NCubes found */
 
   /* release unneeded vectors */
   release((obj *)unresolved_terms);
@@ -167,7 +169,7 @@ void deallocRTable(obj *to_dealloc){
   free(instance->cover_flags);
   release((obj *)instance->pis);
   release((obj *)instance->terms);
-  release((obj *)essential_pis);
+  release((obj *)instance->essential_pis);
 
   free(instance);
 
@@ -175,7 +177,7 @@ void deallocRTable(obj *to_dealloc){
 }
 
 
-void initTermCoverArray(OBVector *cubes, uint32_t term, uint8_t *array){
+void initTermCoverArray(const OBVector *cubes, uint32_t term, uint8_t *array){
   
   NCube *candidate;
   uint32_t i, num_cubes, num_match;
@@ -201,3 +203,143 @@ void initTermCoverArray(OBVector *cubes, uint32_t term, uint8_t *array){
 }
 
 
+OBVector * petricksReduce(const OBVector *unresolved_cubes,
+                          const OBVector *unresolved_terms){
+
+  NCube ***petricks_cubes, *tmp;
+  uint32_t i, num_terms, *counts, *cur_idxs;
+  OBVector *cur_group, *best_group; /* group of NCubes that completely covers
+                                       given terms */
+  double cur_avg_order, best_avg_order; /* the better the avg_order, the better
+                                           the cube grouping */
+
+  num_terms = sizeOfVector(unresolved_terms);
+
+  counts = malloc(sizeof(uint32_t)*num_terms);
+  assert(counts != NULL);
+  cur_idxs = malloc(sizeof(uint32_t)*num_terms);
+  assert(cur_idxs != NULL);
+
+  /* init count */
+  for(i=0; i<num_terms; i++){
+    cur_idxs[i] = 0;
+  }
+
+  petricks_cubes = initPetricksData(unresolved_cubes, unresolved_terms, counts);
+
+  best_avg_order = -1;
+
+  /* iterate through all possible combinations of cubes that completely cover
+   * the given terms */
+  while(1){
+    
+    cur_group = createVector(num_terms);
+    cur_avg_order = 0;
+
+    /* get current group, and sum of orders */
+    for(i=0; i<num_terms; i++){
+      tmp = petricks_cubes[i][cur_idxs[i]];
+      /* if the NCube is not already in the group (and accounted for) then add
+       * it */
+      if(!findObjInVector(cur_group, (obj *)tmp, &compareNCubes)){
+        addToVector(cur_group, (obj *)tmp);
+        cur_avg_order += orderOfNCube(tmp);
+      } 
+    }
+
+    cur_avg_order /= sizeOfVector(cur_group);
+
+    /* if average order of cur_group is better than best_group, there is a new
+     * best group */
+    if(cur_avg_order > best_avg_order){
+      best_avg_order = cur_avg_order;
+      release((obj *)best_group);
+      best_group = cur_group;
+    }
+    /* else release the current group, its not the best */
+    else release((obj *)cur_group);
+
+    if(nextCoverCombo(counts, cur_idxs, num_terms)) break;
+  }
+
+  /* free all unneeded memory */
+  for(i=0; i<num_terms; i++){
+    free(petricks_cubes[i]);
+  }
+  free(petricks_cubes);
+  free(counts);
+  free(cur_idxs);
+  
+  return best_group;
+}
+
+
+NCube *** initPetricksData(const OBVector *unresolved_cubes,
+                           const OBVector *unresolved_terms, uint32_t *counts){
+
+  NCube ***petricks_cubes;
+  uint32_t i, j, k, cur_term, num_terms, num_cubes;
+
+  num_terms = sizeOfVector(unresolved_terms);
+  num_cubes = sizeOfVector(unresolved_cubes);
+
+  petricks_cubes = malloc(sizeof(NCube *)*num_terms);
+  assert(petricks_cubes != NULL);
+
+  /* for all unresolved terms */
+  for(i=0; i<num_terms; i++){
+
+    /* init count (number of cubes matching term) to 0 */
+    counts[i] = 0;
+    cur_term = getTermValue((Term *)objAtVectorIndex(unresolved_terms, i));
+
+    /* for all unresolved cubes, count matching */
+    for(j=0; j<num_cubes; j++){
+      if(nCubeCoversTerm((NCube *)objAtVectorIndex(unresolved_cubes, j),
+                         cur_term)) counts[i]++;
+    }
+
+    petricks_cubes[i] = malloc(sizeof(NCube *)*counts[i]);
+    assert(petricks_cubes[i] != NULL);
+
+    k=0;
+
+    /* for all unresolved cubes, add to petricks_cubes if cube covers term */
+    for(j=0; j<num_cubes; j++){
+      if(nCubeCoversTerm((NCube *)objAtVectorIndex(unresolved_cubes, j),
+                         cur_term))
+        petricks_cubes[i][k++] = (NCube *)objAtVectorIndex(unresolved_cubes,j);
+    }
+  }
+
+  return petricks_cubes;
+}
+
+
+uint8_t nextCoverCombo(const uint32_t *max_idxs, uint32_t *cur_idxs,
+                       uint32_t array_size){
+
+  uint32_t i, idxs_overflowed;
+
+  idxs_overflowed = 0;
+
+  /* increment combo counter */
+  for(i=0; i<array_size; i++){
+    /* if incrementing array position i causes count to overflow, set to 0 and
+     * increment overflow count */
+    if(++cur_idxs[i] > max_idxs[i]){
+      cur_idxs[i] = 0;
+      idxs_overflowed++;
+    }
+    /* else if not overflow occured, nothing need be done for increment */
+    else break;
+  }
+
+  /* if array_size number of overflows occured the combo counter reset to 0,
+   * return 1 */
+  if(idxs_overflowed == array_size){
+    return 1;
+  }
+
+  return 0;
+}
