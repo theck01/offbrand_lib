@@ -40,11 +40,90 @@ RTable * createRTable(OBVector *prime_implicants, OBVector *terms){
 
     term_num = getTermValue((Term *)objAtVectorIndex(new_instance->terms,i));
     
-    processTermCoverArray(new_instance->terms, term_num, 
-                          new_instance->cover_flags[i]);
+    initTermCoverArray(new_instance->terms, term_num,
+                       new_instance->cover_flags[i]);
   }
 
+  new_instance->essential_pis = NULL;
+
   return new_instance;
+}
+
+
+OBVector * findEssentialPIs(RTable *table){
+
+  uint32_t i, j, num_terms, num_pis, is_resolved;
+  OBVector *unknown_pis, *unresolved_terms, *sub_essentials;
+  RTable *sub_table;
+
+  assert(table != NULL);
+
+  /* if the essential pis have already been found */
+  if(table->essential_pis){
+    return copyVector(table->essential_pis);
+  }
+
+  /* create vectors */
+  table->essential_pis = createVector(1);
+  assert(table->essential_pis != NULL);
+  unresolved_terms = createVector(1);
+  assert(unresolved_terms != NULL);
+  unknown_pis = createVector(1);
+  assert(unknown_pis != NULL);
+
+  num_pis = sizeOfVector(table->pis);
+  num_terms = sizeOfVector(table->terms);
+
+  /* find terms that are not covered by a known essential pi */
+  for(i=0; i<num_terms; i++){
+
+    /* by default the term is not resolved */
+    is_resolved = 0;
+    for(j=0; j<num_pis; j++){
+      /* if term is covered by a known essential cube it is resolved */
+      if(table->cover_flags[i][j] == 1 && 
+         isNCubeEssential((NCube *)objAtVectorIndex(table->pis, j))){
+        is_resolved = 1; 
+        break;
+      }
+    }
+
+    /* if cube is not covered by a known essential cube, add it to the vector
+     * of unresolved terms */
+    if(!is_resolved){
+      addToVector(objAtVectorIndex(table->terms, i));
+    }
+  }
+
+  /* compose essential and unknown NCube vectors */
+  for(i=0; i<num_pis; i++){
+    if(isNCubeEssential((NCube *)objAtVectorIndex(table->pis, i)))
+      addToVector(table->essential_pis, objAtVectorIndex(table->pis, i));
+    else addToVector(unknown_pis, objAtVectorIndex(table->pis, i));
+  }
+
+  /* if all terms are unresolved, resort to brute force combination
+   * checking via Petricks Method */
+  if(sizeOfVector(unresolved_terms) == sizeOfVector(table->terms)){
+    sub_essentials = petricksReduce(unknown_pis, unresolved_terms);
+    catVectors(table->essential_pis, sub_essentials);
+    release((obj *)sub_essentials);
+  }
+  /* else if only some terms are resolved, but not all, recursively create a sub
+   * RTable and use it to further reduce pis */
+  else if(sizeOfVector(unresolved_terms) > 0){
+    sub_table = createRTable(unknown_pis, unresolved_terms);
+    sub_essentials = findEssentialPIs(sub_table);
+    release((obj *)sub_table);
+    catVectors(table->essential_pis, sub_essentials);
+    release((obj *)sub_essentials);
+  }
+
+  /* release unneeded vectors */
+  release((obj *)unresolved_terms);
+  release((obj *)unknown_pis);
+
+  return copyVector(table->essential_pis);
 }
 
 
@@ -88,6 +167,7 @@ void deallocRTable(obj *to_dealloc){
   free(instance->cover_flags);
   release((obj *)instance->pis);
   release((obj *)instance->terms);
+  release((obj *)essential_pis);
 
   free(instance);
 
@@ -95,7 +175,7 @@ void deallocRTable(obj *to_dealloc){
 }
 
 
-void processTermCoverArray(OBVector *cubes, uint32_t term, uint8_t *array){
+void initTermCoverArray(OBVector *cubes, uint32_t term, uint8_t *array){
   
   NCube *candidate;
   uint32_t i, num_cubes, num_match;
@@ -119,4 +199,5 @@ void processTermCoverArray(OBVector *cubes, uint32_t term, uint8_t *array){
 
   return;
 }
+
 

@@ -14,6 +14,7 @@ struct RTable_struct{
   obj base;
   OBVector *pis;         /* shorthand for Prime Implicants */
   OBVector *terms;
+  OBVector *essential_pis;
   uint8_t **cover_flags; /* flags that indicate whether a term is covered by a
                             prime implicant, where the first dimension
                             corresponds to the prime implicant, and the second
@@ -35,6 +36,13 @@ void deallocRTable(obj *to_dealloc);
 
 /* used in constructor to determine which Terms covered by which NCubes and
  * which NCubes can be determined to be essential without extra effort */
-void processTermCoverArray(OBVector *cubes, uint32_t term, uint8_t *array);
+void initTermCoverArray(OBVector *cubes, uint32_t term, uint8_t *array);
+
+/* brute force search through all combinations of terms to find the minimal
+ * term coverage. Returns a vector of NCubes with optimal coverage with a
+ * single reference */
+OBVector * petricksReduce(OBVector *unresolved_cubes,
+                          OBVector *unresolved_terms);
+
 
 #endif

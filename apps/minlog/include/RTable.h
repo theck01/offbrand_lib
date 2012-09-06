@@ -28,7 +28,8 @@ typedef struct RTable_struct RTable;
 RTable * createRTable(OBVector *prime_implicants, OBVector *terms);
 
 /* Function initializes the reduction process and returns an OBVector containing
- * all essential prime implicants (NCube objects) */
+ * all essential prime implicants (NCube objects). Returns a unique OBVector of
+ * essential NCube objects referenced once */
 OBVector * findEssentialPIs(RTable *table);
 
 #endif
