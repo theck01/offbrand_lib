@@ -1,5 +1,6 @@
 
 File Structure:
+---------------
 
 The OffBrand library is composed of entirely of incomplete types, to create C 
 style "classes". Each class is composed of three files:
@@ -18,20 +19,21 @@ data structure allocation on the heap.
 
 
 Fast Failure:
+-------------
 
 When Offbrand library functions fail (due to unexpected input values, failure to
 allocate memory, mutex locking issues, etc), they stop the execution of the
-entire program. This fast failure method is used rather than propagating NULL
-(or some invalid integer constant) to relieve the need for the user to check
-return values for errors, greatly simpifying the use of the library. It also has
-the side benefit of helping debug programs in error.
+entire program. This failure method simplifies the usage of APIs (by greatly
+reducing the need for error checking) at the expense of robustness of
+performance under all conditions.
 
-Because of this fast failure, the library can be used with the assumption that
-if a function returns then it succeeded in its task and is returning a valid
-return value.
+Because of this fast failure policy, the library can be used with the assumption
+that if a function returns then it succeeded in its task and all return values
+are valid.
 
 
 OffBrand Compatible Class Creation:
+-----------------------------------
 
 A OffBrand compatible class should be created using the mkobc (MaKe OffBrand
 Class) command included in the installation of the OffBrand library. Run the 
@@ -43,20 +45,13 @@ INCLUDED! The code is essential for creating a class that will work with the
 OffBrand framework. All additional code should be added to the created source
 files in the appropriate locations, indicated by comments in the files.
 
-If additional constructors need be created copy the code provided in the default
-constructor and add code in the designated areas as needed.
-
 
 obj:
+----
 
-obj is the base struct for all OffBrand objects. Casting all OffBrand
-compatible instances to obj allows each data structure to be "generic", where
-it can hold instances of any OffBrand compatible type. There is no planned
-support for heterogenous generic containers (containers that hold data of
-different types). While not explicitly prevented in anyway by the code, it is
-recommended that the user know what they are doing before using OffBrand
-containers in a heterogenous manner. The glaring issue of heterogenous
-containers is no way to determine at which class an obj * is pointing.
+obj is the base data type for all OffBrand objects. Casting all OffBrand
+compatible instances to obj * allows each data structure to be "generic", where
+it can hold instances of any OffBrand compatible type.
 
 obj contains the data for reference counts of all objects and a function
 pointer to the destructor function of the class. All obj are initialized with
@@ -75,6 +70,7 @@ other functions in the Offbrand standard library can be found in "offbrand.h"
 
 
 Thread Safety:
+--------------
 
 Programs wishing to take advantage of the thread synchronization capabilities of
 the Offbrand library should include "offbrand_threaded.h" header file rather
@@ -91,6 +87,7 @@ by the programmer by using the locking library, described in detail in the
 
 
 Contact:
+--------
 
 Please send all bug reports, improvements, feedback, etc to:
 tyler.heck@gmail.com

@@ -91,7 +91,7 @@ the programmer or another object) are equivalent.
 
 STATUS:
 Registry still theoretical, protection scheme based on string comparision of
-classnames implemented.
+classnames implemented and tested.
 
 --------------------------------------------------------------------------------
 
@@ -290,5 +290,11 @@ assist in creating mostly bug free programs.
 PROGRESS:
 Library update underway...
 
+09-09-2012
+asserts included and functioning. A more user friendly (not developer friendly)
+function may be a better choice, included in the library. Look into how assert
+works
+
 STATUS:
-In progress.
+asserts added, library functionallity maintained
+
