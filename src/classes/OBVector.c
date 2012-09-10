@@ -235,6 +235,22 @@ void removeFromVectorIndex(OBVector *v, uint32_t index){
   return;
 }
 
+void clearVector(OBVector *v){
+
+  uint32_t i;
+
+  assert(v != NULL);
+
+  for(i=0; i<v->num_objs; i++){
+    release(v->array[i]);
+  }
+
+  v->num_objs = 0;
+
+  return;
+}
+
+
 
 /* PRIVATE METHODS */
 
@@ -257,6 +273,7 @@ void initVectorBase(OBVector *to_init){
   return;
 }
 
+
 void deallocVector(obj *to_dealloc){
 
   uint32_t i;
@@ -265,10 +282,7 @@ void deallocVector(obj *to_dealloc){
   OBVector *instance = (OBVector *)to_dealloc;
   assert(instance != NULL && objIsOfClass(to_dealloc, "OBVector"));
 
-  /* release all objects stored inside vector */
-  for(i=0; i<instance->num_objs; i++){
-    release((obj *)instance->array[i]);
-  }
+  clearVector(instance); /* release all objs contained in vector */
 
   free(instance->array);
   free(instance);
@@ -282,7 +296,7 @@ void resizeVector(OBVector *v){
 
   if(v->num_objs == v->capacity){
     
-    /* if maximum size has been reached print msg */
+    /* if maximum size has been reached fail*/
     assert(v->capacity != UINT32_MAX);
     
     new_cap = v->capacity*2;

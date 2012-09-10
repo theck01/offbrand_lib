@@ -161,6 +161,16 @@ int main(){
     }
   }
 
+  release((obj *)main_vec);
+  release((obj *)copy_vec);
+
+  if(getTestReferences(tmp) != 1){
+    fprintf(stderr, "OBVector_test: releases of OBVector container did not "
+                    "properly manage\ncontained OBTest reference count, TEST "
+                    "FAILED\n");
+    exit(1);
+  }
+
   printf("OBVector_test: TESTS PASSED\n");
   return 0;
 }

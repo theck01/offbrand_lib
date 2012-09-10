@@ -54,6 +54,7 @@ $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
 
 # OPTIONAL BUILDS
 test: clean debug
+	@echo
 	@echo "Running tests on data structures after successful compilation..."
 	@run-parts $(BIN_TEST)
 
