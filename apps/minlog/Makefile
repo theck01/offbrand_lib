@@ -58,6 +58,7 @@ $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(ALL_DEP)
 
 # OPTIONAL BUILDS
 test: clean debug
+	@echo
 	@echo "Running tests on minlog data structures after successful compile..."
 	@run-parts $(BIN_TEST)
 

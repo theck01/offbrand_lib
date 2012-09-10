@@ -53,11 +53,11 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
 
     for(i=0; i<maxi; i++){
       /* get term for cube creation */
-      tmp_term = (Term *)objAtVectorIndex(terms, i);
+      tmp_term = (Term *)objAtVectorIndex(dont_cares, i);
       assert(objIsOfClass((obj *)tmp_term, "Term"));
 
       /* create cube from term, which is not a dont care cube */
-      tmp_cube = createNCube(getTermValue(tmp_term), 0);
+      tmp_cube = createNCube(getTermValue(tmp_term), 1);
 
       /* add cube to cur_cube_vector */
       addToVector(cur_cube_vector, (obj *)tmp_cube);
@@ -99,7 +99,7 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
 
       for(j=i+1; j<maxi; j++){
 
-        b = (NCube *)objAtVectorIndex(prev_cube_vector, i);
+        b = (NCube *)objAtVectorIndex(prev_cube_vector, j);
         /*if cubes can be merged */
 
         if((tmp_cube = mergeNCubes(a, b))){
@@ -120,7 +120,7 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
   }
 
   /* Create final vector of only prime implicant cubes */
-  result = createVector(4);
+  result = createVector(1);
 
   maxi = sizeOfVector(cube_vectors);
   for(i=0; i<maxi; i++){
@@ -138,4 +138,63 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
 
   release((obj *)cube_vectors);
   return result;
+}
+
+
+uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
+                       OBVector *dont_cares, uint8_t verbose){
+  uint8_t retval;
+  char termstr[1024], dcstr[1024], *curhead; /* substrings that contain terms 
+                                                and dont cares (dc), and pointer
+                                                to current head of string*/
+  char cur_term[1024];   /*current term string representaion */
+  uint32_t cur_term_int; /*current term integer representaion */
+  int16_t dc_start, terms_start;
+  regex_t dc, term, sop, pos; /* various compiled regexs */
+  regmatch_t match;
+  Term *new_term_obj;
+
+  /* compile regular expressions */
+  assert(regcomp(&dc, "[Dd]", REG_EXTENDED) == 0);
+  assert(regcomp(&term, "[:digit:]+", REG_EXTENDED) == 0);
+  assert(regcomp(&pos, "M", REG_EXTENDED) == 0);
+  assert(regcomp(&sop, "m", REG_EXTENDED) == 0);
+
+  /* determine where terms and dont cares are located in the string */
+  if(!regexec(&dc, eqnstr, 1, &match)) dc_start = match.rm_so;
+  else dc_start = -1;
+
+  if(!regexec(&pos, eqnstr, 1, &match)){
+    terms_start = match.rm_so;
+    retval = MAXTERMS;
+  }
+  else if(!regexec(&sop, eqnstr, 1, &match)){
+    terms_start = match.rm_so;
+    retval = MINTERMS;
+  }
+  else{
+    fprintf(stderr, "minlog:parseEqnString - Improper equation format, could\n"
+                    "not find a m/M to indicate start of minterms or "
+                    "maxterms\n");
+    exit(1);
+  }
+
+  /* copy term portions into proper srings */
+  if(dc_start == -1){
+    strncpy(termstr, eqnstr, 1024);
+    termstr[1023] = '\0'; /* ensure last character is a NULL terminator */
+  }
+  else if(dc_start < terms_start){
+    strncpy(dcstr, eqnstr, terms_start);
+    dcstr[terms_start] = '\0';
+    strncpy(termstr, eqnstr+terms_start, 1024 - terms_start);
+    termstr[1023] = '\0'; /* ensure last character is a NULL terminator */
+  }
+  else{
+    strncpy(termstr, eqnstr, dc_start);
+    termstr[terms_start] = '\0';
+    strncpy(dcstr, eqnstr+dc_start, 1024 - dc_start);
+    dcstr[1023] = '\0'; /* ensure last character is a NULL terminator */
+  }
+
 }
