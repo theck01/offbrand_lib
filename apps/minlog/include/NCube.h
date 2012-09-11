@@ -46,5 +46,14 @@ uint8_t isNCubeEssential(const NCube *a);
  * in NCube */
 uint8_t orderOfNCube(const NCube *a);
 
+/* function returns string representing the NCube as a term, either in sum of
+ * products (SOP) or product of sums (POS) format. More significant variables
+ * (or bits) are associated with letters earlier in the alphabet (A is the most
+ * significant bit). sop is a boolean indicating whether sum of products is
+ * desired (non zero value) or product of sums (0 value), and num_var is the
+ * number of variables in the function that the NCube is a part of */
+char * nCubeStr(const NCube *a, uint8_t sop, uint8_t num_var);
+
+
 #endif
 

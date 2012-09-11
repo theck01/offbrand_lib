@@ -2,6 +2,7 @@
 #include "../../include/minlog_funct.h"
 #include "../../include/NCube.h"
 #include "../../include/Term.h"
+#include <regex.h>
 
 uint8_t numOneBits(uint32_t num){
 
@@ -149,6 +150,7 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
                                                 to current head of string*/
   char cur_term[1024];   /*current term string representaion */
   uint32_t cur_term_int; /*current term integer representaion */
+  uint32_t i;
   int16_t dc_start, terms_start;
   regex_t dc, term, sop, pos; /* various compiled regexs */
   regmatch_t match;
@@ -160,15 +162,20 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
   assert(regcomp(&pos, "M", REG_EXTENDED) == 0);
   assert(regcomp(&sop, "m", REG_EXTENDED) == 0);
 
+  /* clear vectors of terms and dont_cares */
+  clearVector(terms);
+  clearVector(dont_cares);
+
   /* determine where terms and dont cares are located in the string */
-  if(!regexec(&dc, eqnstr, 1, &match)) dc_start = match.rm_so;
+  if(!regexec(&dc, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL))
+    dc_start = match.rm_so;
   else dc_start = -1;
 
-  if(!regexec(&pos, eqnstr, 1, &match)){
+  if(!regexec(&pos, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL)){
     terms_start = match.rm_so;
     retval = MAXTERMS;
   }
-  else if(!regexec(&sop, eqnstr, 1, &match)){
+  else if(!regexec(&sop, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL)){
     terms_start = match.rm_so;
     retval = MINTERMS;
   }
@@ -197,4 +204,66 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
     dcstr[1023] = '\0'; /* ensure last character is a NULL terminator */
   }
 
+  /* read in all terms from termstr */
+  curhead = termstr;
+  while(!regexec(&term, curhead, 1, &match, REG_NOTBOL|REG_NOTEOL)){
+
+    strncpy(cur_term, curhead + match.rm_so, match.rm_eo - match.rm_so);
+    cur_term[match.rm_eo - match.rm_so] = '\0';
+
+    cur_term_int = atoi(cur_term);
+
+    new_term_obj = createTerm(cur_term_int);
+    addToVector(terms,(obj *)new_term_obj);
+    release((obj *)new_term_obj);
+
+    curhead += match.rm_eo;
+  }
+
+  /* read in all terms from dcstr, if it exists */
+  if(dc_start != -1){
+    curhead = dcstr;
+    while(!regexec(&term, curhead, 1, &match, REG_NOTBOL|REG_NOTEOL)){
+
+      strncpy(cur_term, curhead + match.rm_so, match.rm_eo - match.rm_so);
+      cur_term[match.rm_eo - match.rm_so] = '\0';
+
+      cur_term_int = atoi(cur_term);
+
+      new_term_obj = createTerm(cur_term_int);
+      addToVector(dont_cares, (obj *)new_term_obj);
+      release((obj *)new_term_obj);
+
+      curhead += match.rm_eo;
+    }
+  }
+
+  /* check that some terms were read in */
+  if(sizeOfVector(terms) == 0){
+    fprintf(stderr, "minlog:parseEqnString - No terms supplied in the "
+                    "equation,\nProgram exits due to bad equation format\n");
+    exit(1);
+  }
+
+  /* print out results of parse, if desired */
+  if(verbose){
+
+    if(retval == MINTERMS) printf("Minterms parsed from equation:\n");
+    else printf("Maxterms parsed from equation:\n");
+    for(i=0; i<sizeOfVector(terms); i++){
+      printf("%u\n", getTermValue((Term *)objAtVectorIndex(terms, i)));
+    }
+
+    printf("\n");
+
+    if(sizeOfVector(dont_cares) > 0){
+      printf("Dont cares parsed from equation:\n");
+      for(i=0; i<sizeOfVector(dont_cares); i++){
+        printf("%u\n", getTermValue((Term *)objAtVectorIndex(dont_cares, i)));
+      }
+    }
+    else printf("Without any dont care terms\n");
+  }
+  
+  return retval;
 }
