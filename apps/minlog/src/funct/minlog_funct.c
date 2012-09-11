@@ -14,6 +14,11 @@ uint8_t numOneBits(uint32_t num){
   return bit_count;
 }
 
+uint8_t testBit(uint32_t num, uint8_t bit_num){
+  assert(bit_num < 32);
+  return (num >> bit_num) & 1;
+}
+
 
 OBVector * findLargestPrimeImplicants(const OBVector *terms, 
                                       const OBVector *dont_cares){
@@ -180,7 +185,7 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
     retval = MINTERMS;
   }
   else{
-    fprintf(stderr, "minlog:parseEqnString - Improper equation format, could\n"
+    fprintf(stderr, "minlog:parseEqnStr - Improper equation format, could\n"
                     "not find a m/M to indicate start of minterms or "
                     "maxterms\n");
     exit(1);
@@ -240,7 +245,7 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
 
   /* check that some terms were read in */
   if(sizeOfVector(terms) == 0){
-    fprintf(stderr, "minlog:parseEqnString - No terms supplied in the "
+    fprintf(stderr, "minlog:parseEqnStr - No terms supplied in the "
                     "equation,\nProgram exits due to bad equation format\n");
     exit(1);
   }

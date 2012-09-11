@@ -52,7 +52,7 @@ uint8_t orderOfNCube(const NCube *a);
  * significant bit). sop is a boolean indicating whether sum of products is
  * desired (non zero value) or product of sums (0 value), and num_var is the
  * number of variables in the function that the NCube is a part of */
-char * nCubeStr(const NCube *a, uint8_t sop, uint8_t num_var);
+char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var);
 
 
 #endif

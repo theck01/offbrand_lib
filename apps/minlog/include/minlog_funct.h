@@ -11,6 +11,10 @@
 /* function returns the number of 1 bits in the integer */
 uint8_t numOneBits(uint32_t num);
 
+/* function returns the value of the bit in the uint32_t corresponding to
+ * bit_num, bit_num of 0 corresponding to the least significant bit */
+uint8_t testBit(uint32_t num, uint8_t bit_num);
+
 /* function takes an OBVector containing all the Term objects required to
  * represent the unminimized function (either minterms or maxterms), and returns
  * a vector of the largest possible NCubes that completely cover all of the

@@ -151,6 +151,15 @@ uint8_t orderOfNCube(const NCube *a){
   return a->order;
 }
 
+
+char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
+
+  char *str;
+
+
+}
+
+
 /* PRIVATE METHODS */
 
 NCube * createNCubeWithOrder(uint8_t order){
