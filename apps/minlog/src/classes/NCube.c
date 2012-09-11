@@ -148,15 +148,60 @@ uint8_t isNCubeEssential(const NCube *a){
 
 
 uint8_t orderOfNCube(const NCube *a){
+  assert(a != NULL);
   return a->order;
 }
 
 
 char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
 
+  uint8_t i, k;
   char *str;
+  char curvar = 'A'; /* assumes that curvar can be incremented, resulting in B,
+                        C, D ... */
+  
+  assert(a != 0 && num_var < 27);
 
+  str = malloc(sizeof(char) * 256);
+  assert(str != NULL);
 
+  /* if all possible terms are encompased in term, return a string of 1 */
+  if(a->order > num_var){
+    strcpy(str, "1");
+    return str;
+  }
+
+  k = 0;
+
+  if(!is_sop) str[k++] = '(';
+
+  for(i=num_var-1; i>=0; i++){
+    /* if the current variable is not a dont care, add it to string */
+    if(!testBit(a->dont_cares, i)){
+      /* add the char representation of the variable */
+      str[k++] = curvar++;
+      /* if the bit for the variable is 0, add an additional ' (to indicate a
+       * notted variable) */
+      if(!testBit(a->terms[0],i)) str[k++] = ''';
+
+      /* if not is_sop, add spaces and '+' char */
+      if(!is_sop){
+        strncpy(str+k, " + ", 3);
+        k += 3;
+      }
+    }
+  }
+
+  /* if the term is product of sums, add final parenthesis and overwrite final
+   * " + " */
+  if(!is_sop){
+    k-=3;
+    str[k++] = ')';
+  }
+
+  str[k] = '\0';
+
+  return str;
 }
 
 
