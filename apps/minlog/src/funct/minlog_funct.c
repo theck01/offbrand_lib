@@ -149,6 +149,7 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
 
 uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
                        OBVector *dont_cares, uint8_t verbose){
+
   uint8_t retval;
   char termstr[1024], dcstr[1024], *curhead; /* substrings that contain terms 
                                                 and dont cares (dc), and pointer
@@ -178,16 +179,16 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
 
   if(!regexec(&pos, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL)){
     terms_start = match.rm_so;
-    retval = MAXTERMS;
+    retval = MINLOG_MAXTERMS;
   }
   else if(!regexec(&sop, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL)){
     terms_start = match.rm_so;
-    retval = MINTERMS;
+    retval = MINLOG_MINTERMS;
   }
   else{
     fprintf(stderr, "minlog:parseEqnStr - Improper equation format, could\n"
                     "not find a m/M to indicate start of minterms or "
-                    "maxterms\n");
+                    "maxterms respectively\n");
     exit(1);
   }
 
@@ -253,7 +254,7 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
   /* print out results of parse, if desired */
   if(verbose){
 
-    if(retval == MINTERMS) printf("Minterms parsed from equation:\n");
+    if(retval == MINLOG_MINTERMS) printf("Minterms parsed from equation:\n");
     else printf("Maxterms parsed from equation:\n");
     for(i=0; i<sizeOfVector(terms); i++){
       printf("%u\n", getTermValue((Term *)objAtVectorIndex(terms, i)));

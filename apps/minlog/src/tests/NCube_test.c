@@ -115,6 +115,19 @@ int main (){
     exit(1);
   }
 
+  if(strcmp(nCubeStr(c0123,1,3),"A`")){
+    fprintf(stderr, "NCube_test: NCube SOP string was not properly generated "
+                    "TEST FAILED\n");
+    exit(1);
+  }
+
+  if(strcmp(nCubeStr(c0123,0,5),"(A`+B`+C`)")){
+    fprintf(stderr, "NCube_test: NCube POS string was not properly generated "
+                    "TEST FAILED\n");
+    fprintf(stderr, "%s\n", nCubeStr(c0123,0,5));
+    exit(1);
+  }
+
   printf("NCube_test: TESTS PASSED\n");
   return 0;
 }

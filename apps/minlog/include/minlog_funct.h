@@ -5,8 +5,8 @@
 #include "../../../include/offbrand.h"
 #include "../../../include/OBVector.h"
 
-#define MINTERMS 0
-#define MAXTERMS 1
+#define MINLOG_MINTERMS 0
+#define MINLOG_MAXTERMS 1
 
 /* function returns the number of 1 bits in the integer */
 uint8_t numOneBits(uint32_t num);

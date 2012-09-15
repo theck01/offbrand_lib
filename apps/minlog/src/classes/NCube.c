@@ -175,27 +175,26 @@ char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
 
   if(!is_sop) str[k++] = '(';
 
-  for(i=num_var-1; i>=0; i++){
+  for(i=num_var-1; i<num_var; i++){
     /* if the current variable is not a dont care, add it to string */
     if(!testBit(a->dont_cares, i)){
       /* add the char representation of the variable */
       str[k++] = curvar++;
       /* if the bit for the variable is 0, add an additional ' (to indicate a
        * notted variable) */
-      if(!testBit(a->terms[0],i)) str[k++] = ''';
+      if(!testBit(a->terms[0],i)) str[k++] = '`';
 
-      /* if not is_sop, add spaces and '+' char */
+      /* if not is_sop, add '+' char */
       if(!is_sop){
-        strncpy(str+k, " + ", 3);
-        k += 3;
+        str[k++] = '+';
       }
     }
   }
 
   /* if the term is product of sums, add final parenthesis and overwrite final
-   * " + " */
+   * "+" */
   if(!is_sop){
-    k-=3;
+    k--;
     str[k++] = ')';
   }
 
