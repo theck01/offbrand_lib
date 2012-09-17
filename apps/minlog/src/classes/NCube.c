@@ -160,7 +160,7 @@ char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
   char curvar = 'A'; /* assumes that curvar can be incremented, resulting in B,
                         C, D ... */
   
-  assert(a != 0 && num_var < 27);
+  assert(a != NULL && num_var < 27);
 
   str = malloc(sizeof(char) * 256);
   assert(str != NULL);
@@ -175,7 +175,8 @@ char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
 
   if(!is_sop) str[k++] = '(';
 
-  for(i=num_var-1; i<num_var; i++){
+  for(i=num_var-1; i<num_var; i--){
+    
     /* if the current variable is not a dont care, add it to string */
     if(!testBit(a->dont_cares, i)){
       /* add the char representation of the variable */
