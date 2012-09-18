@@ -6,9 +6,8 @@
 
 int main(int argc, char **argv){
 
-  OBVector *terms, *dont_cares;
+  OBVector *terms, *dont_cares, *pis, *essential_pis;
   RTable *reduction_table;
-
   uint8_t is_minterms;
 
   

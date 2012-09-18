@@ -273,3 +273,27 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
   release((obj *)cube_vectors);
   return result;
 }
+
+void printEqnVector(const OBVector *essential_pis, uint8_t is_sop, 
+                    uint32_t num_var){
+
+  uint32_t i, num_var;
+  char *cubestr;
+
+  printf("Reduced Equation:\n");
+  for(i=0; i<sizeOfVector(essential_pis); i++){
+
+    assert(objIsOfClass(objAtVectorIndex(essential_pis, i), "NCube"));
+    cubestr = nCubeStr((NCube *)objAtVectorIndex(essential_pis, i), is_sop,
+                        num_var);
+    printf("%s", cubestr);
+    free(cubestr);
+    
+    /* if printing terms in sum of products, print '+' in proper places */
+    if(is_sop && i != sizeOfVector(essential_pis)-1) printf("+");
+  }
+
+  return;
+}
+
+
