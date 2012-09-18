@@ -33,7 +33,7 @@ ALL_FUNCTS = $(patsubst $(FUNCTS)/%.c, $(BIN_FUNCT)/%.o, $(FUNCT_SOURCES))
 
 
 # MAIN BUILD
-all: $(ALL_CLASSES) $(ALL_TESTS) $(ALL_FUNCTS)
+all: $(ALL_CLASSES) $(ALL_TESTS) $(ALL_FUNCTS) $(BIN)/minlog
 
 # Functions Build 
 $(BIN_FUNCT)/%.o: $(FUNCTS)/%.c $(PUBLIC)/%.h
@@ -53,6 +53,10 @@ $(BIN_TEST)/RTable_test: $(TESTS)/RTable_test.c $(EXE_DEP)
 
 # Generic Test Build
 $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(ALL_DEP)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Main program Build
+$(BIN)/minlog: $(SRC)/main.c $(EXE_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
 

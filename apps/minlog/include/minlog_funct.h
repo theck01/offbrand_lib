@@ -1,4 +1,9 @@
 
+/*
+ * Various functions that belong to no class, but simplify the logic
+ * minimization process
+ */
+
 #ifndef MISC_FUNCTIONS_H
 #define MISC_FUNCTIONS_H
 

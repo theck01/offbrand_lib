@@ -277,7 +277,7 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
 void printEqnVector(const OBVector *essential_pis, uint8_t is_sop, 
                     uint32_t num_var){
 
-  uint32_t i, num_var;
+  uint32_t i;
   char *cubestr;
 
   printf("Reduced Equation:\n");
