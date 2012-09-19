@@ -31,30 +31,31 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
   uint32_t cur_term_int; /*current term integer representaion */
   uint32_t i;
   int16_t dc_start, terms_start;
-  regex_t dc, term, sop, pos; /* various compiled regexs */
+  regex_t dc_regex, term_regex, sop_regex, pos_regex; /* various compiled
+                                                         regexs */
   regmatch_t match;
   Term *new_term_obj;
 
   /* compile regular expressions */
-  assert(regcomp(&dc, "[Dd]", REG_EXTENDED) == 0);
-  assert(regcomp(&term, "[:digit:]+", REG_EXTENDED) == 0);
-  assert(regcomp(&pos, "M", REG_EXTENDED) == 0);
-  assert(regcomp(&sop, "m", REG_EXTENDED) == 0);
+  assert(regcomp(&dc_regex, "[Dd]", REG_EXTENDED) == 0);
+  assert(regcomp(&term_regex, "[:digit:]+", REG_EXTENDED) == 0);
+  assert(regcomp(&pos_regex, "M", REG_EXTENDED) == 0);
+  assert(regcomp(&sop_regex, "m", REG_EXTENDED) == 0);
 
   /* clear vectors of terms and dont_cares */
   clearVector(terms);
   clearVector(dont_cares);
 
   /* determine where terms and dont cares are located in the string */
-  if(!regexec(&dc, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL))
+  if(!regexec(&dc_regex, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL))
     dc_start = match.rm_so;
   else dc_start = -1;
 
-  if(!regexec(&pos, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL)){
+  if(!regexec(&pos_regex, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL)){
     terms_start = match.rm_so;
     retval = MINLOG_MAXTERMS;
   }
-  else if(!regexec(&sop, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL)){
+  else if(!regexec(&sop_regex, eqnstr, 1, &match, REG_NOTBOL|REG_NOTEOL)){
     terms_start = match.rm_so;
     retval = MINLOG_MINTERMS;
   }
@@ -64,6 +65,10 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
                     "maxterms respectively\n");
     exit(1);
   }
+
+  if(retval == MINLOG_MAXTERMS) printf("found an M\n");
+  if(retval == MINLOG_MINTERMS) printf("found an m\n");
+  if(dc_start > -1) printf("found a d or D\n");
 
   /* copy term portions into proper srings */
   if(dc_start == -1){
@@ -85,12 +90,13 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
 
   /* read in all terms from termstr */
   curhead = termstr;
-  while(!regexec(&term, curhead, 1, &match, REG_NOTBOL|REG_NOTEOL)){
+  while(!regexec(&term_regex, curhead, 1, &match, REG_NOTBOL|REG_NOTEOL)){
 
     strncpy(cur_term, curhead + match.rm_so, match.rm_eo - match.rm_so);
     cur_term[match.rm_eo - match.rm_so] = '\0';
 
     cur_term_int = atoi(cur_term);
+    printf("Adding term %u\n", cur_term_int);
 
     new_term_obj = createTerm(cur_term_int);
     addToVector(terms,(obj *)new_term_obj);
@@ -102,7 +108,7 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
   /* read in all terms from dcstr, if it exists */
   if(dc_start != -1){
     curhead = dcstr;
-    while(!regexec(&term, curhead, 1, &match, REG_NOTBOL|REG_NOTEOL)){
+    while(!regexec(&term_regex, curhead, 1, &match, REG_NOTBOL|REG_NOTEOL)){
 
       strncpy(cur_term, curhead + match.rm_so, match.rm_eo - match.rm_so);
       cur_term[match.rm_eo - match.rm_so] = '\0';

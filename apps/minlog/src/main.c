@@ -5,14 +5,18 @@
 #include "../include/minlog_funct.h"
 #include "../../../include/OBVector.h"
 
+#define MAX_EQN_SIZE 2048
+
 int main(int argc, char **argv){
 
   OBVector *terms, *dont_cares, *pis, *essential_pis;
   RTable *reduction_table;
   uint8_t is_minterms, num_var;
-  uint32_t max_term; /* largest term given (not a don't care) */
+  uint32_t max_term, numchar, substrlen; 
+  int i;
+  char eqnstr[MAX_EQN_SIZE];
 
-  if(argc != 2){
+  if(argc < 2){
     fprintf(stderr,
             "\n%s: A logic minimization application\n\n"
             "Usage:\n"
@@ -39,11 +43,27 @@ int main(int argc, char **argv){
     exit(1);
   }
 
+  /* compose eqnstr of all strings after argv[0] */
+  numchar = 0;
+  for(i=1; i<argc; i++){
+
+    /* verify that copying the argv string into eqnstr will not overflow 
+     * array */
+    substrlen = strlen(argv[i]);
+    assert(numchar+substrlen < MAX_EQN_SIZE);
+
+    strcpy(eqnstr + numchar, argv[i]);
+    numchar+=substrlen;
+    eqnstr[numchar++] = ' ';
+  }
+  eqnstr[numchar] = '\0'; /* add null terminator to string */
+    
   terms = createVector(32);
   dont_cares = createVector(32);
 
+
   /* parse verbosely for testing */
-  is_minterms = parseEqnString(argv[1], terms, dont_cares, 1);
+  is_minterms = parseEqnString(eqnstr, terms, dont_cares, 1);
 
   /* find largest term, found by sorting and picking first term. Inefficient but
    * concise compared to iterating through each term and checking results */
