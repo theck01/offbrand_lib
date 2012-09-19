@@ -9,7 +9,8 @@ int main(int argc, char **argv){
 
   OBVector *terms, *dont_cares, *pis, *essential_pis;
   RTable *reduction_table;
-  uint8_t is_minterms;
+  uint8_t is_minterms, num_var;
+  uint32_t max_term; /* largest term given (not a don't care) */
 
   if(argc != 2){
     fprintf(stderr,
@@ -37,6 +38,42 @@ int main(int argc, char **argv){
                                                 argv[0], argv[0], argv[0]);
     exit(1);
   }
+
+  terms = createVector(32);
+  dont_cares = createVector(32);
+
+  /* parse verbosely for testing */
+  is_minterms = parseEqnString(argv[1], terms, dont_cares, 1);
+
+  /* find largest term, found by sorting and picking first term. Inefficient but
+   * concise compared to iterating through each term and checking results */
+  sortVector(terms, &compareTerms, OB_GREATEST_TO_LEAST);
+  max_term = getTermValue((Term *)objAtVectorIndex(terms, 0));
+  num_var = 0;
+  /* increase number of variables until 2^num_var > max_term */
+  while(1u<<num_var <= max_term) num_var++;
+
+  /* find prime implicants */
+  pis = findLargestPrimeImplicants(terms, dont_cares);
+
+  release((obj *)dont_cares);
+
+  /* create the table used to reduce the prime implicants to the minimal
+   * essential prime implicants */
+  reduction_table = createRTable(pis, terms);
+  
+  release((obj *)terms);
+  release((obj *)pis);
+
+  /* find the minimal function representation */
+  essential_pis = findEssentialPIs(reduction_table); 
+
+  release((obj *)reduction_table);
+  
+  /* print the result to stdout */
+  printEqnVector(essential_pis, is_minterms, num_var);
+
+  release((obj *)essential_pis);
 
   return 0;
 }

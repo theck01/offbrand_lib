@@ -56,7 +56,7 @@ $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(ALL_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
 # Main program Build
-$(BIN)/minlog: $(SRC)/main.c $(EXE_DEP)
+$(BIN)/minlog: $(SRC)/main.c $(EXE_DEP) $(BIN_CLASS)/RTable.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 

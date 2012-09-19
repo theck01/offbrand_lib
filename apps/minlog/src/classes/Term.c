@@ -19,7 +19,7 @@ Term * createTerm(uint32_t term){
 }
 
 /* function can be deleted if unneeded */
-int8_t compareTerm(const obj *a, const obj *b){
+int8_t compareTerms(const obj *a, const obj *b){
   
   Term *comp_a = (Term *)a;  
   Term *comp_b = (Term *)b;  

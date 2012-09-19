@@ -87,7 +87,7 @@ NCube * mergeNCubes(NCube *a, NCube *b){
 
 
 /* function can be deleted if unneeded */
-int8_t compareNCube(const obj *a, const obj *b){
+int8_t compareNCubes(const obj *a, const obj *b){
   
   uint32_t i, max_i;
   NCube *comp_a = (NCube *)a;  

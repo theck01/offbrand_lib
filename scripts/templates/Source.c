@@ -5,7 +5,7 @@
 /* PUBLIC METHODS */
 
 /* function can be deleted if unneeded */
-int8_t compare%CODECLASSNAME%(const obj *a, const obj *b){
+int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
   
   const %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
   const %CODECLASSNAME% *comp_b = (%CODECLASSNAME% *)b;  

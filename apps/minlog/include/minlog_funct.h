@@ -38,7 +38,8 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
 
 /* function prints the equation represented by the vector of essential prime
  * implicant NCubes, essential_pis, in Sum of Products form if is_sop != 0, or
- * Product of Sums form if is_sop = 0, with the give number of variables */
+ * Product of Sums form if is_sop = 0, with the give number of variables.
+ * Function prints to STDOUT */
 void printEqnVector(const OBVector *essential_pis, uint8_t is_sop,
                     uint32_t num_var);
 
