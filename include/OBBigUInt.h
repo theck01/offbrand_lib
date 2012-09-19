@@ -1,8 +1,8 @@
 
 /*
  * OBBigUInt:
- * Little-endian unsigned integer with maximum size of (2^32)^(2^64). This max
- * number would take 64 exbibytes of memory, take over 10^20 digits to represent
+ * Big-endian unsigned integer with maximum size of (2^32)^(2^64). This max
+ * number would take 64 exbibytes of memory, and over 10^20 digits to represent
  * in decimal format.
  */
 
