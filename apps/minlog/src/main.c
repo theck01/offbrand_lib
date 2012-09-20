@@ -76,24 +76,24 @@ int main(int argc, char **argv){
   /* find prime implicants */
   pis = findLargestPrimeImplicants(terms, dont_cares);
 
-  release((obj *)dont_cares);
+  dont_cares = (OBVector *)release((obj *)dont_cares);
 
   /* create the table used to reduce the prime implicants to the minimal
    * essential prime implicants */
   reduction_table = createRTable(pis, terms);
   
-  release((obj *)terms);
-  release((obj *)pis);
+  terms = (OBVector *)release((obj *)terms);
+  terms = (OBVector *)release((obj *)pis);
 
   /* find the minimal function representation */
   essential_pis = findEssentialPIs(reduction_table); 
 
-  release((obj *)reduction_table);
+  terms = (RTable *)release((obj *)reduction_table);
   
   /* print the result to stdout */
   printEqnVector(essential_pis, is_minterms, num_var);
 
-  release((obj *)essential_pis);
+  essential_pis = (OBVector *)release((obj *)essential_pis);
 
   return 0;
 }

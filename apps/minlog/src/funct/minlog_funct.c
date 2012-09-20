@@ -38,7 +38,7 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
 
   /* compile regular expressions */
   assert(regcomp(&dc_regex, "[Dd]", REG_EXTENDED) == 0);
-  assert(regcomp(&term_regex, "[:digit:]+", REG_EXTENDED) == 0);
+  assert(regcomp(&term_regex, "[[:digit:]]+", REG_EXTENDED) == 0);
   assert(regcomp(&pos_regex, "M", REG_EXTENDED) == 0);
   assert(regcomp(&sop_regex, "m", REG_EXTENDED) == 0);
 
@@ -83,10 +83,13 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
   }
   else{
     strncpy(termstr, eqnstr, dc_start);
-    termstr[terms_start] = '\0';
+    termstr[dc_start] = '\0';
     strncpy(dcstr, eqnstr+dc_start, 1024 - dc_start);
     dcstr[1023] = '\0'; /* ensure last character is a NULL terminator */
   }
+
+  printf("Termstr: %s\n", termstr);
+  if(dc_start != -1) printf("dcstr: %s\n", dcstr);
 
   /* read in all terms from termstr */
   curhead = termstr;
