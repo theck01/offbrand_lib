@@ -40,7 +40,7 @@ RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
 
     term_num = getTermValue((Term *)objAtVectorIndex(new_instance->terms,i));
     
-    initTermCoverArray(new_instance->terms, term_num,
+    initTermCoverArray(new_instance->pis, term_num,
                        new_instance->cover_flags[i]);
   }
 
@@ -107,23 +107,23 @@ OBVector * findEssentialPIs(RTable *table){
   if(sizeOfVector(unresolved_terms) == sizeOfVector(table->terms)){
     sub_essentials = petricksReduce(unknown_pis, unresolved_terms);
     catVectors(table->essential_pis, sub_essentials);
-    release((obj *)sub_essentials);
+    sub_essentials = (OBVector *)release((obj *)sub_essentials);
   }
   /* else if only some terms are resolved, but not all, recursively create a sub
    * RTable and use it to further reduce pis */
   else if(sizeOfVector(unresolved_terms) > 0){
     sub_table = createRTable(unknown_pis, unresolved_terms);
     sub_essentials = findEssentialPIs(sub_table);
-    release((obj *)sub_table);
+    sub_table = (RTable *)release((obj *)sub_table);
     catVectors(table->essential_pis, sub_essentials);
-    release((obj *)sub_essentials);
+    sub_essentials = (OBVector *)release((obj *)sub_essentials);
   }
 
   /* all terms are resolved, and all essential NCubes found */
 
   /* release unneeded vectors */
-  release((obj *)unresolved_terms);
-  release((obj *)unknown_pis);
+  unresolved_terms = (OBVector *)release((obj *)unresolved_terms);
+  unknown_pis = (OBVector *)release((obj *)unknown_pis);
 
   return copyVector(table->essential_pis);
 }
@@ -214,6 +214,7 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
   double cur_avg_order, best_avg_order; /* the better the avg_order, the better
                                            the cube grouping */
 
+  best_group = NULL;
   num_terms = sizeOfVector(unresolved_terms);
 
   counts = malloc(sizeof(uint32_t)*num_terms);
@@ -264,7 +265,7 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
      * best group */
     if(cur_avg_order > best_avg_order){
       best_avg_order = cur_avg_order;
-      release((obj *)best_group);
+      if(best_group) release((obj *)best_group);
       best_group = cur_group;
     }
     /* else release the current group, its not the best */

@@ -79,7 +79,8 @@ void fitVectorToContents(OBVector *v){
 
 
 void addToVector(OBVector *v, obj *to_add){
-  assert(v != NULL && to_add != NULL);
+  assert(v != NULL);
+  assert(to_add != NULL);
   insertAtVectorIndex(v, to_add, v->num_objs);
   return;
 }
@@ -89,7 +90,9 @@ void insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
 
   uint64_t i;
 
-  assert(v != NULL && to_add != NULL && index <= v->num_objs);
+  assert(v != NULL);
+  assert(to_add != NULL);
+  assert(index <= v->num_objs);
 
   /* if the index is beyond the end of the current vector, display error but
    * attempt to add to the end */
@@ -114,7 +117,8 @@ void catVectors(OBVector *destination, OBVector *to_append){
   uint64_t i, new_cap;
   obj **new_array;
 
-  assert(destination != NULL && to_append != NULL);
+  assert(destination != NULL);
+  assert(to_append != NULL);
 
   new_cap = destination->capacity;
   while(new_cap < destination->num_objs + to_append->num_objs){
@@ -149,7 +153,9 @@ void catVectors(OBVector *destination, OBVector *to_append){
 
 void replaceInVector(OBVector *v, obj *new_obj, const uint32_t index){
 
-  assert(v != NULL && new_obj != NULL && index < v->num_objs);
+  assert(v != NULL);
+  assert(new_obj != NULL);
+  assert(index < v->num_objs);
 
   retain(new_obj);
   release(v->array[index]);
@@ -160,7 +166,8 @@ void replaceInVector(OBVector *v, obj *new_obj, const uint32_t index){
 
 
 obj * objAtVectorIndex(const OBVector *v, const uint32_t index){
-  assert(v != NULL && index < v->num_objs);
+  assert(v != NULL);
+  assert(index < v->num_objs);
   return v->array[index];
 }
 
@@ -170,7 +177,8 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
 
   uint32_t i;
 
-  assert(v != NULL && to_find != NULL);
+  assert(v != NULL);
+  assert(to_find != NULL);
 
   /* custom comparison function was not added, use simple pointer comparator */
   if(!compare) compare = &objCompare;
@@ -215,7 +223,8 @@ void removeFromVectorIndex(OBVector *v, uint32_t index){
   
   uint32_t i;
 
-  assert(v != NULL && index < v->num_objs);
+  assert(v != NULL);
+  assert(index < v->num_objs);
 
   /* if the vector is empty, do nothing */
   if(v->num_objs < 1){
@@ -276,11 +285,11 @@ void initVectorBase(OBVector *to_init){
 
 void deallocVector(obj *to_dealloc){
 
-  uint32_t i;
-
   /* cast generic obj to OBVector */
   OBVector *instance = (OBVector *)to_dealloc;
-  assert(instance != NULL && objIsOfClass(to_dealloc, "OBVector"));
+
+  assert(instance != NULL);
+  assert(objIsOfClass(to_dealloc, "OBVector"));
 
   clearVector(instance); /* release all objs contained in vector */
 

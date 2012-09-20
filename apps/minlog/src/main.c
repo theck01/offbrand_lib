@@ -83,12 +83,12 @@ int main(int argc, char **argv){
   reduction_table = createRTable(pis, terms);
   
   terms = (OBVector *)release((obj *)terms);
-  terms = (OBVector *)release((obj *)pis);
+  pis = (OBVector *)release((obj *)pis);
 
   /* find the minimal function representation */
   essential_pis = findEssentialPIs(reduction_table); 
 
-  terms = (RTable *)release((obj *)reduction_table);
+  reduction_table = (RTable *)release((obj *)reduction_table);
   
   /* print the result to stdout */
   printEqnVector(essential_pis, is_minterms, num_var);
