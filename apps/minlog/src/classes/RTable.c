@@ -234,10 +234,10 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
   for(i=0; i<num_terms; i++){
     total_combos *= counts[i];
   }
-  fprintf(stderr, "Resorting to brute force Petricks method to find final "
+  fprintf(stderr, "\nResorting to brute force Petricks method to find final "
                   "essential terms\n"
-                  "Searching for best coverage from %llu possible coverages\n",
-                  total_combos);
+                  "Searching for best coverage from %llu possible coverages..."
+                  "\n", total_combos);
 
   best_avg_order = -1;
 

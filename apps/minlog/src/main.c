@@ -91,7 +91,7 @@ int main(int argc, char **argv){
   reduction_table = (RTable *)release((obj *)reduction_table);
   
   /* print the result to stdout */
-  printEqnVector(essential_pis, is_minterms, num_var);
+  printEqnVector(essential_pis, !is_minterms, num_var);
 
   essential_pis = (OBVector *)release((obj *)essential_pis);
 

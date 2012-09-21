@@ -281,7 +281,7 @@ void printEqnVector(const OBVector *essential_pis, uint8_t is_sop,
   uint32_t i;
   char *cubestr;
 
-  printf("Reduced Equation:\n");
+  printf("\nReduced Equation:\n");
   for(i=0; i<sizeOfVector(essential_pis); i++){
 
     assert(objIsOfClass(objAtVectorIndex(essential_pis, i), "NCube"));
@@ -293,6 +293,8 @@ void printEqnVector(const OBVector *essential_pis, uint8_t is_sop,
     /* if printing terms in sum of products, print '+' in proper places */
     if(is_sop && i != sizeOfVector(essential_pis)-1) printf("+");
   }
+
+  printf("\n");
 
   return;
 }
