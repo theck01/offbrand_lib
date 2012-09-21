@@ -236,7 +236,7 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
   }
   fprintf(stderr, "Resorting to brute force Petricks method to find final "
                   "essential terms\n"
-                  "Searching for best coverage from %llu possible coverages",
+                  "Searching for best coverage from %llu possible coverages\n",
                   total_combos);
 
   best_avg_order = -1;
@@ -250,7 +250,9 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
 
     /* get current group, and sum of orders */
     for(i=0; i<num_terms; i++){
+      /* returning null values... */
       tmp = petricks_cubes[i][cur_idxs[i]];
+
       /* if the NCube is not already in the group (and accounted for) then add
        * it */
       if(!findObjInVector(cur_group, (obj *)tmp, &compareNCubes)){
@@ -341,7 +343,7 @@ uint8_t nextCoverCombo(const uint32_t *max_idxs, uint32_t *cur_idxs,
   for(i=0; i<array_size; i++){
     /* if incrementing array position i causes count to overflow, set to 0 and
      * increment overflow count */
-    if(++cur_idxs[i] > max_idxs[i]){
+    if(++cur_idxs[i] >= max_idxs[i]){
       cur_idxs[i] = 0;
       idxs_overflowed++;
     }

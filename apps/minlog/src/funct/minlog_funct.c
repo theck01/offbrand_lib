@@ -66,10 +66,6 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
     exit(1);
   }
 
-  if(retval == MINLOG_MAXTERMS) printf("found an M\n");
-  if(retval == MINLOG_MINTERMS) printf("found an m\n");
-  if(dc_start > -1) printf("found a d or D\n");
-
   /* copy term portions into proper srings */
   if(dc_start == -1){
     strncpy(termstr, eqnstr, 1024);
@@ -88,9 +84,6 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
     dcstr[1023] = '\0'; /* ensure last character is a NULL terminator */
   }
 
-  printf("Termstr: %s\n", termstr);
-  if(dc_start != -1) printf("dcstr: %s\n", dcstr);
-
   /* read in all terms from termstr */
   curhead = termstr;
   while(!regexec(&term_regex, curhead, 1, &match, REG_NOTBOL|REG_NOTEOL)){
@@ -99,7 +92,6 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
     cur_term[match.rm_eo - match.rm_so] = '\0';
 
     cur_term_int = atoi(cur_term);
-    printf("Adding term %u\n", cur_term_int);
 
     new_term_obj = createTerm(cur_term_int);
     addToVector(terms,(obj *)new_term_obj);
