@@ -237,7 +237,10 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
         b = (NCube *)objAtVectorIndex(prev_cube_vector, j);
         /*if cubes can be merged */
 
-        if((tmp_cube = mergeNCubes(a, b))){
+        /* if the cubes can be merged, and an equivalent cube is not already in
+         * the cur cube vector */
+        if((tmp_cube = mergeNCubes(a, b)) && 
+           !findObjInVector(cur_cube_vector,(obj *)tmp_cube, &compareNCubes)){
           addToVector(cur_cube_vector, (obj *)tmp_cube);
           /* release tmp_cube so that vector has only valid reference */
           release((obj *)tmp_cube);
