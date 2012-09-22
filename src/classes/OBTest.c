@@ -53,7 +53,7 @@ void initTestBase(OBTest *to_init){
   assert(to_init != NULL);
 
   if(!classname){
-    classname = malloc(sizeof(char) * strlen(stack_classname) + 1);
+    classname = malloc(sizeof(char) * (strlen(stack_classname) + 1));
     assert(classname != NULL);
     strcpy(classname, stack_classname); 
   }
@@ -65,7 +65,5 @@ void initTestBase(OBTest *to_init){
 }
 
 void deallocTest(obj *to_dealloc){
-  assert(to_dealloc != NULL && objIsOfClass(to_dealloc, "OBTest"));
-  free((OBTest *)to_dealloc);
   return;
 }

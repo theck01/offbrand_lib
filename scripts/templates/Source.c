@@ -48,7 +48,7 @@ void init%CODECLASSNAME%Base(%CODECLASSNAME% *to_init){
   assert(to_init != NULL);
 
   if(!classname){
-    classname = malloc(sizeof(char) * strlen(stack_classname));
+    classname = malloc(sizeof(char) * (strlen(stack_classname)+1));
     assert(classname != NULL);
     strcpy(classname, stack_classname);
   }
@@ -67,9 +67,8 @@ void dealloc%CODECLASSNAME%(obj *to_dealloc){
 
   assert(to_dealloc && objIsOfClass(to_dealloc, "%CODECLASSNAME%");
 
-  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE */
-
-  free(instance);
+  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE BUT DO NOT
+   * FREE INSTANCE, THE LIBRARY WILL DO THIS FOR THE USER */
 
   return;
 }

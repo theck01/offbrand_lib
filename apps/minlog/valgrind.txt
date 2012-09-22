@@ -1,0 +1,1240 @@
+==623== Memcheck, a memory error detector
+==623== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==623== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==623== Command: bin/minlog m01 4,5d0
+==623== 
+--623-- Valgrind options:
+--623--    -v
+--623-- Contents of /proc/version:
+--623--   Linux version 3.5.4-1-ARCH (tobias@T-POWA-LX) (gcc version 4.7.1 20120721 (prerelease) (GCC) ) #1 SMP PREEMPT Sat Sep 15 13:04:04 UTC 2012
+--623-- Arch and hwcaps: X86, x86-sse1-sse2
+--623-- Page sizes: currently 4096, max supported 4096
+--623-- Valgrind library directory: /usr/lib/valgrind
+--623-- Reading syms from /usr/lib/ld-2.16.so
+--623-- Reading syms from /home/theck/offbrand/apps/minlog/bin/minlog
+--623-- Reading syms from /usr/lib/valgrind/memcheck-x86-linux
+--623--    object doesn't have a symbol table
+--623--    object doesn't have a dynamic symbol table
+--623-- Scheduler: using generic scheduler lock implementation.
+--623-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==623== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-623-by-theck-on-???
+==623== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-623-by-theck-on-???
+==623== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-623-by-theck-on-???
+==623== 
+==623== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==623== don't want to do, unless you know exactly what you're doing,
+==623== or are doing some strange experiment):
+==623==   /usr/lib/valgrind/../../bin/vgdb --pid=623 ...command...
+==623== 
+==623== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==623==   /path/to/gdb bin/minlog
+==623== and then give GDB the following command
+==623==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=623
+==623== --pid is optional if only one valgrind process is running
+==623== 
+--623-- REDIR: 0x4018370 (strlen) redirected to 0x3806ae74 (???)
+--623-- REDIR: 0x40180f0 (index) redirected to 0x3806ae4f (???)
+--623-- Reading syms from /usr/lib/valgrind/vgpreload_core-x86-linux.so
+--623--    object doesn't have a symbol table
+--623-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so
+--623--    object doesn't have a symbol table
+--623-- Reading syms from /usr/lib/libc-2.16.so
+--623-- REDIR: 0x40d2510 (wcslen) redirected to 0x4023590 (_vgnU_ifunc_wrapper)
+--623-- REDIR: 0x40be310 (memrchr) redirected to 0x4023590 (_vgnU_ifunc_wrapper)
+--623-- REDIR: 0x40b93d0 (strncasecmp) redirected to 0x4023590 (_vgnU_ifunc_wrapper)
+--623-- REDIR: 0x40b7e50 (strnlen) redirected to 0x4023590 (_vgnU_ifunc_wrapper)
+--623-- REDIR: 0x40b7ff0 (__GI_strrchr) redirected to 0x402bb10 (__GI_strrchr)
+--623-- REDIR: 0x40b7d40 (strlen) redirected to 0x4023590 (_vgnU_ifunc_wrapper)
+--623-- REDIR: 0x40be6e0 (__strlen_sse2_bsf) redirected to 0x402bf20 (strlen)
+--623-- REDIR: 0x40b7670 (strcpy) redirected to 0x4023590 (_vgnU_ifunc_wrapper)
+--623-- REDIR: 0x40be860 (__strcpy_ssse3) redirected to 0x402bf60 (strcpy)
+--623-- REDIR: 0x40b30e0 (malloc) redirected to 0x402b640 (malloc)
+==623== Invalid write of size 1
+==623==    at 0x804AE6D: initVectorBase (OBVector.c:277)
+==623==    by 0x804A3F1: createVector (OBVector.c:13)
+==623==    by 0x8048899: main (main.c:61)
+==623==  Address 0x41e7070 is 0 bytes after a block of size 8 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804AE26: initVectorBase (OBVector.c:275)
+==623==    by 0x804A3F1: createVector (OBVector.c:13)
+==623==    by 0x8048899: main (main.c:61)
+==623== 
+--623-- REDIR: 0x40b7d90 (__GI_strlen) redirected to 0x402bf40 (__GI_strlen)
+--623-- REDIR: 0x40b3640 (realloc) redirected to 0x402b850 (realloc)
+--623-- REDIR: 0x40b3b10 (calloc) redirected to 0x4029510 (calloc)
+--623-- REDIR: 0x40b3590 (free) redirected to 0x402a3f0 (free)
+--623-- REDIR: 0x40b7f40 (strncpy) redirected to 0x4023590 (_vgnU_ifunc_wrapper)
+--623-- REDIR: 0x40c00b0 (__strncpy_ssse3) redirected to 0x402c100 (strncpy)
+==623== Invalid write of size 1
+==623==    at 0x8049759: initTermBase (Term.c:53)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+--623-- REDIR: 0x40ba7a0 (strchrnul) redirected to 0x402e760 (strchrnul)
+--623-- REDIR: 0x40b75b0 (strcmp) redirected to 0x4023590 (_vgnU_ifunc_wrapper)
+--623-- REDIR: 0x417a220 (__strcmp_ssse3) redirected to 0x402cbb0 (strcmp)
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804961C: compareTerms (Term.c:28)
+==623==    by 0x804B14D: recursiveSortContents (OBVector.c:366)
+==623==    by 0x804B0CE: recursiveSortContents (OBVector.c:351)
+==623==    by 0x804AC27: sortVector (OBVector.c:209)
+==623==    by 0x8048903: main (main.c:70)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8049633: compareTerms (Term.c:28)
+==623==    by 0x804B14D: recursiveSortContents (OBVector.c:366)
+==623==    by 0x804B0CE: recursiveSortContents (OBVector.c:351)
+==623==    by 0x804AC27: sortVector (OBVector.c:209)
+==623==    by 0x8048903: main (main.c:70)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8049F4C: findLargestPrimeImplicants (minlog_funct.c:172)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== Invalid write of size 2
+==623==    at 0x80494BE: initNCubeBase (NCube.c:248)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec134 is 4 bytes inside a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804A00B: findLargestPrimeImplicants (minlog_funct.c:192)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8048F9A: compareNCubes (NCube.c:97)
+==623==    by 0x804AB94: findObjInVector (OBVector.c:188)
+==623==    by 0x804A176: findLargestPrimeImplicants (minlog_funct.c:243)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8048FB1: compareNCubes (NCube.c:97)
+==623==    by 0x804AB94: findObjInVector (OBVector.c:188)
+==623==    by 0x804A176: findLargestPrimeImplicants (minlog_funct.c:243)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec44c is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec450 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41e7070 is 0 bytes after a block of size 8 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804AE26: initVectorBase (OBVector.c:275)
+==623==    by 0x804A3F1: createVector (OBVector.c:13)
+==623==    by 0x8048899: main (main.c:61)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec074 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec078 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8049528: deallocNCube (NCube.c:262)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec170 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8049528: deallocNCube (NCube.c:262)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623==  Address 0x41e71d4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048989: main (main.c:79)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623==  Address 0x41e71d8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048989: main (main.c:79)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x80497C2: deallocTerm (Term.c:67)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623==  Address 0x41ebed8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x80497C2: deallocTerm (Term.c:67)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== Invalid write of size 1
+==623==    at 0x804B89D: initRTableBase (RTable.c:145)
+==623==    by 0x804B2AE: createRTable (RTable.c:19)
+==623==    by 0x80489AA: main (main.c:83)
+==623==  Address 0x41ecc86 is 0 bytes after a block of size 6 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804B854: initRTableBase (RTable.c:143)
+==623==    by 0x804B2AE: createRTable (RTable.c:19)
+==623==    by 0x80489AA: main (main.c:83)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804B335: createRTable (RTable.c:29)
+==623==    by 0x80489AA: main (main.c:83)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804B3C8: createRTable (RTable.c:36)
+==623==    by 0x80489AA: main (main.c:83)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x80489C0: main (main.c:85)
+==623==  Address 0x41e70a4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x80489C0: main (main.c:85)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x80489C0: main (main.c:85)
+==623==  Address 0x41e70a8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x80489C0: main (main.c:85)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x80489D6: main (main.c:86)
+==623==  Address 0x41ecbc4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x80489D6: main (main.c:86)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x80489D6: main (main.c:86)
+==623==  Address 0x41ecbc8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x80489D6: main (main.c:86)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B7D9: findEssentialPIs (RTable.c:125)
+==623==    by 0x80489EC: main (main.c:89)
+==623==  Address 0x41ed0c4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B7D9: findEssentialPIs (RTable.c:125)
+==623==    by 0x80489EC: main (main.c:89)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B7D9: findEssentialPIs (RTable.c:125)
+==623==    by 0x80489EC: main (main.c:89)
+==623==  Address 0x41ed0c8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B7D9: findEssentialPIs (RTable.c:125)
+==623==    by 0x80489EC: main (main.c:89)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B7E7: findEssentialPIs (RTable.c:126)
+==623==    by 0x80489EC: main (main.c:89)
+==623==  Address 0x41ed17c is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B7E7: findEssentialPIs (RTable.c:126)
+==623==    by 0x80489EC: main (main.c:89)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B7E7: findEssentialPIs (RTable.c:126)
+==623==    by 0x80489EC: main (main.c:89)
+==623==  Address 0x41ed180 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B7E7: findEssentialPIs (RTable.c:126)
+==623==    by 0x80489EC: main (main.c:89)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41eccbc is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804B8E2: deallocRTable (RTable.c:162)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41eccc0 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804B8E2: deallocRTable (RTable.c:162)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecc86 is 0 bytes after a block of size 6 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804B854: initRTableBase (RTable.c:143)
+==623==    by 0x804B2AE: createRTable (RTable.c:19)
+==623==    by 0x80489AA: main (main.c:83)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B983: deallocRTable (RTable.c:170)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecd3c is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B983: deallocRTable (RTable.c:170)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B983: deallocRTable (RTable.c:170)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecd40 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B983: deallocRTable (RTable.c:170)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B991: deallocRTable (RTable.c:171)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecdf4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B991: deallocRTable (RTable.c:171)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B991: deallocRTable (RTable.c:171)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecdf8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B991: deallocRTable (RTable.c:171)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B99F: deallocRTable (RTable.c:172)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ed00c is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B99F: deallocRTable (RTable.c:172)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B99F: deallocRTable (RTable.c:172)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ed010 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B99F: deallocRTable (RTable.c:172)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804A2E1: printEqnVector (minlog_funct.c:290)
+==623==    by 0x8048A36: main (main.c:94)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A45: main (main.c:96)
+==623==  Address 0x41ed234 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048A45: main (main.c:96)
+==623== 
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A45: main (main.c:96)
+==623==  Address 0x41ed238 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048A45: main (main.c:96)
+==623== 
+==623== 
+==623== HEAP SUMMARY:
+==623==     in use at exit: 9,563 bytes in 82 blocks
+==623==   total heap usage: 201 allocs, 119 frees, 15,458 bytes allocated
+==623== 
+==623== Searching for pointers to 82 not-freed blocks
+==623== Checked 46,128 bytes
+==623== 
+==623== LEAK SUMMARY:
+==623==    definitely lost: 1,600 bytes in 9 blocks
+==623==    indirectly lost: 7,940 bytes in 69 blocks
+==623==      possibly lost: 0 bytes in 0 blocks
+==623==    still reachable: 23 bytes in 4 blocks
+==623==         suppressed: 0 bytes in 0 blocks
+==623== Rerun with --leak-check=full to see details of leaked memory
+==623== 
+==623== ERROR SUMMARY: 114 errors from 43 contexts (suppressed: 0 from 0)
+==623== 
+==623== 1 errors in context 1 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A45: main (main.c:96)
+==623==  Address 0x41ed238 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048A45: main (main.c:96)
+==623== 
+==623== 
+==623== 1 errors in context 2 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A45: main (main.c:96)
+==623==  Address 0x41ed234 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048A45: main (main.c:96)
+==623== 
+==623== 
+==623== 1 errors in context 3 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804A2E1: printEqnVector (minlog_funct.c:290)
+==623==    by 0x8048A36: main (main.c:94)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 1 errors in context 4 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B99F: deallocRTable (RTable.c:172)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ed010 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B99F: deallocRTable (RTable.c:172)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== 
+==623== 1 errors in context 5 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B99F: deallocRTable (RTable.c:172)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ed00c is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B99F: deallocRTable (RTable.c:172)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== 
+==623== 1 errors in context 6 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B991: deallocRTable (RTable.c:171)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecdf8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B991: deallocRTable (RTable.c:171)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== 
+==623== 1 errors in context 7 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B991: deallocRTable (RTable.c:171)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecdf4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B991: deallocRTable (RTable.c:171)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== 
+==623== 1 errors in context 8 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B983: deallocRTable (RTable.c:170)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecd40 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B983: deallocRTable (RTable.c:170)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== 
+==623== 1 errors in context 9 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B983: deallocRTable (RTable.c:170)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecd3c is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B983: deallocRTable (RTable.c:170)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== 
+==623== 1 errors in context 10 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804B8E2: deallocRTable (RTable.c:162)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41ecc86 is 0 bytes after a block of size 6 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804B854: initRTableBase (RTable.c:143)
+==623==    by 0x804B2AE: createRTable (RTable.c:19)
+==623==    by 0x80489AA: main (main.c:83)
+==623== 
+==623== 
+==623== 1 errors in context 11 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804B8E2: deallocRTable (RTable.c:162)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41eccc0 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== 
+==623== 1 errors in context 12 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x8048A02: main (main.c:91)
+==623==  Address 0x41eccbc is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048A02: main (main.c:91)
+==623== 
+==623== 
+==623== 1 errors in context 13 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B7E7: findEssentialPIs (RTable.c:126)
+==623==    by 0x80489EC: main (main.c:89)
+==623==  Address 0x41ed180 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B7E7: findEssentialPIs (RTable.c:126)
+==623==    by 0x80489EC: main (main.c:89)
+==623== 
+==623== 
+==623== 1 errors in context 14 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B7E7: findEssentialPIs (RTable.c:126)
+==623==    by 0x80489EC: main (main.c:89)
+==623==  Address 0x41ed17c is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B7E7: findEssentialPIs (RTable.c:126)
+==623==    by 0x80489EC: main (main.c:89)
+==623== 
+==623== 
+==623== 1 errors in context 15 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804B7D9: findEssentialPIs (RTable.c:125)
+==623==    by 0x80489EC: main (main.c:89)
+==623==  Address 0x41ed0c8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B7D9: findEssentialPIs (RTable.c:125)
+==623==    by 0x80489EC: main (main.c:89)
+==623== 
+==623== 
+==623== 1 errors in context 16 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804B7D9: findEssentialPIs (RTable.c:125)
+==623==    by 0x80489EC: main (main.c:89)
+==623==  Address 0x41ed0c4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804B7D9: findEssentialPIs (RTable.c:125)
+==623==    by 0x80489EC: main (main.c:89)
+==623== 
+==623== 
+==623== 1 errors in context 17 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x80489D6: main (main.c:86)
+==623==  Address 0x41ecbc8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x80489D6: main (main.c:86)
+==623== 
+==623== 
+==623== 1 errors in context 18 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x80489D6: main (main.c:86)
+==623==  Address 0x41ecbc4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x80489D6: main (main.c:86)
+==623== 
+==623== 
+==623== 1 errors in context 19 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x80489C0: main (main.c:85)
+==623==  Address 0x41e70a8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x80489C0: main (main.c:85)
+==623== 
+==623== 
+==623== 1 errors in context 20 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x80489C0: main (main.c:85)
+==623==  Address 0x41e70a4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x80489C0: main (main.c:85)
+==623== 
+==623== 
+==623== 1 errors in context 21 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804B335: createRTable (RTable.c:29)
+==623==    by 0x80489AA: main (main.c:83)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 1 errors in context 22 of 43:
+==623== Invalid write of size 1
+==623==    at 0x804B89D: initRTableBase (RTable.c:145)
+==623==    by 0x804B2AE: createRTable (RTable.c:19)
+==623==    by 0x80489AA: main (main.c:83)
+==623==  Address 0x41ecc86 is 0 bytes after a block of size 6 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804B854: initRTableBase (RTable.c:143)
+==623==    by 0x804B2AE: createRTable (RTable.c:19)
+==623==    by 0x80489AA: main (main.c:83)
+==623== 
+==623== 
+==623== 1 errors in context 23 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623==  Address 0x41e71d8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048989: main (main.c:79)
+==623== 
+==623== 
+==623== 1 errors in context 24 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623==  Address 0x41e71d4 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x8048989: main (main.c:79)
+==623== 
+==623== 
+==623== 1 errors in context 25 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec450 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 1 errors in context 26 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec44c is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 1 errors in context 27 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804A00B: findLargestPrimeImplicants (minlog_funct.c:192)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== 
+==623== 1 errors in context 28 of 43:
+==623== Invalid write of size 2
+==623==    at 0x80494BE: initNCubeBase (NCube.c:248)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec134 is 4 bytes inside a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 1 errors in context 29 of 43:
+==623== Invalid write of size 1
+==623==    at 0x8049759: initTermBase (Term.c:53)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== 
+==623== 1 errors in context 30 of 43:
+==623== Invalid write of size 1
+==623==    at 0x804AE6D: initVectorBase (OBVector.c:277)
+==623==    by 0x804A3F1: createVector (OBVector.c:13)
+==623==    by 0x8048899: main (main.c:61)
+==623==  Address 0x41e7070 is 0 bytes after a block of size 8 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804AE26: initVectorBase (OBVector.c:275)
+==623==    by 0x804A3F1: createVector (OBVector.c:13)
+==623==    by 0x8048899: main (main.c:61)
+==623== 
+==623== 
+==623== 3 errors in context 31 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804B3C8: createRTable (RTable.c:36)
+==623==    by 0x80489AA: main (main.c:83)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== 
+==623== 3 errors in context 32 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec078 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 3 errors in context 33 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8049F4C: findLargestPrimeImplicants (minlog_funct.c:172)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== 
+==623== 3 errors in context 34 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8049633: compareTerms (Term.c:28)
+==623==    by 0x804B14D: recursiveSortContents (OBVector.c:366)
+==623==    by 0x804B0CE: recursiveSortContents (OBVector.c:351)
+==623==    by 0x804AC27: sortVector (OBVector.c:209)
+==623==    by 0x8048903: main (main.c:70)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== 
+==623== 3 errors in context 35 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804961C: compareTerms (Term.c:28)
+==623==    by 0x804B14D: recursiveSortContents (OBVector.c:366)
+==623==    by 0x804B0CE: recursiveSortContents (OBVector.c:351)
+==623==    by 0x804AC27: sortVector (OBVector.c:209)
+==623==    by 0x8048903: main (main.c:70)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== 
+==623== 4 errors in context 36 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x80497C2: deallocTerm (Term.c:67)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623==  Address 0x41ebd34 is 0 bytes after a block of size 4 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8049718: initTermBase (Term.c:51)
+==623==    by 0x80495B9: createTerm (Term.c:15)
+==623==    by 0x8049C2B: parseEqnString (minlog_funct.c:96)
+==623==    by 0x80488DD: main (main.c:66)
+==623== 
+==623== 
+==623== 4 errors in context 37 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x80497C2: deallocTerm (Term.c:67)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623==  Address 0x41ebed8 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x8048989: main (main.c:79)
+==623== 
+==623== 
+==623== 7 errors in context 38 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8048FB1: compareNCubes (NCube.c:97)
+==623==    by 0x804AB94: findObjInVector (OBVector.c:188)
+==623==    by 0x804A176: findLargestPrimeImplicants (minlog_funct.c:243)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 7 errors in context 39 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8048F9A: compareNCubes (NCube.c:97)
+==623==    by 0x804AB94: findObjInVector (OBVector.c:188)
+==623==    by 0x804A176: findLargestPrimeImplicants (minlog_funct.c:243)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 9 errors in context 40 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8049528: deallocNCube (NCube.c:262)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec135 is 0 bytes after a block of size 5 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804947D: initNCubeBase (NCube.c:246)
+==623==    by 0x80493AA: createNCubeWithOrder (NCube.c:222)
+==623==    by 0x8048CF4: createNCube (NCube.c:14)
+==623==    by 0x8049F8F: findLargestPrimeImplicants (minlog_funct.c:175)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 9 errors in context 41 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048BE1: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x8049528: deallocNCube (NCube.c:262)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec170 is 8 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== 
+==623== 13 errors in context 42 of 43:
+==623== Invalid read of size 1
+==623==    at 0x402CBCD: strcmp (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048BF2: objIsOfClass (offbrand_stdlib.c:58)
+==623==    by 0x804AED6: deallocVector (OBVector.c:292)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41e7070 is 0 bytes after a block of size 8 alloc'd
+==623==    at 0x402B6A8: malloc (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x804AE26: initVectorBase (OBVector.c:275)
+==623==    by 0x804A3F1: createVector (OBVector.c:13)
+==623==    by 0x8048899: main (main.c:61)
+==623== 
+==623== 
+==623== 16 errors in context 43 of 43:
+==623== Invalid read of size 4
+==623==    at 0x8048B44: release (offbrand_stdlib.c:40)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623==  Address 0x41ec074 is 4 bytes inside a block of size 12 free'd
+==623==    at 0x402A45C: free (in /usr/lib/valgrind/vgpreload_memcheck-x86-linux.so)
+==623==    by 0x8048B3E: release (offbrand_stdlib.c:39)
+==623==    by 0x804ADB3: clearVector (OBVector.c:254)
+==623==    by 0x804AF09: deallocVector (OBVector.c:294)
+==623==    by 0x8048B4E: release (offbrand_stdlib.c:40)
+==623==    by 0x804A290: findLargestPrimeImplicants (minlog_funct.c:277)
+==623==    by 0x8048973: main (main.c:77)
+==623== 
+==623== ERROR SUMMARY: 114 errors from 43 contexts (suppressed: 0 from 0)

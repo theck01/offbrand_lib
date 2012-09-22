@@ -122,8 +122,6 @@ OBVector * findEssentialPIs(RTable *table){
   /* all terms are resolved, and all essential NCubes found */
 
   /* release unneeded vectors */
-  unresolved_terms = (OBVector *)release((obj *)unresolved_terms);
-  unknown_pis = (OBVector *)release((obj *)unknown_pis);
 
   return copyVector(table->essential_pis);
 }
@@ -140,7 +138,7 @@ void initRTableBase(RTable *to_init){
   assert(to_init != NULL);
 
   if(!classname){
-    classname = malloc(sizeof(char) * strlen(stack_classname));
+    classname = malloc(sizeof(char) * (strlen(stack_classname)+1));
     assert(classname != NULL);
     strcpy(classname, stack_classname);
   }

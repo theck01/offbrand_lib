@@ -36,8 +36,9 @@ obj * release(obj *instance){
     deallocLock(&((*instance)->lock)); /* free mutex / conds in lock if
                                           threaded */
 #endif
-    free((struct obj_struct *)*instance); /* free reference counted base */ 
     (*instance)->dealloc(instance); /*class specific memory cleanup called*/
+    free((struct obj_struct *)*instance); /* free reference counted base */ 
+    free(instance); /* free the entire object */
     return NULL;
   }
 

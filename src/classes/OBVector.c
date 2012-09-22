@@ -272,7 +272,7 @@ void initVectorBase(OBVector *to_init){
   assert(to_init != NULL);
 
   if(!classname){
-    classname = malloc(sizeof(char) * strlen(stack_classname));
+    classname = malloc(sizeof(char) * (strlen(stack_classname) + 1));
     assert(classname != NULL);
     strcpy(classname, stack_classname);
   }
@@ -294,7 +294,6 @@ void deallocVector(obj *to_dealloc){
   clearVector(instance); /* release all objs contained in vector */
 
   free(instance->array);
-  free(instance);
   return;
 }
 

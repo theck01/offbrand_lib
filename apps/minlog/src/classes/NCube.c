@@ -243,7 +243,7 @@ void initNCubeBase(NCube *to_init){
   assert(to_init != NULL);
 
   if(!classname){
-    classname = malloc(sizeof(char) * strlen(stack_classname));
+    classname = malloc(sizeof(char) * (strlen(stack_classname)+1));
     assert(classname != NULL);
     strcpy(classname, stack_classname);
   }
