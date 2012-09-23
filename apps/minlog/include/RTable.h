@@ -30,7 +30,7 @@ RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms);
 /* Function initializes the reduction process and returns an OBVector containing
  * all essential prime implicants (NCube objects). Returns a unique OBVector of
  * essential NCube objects referenced once */
-OBVector * findEssentialPIs(RTable *table);
+OBVector * findEssentialPIs(RTable *table, uint8_t num_var);
 
 #endif
 

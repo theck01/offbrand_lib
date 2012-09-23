@@ -38,7 +38,7 @@ void initTermCoverArray(const OBVector *cubes, uint32_t term, uint8_t *array);
  * term coverage. Returns a vector of NCubes with optimal coverage with a
  * single reference */
 OBVector * petricksReduce(const OBVector *unresolved_cubes,
-                          const OBVector *unresolved_terms);
+                          const OBVector *unresolved_terms, uint8_t num_var);
 
 /* function initializes two pieces of data, a 2 diminsional "matrix" of NCubes,
  * where the first dimension corresponds to term and the second corresponds to

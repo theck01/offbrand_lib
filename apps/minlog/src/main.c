@@ -86,7 +86,7 @@ int main(int argc, char **argv){
   pis = (OBVector *)release((obj *)pis);
 
   /* find the minimal function representation */
-  essential_pis = findEssentialPIs(reduction_table); 
+  essential_pis = findEssentialPIs(reduction_table, num_var); 
 
   reduction_table = (RTable *)release((obj *)reduction_table);
   

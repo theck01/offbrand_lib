@@ -52,7 +52,7 @@ RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
 }
 
 
-OBVector * findEssentialPIs(RTable *table){
+OBVector * findEssentialPIs(RTable *table, uint8_t num_var){
 
   uint32_t i, j, num_terms, num_pis, is_resolved;
   OBVector *unknown_pis, *unresolved_terms, *sub_essentials;
@@ -107,7 +107,7 @@ OBVector * findEssentialPIs(RTable *table){
   /* if all terms are unresolved, resort to brute force combination
    * checking via Petricks Method */
   if(sizeOfVector(unresolved_terms) == sizeOfVector(table->terms)){
-    sub_essentials = petricksReduce(unknown_pis, unresolved_terms);
+    sub_essentials = petricksReduce(unknown_pis, unresolved_terms, num_var);
     catVectors(table->essential_pis, sub_essentials);
     sub_essentials = (OBVector *)release((obj *)sub_essentials);
   }
@@ -115,7 +115,7 @@ OBVector * findEssentialPIs(RTable *table){
    * RTable and use it to further reduce pis */
   else if(sizeOfVector(unresolved_terms) > 0){
     sub_table = createRTable(unknown_pis, unresolved_terms);
-    sub_essentials = findEssentialPIs(sub_table);
+    sub_essentials = findEssentialPIs(sub_table, num_var);
     sub_table = (RTable *)release((obj *)sub_table);
     catVectors(table->essential_pis, sub_essentials);
     sub_essentials = (OBVector *)release((obj *)sub_essentials);
@@ -183,7 +183,7 @@ void initTermCoverArray(const OBVector *cubes, uint32_t term, uint8_t *array){
 
 
 OBVector * petricksReduce(const OBVector *unresolved_cubes,
-                          const OBVector *unresolved_terms){
+                          const OBVector *unresolved_terms, uint8_t num_var){
 
   NCube ***petricks_cubes, *tmp;
   uint32_t i, num_terms, *counts, *cur_idxs;
@@ -236,7 +236,7 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
        * it */
       if(!findObjInVector(cur_group, (obj *)tmp, &compareNCubes)){
         addToVector(cur_group, (obj *)tmp);
-        cur_total_order += orderOfNCube(tmp);
+        cur_total_order += num_var - orderOfNCube(tmp);
       } 
     }
 
