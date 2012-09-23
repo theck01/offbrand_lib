@@ -118,6 +118,12 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
     }
   }
 
+  /* free regexs */
+  regfree(&term_regex);
+  regfree(&dc_regex);
+  regfree(&pos_regex);
+  regfree(&sop_regex);
+
   /* check that some terms were read in */
   if(sizeOfVector(terms) == 0){
     fprintf(stderr, "minlog:parseEqnStr - No terms supplied in the "
@@ -239,13 +245,15 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
 
         /* if the cubes can be merged, and an equivalent cube is not already in
          * the cur cube vector */
-        if((tmp_cube = mergeNCubes(a, b)) && 
-           !findObjInVector(cur_cube_vector,(obj *)tmp_cube, &compareNCubes)){
-          addToVector(cur_cube_vector, (obj *)tmp_cube);
-          /* release tmp_cube so that vector has only valid reference */
+        if((tmp_cube = mergeNCubes(a, b))){
+          if(!findObjInVector(cur_cube_vector,(obj *)tmp_cube, &compareNCubes)){
+            addToVector(cur_cube_vector, (obj *)tmp_cube);
+            /* increment loop to indicate that larger cube was created */
+            loop++;
+          } 
+          /* release tmp_cube whether or not it was added to the vector, either
+           * freeing or leaving vector with only valid reference */
           release((obj *)tmp_cube);
-          /* increment loop to indicate that another larger cube was created */
-          loop++;
         }
       }
     }

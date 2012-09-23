@@ -65,6 +65,5 @@ void deallocTerm(obj *to_dealloc){
   Term *instance = (Term *)to_dealloc;
   assert(instance != NULL);
   assert(objIsOfClass(to_dealloc, "Term"));
-  free(instance);
   return;
 }

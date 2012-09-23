@@ -261,6 +261,5 @@ void deallocNCube(obj *to_dealloc){
   assert(instance != NULL);
   assert(objIsOfClass(to_dealloc, "NCube"));
   free(instance->terms);
-  free(instance);
   return;
 }

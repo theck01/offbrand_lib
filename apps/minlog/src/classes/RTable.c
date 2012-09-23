@@ -122,6 +122,8 @@ OBVector * findEssentialPIs(RTable *table){
   /* all terms are resolved, and all essential NCubes found */
 
   /* release unneeded vectors */
+  release((obj *)unresolved_terms);
+  release((obj *)unknown_pis);
 
   return copyVector(table->essential_pis);
 }
@@ -168,8 +170,6 @@ void deallocRTable(obj *to_dealloc){
   release((obj *)instance->pis);
   release((obj *)instance->terms);
   release((obj *)instance->essential_pis);
-
-  free(instance);
 
   return;
 }
