@@ -121,10 +121,13 @@ void catVectors(OBVector *destination, OBVector *to_append){
 
   assert(destination != NULL);
   assert(to_append != NULL);
+  /* make sure that the two vectors will not overflow when concatenated */
+  assert(destination->num_obj + to_append->num_objs > destination->num_objs);
 
   new_cap = destination->capacity;
   while(new_cap < destination->num_objs + to_append->num_objs){
     new_cap <<= 1;
+    if(new_cap < destination->capacity) new_cap = UINT32_MAX;
     /* assert that overflow did not occur */
     assert(new_cap > destination->capacity); 
   }

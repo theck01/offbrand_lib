@@ -10,13 +10,15 @@
  * as well if modifications are made */
 RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
 
+  static const char classname[] = "RTable";
+
   uint64_t i, num_pis, num_terms;
   uint32_t term_num;
   RTable *new_instance = malloc(sizeof(RTable));
   assert(new_instance != NULL);
 
   /* initialize reference counting base of class */
-  initRTableBase(new_instance);
+  initBase((obj *)new_instance, &deallocRTable, classname);
 
   new_instance->pis = copyVector(prime_implicants);
   new_instance->terms = copyVector(terms);
@@ -131,27 +133,6 @@ OBVector * findEssentialPIs(RTable *table){
 
 /* PRIVATE METHODS */
 
-void initRTableBase(RTable *to_init){
-
-  /* Classname for the this specific class */
-  static char *classname = NULL;
-  const char stack_classname[] = "RTable";
-
-  assert(to_init != NULL);
-
-  if(!classname){
-    classname = malloc(sizeof(char) * (strlen(stack_classname)+1));
-    assert(classname != NULL);
-    strcpy(classname, stack_classname);
-  }
-
-  /* initialize reference counting base data */
-  initBase((obj *)to_init, &deallocRTable, classname);
-
-  return;
-}
-
-
 void deallocRTable(obj *to_dealloc){
 
   uint64_t i, num_terms;
@@ -209,8 +190,8 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
   uint64_t total_combos;
   OBVector *cur_group, *best_group; /* group of NCubes that completely covers
                                        given terms */
-  double cur_avg_order, best_avg_order; /* the better the avg_order, the better
-                                           the cube grouping */
+  uint64_t cur_total_order, best_total_order; /* the better the total_order, the
+                                                 better the cube grouping */
 
   best_group = NULL;
   num_terms = sizeOfVector(unresolved_terms);
@@ -237,14 +218,14 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
                   "Searching for best coverage from %llu possible coverages..."
                   "\n", total_combos);
 
-  best_avg_order = -1;
+  best_total_order = UINT64_MAX;
 
   /* iterate through all possible combinations of cubes that completely cover
    * the given terms */
   while(1){
     
     cur_group = createVector(num_terms);
-    cur_avg_order = 0;
+    cur_total_order = 0;
 
     /* get current group, and sum of orders */
     for(i=0; i<num_terms; i++){
@@ -255,16 +236,14 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
        * it */
       if(!findObjInVector(cur_group, (obj *)tmp, &compareNCubes)){
         addToVector(cur_group, (obj *)tmp);
-        cur_avg_order += orderOfNCube(tmp);
+        cur_total_order += orderOfNCube(tmp);
       } 
     }
 
-    cur_avg_order /= sizeOfVector(cur_group);
-
-    /* if average order of cur_group is better than best_group, there is a new
+    /* if the total order of cur_group is better than best_group, there is a new
      * best group */
-    if(cur_avg_order > best_avg_order){
-      best_avg_order = cur_avg_order;
+    if(cur_total_order < best_total_order){
+      best_total_order = cur_total_order;
       if(best_group) release((obj *)best_group);
       best_group = cur_group;
     }

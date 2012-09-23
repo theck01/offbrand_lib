@@ -4,21 +4,20 @@
 
 /* PUBLIC METHODS */
 
-/* add arguments to complete initialization as needed, modify Term.h
- * as well if modifications are made */
 Term * createTerm(uint32_t term){
+
+  static char classname[] = "Term";
 
   Term *new_instance = malloc(sizeof(Term));
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initTermBase(new_instance);
+  initBase((obj *)new_instance, &deallocTerm, classname);
 
   new_instance->term = term;
   return new_instance;
 }
 
-/* function can be deleted if unneeded */
 int8_t compareTerms(const obj *a, const obj *b){
   
   Term *comp_a = (Term *)a;  
@@ -38,27 +37,6 @@ uint32_t getTermValue(Term *a){
 }
 
 /* PRIVATE METHODS */
-
-void initTermBase(Term *to_init){
-
-  /* Classname for the this specific class */
-  static char *classname = NULL;
-  const char stack_classname[] = "Term";
-
-  assert(to_init != NULL);
-
-  if(!classname){
-    classname = malloc(sizeof(char) * (strlen(stack_classname)+1));
-    assert(classname != NULL);
-    strcpy(classname, stack_classname);
-  }
-
-  /* initialize reference counting base data */
-  initBase((obj *)to_init, &deallocTerm, classname);
-
-  return;
-}
-
 
 void deallocTerm(obj *to_dealloc){
   /* cast generic obj to Term */

@@ -86,7 +86,6 @@ NCube * mergeNCubes(NCube *a, NCube *b){
 }
 
 
-/* function can be deleted if unneeded */
 int8_t compareNCubes(const obj *a, const obj *b){
   
   uint32_t i, max_i;
@@ -211,6 +210,8 @@ char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
 
 NCube * createNCubeWithOrder(uint8_t order){
   
+  static const char classname[] = "NCube";
+
   NCube *new_cube;
 
   assert(order <= 27);
@@ -219,7 +220,7 @@ NCube * createNCubeWithOrder(uint8_t order){
   assert(new_cube != NULL);
 
   /* initialize reference counting base data */
-  initNCubeBase(new_cube);
+  initBase((obj *)new_cube, &deallocNCube, classname);
 
   new_cube->terms = malloc(sizeof(uint32_t)*(1<<order));
   assert(new_cube->terms != NULL);
@@ -231,27 +232,6 @@ NCube * createNCubeWithOrder(uint8_t order){
   new_cube->essential = 0;
 
   return new_cube;
-}
-
-
-void initNCubeBase(NCube *to_init){
-
-  /* Classname for the this specific class */
-  static char *classname = NULL;
-  const char stack_classname[] = "NCube";
-
-  assert(to_init != NULL);
-
-  if(!classname){
-    classname = malloc(sizeof(char) * (strlen(stack_classname)+1));
-    assert(classname != NULL);
-    strcpy(classname, stack_classname);
-  }
-
-  /* initialize reference counting base data */
-  initBase((obj *)to_init, &deallocNCube, classname);
-
-  return;
 }
 
 
