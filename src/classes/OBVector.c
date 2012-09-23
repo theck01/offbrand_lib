@@ -6,11 +6,13 @@
 
 OBVector * createVector(uint32_t initial_capacity){
 
+  static const char classname[] = "OBVector";
+
   OBVector *new_instance = malloc(sizeof(OBVector));
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initVectorBase(new_instance);
+  initBase((obj *)new_instance, &deallocVector, classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
@@ -122,7 +124,7 @@ void catVectors(OBVector *destination, OBVector *to_append){
 
   new_cap = destination->capacity;
   while(new_cap < destination->num_objs + to_append->num_objs){
-    new_cap *= new_cap;
+    new_cap <<= 1;
     /* assert that overflow did not occur */
     assert(new_cap > destination->capacity); 
   }
@@ -262,26 +264,6 @@ void clearVector(OBVector *v){
 
 
 /* PRIVATE METHODS */
-
-void initVectorBase(OBVector *to_init){
-
-  /* Classname for the this specific class */
-  static char *classname = NULL;
-  const char stack_classname[] = "OBVector";
-
-  assert(to_init != NULL);
-
-  if(!classname){
-    classname = malloc(sizeof(char) * (strlen(stack_classname) + 1));
-    assert(classname != NULL);
-    strcpy(classname, stack_classname);
-  }
-
-  /* initialize reference counting base data */
-  initBase((obj *)to_init, &deallocVector, classname);
-  return;
-}
-
 
 void deallocVector(obj *to_dealloc){
 

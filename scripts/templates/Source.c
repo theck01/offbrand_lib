@@ -27,36 +27,17 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
  * %CODECLASSNAME%_Private.h as well if modifications are made */
 %CODECLASSNAME% * createDefault%CODECLASSNAME%(void){
 
+  static const char classname[] = "%CODECLASSNAME%"
+  
   %CODECLASSNAME% *new_instance = malloc(sizeof(%CODECLASSNAME%));
   assert(new_instance != NULL);
 
-  /* initialize base of class */
-  init%CODECLASSNAME%Base((new_instance);
+  /* initialize base class data */
+  initBase((obj *)new_instance, &dealloc%CODECLASSNAME%, classname);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
   return new_instance;
-}
-
-
-void init%CODECLASSNAME%Base(%CODECLASSNAME% *to_init){
-
-  /* Classname for the this specific class */
-  static char *classname = NULL;
-  const char stack_classname[] = "%CODECLASSNAME%";
-
-  assert(to_init != NULL);
-
-  if(!classname){
-    classname = malloc(sizeof(char) * (strlen(stack_classname)+1));
-    assert(classname != NULL);
-    strcpy(classname, stack_classname);
-  }
-
-  /* initialize reference counting base data */
-  initBase((obj *)to_init, &dealloc%CODECLASSNAME%, classname);
-
-  return;
 }
 
 

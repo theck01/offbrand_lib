@@ -20,11 +20,6 @@ struct OBBigUInt_struct{
 
 /* PRIVATE METHODS */
 
-/* function performs all initialization on new instances OBBigUInt, MUST
- * BE CALLED IMMEDIATELY AFTER INSTANTIATION. This function may be called by a
- * default constructor that all other constructors build off of */
-void initBigUIntBase(OBBigUInt *to_init);
-
 /* constructor allocates an new OBBigUInt with specified capacity. Used for
  * internal allocation in most public arithmetic and bitwise operations */
 OBBigUInt * createBigUIntWithCap(const uint64_t capacity);

@@ -467,35 +467,16 @@ void printBigUInt(const OBBigUInt *a){
 
 /* PRIVATE METHODS */
 
-void initBigUIntBase(OBBigUInt *to_init){
-
-  /* Classname for the this specific class */
-  static char *classname = NULL;
-  const char stack_classname[] = "OBBigUInt";
-
-  assert(to_init != NULL);
-
-  if(!classname){
-    classname = malloc(sizeof(char) * (strlen(stack_classname)+1));
-    assert(classname != NULL);
-    strcpy(classname, stack_classname);
-  }
-
-  /* initialize reference counting base data */
-  initBase((obj *)to_init, &deallocBigUInt, classname);
-
-  return;
-}
-
-
 OBBigUInt * createBigUIntWithCap(const uint64_t capacity){
+
+  static const char classname[] = "OBBigUInt";
 
   uint64_t i;
   OBBigUInt *new_instance = malloc(sizeof(OBBigUInt));
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBigUIntBase(new_instance);
+  initBase((obj *)new_instance, &deallocBigUInt, classname);
 
   new_instance->uint_array = malloc(sizeof(uint32_t)*capacity);
   assert(new_instance->uint_array != NULL);

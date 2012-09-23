@@ -19,11 +19,6 @@ struct OBVector_struct{
 
 /* PRIVATE METHODS */
 
-/* function performs all initialization on new instances OBVector, MUST
- * BE CALLED IMMEDIATELY AFTER INSTANTIATION. This function may be called by a
- * default constructor that all other constructors build off of */
-void initVectorBase(OBVector *to_init);
-
 /* resizes vector if num_objs == capacity, does nothing if not. Doubles vector 
  * capacity */
 void resizeVector(OBVector *v);
