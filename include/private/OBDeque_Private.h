@@ -25,11 +25,6 @@ struct OBDeque_struct{
  * Add additional arguments as needed */
 OBDeque * createDefaultOBDeque(void);
 
-/* function performs all initialization on new instances OBDeque, MUST
- * BE CALLED IMMEDIATELY AFTER INSTANTIATION. This function may be called by a
- * default constructor that all other constructors build off of */
-void initOBDequeBase(OBDeque *to_init);
-
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */
 void deallocOBDeque(obj *to_dealloc);
