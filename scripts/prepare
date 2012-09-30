@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Shell script prepares the offbrand library bin/ directory structure,
+# which needs to be recreated after cloning in git
+
+
+mesgstr="Made"
+
+if [[ $(basename $PWD) != "offbrand" ]]
+then
+  echo "$(basename $0) must be run from the base directory of the Offbrand"
+  echo "library"
+  exit 1
+fi
+
+# check for directories, make non-existant
+if [[ ! -d "bin" ]]
+then
+  mkdir bin
+  mesgstr="$mesgstr bin"
+fi
+
+if [[ ! -d "bin/classes" ]]
+then
+  mkdir bin/classes
+  mesgstr="$mesgstr bin/classes"
+fi
+
+if [[ ! -d "bin/tests" ]]
+then
+  mkdir bin/tests
+  mesgstr="$mesgstr bin/tests"
+fi
+
+# print result message
+if [[ "$mesgstr" == "Made" ]]
+then
+  echo "bin/ directories present"
+else
+  echo "$mesgstr directories"
+fi

@@ -32,7 +32,7 @@ ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
 
 # MAIN BUILD
-all: $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
+all: prepare $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
 
 # Hand builds (STD_LIBS)
 $(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
@@ -61,8 +61,12 @@ test: clean debug
 debug: CFLAGS += -g
 debug: all
 
+# Prepare bin/ output directories
+prepare:
+	scripts/prepare
+
 # Clean previous build
-clean:
+clean: prepare
 	rm -f $(STD_LIBS)
 	rm -f $(ALL_TESTS)
 	rm -f $(ALL_CLASSES)
