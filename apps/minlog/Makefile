@@ -33,7 +33,7 @@ ALL_FUNCTS = $(patsubst $(FUNCTS)/%.c, $(BIN_FUNCT)/%.o, $(FUNCT_SOURCES))
 
 
 # MAIN BUILD
-all: $(ALL_CLASSES) $(ALL_TESTS) $(ALL_FUNCTS) $(BIN)/minlog
+all: prepare $(ALL_CLASSES) $(ALL_TESTS) $(ALL_FUNCTS) $(BIN)/minlog
 
 # Functions Build 
 $(BIN_FUNCT)/%.o: $(FUNCTS)/%.c $(PUBLIC)/%.h
@@ -69,7 +69,10 @@ test: clean debug
 debug: CFLAGS += -g
 debug: all
 
-clean:
+prepare:
+	@scripts/prepare
+
+clean: prepare
 	rm -f $(ALL_FUNCTS)
 	rm -f $(ALL_CLASSES)
 	rm -f $(ALL_TESTS)
