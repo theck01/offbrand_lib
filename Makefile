@@ -63,7 +63,7 @@ debug: all
 
 # Prepare bin/ output directories
 prepare:
-	scripts/prepare
+	@scripts/prepare
 
 # Clean previous build
 clean: prepare
