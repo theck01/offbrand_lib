@@ -62,7 +62,8 @@ To modify the reference count the following methods are defined, which take as
 an argument a pointer to any OffBrand class cast to obj *
 
   obj * release(obj *); Decrements reference count by 1 and frees object if
-                            reference count equals 0
+                        reference count equals 0. Should also call release once
+                        on all objs stored within the class if it is a container
   void retain(obj *); Increments reference count by 1
 
 A more detailed description of reference counting code, and a description of
