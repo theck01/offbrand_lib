@@ -47,7 +47,9 @@ void catVectors(OBVector *destination, OBVector *to_append);
 void replaceInVector(OBVector *v, obj *new_obj, const uint32_t index);
 
 /* returns the object stored in the OBVector at index. Returns NULL if index is
- * out of bounds */
+ * out of bounds. Returns a pointer to the actual obj, do not call memory 
+ * management functions (release retain) on these obj unless the calling code
+ * has a valid reference on that obj */
 obj * objAtVectorIndex(const OBVector *v, const uint32_t index);
 
 /* checks to see if object, or equivalent as determined by compare function
