@@ -28,8 +28,10 @@ void resizeVector(OBVector *v);
 obj ** recursiveSortContents(obj **to_sort, uint32_t size,
                              const compare_fptr compare, int8_t order);
 
-/* deallocator, frees instance of class back to memory. Should not be called
- * manually, instance will be destroyed when reference count reaches 0 */
+/* deallocator, frees instance of class back to memory. Should release all
+ * objects contained within to_dealloc if to_dealloc is a container class (like
+ * a vector or list) Should not be called manually, instance will be destroyed
+ * when reference count reaches 0 */
 void deallocVector(obj *to_dealloc);
 
 #endif
