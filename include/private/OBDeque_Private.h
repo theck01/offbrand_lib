@@ -10,9 +10,19 @@
 
 /* DATA */
 
+/* internal data type, represents a single node in the doubly linked list.
+ * Called an OBDequeIterator as an external facing type, and an OBDequeNode
+ * for internal class use */
+typedef struct OBDequeIterator_struct{
+  obj *stored;
+  struct OBDequeNode_struct *next;
+  struct OBDequeNode_struct *prev;
+} OBDequeNode;
+
 struct OBDeque_struct{
   obj base;
-  /* Additional private data added here, MUST COME AFTER THE obj */
+  OBDequeNode *head;
+  OBDequeNode *tail;
 };
 
 
@@ -25,8 +35,9 @@ struct OBDeque_struct{
  * Add additional arguments as needed */
 OBDeque * createDefaultOBDeque(void);
 
-/* deallocator, frees instance of class back to memory. Should not be called
- * manually, instance will be destroyed when reference count reaches 0 */
+/* deallocator, frees instance of class back to memory. Releases any contained
+ * objs once. Should not be called manually, instance will be destroyed when 
+ * reference count reaches 0 */
 void deallocOBDeque(obj *to_dealloc);
 
 /*PRIVATE METHOD DECLARATIONS HERE*/
