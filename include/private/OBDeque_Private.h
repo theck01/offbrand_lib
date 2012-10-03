@@ -14,6 +14,8 @@
  * Called an OBDequeIterator as an external facing type, and an OBDequeNode
  * for internal class use */
 typedef struct OBDequeIterator_struct{
+  void *null; /* value is always NULL, so that if an OBDequeNode is released
+                 the code will try to dereference NULL and segfault */
   obj *stored;
   struct OBDequeNode_struct *next;
   struct OBDequeNode_struct *prev;
