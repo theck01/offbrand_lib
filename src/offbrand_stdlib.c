@@ -29,6 +29,8 @@ void initBase(obj *instance, dealloc_fptr dealloc, const char *classname){
 obj * release(obj *instance){
 
   assert(instance != NULL);
+  assert(*instance != NULL); /* assertion protects against release of iterator
+                                types */
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
