@@ -1,7 +1,8 @@
 
 /*
  * OBDeque:
- * [Class description]
+ * A double ended queue class that can be used as is and also forms the basis 
+ * for the OBStack and OBQueue
  */
 
 #ifndef OBDEQUE_H
