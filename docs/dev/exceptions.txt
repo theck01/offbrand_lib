@@ -1,0 +1,36 @@
+ EXCEPTION MECHANISM DESIGN OUTLINE
+
+Two new functions could be added to the library to handle execptions, or a
+construct that closely resembles exceptions:
+  void throw(except_t exception_id, char *exception_msg)
+  uint32_t attempt(void (*try_funct)(void), void (*rescue_funct)(except_t), 
+                   va_list args) 
+
+except_t is a simple typedef of a uint32_t, indicating the exception type.
+
+The _throw_ function will replace all calls to _assert_ within the standard
+library, and in most circumstances will behave the same way. When an exception
+is thrown the current context is halted, the exception printed to stderr, and
+unless the program is in the middle of an _attempt_ call the program will halt.
+
+The _attempt_ function performs the duty of the "try-catch" blocks in normal
+exception systems in other languages. The attempt block sets a global return
+address for any failed call to throw to jump to in the event that an exception
+is raised, a vector is created that will store a reference to all objs created
+in the "try_funct" call (SEE NOTE 1) and then _attempt_ calls "try_funct" 
+(SEE NOTE 2).
+If "try_funct succeeds without failure the _attempt_ function will quietly
+reset the return address to NULL (the default value) so that subsequent _throw_
+calls will halt program execution, release the vector storing all newly 
+allocated objs, destroying any that have not been saved in an external 
+structure, and returns 0 (OB_NO_EXCEPTION)
+If "try_funct fails due to a call to _throw_ then the _throw_ call gives
+program control back to _attempt_, where _attempt_ resets the value of the 
+return address to NULL, releases the vector containing objs created in 
+"try_funct", and then calls "rescue_funct" which allows the programmer to undo 
+far-reaching changes made during "try_funct", and then finally returns the
+exception number that caused the "try_funct" to fail.
+
+offbrand_stdlib will declare and define the _throw_ and _attempt_ functions. Two
+new files, exception.h and exception.c, will define exception types and a few
+helper functions for dealing with except_t types.
