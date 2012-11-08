@@ -34,7 +34,7 @@ OBDeque * createDefaultOBDeque(void){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocOBDeque, classname);
+  initBase((obj *)new_instance, &deallocOBDeque, NULL, classname);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 

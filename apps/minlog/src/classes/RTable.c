@@ -18,7 +18,7 @@ RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
   assert(new_instance != NULL);
 
   /* initialize reference counting base of class */
-  initBase((obj *)new_instance, &deallocRTable, classname);
+  initBase((obj *)new_instance, &deallocRTable, NULL, classname);
 
   new_instance->pis = copyVector(prime_implicants);
   new_instance->terms = copyVector(terms);

@@ -7,7 +7,8 @@
 
 #include "../include/private/obj_Private.h"
 
-void initBase(obj *instance, dealloc_fptr dealloc, const char *classname){
+void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
+              const char *classname){
 
   assert(classname != NULL);
 
@@ -17,6 +18,7 @@ void initBase(obj *instance, dealloc_fptr dealloc, const char *classname){
 
   (*instance)->references = 1;
   (*instance)->dealloc = dealloc;
+  (*instance)->hash = hash;
   (*instance)->classname = classname;
 
 #ifdef OB_THREADED
@@ -56,6 +58,7 @@ void retain(obj *instance){
   return;
 }
 
+
 uint8_t objIsOfClass(const obj *a, const char *classname){
   assert(a != NULL && classname != NULL);
   if(strcmp((*a)->classname, classname) == 0) return 1;
@@ -68,6 +71,23 @@ uint8_t sameClass(const obj *a, const obj *b){
   return objIsOfClass(a, (*b)->classname);
 }
 
+
+obhash_t hash(const obj *to_hash){
+
+  obhash_t value;
+  /* if hash function is not specified, or is the hash function in the stdlib
+   * is specified then use the default hashing equation */
+  if(!(*to_hash)->hash || (*to_hash)->hash == &hash){
+    /* scramble the to_hash address to generate hash value */
+    value = (obhash_t)to_hash ^ ((obhash_t)to_hash)<<32;
+    value = (value << 6) ^ (value >> 10);
+    value = (value >> 7) ^ (value << 12);
+    return value;
+  }
+  else{
+    return (*to_hash)->hash(to_hash);
+  }
+}
 
 int8_t objCompare(const obj *a, const obj *b){
 

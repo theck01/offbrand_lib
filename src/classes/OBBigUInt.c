@@ -476,7 +476,7 @@ OBBigUInt * createBigUIntWithCap(const uint64_t capacity){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocBigUInt, classname);
+  initBase((obj *)new_instance, &deallocBigUInt, NULL, classname);
 
   new_instance->uint_array = malloc(sizeof(uint32_t)*capacity);
   assert(new_instance->uint_array != NULL);

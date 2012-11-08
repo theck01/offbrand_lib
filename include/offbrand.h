@@ -32,6 +32,12 @@
 /* function pointer to a deallocator for any OffBrand compatible class */
 typedef void (*dealloc_fptr)(obj *);
 
+/* hash type */
+typedef uint64_t obhash_t;
+
+/* function pointer to a hash functino for any offbrand compatible class */
+typedef obhash_t (*hash_fptr)(const obj *);
+
 /* Pointer to function that compares two instances of the same Offbrand
  * compatible classes. Function should return -1 if first object is less than
  * the second, 0 if they are equal, and 1 if the first is greater than the
@@ -43,7 +49,8 @@ typedef int8_t (*compare_fptr)(const obj *, const obj*);
 
 /* initializes an instance of any class with specified dealloc function,
  * default reference count of 1, and classname */
-void initBase(obj *instance, dealloc_fptr dealloc, const char *classname);
+void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash, 
+              const char *classname);
 
 /* decrements reference count on OBObj, frees memory if reference count is
  * reduced to 0. Returns a pointer to the object if it still exists, NULL if
@@ -62,6 +69,10 @@ uint8_t objIsOfClass(const obj *a, const char *classname);
  * they have the same classname (and are of the same class), or 0 if they have
  * differing classnames */
 uint8_t sameClass(const obj *a, const obj *b);
+
+/* computes the hash of the given obj using the internally stored hash function
+ * specific to that obj */
+obhash_t hash(const obj *to_hash);
 
 /* default comparision, checks to see that the two pointer values are equal.
  * Used in sorting and finding algorithms for basic containers. Returns 0 if

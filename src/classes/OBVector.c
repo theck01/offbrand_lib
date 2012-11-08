@@ -12,7 +12,7 @@ OBVector * createVector(uint32_t initial_capacity){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocVector, classname);
+  initBase((obj *)new_instance, &deallocVector, NULL, classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
