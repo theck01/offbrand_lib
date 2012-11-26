@@ -52,12 +52,12 @@ typedef int8_t (*compare_fptr)(const obj *, const obj*);
 void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash, 
               const char *classname);
 
-/* decrements reference count on OBObj, frees memory if reference count is
+/* decrements reference count on obj, frees memory if reference count is
  * reduced to 0. Returns a pointer to the object if it still exists, NULL if
  * it is no longer referenced and was destroyed */
 obj * release(obj *instance);
 
-/* increments reference count on OBObj by one */
+/* increments reference count on obj by one */
 void retain(obj *instance);
 
 /* performs string comparision on classname of object a and the provided null
