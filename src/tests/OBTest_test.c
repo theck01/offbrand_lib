@@ -50,6 +50,8 @@ int main(){
     exit(1);
   }
 
+  hash((obj *)a);
+
   printf("OBTest_test: TEST PASSED\n");
   return 0;
 }
