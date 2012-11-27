@@ -13,9 +13,8 @@
 /* Class type declaration */
 typedef struct OBDeque_struct OBDeque;
 
-/* iterator type declaration. ITERATORS DO NOT NEED MEMORY MANAGEMENT. DO NOT
- * CALL release OR retain ON ITERATORS OR UNPREDICABLE BEHAVIOR WILL ENSUE */
-typedef struct OBDequeIterator_struct OBDequeIterator;
+/* iterator type declaration. */
+typedef struct OBDequeIterator OBDequeIterator;
 
 
 /* PUBLIC METHODS */
@@ -28,31 +27,35 @@ OBDeque * createEmptyDeque(void);
  * that references the same objs */
 OBDeque * copyDeque(OBDeque *to_copy);
 
-/* returns an OBDequeIterator representing the head of the Deque */
+/* returns an OBDequeIterator representing the head of the Deque, returns
+ * NULL if the deque is empty */
 OBDequeIterator * getDequeHeadIt(OBDeque *deque);
 
-/* returns an OBDequeIterator representing the tail of the Deque */
+/* returns an OBDequeIterator representing the tail of the Deque, returns
+ * NULL if the deque is empty */
 OBDequeIterator * getDequeTailIt(OBDeque *deque);
 
-/* returns an OBDequeIterator to the next position in the deque closer to the
- * tail, NULL if there are no more iterators left */
-OBDequeIterator * nextDequeIterator(OBDequeIterator *it);
+/* updates the OBDequeIterator to the next position in the deque closer to the
+ * tail, returns 0 if there are no elements closer to the tail, 1 if there
+ * are more elements closer to the tail. */
+uint8_t nextDequeIterator(OBDequeIterator *it);
 
-/* returns an OBDequeIterator to the prev position in the deque closer to the
- * head, NULL if there are no more iterators left */
-OBDequeIterator * prevDequeIterator(OBDequeIterator *it);
+/* updates the OBDequeIterator to the next position in the deque closer to the
+ * head, returns 0 if there are no elements closer to the head, 1 if there are
+ * more elements closer to the head */
+uint8_t prevDequeIterator(OBDequeIterator *it);
 
 /* add obj to Deque head, retaining the obj once */
-void addDequeHead(OBDeque *deque, obj *to_add);
+void addAtDequeHead(OBDeque *deque, obj *to_add);
 
 /* add obj to Deque tail, retaining the obj once */
-void addDequeTail(OBDeque *deque, obj *to_add);
+void addAtDequeTail(OBDeque *deque, obj *to_add);
 
 /* add obj to Deque at the iterator, pushing everything including the obj at the
  * iterator one position toward the tail. If iterator is NULL then add to the 
  * tail of the Deque. The iterator then points to the same position in the Deque
  * (the position of the newly added obj). Retains obj once */
-void addDequeAtIt(OBDeque *deque, OBDequeIterator *it, obj *to_add);
+void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add);
 
 /* peek at the obj stored in the Deque head. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference
