@@ -16,6 +16,7 @@
 /* internal data type, represents a single node in the doubly linked list.
  * for internal class use */
 typedef struct OBDequeNode_struct{
+  obj base;
   obj *stored;
   struct OBDequeNode_struct *next;
   struct OBDequeNode_struct *prev;
@@ -44,10 +45,11 @@ struct OBDequeIterator_struct{
 /* OBDequeIterator Private Methods */
 
 /* Constructor, builds an iterator for the OBDeque starting at the given node.
- * Retains the Deque once, so that as long as the iterator exists the deque
- * will exist. */
-struct OBDequeIterator_struct createDequeIterator(OBDeque *deque, 
-                                                  OBDequeNode *node);
+ * Retains the DequeNode once, so that as long as the iterator exists and
+ * has a reference to that node it will exist. Advancing or regressing the
+ * iterator will change which node is being pointed to */
+struct OBDequeIterator_struct * createDequeIterator(OBDeque *deque, 
+                                                    OBDequeNode *node);
 
 /* Destructor, destroys the iterator and releases the associated deque */
 void deallocDequeIterator(obj *to_dealloc);
