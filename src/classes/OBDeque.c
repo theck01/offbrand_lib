@@ -14,36 +14,47 @@ OBDeque * copyDeque(OBDeque *to_copy){
 
   obj *element;
   OBDequeIterator *iter;
-  OBDeque *copy = createEmptyDeque();
+  OBDeque *copy;
+  
+  assert(to_copy);
+
+  copy = createEmptyDeque();
 
   iter = getDequeHeadIt(to_copy);
+  
+  if(!iter) return copy; /* if the list is empty, return empty copy */
 
   /* while there are elements in the deque to copy add to the tail of the
    * deque */
-  while(iter){
+  do{
     element = peekDequeAtIt(to_copy, iter);
     addDequeTail(copy, element);
-    iter = nextDequeIterator(iter);
-  }
+  } while(iterateDequeNext(iter))
 
   return copy;
 }
 
 
 OBDequeIterator * getDequeHeadIt(OBDeque *deque){
+  assert(deque);
   return createDequeIterator(deque, deque->head);
 }
 
 
 OBDequeIterator * getDequeTailIt(OBDeque *deque){
+  assert(deque);
   return createDequeIterator(deque, deque->head);
 }
 
 
-uint8_t nextDequeIterator(OBDequeIterator *it){
+uint8_t iterateDequeNext(OBDequeIterator *it){
+
+  assert(it);
 
   /* update the iterator if the next node exists, and return 1 */
   if(it->node->next){
+    retain((obj *)it->node->next);
+    release((obj *)it->node);
     it->node = it->node->next;
     return 1;
   }
@@ -53,10 +64,14 @@ uint8_t nextDequeIterator(OBDequeIterator *it){
 }
 
 
-OBDequeIterator * prevDequeIterator(OBDequeIterator *it){
+uint8_t iterateDequePrev(OBDequeIterator *it){
+
+  assert(it);
 
   /* update the iterator if the prev node exists, and return 1 */
   if(it->node->prev){
+    retain((obj *)it->node->prev);
+    release((obj *)it->node);
     it->node = it->node->prev;
     return 1;
   }
@@ -67,15 +82,36 @@ OBDequeIterator * prevDequeIterator(OBDequeIterator *it){
 
 
 void addAtDequeHead(OBDeque *deque, obj *to_add){
-  addAtDequeIt(deque, getDequeHeadIt(deque), to_add);
+  
+  OBDequeNode *new_node;
+  
+  assert(deque);
+  assert(to_add);
+
+  new_node = createDequeNode(to_add);
+
+  /* retain the obj to account for new deque reference */
+  retain(to_add);
+
+  /* set node data */
+  new_node->next = deque->head;
+
+  /* update deque data */
+  if(deque->head) deque->head->prev = new_node;
+  deque->head = new_node;
+
+  return;
 }
 
 
-/* addition to the tail is an edge case that cannot be handled by 
- * addAtDequeIt */
 void addAtDequeHead(OBDeque *deque, obj *to_add){
 
-  OBDequeNode *new_node = createDequeNode(to_add);
+  OBDequeNode *new_node;
+  
+  assert(deque);
+  assert(to_add);
+
+  new_node = createDequeNode(to_add);
 
   /* retain the obj to account for new deque reference */
   retain(to_add);
@@ -83,25 +119,84 @@ void addAtDequeHead(OBDeque *deque, obj *to_add){
   /* set node data */
   new_node->prev = deque->tail;
 
-  deque->tail->next = new_node;
+  /* update deque data */
+  if(deque->tail) deque->tail->next = new_node;
   deque->tail = new_node;
+
   return;
 }
 
 
-/* function can be deleted if unneeded */
-int8_t compareOBDeques(const obj *a, const obj *b){
+void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
+
+  OBDequeNode *new_node;
   
-  const OBDeque *comp_a = (OBDeque *)a;  
-  const OBDeque *comp_b = (OBDeque *)b;  
+  assert(deque);
+  assert(it);
+  assert(to_add);
 
-  assert(objIsOfClass(a, "%CODECLASSNAME"));
-  assert(objIsOfClass(b, "OBDeque"));
+  new_node = createDequeNode(to_add);
 
-  /* add specific comparison logic, following the description in the header
-   * file */
+  /* retain the object to account for new deque reference */
+  retain(to_add);
 
-  return OB_EQUAL_TO;
+  /* set node data */
+  new_node->prev = it->node->prev;
+  new_node->next = it->node;
+  it->node->prev = new_node;
+
+  /* update iterator to newly inserted node */
+  assert(iterateDequePrev(it));
+
+  /* update deque data if the iterator is pointing at the head */
+  if(it->node == deque->head) deque->head = new_node;
+
+  return;
+}
+
+
+obj * peekDequeAtHead(OBDeque *deque){
+  assert(deque);
+  return deque->head->stored;
+}
+
+
+obj * peekDequeAtTail(OBDeque *deque){
+  assert(deque);
+  return deque->tail->stored;
+}
+
+
+obj * peekDequeAtIt(OBDeque *deque, OBDequeIterator *it){
+
+  assert(deque);
+  assert(it);
+  assert(it->deque == deque); /* assert that iterator belongs to provided 
+                                 deque */
+  return it->node->stored;
+}
+
+void removeDequeHead(OBDeque *deque){
+
+  OBDequeNode *temp_node;
+  obj *temp_obj;
+
+  assert(deque);
+
+  /* return NULL if the list is empty */
+  if(!(temp_node = deque->head)) return NULL;
+
+  /* set tail to NULL if removing the last element from the list */
+  if(!(deque->head = deque->head->next)) deque->tail = NULL;
+
+  /* set temp_node next and prev to null, to separate the node completely from
+   * the deque if it lives on through a reference in an iterator */
+  temp_node->next = NULL;
+  temp_node->prev = NULL;
+
+  release((obj *)temp_node);
+
+  return;
 }
 
 
