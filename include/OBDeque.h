@@ -27,6 +27,8 @@ OBDeque * createEmptyDeque(void);
  * that references the same objs */
 OBDeque * copyDeque(OBDeque *to_copy);
 
+uint8_t isDequeEmpty(OBDeque *deque);
+
 /* returns an OBDequeIterator representing the head of the Deque, returns
  * NULL if the deque is empty */
 OBDequeIterator * getDequeHeadIt(OBDeque *deque);
@@ -38,12 +40,12 @@ OBDequeIterator * getDequeTailIt(OBDeque *deque);
 /* updates the OBDequeIterator to the next position in the deque closer to the
  * tail, returns 0 if there are no elements closer to the tail, 1 if there
  * are more elements closer to the tail. */
-uint8_t nextDequeIterator(OBDequeIterator *it);
+uint8_t iterateDequeNext(OBDequeIterator *it);
 
 /* updates the OBDequeIterator to the next position in the deque closer to the
  * head, returns 0 if there are no elements closer to the head, 1 if there are
  * more elements closer to the head */
-uint8_t prevDequeIterator(OBDequeIterator *it);
+uint8_t iterateDequePrev(OBDequeIterator *it);
 
 /* add obj to Deque head, retaining the obj once */
 void addAtDequeHead(OBDeque *deque, obj *to_add);
@@ -74,16 +76,16 @@ obj * peekDequeAtIt(OBDeque *deque, OBDequeIterator *it);
 
 /* remove obj from Deque head, releasing that obj and returning it if it still
  * has a reference, NULL if not */
-obj * removeDequeHead(OBDeque *deque);
+void removeDequeHead(OBDeque *deque);
 
 /* remove obj from Deque tail, releasing that obj and returning it if it still
  * has a reference, NULL if not */
-obj * removeDequeTail(OBDeque *deque);
+void removeDequeTail(OBDeque *deque);
 
 /* remove obj form Deque at the position indicated by the iterator, returning
  * the obj at that location if it has a reference, NULL if not. The iterator
  * points to the next obj in the queue after the call (closer to the tail) */
-obj * removeDequeAtIt(OBDeque *deque, OBDequeIterator *it);
+void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it);
 
 #endif
 
