@@ -10,7 +10,7 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
   const %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
   const %CODECLASSNAME% *comp_b = (%CODECLASSNAME% *)b;  
 
-  assert(objIsOfClass(a, "%CODECLASSNAME"));
+  assert(objIsOfClass(a, "%CODECLASSNAME%"));
   assert(objIsOfClass(b, "%CODECLASSNAME%"));
 
   /* add specific comparison logic, following the description in the header
