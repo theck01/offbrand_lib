@@ -47,6 +47,9 @@ uint8_t iterateDequeNext(OBDequeIterator *it);
  * more elements closer to the head */
 uint8_t iterateDequePrev(OBDequeIterator *it);
 
+/* returns the number of elements contained within the deque */
+uint64_t dequeLength(OBDeque *deque);
+
 /* add obj to Deque head, retaining the obj once */
 void addAtDequeHead(OBDeque *deque, obj *to_add);
 
@@ -87,5 +90,7 @@ void removeDequeTail(OBDeque *deque);
  * points to the next obj in the queue after the call (closer to the tail) */
 void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it);
 
-#endif
+/* removes all obj's from the Deque, leaving the Deque empty */
+void clearDeque(OBDeque *deque);
 
+#endif
