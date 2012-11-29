@@ -176,10 +176,10 @@ obj * peekDequeAtIt(OBDeque *deque, OBDequeIterator *it){
   return it->node->stored;
 }
 
+
 void removeDequeHead(OBDeque *deque){
 
   OBDequeNode *temp_node;
-  obj *temp_obj;
 
   assert(deque);
 
@@ -188,6 +188,57 @@ void removeDequeHead(OBDeque *deque){
 
   /* set tail to NULL if removing the last element from the list */
   if(!(deque->head = deque->head->next)) deque->tail = NULL;
+
+  /* set temp_node next and prev to null, to separate the node completely from
+   * the deque if it lives on through a reference in an iterator */
+  temp_node->next = NULL;
+  temp_node->prev = NULL;
+
+  release((obj *)temp_node);
+
+  return;
+}
+
+
+void removeDequeTail(OBDeque *deque){
+
+  OBDequeNode *temp_node;
+
+  assert(deque);
+
+  /* return NULL if the list is empty */
+  if(!(temp_node = deque->tail)) return NULL;
+
+  /* set head to NULL if removing the last element from the list */
+  if(!(deque->tail = deque->tail->prev)) deque->head = NULL;
+
+  /* set temp_node next and prev to null, to separate the node completely from
+   * the deque if it lives on through a reference in an iterator */
+  temp_node->next = NULL;
+  temp_node->prev = NULL;
+
+  release((obj *)temp_node);
+
+  return;
+}
+
+
+void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
+
+  OBDequeNode *temp_node;
+
+  assert(deque);
+  assert(it);
+  assert(deque == it->deque); /* ensure that iterator is associated with given
+                                 deque */
+
+  temp_node = it->node;
+
+  /* if removing the last element from the list */
+  if(temp_node == deque->head && temp_node == deque->tail){
+    deque->head = NULL;
+    deque->tail = NULL;
+  }
 
   /* set temp_node next and prev to null, to separate the node completely from
    * the deque if it lives on through a reference in an iterator */
