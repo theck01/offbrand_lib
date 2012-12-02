@@ -10,7 +10,7 @@ OBDeque * createEmptyDeque(void){
 }
 
 
-OBDeque * copyDeque(OBDeque *to_copy){
+OBDeque * copyDeque(const OBDeque *to_copy){
 
   obj *element;
   OBDequeIterator *iter;
@@ -29,19 +29,44 @@ OBDeque * copyDeque(OBDeque *to_copy){
   do{
     element = peekDequeAtIt(to_copy, iter);
     addDequeTail(copy, element);
-  } while(iterateDequeNext(iter))
+  } while(iterateDequeNext(iter));
+
+  release((obj *)iter);
 
   return copy;
 }
 
 
-OBDequeIterator * getDequeHeadIt(OBDeque *deque){
+uint8_t isDequeEmpty(const OBDeque *deque){
+  assert(deque);
+  return deque->head == NULL;
+}
+
+
+uint64_t dequeLength(const OBDeque *deque){
+
+  OBDequeIterator *it;
+  uint64_t length = 1;
+
+  /* if an iterator cannot be created (the deque is empty) */
+  if(!(it = getDequeHeadIt(deque))) return 0;
+
+  /* advance iterator until it reaches the end of the deque */
+  while(iterateDequeNext(it)) length++;
+
+  release((obj *)it);
+
+  return length;
+}
+
+
+OBDequeIterator * getDequeHeadIt(const OBDeque *deque){
   assert(deque);
   return createDequeIterator(deque, deque->head);
 }
 
 
-OBDequeIterator * getDequeTailIt(OBDeque *deque){
+OBDequeIterator * getDequeTailIt(const OBDeque *deque){
   assert(deque);
   return createDequeIterator(deque, deque->head);
 }
@@ -155,19 +180,39 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
 }
 
 
-obj * peekDequeAtHead(OBDeque *deque){
+uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
+                       compare_fptr compare){
+
+  OBDequeIterator *it;
+
+  assert(deque);
+  assert(to_find);
+  if(!compare) compare = &objCompare;
+
+  it = getDequeHeadIt(deque);
+  if(!it) return 0; /* obj is not in an empty list */
+  
+  do{
+    if(compare(peekDequeAtIt(deque, it), to_find) == OB_EQUAL_TO) return 1;
+  } while(iterateDequeNext(it));
+
+  return 0;
+}
+
+
+obj * peekDequeHead(const OBDeque *deque){
   assert(deque);
   return deque->head->stored;
 }
 
 
-obj * peekDequeAtTail(OBDeque *deque){
+obj * peekDequeTail(const OBDeque *deque){
   assert(deque);
   return deque->tail->stored;
 }
 
 
-obj * peekDequeAtIt(OBDeque *deque, OBDequeIterator *it){
+obj * peekDequeAtIt(const OBDeque *deque, const OBDequeIterator *it){
 
   assert(deque);
   assert(it);
@@ -248,6 +293,29 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
   release((obj *)temp_node);
 
   return;
+}
+
+
+void clearDeque(OBDeque *deque){
+
+  OBDequeNode *tmp, *next;
+
+  assert(deque);
+
+  tmp = deque->head;
+
+  while(tmp){
+
+    next = tmp->next;
+
+    /* remove references to other nodes, individual nodes may live on due to
+     * references from iterators */
+    tmp->next = NULL;
+    tmp->prev = NULL;
+
+    release((obj *)tmp);
+    tmp = next;
+  }
 }
 
 
