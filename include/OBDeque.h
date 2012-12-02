@@ -25,17 +25,21 @@ OBDeque * createEmptyDeque(void);
 
 /* copy constructor, creates a new OBDeque with its own memory (a deep copy)
  * that references the same objs */
-OBDeque * copyDeque(OBDeque *to_copy);
+OBDeque * copyDeque(const OBDeque *to_copy);
 
-uint8_t isDequeEmpty(OBDeque *deque);
+/* returns non-zero if the deque is empty, and 0 if it contains elements */
+uint8_t isDequeEmpty(const OBDeque *deque);
+
+/* returns the number of elements contained within the deque */
+uint64_t dequeLength(const OBDeque *deque);
 
 /* returns an OBDequeIterator representing the head of the Deque, returns
  * NULL if the deque is empty */
-OBDequeIterator * getDequeHeadIt(OBDeque *deque);
+OBDequeIterator * getDequeHeadIt(const OBDeque *deque);
 
 /* returns an OBDequeIterator representing the tail of the Deque, returns
  * NULL if the deque is empty */
-OBDequeIterator * getDequeTailIt(OBDeque *deque);
+OBDequeIterator * getDequeTailIt(const OBDeque *deque);
 
 /* updates the OBDequeIterator to the next position in the deque closer to the
  * tail, returns 0 if there are no elements closer to the tail, 1 if there
@@ -46,9 +50,6 @@ uint8_t iterateDequeNext(OBDequeIterator *it);
  * head, returns 0 if there are no elements closer to the head, 1 if there are
  * more elements closer to the head */
 uint8_t iterateDequePrev(OBDequeIterator *it);
-
-/* returns the number of elements contained within the deque */
-uint64_t dequeLength(OBDeque *deque);
 
 /* add obj to Deque head, retaining the obj once */
 void addAtDequeHead(OBDeque *deque, obj *to_add);
@@ -62,20 +63,29 @@ void addAtDequeTail(OBDeque *deque, obj *to_add);
  * (the position of the newly added obj). Retains obj once */
 void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add);
 
+/* function returns 1 if the provided object is found within the deque, 0 if
+ * not. If using a specific class comparision operator (other than the default
+ * obj comparision) then the deque must contain only that class of objects. The
+ * function will fail assertions if the deque is a heterogenous collection. If
+ * the comparition function pointer is null then the default pointer comparision
+ * will be used */
+uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
+                       compare_fptr compare);
+
 /* peek at the obj stored in the Deque head. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference
  * that it would like to get rid of */
-obj * peekDequeHead(OBDeque *deque);
+obj * peekDequeHead(const OBDeque *deque);
 
 /* peek at the obj stored in the Deque tail. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference
  * that it would like to get rid of */
-obj * peekDequeTail(OBDeque *deque);
+obj * peekDequeTail(const OBDeque *deque);
 
 /* peek at the obj stored in the Deque at the position indicated by the iterator
  * Returns a pointer to the actual object, do not dereference unless the calling
  * code already has a reference that it would like to get rid of */
-obj * peekDequeAtIt(OBDeque *deque, OBDequeIterator *it);
+obj * peekDequeAtIt(const OBDeque *deque, const OBDequeIterator *it);
 
 /* remove obj from Deque head, releasing that obj and returning it if it still
  * has a reference, NULL if not */
