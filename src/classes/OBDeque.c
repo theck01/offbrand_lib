@@ -39,24 +39,13 @@ OBDeque * copyDeque(const OBDeque *to_copy){
 
 uint8_t isDequeEmpty(const OBDeque *deque){
   assert(deque);
-  return deque->head == NULL;
+  return deque->length == 0;
 }
 
 
 uint64_t dequeLength(const OBDeque *deque){
-
-  OBDequeIterator *it;
-  uint64_t length = 1;
-
-  /* if an iterator cannot be created (the deque is empty) */
-  if(!(it = getDequeHeadIt(deque))) return 0;
-
-  /* advance iterator until it reaches the end of the deque */
-  while(iterateDequeNext(it)) length++;
-
-  release((obj *)it);
-
-  return length;
+  assert(deque);
+  return deque->length;
 }
 
 
@@ -122,8 +111,12 @@ void addAtDequeHead(OBDeque *deque, obj *to_add){
   new_node->next = deque->head;
 
   /* update deque data */
+  /* if a head aleady exists update head prev */
   if(deque->head) deque->head->prev = new_node;
+  else deque->tail = new_node /* else set tail, which should not be NULL 
+                                 anymore*/
   deque->head = new_node;
+  deque->length++;
 
   return;
 }
@@ -145,8 +138,12 @@ void addAtDequeHead(OBDeque *deque, obj *to_add){
   new_node->prev = deque->tail;
 
   /* update deque data */
+  /* if a tail aleady exists update tail next */
   if(deque->tail) deque->tail->next = new_node;
+  else deque->head = new_node /* else set head, which should not be NULL
+                                 anymore */
   deque->tail = new_node;
+  deque->length++;
 
   return;
 }
@@ -158,6 +155,7 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
   
   assert(deque);
   assert(it);
+  assert(it->deque == deque);
   assert(to_add);
 
   new_node = createDequeNode(to_add);
@@ -168,17 +166,48 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
   /* set node data */
   new_node->prev = it->node->prev;
   new_node->next = it->node;
+  it->node->prev->next = new_node;
   it->node->prev = new_node;
+
+  deque->length++;
 
   /* update iterator to newly inserted node */
   assert(iterateDequePrev(it));
 
-  /* update deque data if the iterator is pointing at the head */
+  /* update deque data if the iterator is pointing at the head (added node
+   * cannot be the tail) */
   if(it->node == deque->head) deque->head = new_node;
 
   return;
 }
 
+
+OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2){
+
+  OBDeque *joined;
+  OBDequeIterator *it;
+  obj *element;
+
+  assert(d1);
+  assert(d2);
+
+  joined = copyDeque(d1);
+
+  it = getDequeHeadIt(d2);
+  
+  if(!it) return joined; /* if the list is empty, return joined list */
+
+  /* while there are elements in the deque to copy add to the tail of the
+   * deque */
+  do{
+    element = peekDequeAtIt(d2, it);
+    addDequeTail(copy, element);
+  } while(iterateDequeNext(it));
+
+  release((obj *)it);
+
+  return joined;
+}
 
 uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
                        compare_fptr compare){
@@ -198,6 +227,22 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
 
   return 0;
 }
+
+
+void sortDeque(OBDeque *deque, const compare_fptr compare, const int8_t order){
+
+  compare_fptr compare_funct;
+  OBDequeIterator *it;
+
+  assert(deque);
+
+  /* if comparision function was not added use simple pointer comparator */
+  if(!compare) compare_funct = &objCompare;
+  else compare_funct = compare;
+
+  /* INCOMPLETE  IMPLEMENTATION */
+}
+  
 
 
 obj * peekDequeHead(const OBDeque *deque){
@@ -228,11 +273,13 @@ void removeDequeHead(OBDeque *deque){
 
   assert(deque);
 
-  /* return NULL if the list is empty */
-  if(!(temp_node = deque->head)) return NULL;
+  /* return if the list is empty */
+  if(!(temp_node = deque->head)) return;
 
   /* set tail to NULL if removing the last element from the list */
   if(!(deque->head = deque->head->next)) deque->tail = NULL;
+
+  deque->length--;
 
   /* set temp_node next and prev to null, to separate the node completely from
    * the deque if it lives on through a reference in an iterator */
@@ -256,6 +303,8 @@ void removeDequeTail(OBDeque *deque){
 
   /* set head to NULL if removing the last element from the list */
   if(!(deque->tail = deque->tail->prev)) deque->head = NULL;
+
+  deque->length--;
 
   /* set temp_node next and prev to null, to separate the node completely from
    * the deque if it lives on through a reference in an iterator */
@@ -284,6 +333,12 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
     deque->head = NULL;
     deque->tail = NULL;
   }
+  else{ /* join list pieces separated by the node */
+    temp_node->prev->next = temp_node->next;
+    temp_node->next->prev = temp_node->prev;
+  }
+
+  deque->length--;
 
   /* set temp_node next and prev to null, to separate the node completely from
    * the deque if it lives on through a reference in an iterator */
@@ -316,6 +371,10 @@ void clearDeque(OBDeque *deque){
     release((obj *)tmp);
     tmp = next;
   }
+
+  deque->length = 0;
+  
+  return;
 }
 
 
