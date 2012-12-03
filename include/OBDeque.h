@@ -63,6 +63,10 @@ void addAtDequeTail(OBDeque *deque, obj *to_add);
  * (the position of the newly added obj). Retains obj once */
 void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add);
 
+/* joins d1 and d2 into one deque by appending the contents of d2 to the end of
+ * d1, and returning the result as a new deque */
+OBDeque * joinDeques(OBDeque *d1, OBDeque *d2);
+
 /* function returns 1 if the provided object is found within the deque, 0 if
  * not. If using a specific class comparision operator (other than the default
  * obj comparision) then the deque must contain only that class of objects. The
@@ -71,6 +75,12 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add);
  * will be used */
 uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
                        compare_fptr compare);
+
+/* sorts queue using the compare function passed in as an argument. ASSUMES
+ * THAT ALL CONTAINED OBJ ARE OF THE SAME CLASS, assertions will fail if not.
+ * Order (lowest to highest or highest to lowest) specified by sorting macros
+ * defined in offbrand.h. Uses the merge sort algorithm. */
+void sortDeque(OBDeque *deque, const compare_fptr compare, const int8_t order);
 
 /* peek at the obj stored in the Deque head. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference
