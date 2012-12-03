@@ -61,6 +61,7 @@ struct OBDeque_struct{
   obj base;
   OBDequeNode *head;
   OBDequeNode *tail;
+  uint64_t length;
 };
 
 
