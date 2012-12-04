@@ -29,7 +29,7 @@ typedef struct OBDequeNode_struct{
 OBDequeNode * createDequeNode(obj *to_store);
 
 /* frees the node while maintaining deque continuity */
-void deallocDequeNode(OBDequeNode *node, uint8_t is_next);
+void deallocDequeNode(obj *to_dealloc);
 
 
 /* OBDequeIterator type */
