@@ -232,15 +232,22 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
 void sortDeque(OBDeque *deque, compare_fptr compare, const int8_t order){
 
   compare_fptr compare_funct;
-  OBDequeIterator *it;
+  OBDeque sorted; /* stack variable to remove internal memory management
+                     burden */
 
   assert(deque);
+  assert(order == OB_LEAST_TO_GREATEST || order == OB_GREATEST_TO_LEAST);
 
   /* if comparision function was not added use simple pointer comparator */
-  if(!compare) compare_funct = &objCompare;
-  else compare_funct = compare;
+  if(!compare) compare = &objCompare;
 
-  /* INCOMPLETE  IMPLEMENTATION */
+  sorted = recursiveSort(*deque, compare, order);
+
+  /* connect head and tail of newly sorted list to deque */
+  deque->head = sorted.head;
+  deque->tail = sorted.tail;
+
+  return;
 }
   
 
@@ -380,6 +387,76 @@ void clearDeque(OBDeque *deque){
 
 /* PRIVATE METHODS */
 
+
+/* OBDequeNode Private Methods */
+
+OBDequeNode * createDequeNode(obj *to_store){
+
+  static const char classname[] = "OBDequeNode";
+  OBDeque *new_instance = malloc(sizeof(OBDequeNode));
+  assert(new_instance != NULL);
+
+  /* initialize base class data */
+  initBase((obj *)new_instance, &deallocDequeNode, NULL, classname);
+
+  retain(to_store);
+  new_instance->stored = to_store;
+  new_instance->next = NULL;
+  new_instance->prev = NULL;
+
+  return new_instance;
+}
+
+
+void deallocDequeNode(obj *to_dealloc){
+
+  /* cast generic obj to OBDequeNode */
+  OBDequeNode *instance = (OBDequeNode *)to_dealloc;
+
+  assert(to_dealloc);
+  assert(objIsOfClass(to_dealloc, "OBDequeNode"));
+
+  release(instance->stored);
+
+  return;
+}
+
+
+/* OBDequeIterator Private Methods */
+
+OBDequeIterator * createDequeIterator(OBDeque *deque, OBDequeNode *node){
+
+  static const char classname[] = "OBDequeIterator";
+  OBDeque *new_instance = malloc(sizeof(OBDequeIterator));
+  assert(new_instance != NULL);
+
+  /* initialize base class data */
+  initBase((obj *)new_instance, &deallocDequeIterator, NULL, classname);
+
+  retain((obj *)node);
+  new_instance->node = node;
+  new_instance->deque = deque;
+
+  return new_instance;
+}
+
+
+void deallocDequeIterator(obj *to_dealloc){
+
+  /* cast generic obj to OBDequeNode */
+  OBDequeIterator *instance = (OBDequeIterator *)to_dealloc;
+
+  assert(to_dealloc);
+  assert(objIsOfClass(to_dealloc, "OBDequeIterator"));
+
+  release(instance->node);
+
+  return;
+}
+
+
+/* OBDeque Private Methods */
+
 /* add arguments to complete initialization as needed, modify 
  * OBDeque_Private.h as well if modifications are made */
 OBDeque * createDefaultDeque(void){
@@ -397,16 +474,102 @@ OBDeque * createDefaultDeque(void){
 }
 
 
+/* private recursive sort method uses stack variables to take advantage of
+ * static memory management */
+OBDeque recursiveSort(OBDeque deque, const compare_fptr compare,
+                      const int8_t order){
+
+  uint64_t i, half_length;
+  OBDeque left_sorted, right_sorted;
+  OBDequeNode *curnode;
+
+  /* base case, a deque of size 0 or 1 is sorted */
+  if(deque.length < 2) return deque;
+
+  half_length = deque.length/2;
+
+  left_sorted.head = deque.head;
+  left_sorted.tail = deque.head;
+
+  /* iterate through half of the deque to split it in half */
+  for(i=1; i<half_length; i++) left_sorted.tail = left_sorted.tail->next;
+
+  right_sorted.head = left_sorted.tail->next;
+  right_sorted.tail = deque.tail;
+  
+  /* separate right and left deques */
+  right_sorted.head->prev = NULL;
+  left_sorted.tail->next = NULL;
+
+  left_sorted = half_length;
+  right_sorted = deque.length - half_length;
+
+  /* sort deque halves recursively */
+  right_sorted = recursiveSort(right_sorted, compare, order);
+  left_sorted = recursiveSort(left_sorted, compare, order);
+
+  /* set the head of the combined list appropriately */
+  if(compare(right_sorted->head->stored, left_sorted->head->stored) == order){
+    deque->head = right_sorted->head;
+    right_sorted->head = right_sorted->head->next;
+  }
+  else{
+    deque->head = left_sorted->head;
+    left_sorted->head = left_sorted->head->next;
+  }
+
+  curnode = deque->head;
+
+  /* merge lists with proper sequencing */
+  while(right_sorted->head && left_sorted->head){
+
+    if(compare(right_sorted->head->stored, left_sorted->head->stored)
+        == order){
+      curnode->next = right_sorted->head;
+      right_sorted->head->prev = curnode;
+      right_sorted->head = right_sorted->head->next;
+    }
+    else{
+      curnode->next = left_sorted->head;
+      left_sorted->head->prev = curnode;
+      left_sorted->head = left_sorted->head->next;
+    }
+
+    curnode = curnode->next;
+  }
+
+  /* merge in remenants of lists, after one has been depleted */
+  while(right_sorted->head){
+    curnode->next = right_sorted->head;
+    right_sorted->head->prev = curnode;
+    right_sorted->head = right_sorted->head->next;
+    curnode = curnode->next;
+  }
+
+  while(left_sorted->head){
+    curnode->next = left_sorted->head;
+    left_sorted->head->prev = curnode;
+    left_sorted->head = left_sorted->head->next;
+    curnode = curnode->next;
+  }
+    
+  /* curnode should be the last node in the list, set appropriately */
+  deque->tail = curnode;
+
+  return deque;
+}
+
+
 void deallocDeque(obj *to_dealloc){
 
+  OBDequeNode *curnode, *nextnode;
   /* cast generic obj to OBDeque */
   OBDeque *instance = (OBDeque *)to_dealloc;
 
   assert(to_dealloc);
   assert(objIsOfClass(to_dealloc, "OBDeque"));
 
-  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE BUT DO NOT
-   * FREE INSTANCE, THE LIBRARY WILL DO THIS FOR THE USER */
+  clearDeque(instance);
 
   return;
 }
