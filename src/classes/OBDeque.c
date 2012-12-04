@@ -122,7 +122,7 @@ void addAtDequeHead(OBDeque *deque, obj *to_add){
 }
 
 
-void addAtDequeHead(OBDeque *deque, obj *to_add){
+void addAtDequeTail(OBDeque *deque, obj *to_add){
 
   OBDequeNode *new_node;
   
@@ -229,7 +229,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
 }
 
 
-void sortDeque(OBDeque *deque, const compare_fptr compare, const int8_t order){
+void sortDeque(OBDeque *deque, compare_fptr compare, const int8_t order){
 
   compare_fptr compare_funct;
   OBDequeIterator *it;
