@@ -80,7 +80,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
  * THAT ALL CONTAINED OBJ ARE OF THE SAME CLASS, assertions will fail if not.
  * Order (lowest to highest or highest to lowest) specified by sorting macros
  * defined in offbrand.h. Uses the merge sort algorithm. */
-void sortDeque(OBDeque *deque, const compare_fptr compare, const int8_t order);
+void sortDeque(OBDeque *deque, compare_fptr compare, const int8_t order);
 
 /* peek at the obj stored in the Deque head. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference
