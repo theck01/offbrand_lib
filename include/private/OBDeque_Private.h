@@ -74,6 +74,11 @@ struct OBDeque_struct{
  * Add additional arguments as needed */
 OBDeque * createDefaultDeque(void);
 
+/* recursive merge sort operation. runs on static variables to reduce the memory
+ * management overhead */
+OBDeque recursiveSort(OBDeque deque, const compare_fptr compare,
+                      const int8_t order);
+
 /* deallocator, frees instance of class back to memory. Releases any contained
  * objs once. Should not be called manually, instance will be destroyed when 
  * reference count reaches 0 */
