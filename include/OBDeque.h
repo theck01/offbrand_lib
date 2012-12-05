@@ -14,7 +14,7 @@
 typedef struct OBDeque_struct OBDeque;
 
 /* iterator type declaration. */
-typedef struct OBDequeIterator OBDequeIterator;
+typedef struct OBDequeIterator_struct OBDequeIterator;
 
 
 /* PUBLIC METHODS */
@@ -65,7 +65,7 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add);
 
 /* joins d1 and d2 into one deque by appending the contents of d2 to the end of
  * d1, and returning the result as a new deque */
-OBDeque * joinDeques(OBDeque *d1, OBDeque *d2);
+OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2);
 
 /* function returns 1 if the provided object is found within the deque, 0 if
  * not. If using a specific class comparision operator (other than the default

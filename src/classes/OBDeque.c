@@ -6,7 +6,7 @@
 
 
 OBDeque * createEmptyDeque(void){
-  return createDefaultOBDeque():
+  return createDefaultDeque();
 }
 
 
@@ -28,7 +28,7 @@ OBDeque * copyDeque(const OBDeque *to_copy){
    * deque */
   do{
     element = peekDequeAtIt(to_copy, iter);
-    addDequeTail(copy, element);
+    addAtDequeTail(copy, element);
   } while(iterateDequeNext(iter));
 
   release((obj *)iter);
@@ -113,7 +113,7 @@ void addAtDequeHead(OBDeque *deque, obj *to_add){
   /* update deque data */
   /* if a head aleady exists update head prev */
   if(deque->head) deque->head->prev = new_node;
-  else deque->tail = new_node /* else set tail, which should not be NULL 
+  else deque->tail = new_node; /* else set tail, which should not be NULL 
                                  anymore*/
   deque->head = new_node;
   deque->length++;
@@ -140,7 +140,7 @@ void addAtDequeTail(OBDeque *deque, obj *to_add){
   /* update deque data */
   /* if a tail aleady exists update tail next */
   if(deque->tail) deque->tail->next = new_node;
-  else deque->head = new_node /* else set head, which should not be NULL
+  else deque->head = new_node; /* else set head, which should not be NULL
                                  anymore */
   deque->tail = new_node;
   deque->length++;
@@ -201,7 +201,7 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2){
    * deque */
   do{
     element = peekDequeAtIt(d2, it);
-    addDequeTail(copy, element);
+    addAtDequeTail(joined, element);
   } while(iterateDequeNext(it));
 
   release((obj *)it);
@@ -231,7 +231,6 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
 
 void sortDeque(OBDeque *deque, compare_fptr compare, const int8_t order){
 
-  compare_fptr compare_funct;
   OBDeque sorted; /* stack variable to remove internal memory management
                      burden */
 
@@ -306,7 +305,7 @@ void removeDequeTail(OBDeque *deque){
   assert(deque);
 
   /* return NULL if the list is empty */
-  if(!(temp_node = deque->tail)) return NULL;
+  if(!(temp_node = deque->tail)) return;
 
   /* set head to NULL if removing the last element from the list */
   if(!(deque->tail = deque->tail->prev)) deque->head = NULL;
@@ -393,7 +392,7 @@ void clearDeque(OBDeque *deque){
 OBDequeNode * createDequeNode(obj *to_store){
 
   static const char classname[] = "OBDequeNode";
-  OBDeque *new_instance = malloc(sizeof(OBDequeNode));
+  OBDequeNode *new_instance = malloc(sizeof(OBDequeNode));
   assert(new_instance != NULL);
 
   /* initialize base class data */
@@ -424,10 +423,10 @@ void deallocDequeNode(obj *to_dealloc){
 
 /* OBDequeIterator Private Methods */
 
-OBDequeIterator * createDequeIterator(OBDeque *deque, OBDequeNode *node){
+OBDequeIterator * createDequeIterator(const OBDeque *deque, OBDequeNode *node){
 
   static const char classname[] = "OBDequeIterator";
-  OBDeque *new_instance = malloc(sizeof(OBDequeIterator));
+  OBDequeIterator *new_instance = malloc(sizeof(OBDequeIterator));
   assert(new_instance != NULL);
 
   /* initialize base class data */
@@ -449,7 +448,7 @@ void deallocDequeIterator(obj *to_dealloc){
   assert(to_dealloc);
   assert(objIsOfClass(to_dealloc, "OBDequeIterator"));
 
-  release(instance->node);
+  release((obj *)instance->node);
 
   return;
 }
@@ -501,60 +500,60 @@ OBDeque recursiveSort(OBDeque deque, const compare_fptr compare,
   right_sorted.head->prev = NULL;
   left_sorted.tail->next = NULL;
 
-  left_sorted = half_length;
-  right_sorted = deque.length - half_length;
+  left_sorted.length = half_length;
+  right_sorted.length = deque.length - half_length;
 
   /* sort deque halves recursively */
   right_sorted = recursiveSort(right_sorted, compare, order);
   left_sorted = recursiveSort(left_sorted, compare, order);
 
   /* set the head of the combined list appropriately */
-  if(compare(right_sorted->head->stored, left_sorted->head->stored) == order){
-    deque->head = right_sorted->head;
-    right_sorted->head = right_sorted->head->next;
+  if(compare(right_sorted.head->stored, left_sorted.head->stored) == order){
+    deque.head = right_sorted.head;
+    right_sorted.head = right_sorted.head->next;
   }
   else{
-    deque->head = left_sorted->head;
-    left_sorted->head = left_sorted->head->next;
+    deque.head = left_sorted.head;
+    left_sorted.head = left_sorted.head->next;
   }
 
-  curnode = deque->head;
+  curnode = deque.head;
 
   /* merge lists with proper sequencing */
-  while(right_sorted->head && left_sorted->head){
+  while(right_sorted.head && left_sorted.head){
 
-    if(compare(right_sorted->head->stored, left_sorted->head->stored)
+    if(compare(right_sorted.head->stored, left_sorted.head->stored)
         == order){
-      curnode->next = right_sorted->head;
-      right_sorted->head->prev = curnode;
-      right_sorted->head = right_sorted->head->next;
+      curnode->next = right_sorted.head;
+      right_sorted.head->prev = curnode;
+      right_sorted.head = right_sorted.head->next;
     }
     else{
-      curnode->next = left_sorted->head;
-      left_sorted->head->prev = curnode;
-      left_sorted->head = left_sorted->head->next;
+      curnode->next = left_sorted.head;
+      left_sorted.head->prev = curnode;
+      left_sorted.head = left_sorted.head->next;
     }
 
     curnode = curnode->next;
   }
 
   /* merge in remenants of lists, after one has been depleted */
-  while(right_sorted->head){
-    curnode->next = right_sorted->head;
-    right_sorted->head->prev = curnode;
-    right_sorted->head = right_sorted->head->next;
+  while(right_sorted.head){
+    curnode->next = right_sorted.head;
+    right_sorted.head->prev = curnode;
+    right_sorted.head = right_sorted.head->next;
     curnode = curnode->next;
   }
 
-  while(left_sorted->head){
-    curnode->next = left_sorted->head;
-    left_sorted->head->prev = curnode;
-    left_sorted->head = left_sorted->head->next;
+  while(left_sorted.head){
+    curnode->next = left_sorted.head;
+    left_sorted.head->prev = curnode;
+    left_sorted.head = left_sorted.head->next;
     curnode = curnode->next;
   }
     
   /* curnode should be the last node in the list, set appropriately */
-  deque->tail = curnode;
+  deque.tail = curnode;
 
   return deque;
 }
@@ -562,7 +561,6 @@ OBDeque recursiveSort(OBDeque deque, const compare_fptr compare,
 
 void deallocDeque(obj *to_dealloc){
 
-  OBDequeNode *curnode, *nextnode;
   /* cast generic obj to OBDeque */
   OBDeque *instance = (OBDeque *)to_dealloc;
 

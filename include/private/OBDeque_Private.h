@@ -38,7 +38,7 @@ void deallocDequeNode(obj *to_dealloc);
  * the deque. */
 struct OBDequeIterator_struct{
   obj base;
-  OBDeque *deque;
+  const OBDeque *deque;
   OBDequeNode *node;
 };
 
@@ -48,7 +48,7 @@ struct OBDequeIterator_struct{
  * Retains the DequeNode once, so that as long as the iterator exists and
  * has a reference to that node it will exist. Advancing or regressing the
  * iterator will change which node is being pointed to */
-struct OBDequeIterator_struct * createDequeIterator(OBDeque *deque, 
+struct OBDequeIterator_struct * createDequeIterator(const OBDeque *deque, 
                                                     OBDequeNode *node);
 
 /* Destructor, destroys the iterator and releases the associated deque */
