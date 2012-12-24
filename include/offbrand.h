@@ -71,8 +71,13 @@ uint8_t objIsOfClass(const obj *a, const char *classname);
 uint8_t sameClass(const obj *a, const obj *b);
 
 /* computes the hash of the given obj using the internally stored hash function
- * specific to that obj */
+ * specific to that obj. If no hash function has been specified this function
+ * returns the defaultHash of that obj */
 obhash_t hash(const obj *to_hash);
+
+/* computes the hash of the given obj using information common to all obj's,
+ * allowing this hash to be used for any offbrand compatible class */
+obhash_t defaultHash(const obj *to_hash);
 
 /* default comparision, checks to see that the two pointer values are equal.
  * Used in sorting and finding algorithms for basic containers. Returns 0 if

@@ -39,6 +39,15 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
   return new_instance;
 }
 
+obhash_t hash%CODECLASSNAME%(obj *to_hash){
+
+  /* Implement a hash function suitable for uniquely itentifying
+   * %CODECLASSNAME% instances */
+
+  return defaultHash(to_hash);
+
+}
+
 
 void dealloc%CODECLASSNAME%(obj *to_dealloc){
 

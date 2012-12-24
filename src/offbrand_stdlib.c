@@ -73,20 +73,25 @@ uint8_t sameClass(const obj *a, const obj *b){
 
 
 obhash_t hash(const obj *to_hash){
-
-  obhash_t value;
   /* if hash function is not specified, or is the hash function in the stdlib
    * is specified then use the default hashing equation */
-  if(!(*to_hash)->hash || (*to_hash)->hash == &hash){
-    /* scramble the to_hash address to generate hash value */
-    value = (obhash_t)to_hash ^ ((obhash_t)to_hash)<<32;
-    value = (value << 6) ^ (value >> 10);
-    value = (value >> 7) ^ (value << 12);
-    return value;
-  }
-  else{
-    return (*to_hash)->hash(to_hash);
-  }
+  if(!(*to_hash)->hash || (*to_hash)->hash == &hash)
+    return defaultHash(to_hash);
+  else return (*to_hash)->hash(to_hash);
+}
+
+obhash_t defaultHash(const obj *to_hash){
+
+  obhash_t value;
+
+  /* FIX: temporary implementation, better hashes exist */
+  value = (obhash_t)to_hash ^ ((obhash_t)to_hash)<<32;
+  value = (value << 6) ^ (value >> 10);
+  value = (value >> 7) ^ (value << 12);
+  
+  /* ADD: hash works with classname in addition to pointer value */
+
+  return value;
 }
 
 int8_t objCompare(const obj *a, const obj *b){
