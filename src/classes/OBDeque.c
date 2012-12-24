@@ -57,7 +57,7 @@ OBDequeIterator * getDequeHeadIt(const OBDeque *deque){
 
 OBDequeIterator * getDequeTailIt(const OBDeque *deque){
   assert(deque);
-  return createDequeIterator(deque, deque->head);
+  return createDequeIterator(deque, deque->tail);
 }
 
 
@@ -171,12 +171,12 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
 
   deque->length++;
 
+  /* update deque data if the iterator is pointing at the head (added node
+   * cannot be the new tail) */
+  if(it->node == deque->head) deque->head = new_node;
+
   /* update iterator to newly inserted node */
   assert(iterateDequePrev(it));
-
-  /* update deque data if the iterator is pointing at the head (added node
-   * cannot be the tail) */
-  if(it->node == deque->head) deque->head = new_node;
 
   return;
 }
@@ -253,13 +253,15 @@ void sortDeque(OBDeque *deque, compare_fptr compare, const int8_t order){
 
 obj * peekDequeHead(const OBDeque *deque){
   assert(deque);
-  return deque->head->stored;
+  if(deque->head) return deque->head->stored;
+  return NULL;
 }
 
 
 obj * peekDequeTail(const OBDeque *deque){
   assert(deque);
-  return deque->tail->stored;
+  if(deque->tail) return deque->tail->stored;
+  return NULL;
 }
 
 
@@ -340,8 +342,10 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
     deque->tail = NULL;
   }
   else{ /* join list pieces separated by the node */
-    temp_node->prev->next = temp_node->next;
-    temp_node->next->prev = temp_node->prev;
+    if(temp_node != deque->head)
+      temp_node->prev->next = temp_node->next;
+    if(temp_node != deque->tail)
+      temp_node->next->prev = temp_node->prev;
   }
 
   deque->length--;
@@ -378,6 +382,8 @@ void clearDeque(OBDeque *deque){
     tmp = next;
   }
 
+  deque->head = NULL;
+  deque->tail = NULL;
   deque->length = 0;
   
   return;
@@ -392,7 +398,11 @@ void clearDeque(OBDeque *deque){
 OBDequeNode * createDequeNode(obj *to_store){
 
   static const char classname[] = "OBDequeNode";
-  OBDequeNode *new_instance = malloc(sizeof(OBDequeNode));
+  OBDequeNode *new_instance;
+  
+  assert(to_store != NULL);
+
+  new_instance = malloc(sizeof(OBDequeNode));
   assert(new_instance != NULL);
 
   /* initialize base class data */
@@ -426,7 +436,12 @@ void deallocDequeNode(obj *to_dealloc){
 OBDequeIterator * createDequeIterator(const OBDeque *deque, OBDequeNode *node){
 
   static const char classname[] = "OBDequeIterator";
-  OBDequeIterator *new_instance = malloc(sizeof(OBDequeIterator));
+  OBDequeIterator *new_instance;
+  
+  if(!node) return NULL; /* return nothing when iterating from an empty
+                            deque */
+
+  new_instance = malloc(sizeof(OBDequeIterator));
   assert(new_instance != NULL);
 
   /* initialize base class data */
@@ -467,7 +482,9 @@ OBDeque * createDefaultDeque(void){
   /* initialize base class data */
   initBase((obj *)new_instance, &deallocDeque, NULL, classname);
 
-  /* ADD CLASS SPECIFIC INITIALIZATION HERE */
+  new_instance->head = NULL;
+  new_instance->tail = NULL;
+  new_instance->length = 0;
 
   return new_instance;
 }
@@ -572,4 +589,3 @@ void deallocDeque(obj *to_dealloc){
   return;
 }
 
-/* DEFINE ADDITIONAL PRIVATE METHODS HERE */
