@@ -52,10 +52,10 @@ uint8_t iterateDequeNext(OBDequeIterator *it);
 uint8_t iterateDequePrev(OBDequeIterator *it);
 
 /* add obj to Deque head, retaining the obj once */
-void addAtDequeHead(OBDeque *deque, obj *to_add);
+void addDequeHead(OBDeque *deque, obj *to_add);
 
 /* add obj to Deque tail, retaining the obj once */
-void addAtDequeTail(OBDeque *deque, obj *to_add);
+void addDequeTail(OBDeque *deque, obj *to_add);
 
 /* add obj to Deque at the iterator, pushing everything including the obj at the
  * iterator one position toward the tail. If iterator is NULL then add to the 

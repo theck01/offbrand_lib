@@ -28,7 +28,7 @@ OBDeque * copyDeque(const OBDeque *to_copy){
    * deque */
   do{
     element = peekDequeAtIt(to_copy, iter);
-    addAtDequeTail(copy, element);
+    addDequeTail(copy, element);
   } while(iterateDequeNext(iter));
 
   release((obj *)iter);
@@ -201,7 +201,7 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2){
    * deque */
   do{
     element = peekDequeAtIt(d2, it);
-    addAtDequeTail(joined, element);
+    addDequeTail(joined, element);
   } while(iterateDequeNext(it));
 
   release((obj *)it);
