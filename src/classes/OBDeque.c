@@ -30,7 +30,7 @@ OBDeque * copyDeque(const OBDeque *to_copy){
   do{
     element = peekDequeAtIt(to_copy, iter);
     addDequeTail(copy, element);
-  } while(iterateDequeNext(iter));
+  } while(iterateDequeNext(to_copy, iter));
 
   release((obj *)iter);
 
@@ -178,7 +178,7 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
   if(it->node == deque->head) deque->head = new_node;
 
   /* update iterator to newly inserted node */
-  assert(iterateDequePrev(it));
+  assert(iterateDequePrev(deque, it));
 
   return;
 }
@@ -204,7 +204,7 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2){
   do{
     element = peekDequeAtIt(d2, it);
     addDequeTail(joined, element);
-  } while(iterateDequeNext(it));
+  } while(iterateDequeNext(d2, it));
 
   release((obj *)it);
 
@@ -229,7 +229,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
       retval = 1;
       break;
     }
-  } while(iterateDequeNext(it));
+  } while(iterateDequeNext(deque, it));
 
   release((obj *)it);
 

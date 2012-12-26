@@ -44,12 +44,12 @@ OBDequeIterator * getDequeTailIt(const OBDeque *deque);
 /* updates the OBDequeIterator to the next position in the deque closer to the
  * tail, returns 0 if there are no elements closer to the tail, 1 if there
  * are more elements closer to the tail. */
-uint8_t iterateDequeNext(OBDequeIterator *it);
+uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it);
 
 /* updates the OBDequeIterator to the next position in the deque closer to the
  * head, returns 0 if there are no elements closer to the head, 1 if there are
  * more elements closer to the head */
-uint8_t iterateDequePrev(OBDequeIterator *it);
+uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it);
 
 /* add obj to Deque head, retaining the obj once */
 void addDequeHead(OBDeque *deque, obj *to_add);
