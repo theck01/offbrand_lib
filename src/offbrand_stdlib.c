@@ -78,7 +78,7 @@ obhash_t defaultHash(const obj *to_hash){
   obhash_t value;
 
   /* FIX: temporary implementation, better hashes exist */
-  value = (obhash_t)to_hash ^ ((obhash_t)to_hash)<<32;
+  value = (obhash_t)to_hash ^ ((obhash_t)to_hash)<<15;
   value = (value << 6) ^ (value >> 10);
   value = (value >> 7) ^ (value << 12);
   

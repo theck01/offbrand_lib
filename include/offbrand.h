@@ -33,7 +33,7 @@
 typedef void (*dealloc_fptr)(obj *);
 
 /* hash type */
-typedef uint64_t obhash_t;
+typedef size_t obhash_t;
 
 /* function pointer to a hash functino for any offbrand compatible class */
 typedef obhash_t (*hash_fptr)(const obj *);
