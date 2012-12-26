@@ -45,6 +45,12 @@ void retain(obj *instance){
   return;
 }
 
+uint32_t referenceCount(obj *instance){
+  assert(instance != NULL);
+  return (*instance)->references;
+}
+
+
 
 uint8_t objIsOfClass(const obj *a, const char *classname){
   assert(a != NULL && classname != NULL);

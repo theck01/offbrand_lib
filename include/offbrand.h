@@ -60,6 +60,9 @@ obj * release(obj *instance);
 /* increments reference count on obj by one */
 void retain(obj *instance);
 
+/* returns the reference count of the provided obj */
+uint32_t referenceCount(obj *instance);
+
 /* performs string comparision on classname of object a and the provided null
  * terminated character string, returns 1 if they are equal, 0 if the classnames
  * do not match */
