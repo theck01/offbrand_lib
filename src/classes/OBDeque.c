@@ -1,6 +1,7 @@
 
 #include "../../include/OBDeque.h"
 #include "../../include/private/OBDeque_Private.h"
+#include "../../include/OBTest.h"
 
 /* PUBLIC METHODS */
 
@@ -65,6 +66,8 @@ uint8_t iterateDequeNext(OBDequeIterator *it){
 
   assert(it);
 
+  if(!it->node) return 0;
+
   /* update the iterator if the next node exists, and return 1 */
   if(it->node->next){
     retain((obj *)it->node->next);
@@ -82,6 +85,8 @@ uint8_t iterateDequePrev(OBDequeIterator *it){
 
   assert(it);
 
+  if(!it->node) return 0;
+
   /* update the iterator if the prev node exists, and return 1 */
   if(it->node->prev){
     retain((obj *)it->node->prev);
@@ -95,17 +100,16 @@ uint8_t iterateDequePrev(OBDequeIterator *it){
 }
 
 
-void addAtDequeHead(OBDeque *deque, obj *to_add){
+void addDequeHead(OBDeque *deque, obj *to_add){
   
   OBDequeNode *new_node;
   
   assert(deque);
   assert(to_add);
 
+  /* creating deque node with to_add retains to account for the deque's
+   * reference */
   new_node = createDequeNode(to_add);
-
-  /* retain the obj to account for new deque reference */
-  retain(to_add);
 
   /* set node data */
   new_node->next = deque->head;
@@ -122,17 +126,16 @@ void addAtDequeHead(OBDeque *deque, obj *to_add){
 }
 
 
-void addAtDequeTail(OBDeque *deque, obj *to_add){
+void addDequeTail(OBDeque *deque, obj *to_add){
 
   OBDequeNode *new_node;
   
   assert(deque);
   assert(to_add);
 
+  /* creating deque node with to_add retains to account for the deque's
+   * reference */
   new_node = createDequeNode(to_add);
-
-  /* retain the obj to account for new deque reference */
-  retain(to_add);
 
   /* set node data */
   new_node->prev = deque->tail;
@@ -158,10 +161,9 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
   assert(it->deque == deque);
   assert(to_add);
 
+  /* creating deque node with to_add retains to account for the deque's
+   * reference */
   new_node = createDequeNode(to_add);
-
-  /* retain the object to account for new deque reference */
-  retain(to_add);
 
   /* set node data */
   new_node->prev = it->node->prev;
@@ -213,6 +215,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
                        compare_fptr compare){
 
   OBDequeIterator *it;
+  uint8_t retval = 0;
 
   assert(deque);
   assert(to_find);
@@ -222,10 +225,15 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
   if(!it) return 0; /* obj is not in an empty list */
   
   do{
-    if(compare(peekDequeAtIt(deque, it), to_find) == OB_EQUAL_TO) return 1;
+    if(compare(peekDequeAtIt(deque, it), to_find) == OB_EQUAL_TO){
+      retval = 1;
+      break;
+    }
   } while(iterateDequeNext(it));
 
-  return 0;
+  release((obj *)it);
+
+  return retval;
 }
 
 
@@ -284,8 +292,10 @@ void removeDequeHead(OBDeque *deque){
   /* return if the list is empty */
   if(!(temp_node = deque->head)) return;
 
-  /* set tail to NULL if removing the last element from the list */
-  if(!(deque->head = deque->head->next)) deque->tail = NULL;
+  /* repair deque after removal */
+  deque->head = deque->head->next;
+  if(!deque->head) deque->tail = NULL;
+  else deque->head->prev = NULL;
 
   deque->length--;
 
@@ -309,8 +319,10 @@ void removeDequeTail(OBDeque *deque){
   /* return NULL if the list is empty */
   if(!(temp_node = deque->tail)) return;
 
-  /* set head to NULL if removing the last element from the list */
-  if(!(deque->tail = deque->tail->prev)) deque->head = NULL;
+  /* repair deque after removal */
+  deque->tail = deque->tail->prev;
+  if(!deque->tail) deque->head = NULL;
+  else deque->tail->next = NULL;
 
   deque->length--;
 
@@ -335,6 +347,7 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
                                  deque */
 
   temp_node = it->node;
+  it->node = it->node->next;
 
   /* if removing the last element from the list */
   if(temp_node == deque->head && temp_node == deque->tail){
