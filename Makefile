@@ -13,7 +13,6 @@ TESTS = src/tests
 CC = gcc
 CFLAGS = -Wall -Wextra #Common flags for all
 OFLAGS = $(CFLAGS) -c	 #Flags for .o output files
-TFLAGS = -lpthread -D OB_THREADED #Extra flags for threaded programs
 
 # common dependencies for many classes/tests
 TEST_DEP = $(BIN)/offbrand_stdlib.o $(BIN_CLASS)/OBTest.o
@@ -21,8 +20,7 @@ THREAD_DEP = $(BIN)/offbrand_t_stdlib.o $(BIN)/offbrand_threadlib.o \
 						 $(BIN_CLASS)/OBTest.o
 
 # Enumerate/Find Objects to build
-STD_LIBS = $(BIN)/offbrand_stdlib.o $(BIN)/offbrand_t_stdlib.o \
-					 $(BIN)/offbrand_threadlib.o
+STD_LIBS = $(BIN)/offbrand_stdlib.o 
 
 CLASS_SOURCES := $(wildcard $(CLASSES)/*.c)
 ALL_CLASSES = $(patsubst $(CLASSES)/%.c, $(BIN_CLASS)/%.o, $(CLASS_SOURCES))
@@ -37,11 +35,6 @@ all: prepare $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
 # Hand builds (STD_LIBS)
 $(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
 	$(CC) $(OFLAGS) $< -o $@
-$(BIN)/offbrand_t_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
-	$(CC) $(OFLAGS) $(TFLAGS) $< -o $@
-$(BIN)/offbrand_threadlib.o: $(SRC)/offbrand_threadlib.c \
-	$(PUBLIC)/offbrand_threaded.h
-	$(CC) $(OFLAGS) $(TFLAGS) $< -o $@
 
 # Build class objects
 $(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
@@ -82,7 +75,6 @@ print:
 	@echo "Compiler: $(CC)"
 	@echo "CFLAGS: $(CFLAGS)"
 	@echo "OFLAGS: $(OFLAGS)"
-	@echo "TFLAGS: $(TFLAGS)"
 	@echo
 	@echo "Classes: $(ALL_CLASSES)"
 	@echo "Tests: $(ALL_TESTS)"

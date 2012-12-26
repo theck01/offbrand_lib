@@ -1,10 +1,5 @@
 
-#ifndef OB_THREADED
 #include "../include/offbrand.h"
-#else
-#include "../include/offbrand_threaded.h"
-#endif
-
 #include "../include/private/obj_Private.h"
 
 void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
@@ -21,10 +16,6 @@ void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
   (*instance)->hash = hash;
   (*instance)->classname = classname;
 
-#ifdef OB_THREADED
-  initLock(&((*instance)->lock));
-#endif
-
   return;
 }
 
@@ -36,10 +27,6 @@ obj * release(obj *instance){
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
-#ifdef OB_THREADED
-    deallocLock(&((*instance)->lock)); /* free mutex / conds in lock if
-                                          threaded */
-#endif
     (*instance)->dealloc(instance); /*class specific memory cleanup called*/
     free((struct obj_struct *)*instance); /* free reference counted base */ 
     free(instance); /* free the entire object */
