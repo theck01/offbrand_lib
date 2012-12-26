@@ -62,9 +62,11 @@ OBDequeIterator * getDequeTailIt(const OBDeque *deque){
 }
 
 
-uint8_t iterateDequeNext(OBDequeIterator *it){
+uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it){
 
+  assert(deque);
   assert(it);
+  assert(it->deque == deque);
 
   if(!it->node) return 0;
 
@@ -81,9 +83,11 @@ uint8_t iterateDequeNext(OBDequeIterator *it){
 }
 
 
-uint8_t iterateDequePrev(OBDequeIterator *it){
+uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it){
 
+  assert(deque);
   assert(it);
+  assert(it->deque == deque);
 
   if(!it->node) return 0;
 
@@ -161,6 +165,11 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
   assert(it->deque == deque);
   assert(to_add);
 
+  if(!it->node){
+    addDequeHead(deque, to_add);
+    it->node = deque->head;
+  }
+
   /* creating deque node with to_add retains to account for the deque's
    * reference */
   new_node = createDequeNode(to_add);
@@ -168,7 +177,7 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
   /* set node data */
   new_node->prev = it->node->prev;
   new_node->next = it->node;
-  it->node->prev->next = new_node;
+  if(it->node->prev) it->node->prev->next = new_node;
   it->node->prev = new_node;
 
   deque->length++;
@@ -279,6 +288,7 @@ obj * peekDequeAtIt(const OBDeque *deque, const OBDequeIterator *it){
   assert(it);
   assert(it->deque == deque); /* assert that iterator belongs to provided 
                                  deque */
+  if(!it->node) return NULL; /* if the iterator is empty return NULL */
   return it->node->stored;
 }
 
@@ -345,6 +355,8 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
   assert(it);
   assert(deque == it->deque); /* ensure that iterator is associated with given
                                  deque */
+  if(!it->node) return; /* if iterator points to no node (an empty deque)
+                           do nothing */
 
   temp_node = it->node;
   it->node = it->node->next;
