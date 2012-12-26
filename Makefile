@@ -11,7 +11,7 @@ TESTS = src/tests
 
 # Compiler Info
 CC = gcc
-CFLAGS = -Wall -Wextra #Common flags for all
+CFLAGS = -Wall -Wextra -g #Common flags for all
 OFLAGS = $(CFLAGS) -c	 #Flags for .o output files
 
 # common dependencies for many classes/tests
