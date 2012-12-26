@@ -41,5 +41,6 @@ int8_t compareTests(const obj *a, const obj *b){
 /* PRIVATE METHODS */
 
 void deallocTest(obj *to_dealloc){
+  assert(to_dealloc != NULL);
   return;
 }
