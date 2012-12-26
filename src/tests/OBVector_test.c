@@ -19,7 +19,7 @@ int main(){
     tests[i] = createTest(i);
     addToVector(main_vec, (obj *)tests[i]);
 
-    if(getTestReferences(tests[i]) != 2){
+    if(referenceCount((obj *)tests[i]) != 2){
       fprintf(stderr, "OBVector_test: vector did not properly retain element "
                       "TEST FAILED\n");
       exit(1);
@@ -57,7 +57,7 @@ int main(){
     exit(1);
   }
 
-  if(getTestReferences(singleton) != 1){
+  if(referenceCount((obj *)singleton) != 1){
     fprintf(stderr, "OBVector_test: vector did not release element on removal "
                     "TEST FAILED\n");
     exit(1);
@@ -67,7 +67,7 @@ int main(){
   retain((obj *)tmp);
 
   replaceInVector(main_vec, (obj *)singleton, 3);
-  if(getTestReferences(tmp) != 1){
+  if(referenceCount((obj *)tmp) != 1){
     fprintf(stderr, "OBVector_test: vector did not release element on "
                     "replacement, TEST FAILED\n");
     exit(1);
@@ -128,7 +128,7 @@ int main(){
       exit(1);
     }
     
-    if(getTestReferences((OBTest *)objAtVectorIndex(main_vec, i)) != 2){
+    if(referenceCount((obj *)(OBTest *)objAtVectorIndex(main_vec, i)) != 2){
       fprintf(stderr, "OBVector_test: vector contents not retained on copy, "
                       "TEST FAILED\n");
       exit(1);
@@ -164,7 +164,7 @@ int main(){
   release((obj *)main_vec);
   release((obj *)copy_vec);
 
-  if(getTestReferences(tmp) != 1){
+  if(referenceCount((obj *)tmp) != 1){
     fprintf(stderr, "OBVector_test: releases of OBVector container did not "
                     "properly manage\ncontained OBTest reference count, TEST "
                     "FAILED\n");

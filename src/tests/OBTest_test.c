@@ -16,7 +16,7 @@ int main(){
     retain((obj *)test_obj);
   }
 
-  if(getTestReferences(test_obj) != 4){
+  if(referenceCount((obj *)test_obj) != 4){
     fprintf(stderr, "OBTest_test: reference count not incrememted correctly by "
                     "retain\nTEST FAILED\n");
     exit(1);
