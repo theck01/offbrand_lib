@@ -46,13 +46,10 @@ $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
 
 
 # OPTIONAL BUILDS
-test: clean debug
+test: clean all
 	@echo
 	@echo "Running tests on data structures after successful compilation..."
 	@run-parts $(BIN_TEST)
-
-debug: CFLAGS += -g
-debug: all
 
 # Prepare bin/ output directories
 prepare:
