@@ -38,13 +38,6 @@ int8_t compareTests(const obj *a, const obj *b){
   return -1;
 }
 
-uint32_t getTestReferences(OBTest *a){
-  assert(a != NULL);
-  /* complex dereferencing to access reference count. FOR TESTING ONLY! */
-  return (uint32_t)((*((obj *)a))->references);
-}
-
-
 /* PRIVATE METHODS */
 
 void deallocTest(obj *to_dealloc){

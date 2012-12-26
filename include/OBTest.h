@@ -22,8 +22,5 @@ uint32_t getTestID(OBTest *a);
  * a == b, and 1 for a > b */
 int8_t compareTests(const obj *a, const obj *b);
 
-/* returns the reference count of OBTest a */
-uint32_t getTestReferences(OBTest *a);
-
 #endif
 
