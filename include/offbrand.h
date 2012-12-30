@@ -1,90 +1,159 @@
-
-/*
- * OFFBRAND STANDARD LIBRARY
+/**
+ * @file offbrand.h
+ * @brief Offbrand Standard Library
+ * 
+ * @details
+ * The standard library defines all data structures and function calls
+ * required for memory management via reference count, class membership tests,
+ * hashing, and others.
  *
- * Includes all data structures required reference counting, as well as common
- * types required by most/all Offbrand classes. Defines the interface for the 
- * reference counting API and other common functions.
+ * @author theck
  */
 
 #ifndef OFFBRAND_LIB
 #define OFFBRAND_LIB
 
+#include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include <assert.h>
 
-#include "obj.h" /*generic pointer for all OffBrand data structures*/
-
-/* OFFBRAND CONSTANTS */
-
-/* comparison constants */
-#define OB_EQUAL_TO 0
+/** Comparison Constant, two elements are equal */
+#define OB_EQUAL_TO 0 
+/** Comparison Constant, the first element is greater than the second */
 #define OB_GREATER_THAN 1
+/** Comparison Constant, the first element is less than the second */
 #define OB_LESS_THAN -1
 
-/* sorting order */
+/** Sorting Order Constant, sort elements from least to greatest*/
 #define OB_LEAST_TO_GREATEST -1
+/** Sorting Order Constant, sort elements from greatest to least*/
 #define OB_GREATEST_TO_LEAST 1
 
-/* OFFBRAND PRIMITIVE TYPES */
+/** 
+ * basic generic type used to track reference counts, store class specific 
+ * function pointers, and form the basis for all generic container classes
+ * and functions.
+ */
+typedef struct obj_struct * obj;
 
-/* function pointer to a deallocator for any OffBrand compatible class */
+/** 
+ * reference count, tracks references to instances of Offbrand compatible
+ * classes 
+ */
+typedef uint32_t ref_count_t;
+
+/** function pointer to a deallocator for any OffBrand compatible class */
 typedef void (*dealloc_fptr)(obj *);
 
-/* hash type */
+/** hash value, used returned from hash functions */
 typedef size_t obhash_t;
 
-/* function pointer to a hash functino for any offbrand compatible class */
+/** function pointer to a hash function for any offbrand compatible class */
 typedef obhash_t (*hash_fptr)(const obj *);
 
-/* Pointer to function that compares two instances of the same Offbrand
- * compatible classes. Function should return -1 if first object is less than
- * the second, 0 if they are equal, and 1 if the first is greater than the
- * second */
+/**
+ * function pointer to a comparision function that takes two obj pointers from
+ * the same Offbrand compatible class and returns one of the Comparison 
+ * Constants listed in Offbrand Constants
+ */
 typedef int8_t (*compare_fptr)(const obj *, const obj*);
 
 
 /* OFFBRAND STANDARD LIB */
 
-/* initializes an instance of any class with specified dealloc function,
- * default reference count of 1, and classname */
+/**
+ * @brief Initializes instances of all Offbrand compatible classes with a
+ * reference count of 1, a deallocator, a hash function, and the provided class
+ * name
+ *
+ * @param instance An newly allocated instance of any Offbrand compatible class
+ * @param dealloc Function pointer to the deallocator for the instances class
+ * @param hash Function pointer to the hash function for the instances class
+ * @param classname C string containing instances classname.
+ */
 void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash, 
               const char *classname);
 
-/* decrements reference count on obj, frees memory if reference count is
- * reduced to 0. Returns a pointer to the object if it still exists, NULL if
- * it is no longer referenced and was destroyed */
+/**
+ * @brief Decrements the instances reference count by 1. If the reference count
+ * is reduced to 0 then release automatically calls the instances deallocator.
+ *
+ * @param instance An instance of any Offbrand compatible class
+ * @retval &instance Reference count was decremented but the instance is still
+ * referenced
+ * @retval NULL Reference count was decremented to 0 and deallocator was called
+ * on instance
+ */
 obj * release(obj *instance);
 
-/* increments reference count on obj by one */
+/**
+ * @brief Increments the instances reference count by 1, indicating that the
+ * calling code has "referenced" that instance for later use.
+ *
+ * @param instance An instance of any Offbrand compatible class
+ */
 void retain(obj *instance);
 
-/* returns the reference count of the provided obj */
+/**
+ * @brief Returns the current reference count of the given instance.
+ *
+ * @param instance An instance of any Offbrand compatible class
+ * @return An unsigned integer reference count
+ */
 uint32_t referenceCount(obj *instance);
 
-/* performs string comparision on classname of object a and the provided null
- * terminated character string, returns 1 if they are equal, 0 if the classnames
- * do not match */
+/**
+ * @brief Checks that the given obj is of the provided class
+ *
+ * @param a An instance of any Offbrand compatible class
+ * @param classname An C string describing a class name
+ * 
+ * @retval 0 a is not an instance of classname
+ * @retval non-zero a is an instance of classname
+ */
 uint8_t objIsOfClass(const obj *a, const char *classname);
 
-/* performs string comparision on classnames of objects a and b, returns 1 if
- * they have the same classname (and are of the same class), or 0 if they have
- * differing classnames */
+/**
+ * @brief Checks that two objs are of the same class
+ *
+ * @param a An instance of any Offbrand compatible class
+ * @param b An instance of any Offbrand compatible class
+ *
+ * @retval 0 a and b are not of the same class
+ * @retval non-zero a and b are of the same class
+ */
 uint8_t sameClass(const obj *a, const obj *b);
 
-/* computes the hash of the given obj using the internally stored hash function
- * specific to that obj. If no hash function has been specified this function
- * returns the defaultHash of that obj */
+/**
+ * @brief Computes the hash value of the instance using a class specific hash
+ * function if one is available or the defaultHash function if not
+ *
+ * @param to_hash An instance of any Offbrand compatible class
+ * @return Hash value
+ */
 obhash_t hash(const obj *to_hash);
 
-/* computes the hash of the given obj using information common to all obj's,
- * allowing this hash to be used for any offbrand compatible class */
+/**
+ * @brief Computes the hash value of the instance using a hash function that
+ * access only common attributes to all Offbrand compatible class instances.
+ *
+ * @param to_hash An instance of any Offbrand compatible class
+ * @return Hash value
+ */
 obhash_t defaultHash(const obj *to_hash);
 
-/* default comparision, checks to see that the two pointer values are equal.
- * Used in sorting and finding algorithms for basic containers. Returns 0 if
- * equal, 1 if not equal */
+/**
+ * @brief default pointer comparision between two obj instances
+ *
+ * @param a An instance of any Offbrand compatible class
+ * @param b An instance of any Offbrand compatible class
+ *
+ * @retval OB_LESS_THAN obj a is less than b
+ * @retval OB_GREATER_THAN obj a is equivalent to b
+ * @retval OB_EQUAL_TO obj a is greater than b
+ */
 int8_t objCompare(const obj *a, const obj *b);
 
 #endif
