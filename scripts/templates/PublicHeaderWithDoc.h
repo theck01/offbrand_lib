@@ -16,7 +16,7 @@ typedef struct %CODECLASSNAME%_struct %CODECLASSNAME%;
 /* PUBLIC METHODS */
 
 /**
- * @brief compares two instances of %CODECLASSNAME%
+ * @brief Compares two instances of %CODECLASSNAME%
  *
  * @param a A non-NULL obj pointer to type %CODECLASSNAME%
  * @param b A non-NULL obj pointer to type %CODECLASSNAME%
