@@ -21,9 +21,9 @@ typedef struct %CODECLASSNAME%_struct %CODECLASSNAME%;
  * @param a A non-NULL obj pointer to type %CODECLASSNAME%
  * @param b A non-NULL obj pointer to type %CODECLASSNAME%
  *
- * @retval -1 obj a is less than b
- * @retval 0 obj a is equivalent to b
- * @retval 1 obj a is greater than b
+ * @retval OB_LESS_THAN obj a is less than b
+ * @retval OB_GREATER_THAN obj a is equivalent to b
+ * @retval OB_EQUAL_TO obj a is greater than b
  */
 int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b);
 /* Arguments are obj * so that a function pointer can be used for container
