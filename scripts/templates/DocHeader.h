@@ -5,21 +5,12 @@
  * @brief  [short class description]
  *
  * [detailed class description]
- */
-
-/**@{*/
-
-/**
+ *
+ * @{
  * @file %CODECLASSNAME%.h
- */
-/**
  * @file %CODECLASSNAME%_Private.h
- */
-/**
  * @file %CODECLASSNAME%.c
- */
-/**
  * @file %CODECLASSNAME%_test.c
+ * @}
  */
 
-/**@}*/
