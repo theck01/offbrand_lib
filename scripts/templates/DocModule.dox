@@ -1,5 +1,3 @@
-/* Header file required to create proper documentation with Doxygen */
-
 /**
  * @addtogroup %CODECLASSNAME%
  * @brief  [short class description]
