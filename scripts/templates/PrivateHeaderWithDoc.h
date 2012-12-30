@@ -12,7 +12,8 @@
 /* DATA */
 
 /**
- * @brief Internal structure encapsulating all data needed for %CODECLASSNAME%
+ * @brief %CODECLASSNAME% internal structure, encapsulating all data needed for
+ * an instance of %CODECLASSNAME%
  */
 struct %CODECLASSNAME%_struct{
   obj base; /**< obj containing reference count and class membership data */
