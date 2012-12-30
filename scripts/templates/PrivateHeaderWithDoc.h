@@ -1,7 +1,7 @@
 /**
  * @file %CODECLASSNAME%_Private.h
- * @author %CLASSAUTHOR%
  * @brief %CODECLASSNAME% Private Interface
+ * @author %CLASSAUTHOR%
  */
 
 #ifndef %MACROCLASSNAME%_PRIVATE_H

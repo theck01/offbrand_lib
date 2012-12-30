@@ -1,7 +1,7 @@
 /**
  * @file %CODECLASSNAME%.c
- * @author %CLASSAUTHOR%
  * @brief %CODECLASSNAME% Method Implementation
+ * @author %CLASSAUTHOR%
  */
 
 #include "../../include/%CODECLASSNAME%.h"

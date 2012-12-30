@@ -1,7 +1,7 @@
 /**
  * @file %CODECLASSNAME%_test.c
- * @author %CLASSAUTHOR%
  * @brief %CODECLASSNAME% Unit Tests
+ * @author %CLASSAUTHOR%
  */
 
 #include "../../include/offbrand.h"
