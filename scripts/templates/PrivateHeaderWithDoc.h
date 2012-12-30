@@ -22,15 +22,11 @@ struct %CODECLASSNAME%_struct{
 
 /* PRIVATE METHODS */
 
-/* default constructor allocates and initializes an instance of %CODECLASSNAME%.
- * ALL OTHER CONSTRUCTOR METHODS SHOULD CALL THIS DEFAULT CONSTRUCTOR, which
- * should set up a bare bones instance of the class that others will initialize.
- * Ensures base obj is properly initialized.
- * Add additional arguments as needed */
-
 /**
  * @brief Default constructor for %CODECLASSNAME%
  * @return An instance of class %CODECLASSNAME%
+ * @warning All public constructors should call this constructor and intialize
+ * individual members as needed, so that all base data is initialized properly.
  */
 %CODECLASSNAME% * createDefault%CODECLASSNAME%(void);
 
