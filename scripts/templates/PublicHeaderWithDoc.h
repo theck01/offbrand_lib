@@ -4,7 +4,6 @@
  * @brief %CODECLASSNAME% Public Interface
  */
 
-/**@{*/
 #ifndef %MACROCLASSNAME%_H
 #define %MACROCLASSNAME%_H
 
@@ -36,4 +35,3 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b);
 
 #endif
 
-/**@}*/

@@ -4,7 +4,6 @@
  * @brief %CODECLASSNAME% Private Interface
  */
 
-/**@{*/
 #ifndef %MACROCLASSNAME%_PRIVATE_H
 #define %MACROCLASSNAME%_PRIVATE_H
 
@@ -53,4 +52,3 @@ void dealloc%CODECLASSNAME%(obj *to_dealloc);
 
 #endif
 
-/**@}*/
