@@ -1,65 +1,129 @@
 #!/bin/bash
 
-HEADER_TEMPLATE=scripts/templates/PublicHeader.h
-RESTRICTED_TEMPLATE=scripts/templates/PrivateHeader.h
+PUBLIC_TEMPLATE=scripts/templates/PublicHeader.h
+PRIVATE_TEMPLATE=scripts/templates/PrivateHeader.h
 SOURCE_TEMPLATE=scripts/templates/Source.c
 TEST_TEMPLATE=scripts/templates/Test.c
 
+DOX_PUBLIC_TEMPLATE=scripts/templates/PublicHeaderWithDoc.h
+DOX_PRIVATE_TEMPLATE=scripts/templates/PrivateHeaderWithDoc.h
+DOX_SOURCE_TEMPLATE=scripts/templates/SourceWithDoc.c
+DOX_TEST_TEMPLATE=scripts/templates/TestWithDoc.c
+DOX_MODULE=scripts/templates/DocModule.dox
+
 function print_usage() {
-  echo "Usage:"
-  echo "$(basename $0) [class name]"
+  echo "Usage: $(basename $0) [options]"
   echo
-  echo "Script generates new files for a OffBrand compatible class with the"
+  echo "Script generates new files for a Offbrand compatible class with the"
   echo "specified name. All code required for reference counting and inclusion"
-  echo "in OffBrand container structures is in place. The user must add"
-  echo "relevant thread safety procedures and functionallity specific to the"
-  echo "class created."
+  echo "in OffBrand container structures is in place, providing the common"
+  echo "starting platform for creating all Offbrand classes"
   echo
-  echo "[class name] should not have any file extensions"
+  echo "Required Options:"
+  echo "-----------------"
+  echo "-c <class name>"
+  echo "   Name of the newly created class. Should not contain any file"
+  echo "   extensions or special characters (such as *,.!? etc.)"
   echo
-  echo "See doc directory for more information on OffBrand library"
+  echo "Optional Options:"
+  echo "-----------------"
+  echo "-a <author name>"
+  echo "   Author name for the newly created class. Must be in quotes if the"
+  echo "   author's name contains any spaces. Default value is \"anonymous\""
+  echo "-d"
+  echo "   Flag to indicate that generated class should be created with Doxygen"
+  echo "   based documentation. By default flag is unset."
+  echo "-h"
+  echo "   Print usage and exit"
+  echo
 }
 
+codeClassName=
+docFlag=
+authorName="anonymous"
+
+while getopts a:c:dh option
+do
+  case $option in
+  a)  authorName="$OPTARG" ;;
+  c)  codeClassName="$OPTARG" ;;
+  d)  docFlag=1 ;;
+  h)  print_usage
+      exit 0;;
+  ?)  print_usage
+      exit 1;;
+  esac
+done
+
+
 #check usage
-if [[ $# -ne 1 ]]
+if [[ -z $codeClassName ]]
 then
+  echo "Class name was not specified"
   print_usage
   exit 1
 fi
 
-if [[ $1 == "-h" ]] || [[ $1 == "--help" ]]
-then
-  print_usage
-  exit 0
-fi
-
 #Generate substitution strings
-codeClassName=$1
-macroClassName=$(echo $1 | tr '[a-z]' '[A-Z]') #capitalize class name
+macroClassName=$(echo $codeClassName | tr '[a-z]' '[A-Z]') #capitalize class name
 
-#filenames
+#input templates
+moduleTemplate=$DOX_MODULE
+publicTemplate=$PUBLIC_TEMPLATE
+privateTemplate=$PRIVATE_TEMPLATE
+sourceTemplate=$SOURCE_TEMPLATE
+testTemplate=$TEST_TEMPLATE
+
+#output filenames
+docModule="/dev/null"
 publicHeader=$codeClassName".h"
 privateHeader=$codeClassName"_Private.h"
 sourceFile=$codeClassName".c"
 testFile=$codeClassName"_test.c"
 
+# change input templates if doxygen flag specified
+if [[ ! -z $docFlag ]]
+then
+  docModule=$codeClassName"Module.dox"
+  publicTemplate=$DOX_PUBLIC_TEMPLATE
+  privateTemplate=$DOX_PRIVATE_TEMPLATE
+  sourceTemplate=$DOX_SOURCE_TEMPLATE
+  testTemplate=$DOX_TEST_TEMPLATE
+fi
+
+echo
+
 #substitute class name into template files and write files with proper file
 #names to the current directory
-cat $HEADER_TEMPLATE | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+cat $moduleTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+  sed "s/%CLASSAUTHOR%/$authorName/g" | \
+  sed "s/%MACROCLASSNAME%/$macroClassName/g" > $docModule
+if [[ ! -z $docFlag ]]
+then
+  echo "Add class description to newly created Doxygen Module: $docModule"
+fi
+
+cat $publicTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+  sed "s/%CLASSAUTHOR%/$authorName/g" | \
   sed "s/%MACROCLASSNAME%/$macroClassName/g" > $publicHeader
-echo "$publicHeader created"
+echo "Add public class methods to newly created file: $publicHeader"
 
-cat $RESTRICTED_TEMPLATE | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+cat $privateTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+  sed "s/%CLASSAUTHOR%/$authorName/g" | \
   sed "s/%MACROCLASSNAME%/$macroClassName/g" > $privateHeader
-echo "$privateHeader created"
+echo "Add private class methods and members to newly created file: "
+echo "  $privateHeader"
 
-cat $SOURCE_TEMPLATE | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+cat $sourceTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+  sed "s/%CLASSAUTHOR%/$authorName/g" | \
   sed "s/%MACROCLASSNAME%/$macroClassName/g" > $sourceFile
-echo "$sourceFile created"
+echo "Add method implementation to newly created file: $sourceFile"
 
-cat $TEST_TEMPLATE | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+cat $testTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
+  sed "s/%CLASSAUTHOR%/$authorName/g" | \
   sed "s/%MACROCLASSNAME%/$macroClassName/g" > $testFile
-echo "$testFile created"
+echo "Add unit tests to newly created file: $testFile"
 
 echo ""
-echo "New class created, ready for editing"
+echo "New class created."
+echo
