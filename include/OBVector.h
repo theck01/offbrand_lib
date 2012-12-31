@@ -1,15 +1,13 @@
-
-/*
- * OBVector:
- * Automatically resizing array of obj's (any Offbrand builtin or compatible
- * class
+/**
+ * @file OBVector.h
+ * @brief OBVector Public Interface
+ * @author theck
  */
 
 #ifndef OBVECTOR_H
 #define OBVECTOR_H
 
 #include "offbrand.h"
-#include <stdio.h>
 
 /* Class type declaration */
 typedef struct OBVector_struct OBVector;
@@ -17,64 +15,172 @@ typedef struct OBVector_struct OBVector;
 
 /* PUBLIC METHODS */
 
-/* constructor allocates and initializes an instance of OBVector with the
- * initial capacity specified*/
+/**
+ * @brief Constructor, creates a new instance of OBVector with a given initial
+ * capacity
+ * @param initial_capacity Integer size for the vector capacity
+ * @return Pointer to the newly created vector
+ */
 OBVector * createVector(uint32_t initial_capacity);
 
-/* creates a new OBVector that contains the same pointer so obj's. The OBVector
- * data is copied, but the objects contained within are not */
+/**
+ * @brief Copy Constructor, creates a new OBVector that is a copy of an instance
+ * of another OBVector.
+ *
+ * @details The new copy is a shallow copy, it references the same obj pointers
+ * rather that creating unique copies of each contained obj
+ *
+ * @param to_copy The OBVector instance to be copied
+ * @return A new instance of OBVector that is a shallow copy of to_copy
+ */
 OBVector * copyVector(const OBVector *to_copy); 
 
-/* returns the number of elements contained within the given OBVector */
+/**
+ * @brief Gets the number of elements contained within an OBVector instance
+ * @param v A pointer to an instance of OBVector
+ * @return An integer size corresponding to the number of elements contained
+ * within the vector
+ */
 uint32_t sizeOfVector(const OBVector *v);
 
-/* resizes the vector to the current number of elements, so no extra array space
- * is wasted. Should be used only after a vector will remain constant for the
- * duration of its lifespan, if memory is tight. */
+/**
+ * @brief Resizes an OBVector instance with a capacity equaling the number of
+ * elements contained within.
+ * @param v A pointer to an instance of OBVector
+ */
 void fitVectorToContents(OBVector *v); 
 
-/* adds obj to end of vector */
+/**
+ * @brief Adds an instance of any Offbrand compatible class to the end of an
+ * OBVector, increasing its size by one.
+ * @param v A pointer to an instance of OBVector
+ * @param to_add A pointer to any Offbrand compativle class instance
+ */
 void addToVector(OBVector *v, obj *to_add);
 
-/* adds obj to the vector at specified index */ 
+/**
+ * @brief Adds an instance of any Offbrand compatible class to the index,
+ * shifting all obj at and after that index to index+1
+ *
+ * @param v A pointer to an instance of OBVector
+ * @param to_add A pointer to any Offbrand compativle class instance
+ * @param index An integer index that may be positive to index from the
+ * beginning of the vector or negative to index from the end of the vector
+ * (where index = -x associates to element at [size of v] - x)
+ *
+ * @warning If the magnitude of the index is greater than the number of items
+ * in the vector then to_add will be added at the end of the vector (if index is
+ * positive) or at the beginning of the vector (if index is negative) rather
+ * than at the specified index to maintain vector density
+ */
 void insertAtVectorIndex(OBVector *v, obj *to_add, int64_t index);
 
-/* function adds the contents of to_append to the end of destination */
+/**
+ * @brief Adds the contents of on vector to the end of another, concatenating
+ * the two.
+ *
+ * @param destination OBVector that will be extended with the contents of
+ * to_append
+ * @param to_append OBVector whos contents will be added to the end of 
+ * destination
+ */
 void catVectors(OBVector *destination, OBVector *to_append);
 
-/* replace obj at index. Does nothing if index is not less than number of items
- * contained within vector. Returns 0 if object is replaced, 1 if out of range*/
+/**
+ * @brief Replaces the instance of any Offbrand compatible class at the index,
+ * with a new instance of an Offbrand compatible class
+ *
+ * @param v A pointer to an instance of OBVector
+ * @param new_obj A pointer to any Offbrand compativle class instance
+ * @param index An integer index that may be positive to index from the
+ * beginning of the vector or negative to index from the end of the vector
+ * (where index = -x associates to element at [size of v] - x)
+ *
+ * @warning If the magnitude of the index is greater than the number of items
+ * in the vector then the function will silently to nothing.
+ */
 void replaceInVector(OBVector *v, obj *new_obj, int64_t index);
 
-/* returns the object stored in the OBVector at index. Returns NULL if index is
- * out of bounds. Returns a pointer to the actual obj, do not call memory 
- * management functions (release retain) on these obj unless the calling code
- * has a valid reference on that obj */
+/**
+ * @brief Accesses the Offbrand compatile class instance stored an index in an
+ * OBVector
+ *
+ * @param v A pointer to an instance of OBVector
+ * @param index An integer index that may be positive to index from the
+ * beginning of the vector or negative to index from the end of the vector
+ * (where index = -x associates to element at [size of v] - x)
+ *
+ * @retval NULL When index is out of range of OBVector
+ * @retval obj* When index is in OBVector range
+ *
+ * @warning Do not call release on returned object unless the calling
+ * code already had a reference to the object before calling objAtVectorIndex
+ * that it wishes to relenquish
+ */
 obj * objAtVectorIndex(const OBVector *v, const int64_t index);
 
-/* checks to see if object, or equivalent as determined by compare function
- * pointer for specific class, can be found within vector. If compare function
- * argument it NULL then pointer comparisons are used. Returns 1 if found, 0 if 
- * not. Compare function should be specified only if vector is homogenous, else
- * the function will fail and halt the program */
+/**
+ * @brief Searches for an instance of any Offbrand compatible class in an
+ * OBVector using a comparision function
+ *
+ * @param v A pointer to an instance of OBVector
+ * @param to_find A pointer to an instance of any Offbrand compatible class
+ * @param compare A function pointer to a comparision function with signature
+ * matching the compare_fptr type. If NULL then default pointer comparisions are
+ * used
+ *
+ * @retval 0 to_find was not found in the OBVector
+ * @retval 1 to_find exists in the OBVector
+ *
+ * @warning Specify NULL as the comparision function if the given OBVector is
+ * known to contain instances of may different classes else the function will
+ * likely cause the program to be aborted
+ */
 uint8_t findObjInVector(const OBVector *v, const obj *to_find,
                         compare_fptr compare);
 
-/* sorts vector using the compare function passed in as an argument. ASSUMES
- * THAT ALL OBJ INSIDE ARE OF THE SAME CLASS, assertions will fail if not.
- * Order (lowest to highest or highest to lowest) specified by sorting macros
- * defined in offbrand.h. Uses the merge sort algorithm. */
+/**
+ * @brief Sorts an OBVector from least-to-greatest or greatest-to-least using a 
+ * specified comparision function 
+ *
+ * @param v A pointer to an instance of OBVector
+ * @param compare A function pointer to a comparision function with signature
+ * matching the compare_fptr type. If NULL then default pointer comparisions are
+ * used
+ * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
+ * orders
+ *
+ * @warning Specify NULL as the comparision function if the given OBVector is
+ * known to contain instances of may different classes else the function will
+ * likely cause the program to be aborted
+ */
 void sortVector(OBVector *v, const compare_fptr compare, const int8_t order);
 
-/* remove obj at end of vector, releasing the vectors reference on the obj */
+/**
+ * @brief Removes the object at the end of the vector, doing nothing if the
+ * vector is already empty
+ * @param v A pointer to an instance of OBVector
+ */
 void removeFromVectorEnd(OBVector *v);
 
-/* remove obj at the specified index in the vector, releasing the vectors
- * reference on the obj. If the index is not within vector range, function does
- * nothing */
+/**
+ * @brief Removes the object an index in an OBVector, shifting all objects
+ * at indecies greater than index by -1 and doing nothing if the vector is empty
+ *
+ * @param v A pointer to an instance of OBVector
+ * @param index An integer index that may be positive to index from the
+ * beginning of the vector or negative to index from the end of the vector
+ * (where index = -x associates to element at [size of v] - x)
+ *
+ * @warning If the magnitude of the index is greater than the number of items
+ * in the vector then the function will silently to nothing.
+ */
 void removeFromVectorIndex(OBVector *v, int64_t index);
 
-/* releases all objs contained within OBVector, and sets it to empty */
+/**
+ * @brief Removes all objects from an OBVector, leaving it empty
+ * @param v A pointer to an instance of OBVector
+ */
 void clearVector(OBVector *v);
 
 #endif

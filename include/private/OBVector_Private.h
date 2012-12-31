@@ -1,6 +1,7 @@
-
-/*
- * Private header for OBVector
+/**
+ * @file OBVector_Private.h
+ * @brief OBVector Private Interface
+ * @author theck
  */
 
 #ifndef OBVECTOR_PRIVATE_H
@@ -9,29 +10,57 @@
 #include "../OBVector.h"
 
 /* DATA */
+
+/**
+ * @brief OBVector internal structure, encapsulating all data needed for
+ * an instance of OBVector
+ */
 struct OBVector_struct{
-  obj base;
-  obj **array;
-  uint32_t num_objs;
-  uint32_t capacity;
+  obj base; /**< obj containing reference count and class membership data */
+  obj **array; /**< intenal dynamically sized array of pointers to Offbrand
+                    compatible class instances */
+  uint32_t num_objs; /**< Integer count of the number of contained objects */
+  uint32_t capacity; /**< Integer count of the capacity of the internal array */
 };
 
 
 /* PRIVATE METHODS */
 
-/* resizes vector if num_objs == capacity, does nothing if not. Doubles vector 
- * capacity */
+/**
+ * @brief Resizes a vector if the number of objects it contains is equal to its
+ * capacity by doubling the potential capacity of the vector
+ * @param v Pointer to an instance of OBVector
+ */
 void resizeVector(OBVector *v);
 
-/* recusive implementation of the merge sort algorithm to be applied to the
- * OBVector */
+/**
+ * @brief Internal merge sort implementation for an OBVector
+ *
+ * @param to_sort Primitive array of objects to be sorted
+ * @param size Size of to_sort
+ * @param compare A function pointer to a comparision function with signature
+ * matching the compare_fptr type. If NULL then default pointer comparisions are
+ * used
+ * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
+ * orders
+ * 
+ * @return The sorted primitive array of objects (a new primitive array, not
+ * to_sort)
+ *
+ * @warning There is little to no parameter checking in this function, all
+ * sorting should use the publicly accessable function which calls this method
+ * internally.
+ */
 obj ** recursiveSortContents(obj **to_sort, uint32_t size,
                              const compare_fptr compare, int8_t order);
 
-/* deallocator, frees instance of class back to memory. Should release all
- * objects contained within to_dealloc if to_dealloc is a container class (like
- * a vector or list) Should not be called manually, instance will be destroyed
- * when reference count reaches 0 */
+/** 
+ * @brief Destructor for OBVector
+ * @param to_dealloc An obj pointer to an instance of OBVector with
+ * reference count of 0
+ * @warning Do not call manually, release will call automatically when the
+ * instances reference count drops to 0!
+ */
 void deallocVector(obj *to_dealloc);
 
 #endif
