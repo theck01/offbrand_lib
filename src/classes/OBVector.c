@@ -134,10 +134,14 @@ void catVectors(OBVector *destination, OBVector *to_append){
   new_cap = destination->capacity;
   while(new_cap < destination->num_objs + to_append->num_objs){
     new_cap <<= 1;
-    if(new_cap < destination->capacity) new_cap = UINT32_MAX;
-    /* assert that overflow did not occur */
-    assert(new_cap > destination->capacity); 
+    if(new_cap > UINT32_MAX){
+      new_cap = UINT32_MAX;
+      break;
+    }
   }
+
+  /* ensure that the new capacity is indeed big enough for the concatenation */
+  assert(new_cap > destination->num_objs + to_append->num_objs);
 
   new_array = malloc(sizeof(obj *)*new_cap);
   assert(new_array != NULL);
