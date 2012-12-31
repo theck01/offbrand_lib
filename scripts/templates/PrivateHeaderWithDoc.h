@@ -40,8 +40,10 @@ obhash_t hash%CODECLASSNAME%(const obj *to_hash);
 
 /** 
  * @brief Destructor for %CODECLASSNAME%
- * @param to_dealloc An obj pointer to an instance of %CODECLASSNAME%
- * @warning Do not call manually, release will call automatically when the instances reference count drops to 0!
+ * @param to_dealloc An obj pointer to an instance of %CODECLASSNAME% with
+ * reference count of 0
+ * @warning Do not call manually, release will call automatically when the
+ * instances reference count drops to 0!
  */
 void dealloc%CODECLASSNAME%(obj *to_dealloc);
 

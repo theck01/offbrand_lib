@@ -2,7 +2,7 @@
  * @addtogroup %CODECLASSNAME%
  * @brief  [short class description]
  *
- * [detailed class description]
+ * @details [detailed class description]
  *
  * @{
  * @file %CODECLASSNAME%.h
