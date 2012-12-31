@@ -50,7 +50,7 @@ void replaceInVector(OBVector *v, obj *new_obj, int64_t index);
  * out of bounds. Returns a pointer to the actual obj, do not call memory 
  * management functions (release retain) on these obj unless the calling code
  * has a valid reference on that obj */
-obj * objAtVectorIndex(const OBVector *v, const uint32_t index);
+obj * objAtVectorIndex(const OBVector *v, const int64_t index);
 
 /* checks to see if object, or equivalent as determined by compare function
  * pointer for specific class, can be found within vector. If compare function
@@ -72,7 +72,7 @@ void removeFromVectorEnd(OBVector *v);
 /* remove obj at the specified index in the vector, releasing the vectors
  * reference on the obj. If the index is not within vector range, function does
  * nothing */
-void removeFromVectorIndex(OBVector *v, uint32_t index);
+void removeFromVectorIndex(OBVector *v, int64_t index);
 
 /* releases all objs contained within OBVector, and sets it to empty */
 void clearVector(OBVector *v);

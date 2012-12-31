@@ -98,9 +98,7 @@ void insertAtVectorIndex(OBVector *v, obj *to_add, int64_t index){
 
   /* if indexing past array bounds, add to the end of the array */
   if(index > v->num_objs) index = v->num_objs;
-  /* if negatively indexing, index from the end of the array backwards, where
-   * -1 corresponds to the very end of the array (and is equivalent to 
-   *  a call to addToVector */
+  /* if negatively indexing, index from the end of the array backwards */
   else if(index < 0){
     if(index < -((int64_t)v->num_objs)) index = 0;
     else index += v->num_objs; 
@@ -172,13 +170,11 @@ void replaceInVector(OBVector *v, obj *new_obj, int64_t index){
   assert(v != NULL);
   assert(new_obj != NULL);
 
-  /* if indexing past array bounds, add to the end of the array */
-  if(index > v->num_objs) index = v->num_objs;
-  /* if negatively indexing, index from the end of the array backwards, where
-   * -1 corresponds to the very end of the array (and is equivalent to 
-   *  a call to addToVector */
+  /* if indexing past array bounds, do nothing */
+  if(index > v->num_objs) return;
+  /* if negatively indexing, index from the end of the array backwards */
   else if(index < 0){
-    if(index < -((int64_t)v->num_objs)) index = 0;
+    if(index < -((int64_t)v->num_objs)) return;
     else index += v->num_objs; 
   }
 
@@ -190,9 +186,20 @@ void replaceInVector(OBVector *v, obj *new_obj, int64_t index){
 }
 
 
-obj * objAtVectorIndex(const OBVector *v, const uint32_t index){
+obj * objAtVectorIndex(const OBVector *v, int64_t index){
   assert(v != NULL);
-  assert(index < v->num_objs);
+
+  /* if indexing past array bounds, return NULL */
+  if(index > v->num_objs) return NULL;
+
+  /* if negatively indexing, index from the end of the array backwards, where
+   * -1 corresponds to the very end of the array (and is equivalent to 
+   *  a call to addToVector */
+  if(index < 0){
+    if(index < -((int64_t)v->num_objs)) return NULL;
+    else index += v->num_objs; 
+  }
+
   return v->array[index];
 }
 
@@ -244,16 +251,26 @@ void removeFromVectorEnd(OBVector *v){
   return removeFromVectorIndex(v, v->num_objs-1);
 }
 
-void removeFromVectorIndex(OBVector *v, uint32_t index){
+void removeFromVectorIndex(OBVector *v, int64_t index){
   
-  uint32_t i;
+  int64_t i;
 
   assert(v != NULL);
-  assert(index < v->num_objs);
 
   /* if the vector is empty, do nothing */
   if(v->num_objs < 1){
     return;
+  }
+
+  /* if indexing past array bounds do nothing */
+  if(index > v->num_objs) return;
+
+  /* if negatively indexing, index from the end of the array backwards, where
+   * -1 corresponds to the very end of the array (and is equivalent to 
+   *  a call to addToVector */
+  if(index < 0){
+    if(index < -((int64_t)v->num_objs)) return;
+    else index += v->num_objs; 
   }
 
   /* release object being removed */
