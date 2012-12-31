@@ -88,16 +88,23 @@ void addToVector(OBVector *v, obj *to_add){
 }
 
 
-void insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index){
+void insertAtVectorIndex(OBVector *v, obj *to_add, int64_t index){
 
-  uint64_t i;
+  int64_t i;
 
   assert(v != NULL);
   assert(to_add != NULL);
   assert(index <= v->num_objs);
 
-  /* if the index is beyond the end of the current vector, display error but
-   * attempt to add to the end */
+  /* if indexing past array bounds, add to the end of the array */
+  if(index > v->num_objs) index = v->num_objs;
+  /* if negatively indexing, index from the end of the array backwards, where
+   * -1 corresponds to the very end of the array (and is equivalent to 
+   *  a call to addToVector */
+  else if(index < 0){
+    if(index < -((int64_t)v->num_objs)) index = 0;
+    else index += v->num_objs; 
+  }
 
   resizeVector(v);
 
@@ -156,11 +163,20 @@ void catVectors(OBVector *destination, OBVector *to_append){
 }
 
 
-void replaceInVector(OBVector *v, obj *new_obj, const uint32_t index){
+void replaceInVector(OBVector *v, obj *new_obj, int64_t index){
 
   assert(v != NULL);
   assert(new_obj != NULL);
-  assert(index < v->num_objs);
+
+  /* if indexing past array bounds, add to the end of the array */
+  if(index > v->num_objs) index = v->num_objs;
+  /* if negatively indexing, index from the end of the array backwards, where
+   * -1 corresponds to the very end of the array (and is equivalent to 
+   *  a call to addToVector */
+  else if(index < 0){
+    if(index < -((int64_t)v->num_objs)) index = 0;
+    else index += v->num_objs; 
+  }
 
   retain(new_obj);
   release(v->array[index]);

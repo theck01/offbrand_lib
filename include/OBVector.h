@@ -37,14 +37,14 @@ void fitVectorToContents(OBVector *v);
 void addToVector(OBVector *v, obj *to_add);
 
 /* adds obj to the vector at specified index */ 
-void insertAtVectorIndex(OBVector *v, obj *to_add, uint32_t index);
+void insertAtVectorIndex(OBVector *v, obj *to_add, int64_t index);
 
 /* function adds the contents of to_append to the end of destination */
 void catVectors(OBVector *destination, OBVector *to_append);
 
 /* replace obj at index. Does nothing if index is not less than number of items
  * contained within vector. Returns 0 if object is replaced, 1 if out of range*/
-void replaceInVector(OBVector *v, obj *new_obj, const uint32_t index);
+void replaceInVector(OBVector *v, obj *new_obj, int64_t index);
 
 /* returns the object stored in the OBVector at index. Returns NULL if index is
  * out of bounds. Returns a pointer to the actual obj, do not call memory 
