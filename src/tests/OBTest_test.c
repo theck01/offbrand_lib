@@ -1,8 +1,15 @@
+/**
+ * @file OBTest_test.c
+ * @brief OBTest Unit Tests
+ * @author theck
+ */
 
-#include <stdio.h>
 #include "../../include/offbrand.h"
 #include "../../include/OBTest.h"
 
+/**
+ * @brief Main unit testing routine
+ */
 int main(){
 
   int i;

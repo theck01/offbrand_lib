@@ -1,0 +1,17 @@
+/**
+ * @addtogroup OBTest
+ * @brief  Small class used to test large container classes
+ *
+ * @details Class simply acts as a number that can be stored in various
+ * container classes. The main purpose of this class is to test container
+ * reference counting management and potential comparison depended routines
+ * such as sorting
+ *
+ * @{
+ * @file OBTest.h
+ * @file OBTest_Private.h
+ * @file OBTest.c
+ * @file OBTest_test.c
+ * @}
+ */
+

@@ -1,7 +1,11 @@
+/**
+ * @file OBTest.c
+ * @brief OBTest Method Implementation
+ * @author theck
+ */
 
 #include "../../include/OBTest.h"
 #include "../../include/private/OBTest_Private.h"
-#include "../../include/private/obj_Private.h"
 
 /* PUBLIC METHODS */
 
