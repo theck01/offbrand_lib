@@ -15,6 +15,7 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
 
   /* add specific comparison logic, following the description in the header
    * file */
+  return OB_EQUAL_TO;
 }
 
 
@@ -32,7 +33,8 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &dealloc%CODECLASSNAME%, classname);
+  initBase((obj *)new_instance, &dealloc%CODECLASSNAME%, &hash%CODECLASSNAME%,
+           classname);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
@@ -42,10 +44,8 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
 obhash_t hash%CODECLASSNAME%(obj *to_hash){
 
   /* Implement a hash function suitable for uniquely itentifying
-   * %CODECLASSNAME% instances */
-
+   * %CODECLASSNAME% instances if default hash is not adequate */
   return defaultHash(to_hash);
-
 }
 
 
