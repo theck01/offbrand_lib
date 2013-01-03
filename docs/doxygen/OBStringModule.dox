@@ -1,0 +1,16 @@
+/**
+ * @addtogroup OBString
+ * @brief Container class designed to store a sequence of characters
+ *
+ * @details The OBString class is intended to encapsulate traditional C strings
+ * into an Offbrand compatible class, while also providing an easy to understand
+ * interface for interacting with encapsulated string.
+ *
+ * @{
+ * @file OBString.h
+ * @file OBString_Private.h
+ * @file OBString.c
+ * @file OBString_test.c
+ * @}
+ */
+
