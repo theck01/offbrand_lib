@@ -18,7 +18,7 @@
 struct OBString_struct{
   obj base; /**< obj containing reference count and class membership data */
   char *str; /**< encapsulated NUL terminated C string */
-  uint32_t length; /**< integer tracking str length */
+  uint64_t length; /**< integer tracking str length */
 };
 
 
