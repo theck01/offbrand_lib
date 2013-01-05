@@ -220,15 +220,13 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2){
   return joined;
 }
 
-uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
-                       compare_fptr compare){
+uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find){
 
   OBDequeIterator *it;
   uint8_t retval = 0;
 
   assert(deque);
   assert(to_find);
-  if(!compare) compare = &objCompare;
 
   it = getDequeHeadIt(deque);
   if(!it) return 0; /* obj is not in an empty list */
@@ -246,7 +244,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
 }
 
 
-void sortDeque(OBDeque *deque, compare_fptr compare, const int8_t order){
+void sortDeque(OBDeque *deque, int8_t order){
 
   OBDeque sorted; /* stack variable to remove internal memory management
                      burden */
@@ -254,10 +252,7 @@ void sortDeque(OBDeque *deque, compare_fptr compare, const int8_t order){
   assert(deque);
   assert(order == OB_LEAST_TO_GREATEST || order == OB_GREATEST_TO_LEAST);
 
-  /* if comparision function was not added use simple pointer comparator */
-  if(!compare) compare = &objCompare;
-
-  sorted = recursiveSort(*deque, compare, order);
+  sorted = recursiveSort(*deque, order);
 
   /* connect head and tail of newly sorted list to deque */
   deque->head = sorted.head;
@@ -431,7 +426,7 @@ OBDequeNode * createDequeNode(obj *to_store){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDequeNode, NULL, classname);
+  initBase((obj *)new_instance, &deallocDequeNode, NULL, NULL, classname);
 
   retain(to_store);
   new_instance->stored = to_store;
@@ -470,7 +465,7 @@ OBDequeIterator * createDequeIterator(const OBDeque *deque, OBDequeNode *node){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDequeIterator, NULL, classname);
+  initBase((obj *)new_instance, &deallocDequeIterator, NULL, NULL, classname);
 
   retain((obj *)node);
   new_instance->node = node;
@@ -505,7 +500,7 @@ OBDeque * createDefaultDeque(void){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDeque, NULL, classname);
+  initBase((obj *)new_instance, &deallocDeque, NULL, NULL, classname);
 
   new_instance->head = NULL;
   new_instance->tail = NULL;
@@ -517,8 +512,7 @@ OBDeque * createDefaultDeque(void){
 
 /* private recursive sort method uses stack variables to take advantage of
  * static memory management */
-OBDeque recursiveSort(OBDeque deque, const compare_fptr compare,
-                      const int8_t order){
+OBDeque recursiveSort(OBDeque deque, int8_t order){
 
   uint64_t i, half_length;
   OBDeque left_sorted, right_sorted;
@@ -546,8 +540,8 @@ OBDeque recursiveSort(OBDeque deque, const compare_fptr compare,
   right_sorted.length = deque.length - half_length;
 
   /* sort deque halves recursively */
-  right_sorted = recursiveSort(right_sorted, compare, order);
-  left_sorted = recursiveSort(left_sorted, compare, order);
+  right_sorted = recursiveSort(right_sorted, order);
+  left_sorted = recursiveSort(left_sorted, order);
 
   /* set the head of the combined list appropriately */
   if(compare(right_sorted.head->stored, left_sorted.head->stored) == order){

@@ -25,6 +25,9 @@
 #define OB_GREATER_THAN 1
 /** Comparison Constant, the first element is less than the second */
 #define OB_LESS_THAN -1
+/** Comparison Constant, the first element is not equal to the second, and no
+ * other relation ship can be infered */
+#define OB_NOT_EQUAL 2
 
 /** Sorting Order Constant, sort elements from least to greatest*/
 #define OB_LEAST_TO_GREATEST -1
@@ -54,11 +57,11 @@ typedef size_t obhash_t;
 typedef obhash_t (*hash_fptr)(const obj *);
 
 /**
- * function pointer to a comparision function that takes two obj pointers from
- * the same Offbrand compatible class and returns one of the Comparison 
- * Constants listed in Offbrand Constants
+ * function pointer to a comparision function that takes pointers to any two
+ * Offbrand compatible classes and returns one of the comparision constants
+ * listed in the constants section.
  */
-typedef int8_t (*compare_fptr)(const obj *, const obj*);
+typedef int8_t (*compare_fptr)(const obj *, const obj *);
 
 
 /* OFFBRAND STANDARD LIB */
@@ -74,7 +77,7 @@ typedef int8_t (*compare_fptr)(const obj *, const obj*);
  * @param classname C string containing instances classname.
  */
 void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash, 
-              const char *classname);
+              compare_fptr compare, const char *classname);
 
 /**
  * @brief Decrements the instances reference count by 1. If the reference count
@@ -136,16 +139,7 @@ uint8_t sameClass(const obj *a, const obj *b);
 obhash_t hash(const obj *to_hash);
 
 /**
- * @brief Computes the hash value of the instance using a hash function that
- * access only common attributes to all Offbrand compatible class instances.
- *
- * @param to_hash An instance of any Offbrand compatible class
- * @return Hash value
- */
-obhash_t defaultHash(const obj *to_hash);
-
-/**
- * @brief default pointer comparision between two obj instances
+ * @brief comparision operator between any two Offbrand compatible classes
  *
  * @param a An instance of any Offbrand compatible class
  * @param b An instance of any Offbrand compatible class
@@ -153,8 +147,10 @@ obhash_t defaultHash(const obj *to_hash);
  * @retval OB_LESS_THAN obj a is less than b
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
+ * @retval OB_NOT_EQUAL obj a is not equal to b, but no other relationship can
+ * be infered
  */
-int8_t objCompare(const obj *a, const obj *b);
+int8_t compare(const obj *a, const obj *b);
 
 #endif
 

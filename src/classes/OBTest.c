@@ -17,7 +17,7 @@ OBTest * createTest(uint32_t id){
   assert(new_instance != NULL);
 
   /*initialize reference counting base data*/
-  initBase((obj *)new_instance, &deallocTest, &hash, classname);
+  initBase((obj *)new_instance, &deallocTest, &hash, &compareTests, classname);
 
   new_instance->id = id;
   return new_instance;

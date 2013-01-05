@@ -42,7 +42,7 @@ int main (){
   assert(getTestID((OBTest *)peekDequeAtIt(test_deque_a, head_it)) == 1);
   assert(getTestID((OBTest *)peekDequeAtIt(test_deque_a, tail_it)) == 1);
 
-  assert(findObjInDeque(test_deque_a, (obj *)a, &compareTests));
+  assert(findObjInDeque(test_deque_a, (obj *)a));
 
   /* test removing the only element from the deque */
   removeDequeTail(test_deque_a);
@@ -72,7 +72,7 @@ int main (){
   test_deque_b = copyDeque(test_deque_a);
   assert(referenceCount((obj *)a) == 3);
 
-  sortDeque(test_deque_a, &compareTests, OB_LEAST_TO_GREATEST);
+  sortDeque(test_deque_a, OB_LEAST_TO_GREATEST);
   assert(dequeLength(test_deque_a) == 5);
 
   i = 1;
@@ -88,7 +88,7 @@ int main (){
 
   test_deque_a = copyDeque(test_deque_b);
   joined_deque = joinDeques(test_deque_a, test_deque_b);
-  sortDeque(joined_deque, &compareTests, OB_GREATEST_TO_LEAST);
+  sortDeque(joined_deque, OB_GREATEST_TO_LEAST);
 
   assert(dequeLength(joined_deque) == 10);
   assert(referenceCount((obj *)a) == 5); /* the joined deque has two references,

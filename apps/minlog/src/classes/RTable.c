@@ -18,7 +18,7 @@ RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
   assert(new_instance != NULL);
 
   /* initialize reference counting base of class */
-  initBase((obj *)new_instance, &deallocRTable, NULL, classname);
+  initBase((obj *)new_instance, &deallocRTable, NULL, NULL, classname);
 
   new_instance->pis = copyVector(prime_implicants);
   new_instance->terms = copyVector(terms);
@@ -234,7 +234,7 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
 
       /* if the NCube is not already in the group (and accounted for) then add
        * it */
-      if(!findObjInVector(cur_group, (obj *)tmp, &compareNCubes)){
+      if(!findObjInVector(cur_group, (obj *)tmp)){
         addToVector(cur_group, (obj *)tmp);
         cur_total_order += num_var - orderOfNCube(tmp);
       } 

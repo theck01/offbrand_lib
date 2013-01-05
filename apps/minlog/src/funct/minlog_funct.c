@@ -246,7 +246,7 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
         /* if the cubes can be merged, and an equivalent cube is not already in
          * the cur cube vector */
         if((tmp_cube = mergeNCubes(a, b))){
-          if(!findObjInVector(cur_cube_vector,(obj *)tmp_cube, &compareNCubes)){
+          if(!findObjInVector(cur_cube_vector,(obj *)tmp_cube)){
             addToVector(cur_cube_vector, (obj *)tmp_cube);
             /* increment loop to indicate that larger cube was created */
             loop++;

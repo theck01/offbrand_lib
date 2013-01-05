@@ -38,7 +38,8 @@ OBString * createDefaultString(void){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocString, &hashString, classname);
+  initBase((obj *)new_instance, &deallocString, &hashString, &compareStrings,
+           classname);
 
   new_instance->str = NULL;
   new_instance->length = 0;
@@ -47,7 +48,7 @@ OBString * createDefaultString(void){
 }
 
 obhash_t hashString(const obj *to_hash){
-  return defaultHash(to_hash);
+  return hash(to_hash);
 }
 
 

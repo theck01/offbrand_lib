@@ -67,7 +67,7 @@ int main(int argc, char **argv){
 
   /* find largest term, found by sorting and picking first term. Inefficient but
    * concise compared to iterating through each term and checking results */
-  sortVector(terms, &compareTerms, OB_GREATEST_TO_LEAST);
+  sortVector(terms, OB_GREATEST_TO_LEAST);
   max_term = getTermValue((Term *)objAtVectorIndex(terms, 0));
   num_var = 0;
   /* increase number of variables until 2^num_var > max_term */

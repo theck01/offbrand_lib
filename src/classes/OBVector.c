@@ -17,7 +17,7 @@ OBVector * createVector(uint32_t initial_capacity){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocVector, NULL, classname);
+  initBase((obj *)new_instance, &deallocVector, NULL, NULL, classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
@@ -209,20 +209,16 @@ obj * objAtVectorIndex(const OBVector *v, int64_t index){
 }
 
 
-uint8_t findObjInVector(const OBVector *v, const obj *to_find,
-                        compare_fptr compare){
+uint8_t findObjInVector(const OBVector *v, const obj *to_find){
 
   uint32_t i;
 
   assert(v != NULL);
   assert(to_find != NULL);
 
-  /* custom comparison function was not added, use simple pointer comparator */
-  if(!compare) compare = &objCompare;
-
   for(i=0; i<v->num_objs; i++){
     /* if the object exists in the vector */
-    if(compare(to_find, v->array[i]) == 0){
+    if(compare(to_find, v->array[i]) == OB_EQUAL_TO){
       return 1;
     }
   }
@@ -231,19 +227,14 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find,
 }
 
 
-void sortVector(OBVector *v, const compare_fptr compare,
-                   const int8_t order){
+void sortVector(OBVector *v, int8_t order){
 
-  compare_fptr compare_funct;
   obj **sorted;
 
   assert(v != NULL);
 
   /* custom comparison function was not added, use simple pointer comparator */
-  if(!compare) compare_funct = &objCompare;
-  else compare_funct = compare;
-
-  sorted = recursiveSortContents(v->array, v->num_objs, compare_funct, order);
+  sorted = recursiveSortContents(v->array, v->num_objs, order);
 
   free(v->array);
   v->array = sorted;
@@ -355,10 +346,10 @@ void resizeVector(OBVector *v){
   return;
 }
 
-obj ** recursiveSortContents(obj **to_sort, uint32_t size,
-                             const compare_fptr compare, int8_t order){
+obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order){
   
   uint32_t i,j, split;
+  int8_t comp_result;
   obj **left_sorted, **right_sorted;
   obj **sorted;
 
@@ -373,8 +364,8 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size,
   split = size/2;
 
   /* sort left half and right half of array */
-  left_sorted = recursiveSortContents(to_sort, split, compare, order);
-  right_sorted = recursiveSortContents(to_sort+split, size-split, compare, 
+  left_sorted = recursiveSortContents(to_sort, split, order);
+  right_sorted = recursiveSortContents(to_sort+split, size-split, 
                                        order);
   
   sorted = malloc(sizeof(obj *)*size);
@@ -389,7 +380,7 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size,
     
     /* if the comparison of the left to the right matches the desired order,
      * then the next item to go in the sorted array is from the left */
-    if(compare(left_sorted[i], right_sorted[j]) == order){
+    if((comp_result = compare(left_sorted[i], right_sorted[j])) == order){
       sorted[i+j] = left_sorted[i];
       i++;
     }

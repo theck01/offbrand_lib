@@ -3,7 +3,7 @@
 #include "../include/private/obj_Private.h"
 
 void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
-              const char *classname){
+              compare_fptr compare, const char *classname){
 
   assert(classname != NULL);
 
@@ -14,6 +14,7 @@ void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
   (*instance)->references = 1;
   (*instance)->dealloc = dealloc;
   (*instance)->hash = hash;
+  (*instance)->compare = compare;
   (*instance)->classname = classname;
 
   return;
@@ -66,38 +67,55 @@ uint8_t sameClass(const obj *a, const obj *b){
 
 
 obhash_t hash(const obj *to_hash){
-  /* if hash function is not specified, or is the hash function in the stdlib
-   * is specified then use the default hashing equation */
-  if(!(*to_hash)->hash || (*to_hash)->hash == &hash)
-    return defaultHash(to_hash);
-  else return (*to_hash)->hash(to_hash);
+
+  obhash_t retval;
+
+#if __STD_C_VERSION__ >= 201112L
+  static _Thread_local int call_count = 0; /* number of calls to the compare
+                                              function before a return */
+#else
+  static int call_count = 0; /* number of calls to the compare
+                                function before a return */
+#endif
+
+  assert(to_hash);
+
+  call_count++;
+
+  if((*to_hash)->hash && call_count == 1) retval = (*to_hash)->hash(to_hash);
+  else{ 
+    retval = (obhash_t)to_hash ^ ((obhash_t)to_hash)<<15;
+    retval = (retval << 6) ^ (retval >> 10);
+    retval = (retval >> 7) ^ (retval << 12);
+  }
+
+  call_count--;
+
+  return retval;
 }
 
-obhash_t defaultHash(const obj *to_hash){
+int8_t compare(const obj *a, const obj *b){
 
-  obhash_t value;
+  int8_t retval;
 
-  /* FIX: temporary implementation, better hashes exist */
-  value = (obhash_t)to_hash ^ ((obhash_t)to_hash)<<15;
-  value = (value << 6) ^ (value >> 10);
-  value = (value >> 7) ^ (value << 12);
-  
-  /* ADD: hash works with classname in addition to pointer value */
+#if __STD_C_VERSION__ >= 201112L
+  static _Thread_local int call_count = 0; /* number of calls to the compare
+                                              function before a return */
+#else
+  static int call_count = 0; /* number of calls to the compare
+                                function before a return */
+#endif
 
-  return value;
-}
-
-int8_t objCompare(const obj *a, const obj *b){
+  call_count++;
 
   assert(a != NULL && b != NULL);
 
-  if(a > b){
-    return 1;
-  }
-  else if(a == b){
-    return 0;
-  }
-  else{
-    return -1;
-  }
+  if(sameClass(a, b) && call_count == 1 && (*a)->compare != NULL) 
+    retval = (*a)->compare(a, b);
+  else if(a == b) retval = OB_EQUAL_TO;
+  else retval = OB_NOT_EQUAL;
+
+  call_count--;
+  
+  return retval;
 }

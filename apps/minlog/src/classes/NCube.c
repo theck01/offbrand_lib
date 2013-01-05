@@ -96,17 +96,17 @@ int8_t compareNCubes(const obj *a, const obj *b){
   assert(objIsOfClass(a, "NCube") && objIsOfClass(b, "NCube"));
 
   if(comp_a->order != comp_b->order){
-    return 1;
+    return OB_NOT_EQUAL;
   }
 
   max_i = 1 << comp_a->order;
   for(i=0; i<max_i; i++){
     if(comp_a->terms[i] != comp_b->terms[i]){
-      return 1;
+      return OB_NOT_EQUAL;
     }
   }
 
-  return 0;
+  return OB_EQUAL_TO;
 }
 
 
@@ -220,7 +220,7 @@ NCube * createNCubeWithOrder(uint8_t order){
   assert(new_cube != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_cube, &deallocNCube, NULL, classname);
+  initBase((obj *)new_cube, &deallocNCube, NULL, &compareNCubes, classname);
 
   new_cube->terms = malloc(sizeof(uint32_t)*(1<<order));
   assert(new_cube->terms != NULL);

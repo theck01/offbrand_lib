@@ -51,8 +51,7 @@ void resizeVector(OBVector *v);
  * sorting should use the publicly accessable function which calls this method
  * internally.
  */
-obj ** recursiveSortContents(obj **to_sort, uint32_t size,
-                             const compare_fptr compare, int8_t order);
+obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order);
 
 /** 
  * @brief Destructor for OBVector

@@ -90,13 +90,13 @@ int main(){
   /* reduce reference count to 1, so only vector holds reference to obj */
   release((obj *)tmp);
 
-  if(!findObjInVector(main_vec, (obj *)singleton, &compareTests)){
+  if(!findObjInVector(main_vec, (obj *)singleton)){
     fprintf(stderr, "OBVector_test: vector did not replace element correctly, "
                     "or was not found\nTEST FAILED\n");
     exit(1);
   }
   
-  sortVector(main_vec, &compareTests, OB_LEAST_TO_GREATEST);
+  sortVector(main_vec, OB_LEAST_TO_GREATEST);
 
   id = 0;
   for(i=0; i<sizeOfVector(main_vec); i++){
@@ -108,7 +108,7 @@ int main(){
     id = getTestID((OBTest *)objAtVectorIndex(main_vec, i));
   }
 
-  sortVector(main_vec, &compareTests, OB_GREATEST_TO_LEAST);
+  sortVector(main_vec, OB_GREATEST_TO_LEAST);
 
   id = 10;
   for(i=0; i<sizeOfVector(main_vec); i++){
@@ -126,8 +126,7 @@ int main(){
                                 by containing vectors */
 
   for(i=0; i<sizeOfVector(main_vec); i++){
-    if(compareTests(objAtVectorIndex(main_vec, i),
-                    objAtVectorIndex(copy_vec, i))){
+    if(compare(objAtVectorIndex(main_vec, i), objAtVectorIndex(copy_vec, i))){
       fprintf(stderr, "OBVector_test: vector contents not copied correctly, "
                       "TEST FAILED\n");
       exit(1);
@@ -155,7 +154,7 @@ int main(){
   }
 
   catVectors(main_vec, copy_vec);
-  sortVector(main_vec, &compareTests, OB_GREATEST_TO_LEAST);
+  sortVector(main_vec, OB_GREATEST_TO_LEAST);
 
   for(i=0; i<sizeOfVector(main_vec)-1; i+=2){
     if(getTestID((OBTest *)objAtVectorIndex(main_vec,i)) !=

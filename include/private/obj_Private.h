@@ -24,16 +24,8 @@ struct obj_struct{
   ref_count_t references; /**< reference count for each instance */
   dealloc_fptr dealloc; /**< pointer to class specific deallocation function */
   hash_fptr hash; /**< pointer to class specific hash function */
+  compare_fptr compare; /**< pointer to class specific comparison function */
   const char *classname; /**< C String classname to which the instance belongs */
 };
-
-/**
- * @brief Computes the hash value of the instance using a hash function that
- * access only common attributes to all Offbrand compatible class instances.
- *
- * @param to_hash An instance of any Offbrand compatible class
- * @return Hash value
- */
-obhash_t defaultHash(const obj *to_hash);
 
 #endif

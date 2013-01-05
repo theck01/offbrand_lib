@@ -73,14 +73,13 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2);
  * function will fail assertions if the deque is a heterogenous collection. If
  * the comparition function pointer is null then the default pointer comparision
  * will be used */
-uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find,
-                       compare_fptr compare);
+uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find);
 
 /* sorts queue using the compare function passed in as an argument. ASSUMES
  * THAT ALL CONTAINED OBJ ARE OF THE SAME CLASS, assertions will fail if not.
  * Order (lowest to highest or highest to lowest) specified by sorting macros
  * defined in offbrand.h. Uses the merge sort algorithm. */
-void sortDeque(OBDeque *deque, compare_fptr compare, const int8_t order);
+void sortDeque(OBDeque *deque, int8_t order);
 
 /* peek at the obj stored in the Deque head. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference

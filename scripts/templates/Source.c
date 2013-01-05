@@ -4,7 +4,6 @@
 
 /* PUBLIC METHODS */
 
-/* function can be deleted if unneeded */
 int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
   
   const %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
@@ -14,7 +13,13 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
   assert(objIsOfClass(b, "%CODECLASSNAME%"));
 
   /* add specific comparison logic, following the description in the header
-   * file */
+   * file. If no comparison function is desired then be sure to pass NULL to
+   * the compare argument of initBase in the createDefault%CODECLASSNAME%
+   * function to use the default pointer comparision Returning the stdlib 
+   * compare function here can cause concurrency issues in C versions less than
+   * C11 (even though it will work for single thread programs) If unneeded and 
+   * above considerations are met then this function can be deleted from all 
+   * %CODECLASSNAME% Files*/
   return OB_EQUAL_TO;
 }
 
@@ -34,7 +39,7 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
 
   /* initialize base class data */
   initBase((obj *)new_instance, &dealloc%CODECLASSNAME%, &hash%CODECLASSNAME%,
-           classname);
+           &compare%CODECLASSNAME%, classname);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
@@ -44,8 +49,14 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
 obhash_t hash%CODECLASSNAME%(obj *to_hash){
 
   /* Implement a hash function suitable for uniquely itentifying
-   * %CODECLASSNAME% instances if default hash is not adequate */
-  return defaultHash(to_hash);
+   * %CODECLASSNAME% instances if default hash is not adequate. If no
+   * hash function is desired then be sure to pass NULL as the hash argument
+   * for initBase in createDefault%CODECLASSNAME% to use the default hash 
+   * function. Returning the stdlib hash function here can cause concurrency
+   * issues in C versions less than C11 (even though it will work for single 
+   * thread programs). If unneeded and above considerations are met then
+   * this function can be deleted from all %CODECLASSNAME% Files*/
+  return 0;
 }
 
 

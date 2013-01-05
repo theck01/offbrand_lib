@@ -8,6 +8,7 @@
 #define OBSTRING_H
 
 #include "offbrand.h"
+#include "OBVector.h"
 
 /* Class type declaration */
 typedef struct OBString_struct OBString;

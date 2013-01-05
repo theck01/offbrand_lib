@@ -117,7 +117,7 @@ void replaceInVector(OBVector *v, obj *new_obj, int64_t index);
  * code already had a reference to the object before calling objAtVectorIndex
  * that it wishes to relenquish
  */
-obj * objAtVectorIndex(const OBVector *v, const int64_t index);
+obj * objAtVectorIndex(const OBVector *v, int64_t index);
 
 /**
  * @brief Searches for an instance of any Offbrand compatible class in an
@@ -136,25 +136,21 @@ obj * objAtVectorIndex(const OBVector *v, const int64_t index);
  * known to contain instances of may different classes else the function will
  * likely cause the program to be aborted
  */
-uint8_t findObjInVector(const OBVector *v, const obj *to_find,
-                        compare_fptr compare);
+uint8_t findObjInVector(const OBVector *v, const obj *to_find);
 
 /**
  * @brief Sorts an OBVector from least-to-greatest or greatest-to-least using a 
  * specified comparision function 
  *
  * @param v A pointer to an instance of OBVector
- * @param compare A function pointer to a comparision function with signature
- * matching the compare_fptr type. If NULL then default pointer comparisions are
- * used
  * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
  * orders
  *
- * @warning Specify NULL as the comparision function if the given OBVector is
- * known to contain instances of may different classes else the function will
- * likely cause the program to be aborted
+ * @warning If called on an OBVector containing instances of multiple Offbrand
+ * classes the call will likely not sort members properly but will still likely
+ * reorder internal contents
  */
-void sortVector(OBVector *v, const compare_fptr compare, const int8_t order);
+void sortVector(OBVector *v, int8_t order);
 
 /**
  * @brief Removes the object at the end of the vector, doing nothing if the
