@@ -1,9 +1,15 @@
+/**
+ * @file %CODECLASSNAME%.c
+ * @brief %CODECLASSNAME% Method Implementation
+ * @author %CLASSAUTHOR%
+ */
 
 #include "../../include/%CODECLASSNAME%.h"
 #include "../../include/private/%CODECLASSNAME%_Private.h"
 
 /* PUBLIC METHODS */
 
+/* function can be deleted if unneeded */
 int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
   
   const %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
@@ -46,7 +52,8 @@ int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
   return new_instance;
 }
 
-obhash_t hash%CODECLASSNAME%(obj *to_hash){
+/* function can be deleted if unneeded */
+obhash_t hash%CODECLASSNAME%(const obj *to_hash){
 
   /* Implement a hash function suitable for uniquely itentifying
    * %CODECLASSNAME% instances if default hash is not adequate. If no

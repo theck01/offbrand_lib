@@ -1,6 +1,7 @@
-
-/*
- * Private header for %CODECLASSNAME%
+/**
+ * @file %CODECLASSNAME%_Private.h
+ * @brief %CODECLASSNAME% Private Interface
+ * @author %CLASSAUTHOR%
  */
 
 #ifndef %MACROCLASSNAME%_PRIVATE_H
@@ -10,27 +11,43 @@
 
 /* DATA */
 
+/**
+ * @brief %CODECLASSNAME% internal structure, encapsulating all data needed for
+ * an instance of %CODECLASSNAME%
+ */
 struct %CODECLASSNAME%_struct{
-  obj base;
+  obj base; /**< obj containing reference count and class membership data */
   /* Additional private data added here, MUST COME AFTER THE obj */
 };
 
 
 /* PRIVATE METHODS */
 
-/* default constructor allocates and initializes an instance of %CODECLASSNAME%.
- * ALL OTHER CONSTRUCTOR METHODS SHOULD CALL THIS DEFAULT CONSTRUCTOR, which
- * should set up a bare bones instance of the class that others will initialize.
- * Ensures base obj is properly initialized.
- * Add additional arguments as needed */
+/**
+ * @brief Default constructor for %CODECLASSNAME%
+ * @return An instance of class %CODECLASSNAME%
+ * @warning All public constructors should call this constructor and intialize
+ * individual members as needed, so that all base data is initialized properly.
+ */
 %CODECLASSNAME% * createDefault%CODECLASSNAME%(void);
 
-/* deallocator, frees instance of class back to memory. Should release all
- * objects contained within to_dealloc if to_dealloc is a container class (like
- * a vector or list) Should not be called manually, instance will be destroyed
- * when reference count reaches 0 */
+/**
+ * @brief Hash function for %CODECLASSNAME%
+ * @param to_hash An obj pointer to an instance of %CODECLASSNAME%
+ * @return Key value (hash) for the given obj pointer to a %CODECLASSNAME%
+ */
+obhash_t hash%CODECLASSNAME%(const obj *to_hash);
+
+/** 
+ * @brief Destructor for %CODECLASSNAME%
+ * @param to_dealloc An obj pointer to an instance of %CODECLASSNAME% with
+ * reference count of 0
+ * @warning Do not call manually, release will call automatically when the
+ * instances reference count drops to 0!
+ */
 void dealloc%CODECLASSNAME%(obj *to_dealloc);
 
-/*PRIVATE METHOD DECLARATIONS HERE*/
+/* ADDITIONAL PRIVATE METHOD DECLARATIONS HERE*/
 
 #endif
+

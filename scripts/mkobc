@@ -4,11 +4,6 @@ PUBLIC_TEMPLATE=scripts/templates/PublicHeader.h
 PRIVATE_TEMPLATE=scripts/templates/PrivateHeader.h
 SOURCE_TEMPLATE=scripts/templates/Source.c
 TEST_TEMPLATE=scripts/templates/Test.c
-
-DOX_PUBLIC_TEMPLATE=scripts/templates/PublicHeaderWithDoc.h
-DOX_PRIVATE_TEMPLATE=scripts/templates/PrivateHeaderWithDoc.h
-DOX_SOURCE_TEMPLATE=scripts/templates/SourceWithDoc.c
-DOX_TEST_TEMPLATE=scripts/templates/TestWithDoc.c
 DOX_MODULE=scripts/templates/DocModule.dox
 
 function print_usage() {
@@ -30,9 +25,6 @@ function print_usage() {
   echo "-a <author name>"
   echo "   Author name for the newly created class. Must be in quotes if the"
   echo "   author's name contains any spaces. Default value is \"anonymous\""
-  echo "-d"
-  echo "   Flag to indicate that generated class should be created with Doxygen"
-  echo "   based documentation. By default flag is unset."
   echo "-h"
   echo "   Print usage and exit"
   echo
@@ -47,7 +39,6 @@ do
   case $option in
   a)  authorName="$OPTARG" ;;
   c)  codeClassName="$OPTARG" ;;
-  d)  docFlag=1 ;;
   h)  print_usage
       exit 0;;
   ?)  print_usage
@@ -75,21 +66,11 @@ sourceTemplate=$SOURCE_TEMPLATE
 testTemplate=$TEST_TEMPLATE
 
 #output filenames
-docModule="/dev/null"
+docModule=$codeClassName"Module.dox"
 publicHeader=$codeClassName".h"
 privateHeader=$codeClassName"_Private.h"
 sourceFile=$codeClassName".c"
 testFile=$codeClassName"_test.c"
-
-# change input templates if doxygen flag specified
-if [[ ! -z $docFlag ]]
-then
-  docModule=$codeClassName"Module.dox"
-  publicTemplate=$DOX_PUBLIC_TEMPLATE
-  privateTemplate=$DOX_PRIVATE_TEMPLATE
-  sourceTemplate=$DOX_SOURCE_TEMPLATE
-  testTemplate=$DOX_TEST_TEMPLATE
-fi
 
 echo
 
@@ -98,20 +79,17 @@ echo
 cat $moduleTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
   sed "s/%CLASSAUTHOR%/$authorName/g" | \
   sed "s/%MACROCLASSNAME%/$macroClassName/g" > $docModule
-if [[ ! -z $docFlag ]]
-then
-  echo "Add class description to newly created Doxygen Module: $docModule"
-fi
+echo "Add class description to newly created Doxygen Module: $docModule"
 
 cat $publicTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
   sed "s/%CLASSAUTHOR%/$authorName/g" | \
   sed "s/%MACROCLASSNAME%/$macroClassName/g" > $publicHeader
-echo "Add public class methods to newly created file: $publicHeader"
+echo "Add public class method declarations to newly created file: $publicHeader"
 
 cat $privateTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
   sed "s/%CLASSAUTHOR%/$authorName/g" | \
   sed "s/%MACROCLASSNAME%/$macroClassName/g" > $privateHeader
-echo "Add private class methods and members to newly created file: "
+echo "Add private class method declarations and members to newly created file: "
 echo "  $privateHeader"
 
 cat $sourceTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
@@ -125,5 +103,5 @@ cat $testTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
 echo "Add unit tests to newly created file: $testFile"
 
 echo ""
-echo "New class created."
+echo "$codeClassName offbrand compatible class created."
 echo
