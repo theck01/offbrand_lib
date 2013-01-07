@@ -9,17 +9,105 @@
 
 /* PUBLIC METHODS */
 
-/* function can be deleted if unneeded */
+OBString *createString(const char *str){
+
+  OBString *instance;
+  
+  assert(str);
+
+  instance = createDefaultString();
+
+  instance->length = strlen(str);
+  instance->str = malloc((instance->length+1)*sizeof(char));
+  assert(instance->str);
+
+  strcpy(instance->str, str);
+
+  return instance;
+}
+
+
+OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
+  
+  OBString *instance;
+
+  assert(s);
+
+  instance = createDefaultString();
+
+  /* account for negative indexing */
+  if(start < 0) start += s->length;
+
+  /* if specified range contains no characters return an "empty" string */
+  if(start > s->length || start+length < 0 || s->length == 0){
+    instance->str = NULL;
+    instance->length = 0;
+    return instance;
+  }
+
+  /* if negative indexing beyond start of string then modify range */
+  if(start < 0){
+    length += start; /* shrink length to not copy out of range space */
+    start = 0;
+  }
+  
+  /* if indexing beyond end of string then shrink lenght to not copy out of 
+   * range space */
+  if(start+length > s->length) length = s->length - start;
+
+  instance->length = length;
+  instance->str = malloc((length+1)*sizeof(char));
+  assert(instance->str);
+
+  strncpy(instance->str, s->str+start, length);
+  instance->str[length] = '\0';
+
+  return instance;
+}
+
+
+uint32_t stringLength(const OBString *s){
+  assert(s);  
+  return s->length;
+}
+
+
+char * getCString(const OBString *s){
+  
+  char *contents;
+
+  assert(s);
+
+  contents = malloc((s->length+1)*sizeof(char));
+  assert(contents);
+
+  if(s->str) strcpy(contents, s->str);
+  else contents[0] = '\0';
+
+  return contents;
+}
+
+
 int8_t compareStrings(const obj *a, const obj *b){
   
+  uint32_t i;
   const OBString *comp_a = (OBString *)a;  
   const OBString *comp_b = (OBString *)b;  
 
+  assert(a);
+  assert(b);
   assert(objIsOfClass(a, "OBString"));
   assert(objIsOfClass(b, "OBString"));
 
-  /* add specific comparison logic, following the description in the header
-   * file */
+  /* compare string contents where both have characters */
+  for(i=0; i<comp_a->length && i<comp_b->length; i++){
+    if(comp_a->str[i] < comp_b->str[i]) return OB_LESS_THAN;
+    else if(comp_b->str[i] < comp_a->str[i]) return OB_GREATER_THAN;
+  }
+
+  /* if characters matched check lengths for final equality */
+  if(comp_a->length < comp_b->length) return OB_LESS_THAN;
+  else if(comp_b->length < comp_a->length) return OB_GREATER_THAN;
   return OB_EQUAL_TO;
 }
 
