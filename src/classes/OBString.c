@@ -38,13 +38,6 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
   /* account for negative indexing */
   if(start < 0) start += s->length;
 
-  /* if specified range contains no characters return an "empty" string */
-  if(start > s->length || start+length < 0 || s->length == 0){
-    instance->str = NULL;
-    instance->length = 0;
-    return instance;
-  }
-
   /* if negative indexing beyond start of string then modify range */
   if(start < 0){
     length += start; /* shrink length to not copy out of range space */
@@ -54,6 +47,10 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
   /* if indexing beyond end of string then shrink lenght to not copy out of 
    * range space */
   if(start+length > s->length) length = s->length - start;
+
+  /* if specified range contains no characters return an "empty" string */
+  if(start > s->length || start+length < 0 || s->length == 0 || length <= 0)
+    return instance;
 
   instance->length = length;
   instance->str = malloc((length+1)*sizeof(char));
@@ -72,19 +69,35 @@ uint32_t stringLength(const OBString *s){
 }
 
 
-char * getCString(const OBString *s){
-  
-  char *contents;
+char charAtStringIndex(const OBString *s, int64_t i){
 
   assert(s);
 
-  contents = malloc((s->length+1)*sizeof(char));
-  assert(contents);
+  if(i < 0) i += s->length; /* account for negative indexing */
+  if(i >= s->length || i < 0) return '\0';
+  return s->str[i];
+}
 
-  if(s->str) strcpy(contents, s->str);
-  else contents[0] = '\0';
 
-  return contents;
+OBString * concatenateStrings(const OBString *s1, const OBString *s2){
+
+  OBString *concatted;
+
+  assert(s1);
+  assert(s2);
+
+  concatted = createDefaultString();
+  concatted->length = s1->length + s2->length;
+
+  if(concatted->length == 0) return concatted;
+
+  concatted->str = malloc((concatted->length+1)*sizeof(char));
+  assert(concatted->str);
+
+  if(s1->length > 0) strcpy(concatted->str, s1->str);
+  if(s2->length > 0) strcpy(concatted->str+s1->length, s2->str);
+
+  return concatted;
 }
 
 
@@ -109,6 +122,22 @@ int8_t compareStrings(const obj *a, const obj *b){
   if(comp_a->length < comp_b->length) return OB_LESS_THAN;
   else if(comp_b->length < comp_a->length) return OB_GREATER_THAN;
   return OB_EQUAL_TO;
+}
+
+
+char * getCString(const OBString *s){
+  
+  char *contents;
+
+  assert(s);
+
+  contents = malloc((s->length+1)*sizeof(char));
+  assert(contents);
+
+  if(s->str) strcpy(contents, s->str);
+  else contents[0] = '\0';
+
+  return contents;
 }
 
 
