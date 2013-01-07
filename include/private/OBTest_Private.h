@@ -20,8 +20,18 @@ struct OBTest_struct{
   uint32_t id; /**< integer id to identify different instances of OBTest */
 };
 
-/* deallocator, frees instance of class back to memory. Should not be called
- * manually, instance will be destroyed when reference count reaches 0 */
+/**
+ * @brief Compares two instances of OBTest
+ *
+ * @param a A non-NULL obj pointer to type OBTest
+ * @param b A non-NULL obj pointer to type OBTest
+ *
+ * @retval OB_LESS_THAN obj a is less than b
+ * @retval OB_GREATER_THAN obj a is equivalent to b
+ * @retval OB_EQUAL_TO obj a is greater than b
+ */
+int8_t compareTests(const obj *a, const obj *b);
+
 /**
  * @brief Destructor for OBTest
  * @param to_dealloc An obj pointer to an instance of OBTest with reference

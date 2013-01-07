@@ -18,6 +18,13 @@ Term * createTerm(uint32_t term){
   return new_instance;
 }
 
+uint32_t getTermValue(Term *a){
+  assert(a != NULL);
+  return a->term;
+}
+
+/* PRIVATE METHODS */
+
 int8_t compareTerms(const obj *a, const obj *b){
   
   Term *comp_a = (Term *)a;  
@@ -30,13 +37,6 @@ int8_t compareTerms(const obj *a, const obj *b){
   else if(comp_a->term < comp_b->term) return OB_LESS_THAN;
   else return OB_EQUAL_TO;
 }
-
-uint32_t getTermValue(Term *a){
-  assert(a != NULL);
-  return a->term;
-}
-
-/* PRIVATE METHODS */
 
 void deallocTerm(obj *to_dealloc){
   /* cast generic obj to Term */

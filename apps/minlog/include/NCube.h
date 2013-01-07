@@ -26,10 +26,6 @@ NCube * createNCube(uint32_t term, uint8_t is_dont_care);
  * return NULL */
 NCube * mergeNCubes(NCube *a, NCube *b); 
 
-/* compare two instances of NCube, return 0 if they are equal, 1 if they are not
- * NCubes cannot be considered greater than or less than each other */
-int8_t compareNCubes(const obj *a, const obj *b);
-
 /* boolean function, returns 1 if NCube covers term specified, 0 if not */
 uint8_t nCubeCoversTerm(const NCube *a, uint32_t term);
 

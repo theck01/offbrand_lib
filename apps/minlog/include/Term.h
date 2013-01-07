@@ -20,10 +20,6 @@ typedef struct Term_struct Term;
 /* expand with additional arguments as needed */
 Term * createTerm(uint32_t term);
 
-/* compare two instances of Term, return 1 if a > b, 0 if a == b, 
- * and -1 if a < b */
-int8_t compareTerms(const obj *a, const obj *b);
-
 /* get term value as an integer */
 uint32_t getTermValue(Term *a);
 

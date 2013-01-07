@@ -86,30 +86,6 @@ NCube * mergeNCubes(NCube *a, NCube *b){
 }
 
 
-int8_t compareNCubes(const obj *a, const obj *b){
-  
-  uint32_t i, max_i;
-  NCube *comp_a = (NCube *)a;  
-  NCube *comp_b = (NCube *)b;  
-
-  assert(a != NULL && b != NULL);
-  assert(objIsOfClass(a, "NCube") && objIsOfClass(b, "NCube"));
-
-  if(comp_a->order != comp_b->order){
-    return OB_NOT_EQUAL;
-  }
-
-  max_i = 1 << comp_a->order;
-  for(i=0; i<max_i; i++){
-    if(comp_a->terms[i] != comp_b->terms[i]){
-      return OB_NOT_EQUAL;
-    }
-  }
-
-  return OB_EQUAL_TO;
-}
-
-
 uint8_t nCubeCoversTerm(const NCube *a, uint32_t term){
 
   uint32_t i, max_i;
@@ -232,6 +208,30 @@ NCube * createNCubeWithOrder(uint8_t order){
   new_cube->essential = 0;
 
   return new_cube;
+}
+
+
+int8_t compareNCubes(const obj *a, const obj *b){
+  
+  uint32_t i, max_i;
+  NCube *comp_a = (NCube *)a;  
+  NCube *comp_b = (NCube *)b;  
+
+  assert(a != NULL && b != NULL);
+  assert(objIsOfClass(a, "NCube") && objIsOfClass(b, "NCube"));
+
+  if(comp_a->order != comp_b->order){
+    return OB_NOT_EQUAL;
+  }
+
+  max_i = 1 << comp_a->order;
+  for(i=0; i<max_i; i++){
+    if(comp_a->terms[i] != comp_b->terms[i]){
+      return OB_NOT_EQUAL;
+    }
+  }
+
+  return OB_EQUAL_TO;
 }
 
 

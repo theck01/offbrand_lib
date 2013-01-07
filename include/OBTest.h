@@ -26,17 +26,5 @@ OBTest * createTest(uint32_t id);
  */
 uint32_t getTestID(OBTest *a);
 
-/**
- * @brief Compares two instances of OBTest
- *
- * @param a A non-NULL obj pointer to type OBTest
- * @param b A non-NULL obj pointer to type OBTest
- *
- * @retval OB_LESS_THAN obj a is less than b
- * @retval OB_GREATER_THAN obj a is equivalent to b
- * @retval OB_EQUAL_TO obj a is greater than b
- */
-int8_t compareTests(const obj *a, const obj *b);
-
 #endif
 

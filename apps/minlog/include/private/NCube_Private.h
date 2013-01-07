@@ -29,6 +29,10 @@ struct NCube_struct{
 /* default constructor, other constructors will call this one */
 NCube * createNCubeWithOrder(uint8_t order);
 
+/* compare two instances of NCube, return 0 if they are equal, 1 if they are not
+ * NCubes cannot be considered greater than or less than each other */
+int8_t compareNCubes(const obj *a, const obj *b);
+
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */
 void deallocNCube(obj *to_dealloc);

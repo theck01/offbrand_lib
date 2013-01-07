@@ -29,6 +29,7 @@ uint32_t getTestID(OBTest *a){
   return a->id;
 }
 
+/* PRIVATE METHODS */
 
 int8_t compareTests(const obj *a, const obj *b){
 
@@ -42,7 +43,6 @@ int8_t compareTests(const obj *a, const obj *b){
   return -1;
 }
 
-/* PRIVATE METHODS */
 
 void deallocTest(obj *to_dealloc){
   assert(to_dealloc != NULL);

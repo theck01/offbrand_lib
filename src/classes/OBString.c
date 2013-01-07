@@ -101,30 +101,6 @@ OBString * concatenateStrings(const OBString *s1, const OBString *s2){
 }
 
 
-int8_t compareStrings(const obj *a, const obj *b){
-  
-  uint32_t i;
-  const OBString *comp_a = (OBString *)a;  
-  const OBString *comp_b = (OBString *)b;  
-
-  assert(a);
-  assert(b);
-  assert(objIsOfClass(a, "OBString"));
-  assert(objIsOfClass(b, "OBString"));
-
-  /* compare string contents where both have characters */
-  for(i=0; i<comp_a->length && i<comp_b->length; i++){
-    if(comp_a->str[i] < comp_b->str[i]) return OB_LESS_THAN;
-    else if(comp_b->str[i] < comp_a->str[i]) return OB_GREATER_THAN;
-  }
-
-  /* if characters matched check lengths for final equality */
-  if(comp_a->length < comp_b->length) return OB_LESS_THAN;
-  else if(comp_b->length < comp_a->length) return OB_GREATER_THAN;
-  return OB_EQUAL_TO;
-}
-
-
 char * getCString(const OBString *s){
   
   char *contents;
@@ -164,8 +140,33 @@ OBString * createDefaultString(void){
   return new_instance;
 }
 
+
 obhash_t hashString(const obj *to_hash){
   return hash(to_hash);
+}
+
+
+int8_t compareStrings(const obj *a, const obj *b){
+  
+  uint32_t i;
+  const OBString *comp_a = (OBString *)a;  
+  const OBString *comp_b = (OBString *)b;  
+
+  assert(a);
+  assert(b);
+  assert(objIsOfClass(a, "OBString"));
+  assert(objIsOfClass(b, "OBString"));
+
+  /* compare string contents where both have characters */
+  for(i=0; i<comp_a->length && i<comp_b->length; i++){
+    if(comp_a->str[i] < comp_b->str[i]) return OB_LESS_THAN;
+    else if(comp_b->str[i] < comp_a->str[i]) return OB_GREATER_THAN;
+  }
+
+  /* if characters matched check lengths for final equality */
+  if(comp_a->length < comp_b->length) return OB_LESS_THAN;
+  else if(comp_b->length < comp_a->length) return OB_GREATER_THAN;
+  return OB_EQUAL_TO;
 }
 
 
