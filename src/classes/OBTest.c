@@ -31,6 +31,11 @@ uint32_t getTestID(OBTest *a){
 
 /* PRIVATE METHODS */
 
+obhash_t hashTest(const obj *to_hash){
+  assert(to_hash);
+  return (obhash_t)(((OBTest *)to_hash)->id);
+}
+
 int8_t compareTests(const obj *a, const obj *b){
 
   assert(a != NULL);

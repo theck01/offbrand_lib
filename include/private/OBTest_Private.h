@@ -21,6 +21,13 @@ struct OBTest_struct{
 };
 
 /**
+ * @brief Hash function for OBTest
+ * @param to_hash An obj pointer to an instance of OBString
+ * @return Key value (hash) for the given obj pointer to a OBString 
+ */
+obhash_t hashTest(const obj *to_hash);
+
+/**
  * @brief Compares two instances of OBTest
  *
  * @param a A non-NULL obj pointer to type OBTest
