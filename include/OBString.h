@@ -66,10 +66,14 @@ uint32_t stringLength(const OBString *s);
  * @brief returns the character at the specified index
  *
  * @param s A pointer to an instance of OBString
- * @param i An integer index value within the string
+ * @param i An integer denoting a characters position in the string.
+ * Negative integers are accepted, with -1 indicating the final non-NUL
+ * character in the string
  *
+ * @return The character at the index within the string, '\0' if the character
+ * is out of bounds
  */
-char charAtStringIndex(const OBString *s, uint64_t i);
+char charAtStringIndex(const OBString *s, int64_t i);
 
 /**
  * @brief concatenates the two OBString instances into a new instance of
@@ -81,7 +85,7 @@ char charAtStringIndex(const OBString *s, uint64_t i);
  * @return A pointer to an new instance of OBString that contains string 
  * s1+s2
  */
-OBString * contatenateStrings(const OBString *s1, const OBString *s2);
+OBString * concatenateStrings(const OBString *s1, const OBString *s2);
 
 /**
  * @brief Compares two instances of OBString
