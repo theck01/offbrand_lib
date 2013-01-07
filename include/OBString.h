@@ -20,16 +20,18 @@ typedef struct OBString_struct OBString;
  * @brief Creates a new OBString with the string of characters
  *
  * @param str A NUL terminated C string
- * @param length The length of the str, a protection mechanism against buffer
- * overflows
  *
  * @return An instance of OBString encapsulating the given C string
  *
  * @details The provided C string is not stored directly in an instance of
  * OBString and so can be modified and free'd without affecting the created
  * OBString.
+ *
+ * @warning Constructor assumes that the input string NUL terminated with
+ * finite length, any C strings passed to the constructor should be known to
+ * meet these constraints
  */
-OBString * createString(const char *str, size_t length);
+OBString * createString(const char *str);
 
 /**
  * @brief Copies a sequence of characters from an OBString to create a new
@@ -37,14 +39,19 @@ OBString * createString(const char *str, size_t length);
  * 
  * @param s A pointer to an instance of OBString
  * @param start An integer denoting the position of the start of the
- * sequence to copy within the string, character at position start included
- * @param end An integer denoting the position of the end of the
- * sequence to copy within the string, character at position end included
+ * sequence to copy within the string, character at position start included.
+ * Negative integers are accepted, with -1 indicating the final non-NUL
+ * character in the string
+ * @param length An integer denoting the length of the string to be copied
  *
- * @return An instance of OBString containing the seqence of characters selected
- * from the provided OBString
+ * @return An instance of OBString containing the seqence of characters
+ * selected from the provided OBString
+ * 
+ * @warning If start and length combine to specify a range beyond the string
+ * bounds then any extension beyond the bounds will return only existing
+ * characters in the range, an empty string if none exist
  */
-OBString * copyStringSequence(OBString *s, uint32_t start, uint32_t end);
+OBString * copySubstring(const OBString *s, int64_t start, uint32_t length);
 
 /**
  * @brief Gets the length of an OBString
@@ -53,7 +60,7 @@ OBString * copyStringSequence(OBString *s, uint32_t start, uint32_t end);
  *
  * @return Integer length of the OBString instance
  */
-uint64_t lengthOfString(const OBString *s);
+uint32_t stringLength(const OBString *s);
 
 /**
  * @brief returns the character at the specified index
