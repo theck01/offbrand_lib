@@ -123,13 +123,16 @@ OBVector * splitString(const OBString *s, const char *delim);
  * @brief Searches for an substring in an OBString
  *
  * @param s A pointer to an instance of OBString to be searched
- * @param to_find A pointer to an instance of OBString containing the substring
- * to find
+ * @param substring A NUL terminated C string containing the sequence of 
+ * characters to find
  *
  * @retval 0 The substring was not found in the search string
  * @retval non-zero The substring was found in the search string
+ *
+ * @warning Function does not attempt to verify that delim is in fact NUL
+ * terminated
  */
-uint8_t findSubString(const OBString *s, const OBString *to_find);
+uint8_t findSubstring(const OBString *s, const char *to_find);
 
 /**
  * @brief Finds the pattern matching an expression in an OBString
@@ -142,8 +145,11 @@ uint8_t findSubString(const OBString *s, const OBString *to_find);
  *
  * @details The POSIX Extended Regular Expression syntax is used to interpret
  * the provided expression
+ *
+ * @warning Function does not attempt to verify that delim is in fact NUL
+ * terminated
  */
-OBString * matchStringRegex(const OBString *s, const OBString *regex);
+OBString * matchStringRegex(const OBString *s, const char *regex);
 
 #endif
 
