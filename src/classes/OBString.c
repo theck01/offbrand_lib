@@ -6,6 +6,9 @@
 
 #include "../../include/OBString.h"
 #include "../../include/private/OBString_Private.h"
+#include <regex.h>
+
+#define REGEX_ERROR_BUFFER_SIZE 256
 
 /* PUBLIC METHODS */
 
@@ -124,7 +127,7 @@ OBVector * splitString(const OBString *s, const char *delim){
   marker = copy->str;
 
   /* overwrite all instance of delimeter with NUL character(s) */
-  while(marker < copy->str+copy->length - delim_len){
+  while(marker <= copy->str+(copy->length - delim_len)){
     if(strncmp(marker, delim, delim_len) == 0)
       for(i=0; i<delim_len; i++) *(marker++) = '\0';
     else
@@ -147,7 +150,54 @@ OBVector * splitString(const OBString *s, const char *delim){
 }
 
 
-/* DEFINE ADDITIONAL PUBLIC METHODS HERE */
+uint8_t findSubstring(const OBString *s, const char *substring){
+
+  uint32_t sublen;
+  char *marker;
+
+  assert(s);
+  assert(substring);
+
+  sublen = strlen(substring);
+  
+  for(marker = s->str; marker <= s->str +(s->length - sublen); marker++)
+    if(strncmp(marker, substring, sublen) == 0) return 1;
+
+  return 0;
+}
+
+
+OBString * matchStringRegex(const OBString *s, const char *regex){
+
+  regex_t comp_regex;
+  regmatch_t match;
+  int errcode;
+  char errbuf[REGEX_ERROR_BUFFER_SIZE];
+
+  assert(s);
+  assert(regex);
+
+  /* compile regex */
+  if((errcode = regcomp(&comp_regex, regex, REG_EXTENDED))){
+    regerror(errcode, &comp_regex, errbuf, REGEX_ERROR_BUFFER_SIZE);
+    fprintf(stderr, "OBString::matchStringRegex recieved improper regex\n"
+                    "Regex supplied: %s\nError string:%s\n", regex, errbuf);
+
+    regfree(&comp_regex);
+    return createString("");
+  }
+
+  /* match regex, returning empty string if no match was found */
+  if(regexec(&comp_regex, s->str, 1, &match, 0)){
+    regfree(&comp_regex);
+    return createString("");
+  }
+
+  regfree(&comp_regex);
+
+  /* return a new string containing the matching range */
+  return copySubstring(s, match.rm_so, match.rm_eo - match.rm_so);
+}
 
 
 /* PRIVATE METHODS */
@@ -174,7 +224,27 @@ OBString * createDefaultString(void){
 
 
 obhash_t hashString(const obj *to_hash){
-  return hash(to_hash);
+  
+  OBString *instance = (OBString *)to_hash;
+  obhash_t value;
+  char *pos;
+
+  assert(to_hash);
+  assert(objIsOfClass(to_hash, "OBString"));
+
+  /* A version of Jenkin's one at a time hash function */
+  pos = instance->str;
+  value = 0;
+  while(*pos != '\0'){
+    value += *(pos++);
+    value += (value << 10);
+    value ^= (value >> 6);
+  }
+
+  value += (value << 3);
+  value ^= (value >> 11);
+  value += (value << 15);
+  return value;
 }
 
 

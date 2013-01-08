@@ -18,7 +18,6 @@ int main (){
   const char *contents;
 
   str1 = createString("Hello, World!");
-  null_str = copySubstring(str1, 20, 2);
 
   /* Test createString and getCString */
   contents = getCString(str1);
@@ -90,7 +89,28 @@ int main (){
   assert(strcmp(getCString((OBString *)objAtVectorIndex(tokens, 1)), "many")
          == 0);
 
+  release((obj *)tokens);
 
+  /* Test String Search */
+
+  assert(findSubstring(str2, "Testing") != 0);
+  assert(findSubstring(str2, "#!many") != 0);
+  assert(findSubstring(str2, "Hello World") == 0);
+
+  /* Test Regex Match */
+  str3 = matchStringRegex(str1, "[Hh]el{1,2}.");
+  assert(strcmp(getCString(str3), "Hello") == 0);
+  release((obj *)str3);
+
+  str3 = matchStringRegex(str2, " *into[#!]{2,2}.*$");
+  assert(strcmp(getCString(str3), "   into#!many") == 0);
+
+  release((obj *)str3);
+  release((obj *)str2);
+  release((obj *)str1);
+  release((obj *)null_str);
+    
+  /* TESTS COMPLETE */
   printf("OBString_test: TESTS PASSED\n");
 
   return 0;
