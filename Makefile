@@ -40,7 +40,11 @@ $(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
 $(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
 	$(CC) $(OFLAGS) $< -o $@
 
-# Build tests executables
+# Build tests executables (special builds encountered first)
+$(BIN_TEST)/OBString_test: $(TESTS)/OBString_test.c $(BIN_CLASS)/OBString.o \
+	$(TEST_DEP) $(BIN_CLASS)/OBVector.o
+	$(CC) $(CFLAGS) $^ -o $@
+
 $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
