@@ -95,25 +95,29 @@ OBString * concatenateStrings(const OBString *s1, const OBString *s2);
  * @return A C string containing the same sequence of characters as the OBString
  * instance
  *
- * @warning The returned array is a newly allocated block that must be free'd
- * by the caller, the function does not give access to OBString internal values
+ * @warning The returned pointer is directed at an internal C string that should
+ * not be altered, a new OBString should be created if an alteration is desired
  */
-char * getCString(const OBString *s);
+const char * getCString(const OBString *s);
 
 /**
  * @brief Tokenizes an OBString over a character sequence
  *
  * @param s A pointer to an instance of OBString to be tokenized
- * @param delim An OBString delimeter on which to tokenize s 
+ * @param delim A NUL terminated C string indicating the character or sequence
+ * of characters on which to break a string
  *
  * @return An OBVector containing the resulting OBStrings derived from
  * splitting the original on the delimeter string
  *
  * @details A multicharacter OBString will not cause the the original string to
  * be split on each character, but rather the original string will be split
- * on complete instances of delim
+ * on complete instances of delim.
+ *
+ * @warning Function does not attempt to verify that delim is in fact NUL
+ * terminated
  */
-OBVector * splitString(const OBString *s, const OBString *delim);
+OBVector * splitString(const OBString *s, const char *delim);
 
 /**
  * @brief Searches for an substring in an OBString
