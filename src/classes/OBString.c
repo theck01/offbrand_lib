@@ -18,7 +18,7 @@ OBString *createString(const char *str){
   instance = createDefaultString();
 
   instance->length = strlen(str);
-  instance->str = malloc((instance->length+1)*sizeof(char));
+  instance->str = realloc(instance->str, (instance->length+1)*sizeof(char));
   assert(instance->str);
 
   strcpy(instance->str, str);
@@ -53,7 +53,7 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
     return instance;
 
   instance->length = length;
-  instance->str = malloc((length+1)*sizeof(char));
+  instance->str = realloc(instance->str, (length+1)*sizeof(char));
   assert(instance->str);
 
   strncpy(instance->str, s->str+start, length);
@@ -91,7 +91,7 @@ OBString * concatenateStrings(const OBString *s1, const OBString *s2){
 
   if(concatted->length == 0) return concatted;
 
-  concatted->str = malloc((concatted->length+1)*sizeof(char));
+  concatted->str = realloc(concatted->str, (concatted->length+1)*sizeof(char));
   assert(concatted->str);
 
   if(s1->length > 0) strcpy(concatted->str, s1->str);
@@ -101,19 +101,49 @@ OBString * concatenateStrings(const OBString *s1, const OBString *s2){
 }
 
 
-char * getCString(const OBString *s){
-  
-  char *contents;
+const char * getCString(const OBString *s){
+  assert(s);
+  return s->str;
+}
+
+
+OBVector * splitString(const OBString *s, const char *delim){
+
+  OBVector *tokens;
+  OBString *copy, *substring;
+  char *marker;
+  uint32_t i, delim_len;
+
 
   assert(s);
+  assert(delim);
 
-  contents = malloc((s->length+1)*sizeof(char));
-  assert(contents);
+  tokens = createVector(1);
+  copy = copySubstring(s, 0, s->length);
+  delim_len = strlen(delim);
+  marker = copy->str;
 
-  if(s->str) strcpy(contents, s->str);
-  else contents[0] = '\0';
+  /* overwrite all instance of delimeter with NUL character(s) */
+  while(marker < copy->str+copy->length - delim_len){
+    if(strncmp(marker, delim, delim_len) == 0)
+      for(i=0; i<delim_len; i++) *(marker++) = '\0';
+    else
+      marker++;
+  }
 
-  return contents;
+  marker = copy->str;
+
+  /* copy all found substrings into new OBStrings for Vector */
+  while(marker < copy->str+copy->length){
+    substring = createString(marker);
+    marker += substring->length;
+    addToVector(tokens, (obj *)substring);
+    release((obj *)substring); /* only tokens vector needs a reference */
+    while(*marker == '\0' && marker < copy->str + copy->length) marker++;
+  }
+
+  release((obj *)copy);
+  return tokens;
 }
 
 
@@ -134,7 +164,9 @@ OBString * createDefaultString(void){
   initBase((obj *)new_instance, &deallocString, &hashString, &compareStrings,
            classname);
 
-  new_instance->str = NULL;
+  new_instance->str = malloc(sizeof(char));
+  assert(new_instance->str);
+  new_instance->str[0] = '\0';
   new_instance->length = 0;
 
   return new_instance;
