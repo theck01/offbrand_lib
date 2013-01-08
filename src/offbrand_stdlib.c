@@ -23,13 +23,13 @@ void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
 obj * release(obj *instance){
 
   assert(instance != NULL);
-  assert(*instance != NULL); /* assertion protects against release of iterator
-                                types */
+  assert(*instance != NULL); /* assertion protects against double dealloc */
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
     (*instance)->dealloc(instance); /*class specific memory cleanup called*/
     free((struct obj_struct *)*instance); /* free reference counted base */ 
+    (*instance) = NULL; /* mark instance as deallocated */
     free(instance); /* free the entire object */
     return NULL;
   }
@@ -40,6 +40,7 @@ obj * release(obj *instance){
 void retain(obj *instance){
 
   assert(instance != NULL);
+  assert(*instance != NULL); /* assertion protects against double dealloc */
 
   if((*instance)->references < UINT32_MAX) ++((*instance)->references);
 
@@ -48,6 +49,7 @@ void retain(obj *instance){
 
 uint32_t referenceCount(obj *instance){
   assert(instance != NULL);
+  assert(*instance != NULL); /* assertion protects against double dealloc */
   return (*instance)->references;
 }
 
@@ -55,6 +57,8 @@ uint32_t referenceCount(obj *instance){
 
 uint8_t objIsOfClass(const obj *a, const char *classname){
   assert(a != NULL && classname != NULL);
+  assert(*a != NULL); /* assertion protects against double 
+                                       dealloc */
   if(strcmp((*a)->classname, classname) == 0) return 1;
   else return 0;
 }
@@ -62,6 +66,8 @@ uint8_t objIsOfClass(const obj *a, const char *classname){
 
 uint8_t sameClass(const obj *a, const obj *b){
   assert(a != NULL && b != NULL);
+  assert(*a != NULL && *b != NULL); /* assertion protects against double 
+                                       dealloc */
   return objIsOfClass(a, (*b)->classname);
 }
 
@@ -78,9 +84,10 @@ obhash_t hash(const obj *to_hash){
                                 function before a return */
 #endif
 
-  assert(to_hash);
-
   call_count++;
+
+  assert(to_hash);
+  assert(*to_hash); /* assertion protects against double dealloc */
 
   if((*to_hash)->hash && call_count == 1) retval = (*to_hash)->hash(to_hash);
   else{ 
@@ -109,6 +116,8 @@ int8_t compare(const obj *a, const obj *b){
   call_count++;
 
   assert(a != NULL && b != NULL);
+  assert(*a != NULL && *b != NULL); /* assertion protects against double 
+                                       dealloc */
 
   if(sameClass(a, b) && call_count == 1 && (*a)->compare != NULL) 
     retval = (*a)->compare(a, b);
