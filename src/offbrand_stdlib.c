@@ -91,9 +91,11 @@ obhash_t hash(const obj *to_hash){
 
   if((*to_hash)->hash && call_count == 1) retval = (*to_hash)->hash(to_hash);
   else{ 
-    retval = (obhash_t)to_hash ^ ((obhash_t)to_hash)<<15;
-    retval = (retval << 6) ^ (retval >> 10);
-    retval = (retval >> 7) ^ (retval << 12);
+    retval = (obhash_t)to_hash;
+    retval += (retval << 6);
+    retval ^= (retval >> 10);
+    retval += (retval >> 7);
+    retval ^= (retval << 12);
   }
 
   call_count--;
