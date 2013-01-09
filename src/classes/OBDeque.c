@@ -518,7 +518,8 @@ OBDeque * createDefaultDeque(void){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDeque, NULL, NULL, classname);
+  initBase((obj *)new_instance, &deallocDeque, &hashDeque, &compareDeques,
+           classname);
 
   new_instance->head = NULL;
   new_instance->tail = NULL;
@@ -610,6 +611,66 @@ OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct){
   deque.tail = curnode;
 
   return deque;
+}
+
+
+obhash_t hashDeque(const obj *to_hash){
+
+  obhash_t value = 0;
+  OBDeque *instance = (OBDeque *)to_hash;
+  OBDequeIterator *it;
+
+  assert(to_hash);
+  assert(objIsOfClass(to_hash, "OBDeque"));
+  
+  it = getDequeHeadIt(instance);
+  if(!it) return value;
+
+  do{
+    value += hash(peekDequeAtIt(instance, it));
+    value += value << 10;
+    value ^= value >> 6;
+  }while(iterateDequeNext(instance, it));
+
+  release((obj *)it);
+
+  value += value << 3;
+  value ^= value >> 11;
+  value += value << 15;
+
+  return value;
+}
+
+
+int8_t compareDeques(const obj *a, const obj *b){
+
+  int8_t retval = OB_EQUAL_TO; /* assume equality and disprove if not */
+  const OBDeque *comp_a = (OBDeque *)a;
+  const OBDeque *comp_b = (OBDeque *)b;
+  OBDequeIterator *a_it, *b_it;
+
+  assert(a);
+  assert(b);
+  assert(objIsOfClass(a, "OBDeque"));
+  assert(objIsOfClass(b, "OBDeque"));
+
+  if(comp_a->length != comp_b->length) return OB_NOT_EQUAL;
+
+  a_it = getDequeHeadIt(comp_a);
+  b_it = getDequeHeadIt(comp_b);
+
+  do{
+    if(compare(peekDequeAtIt(comp_a, a_it), peekDequeAtIt(comp_b, b_it)) ==
+       OB_NOT_EQUAL){
+      retval = OB_NOT_EQUAL;
+      break;
+    }
+  }while(iterateDequeNext(comp_a, a_it) && iterateDequeNext(comp_b, b_it));
+
+  release((obj *)a_it);
+  release((obj *)b_it);
+  
+  return retval;
 }
 
 

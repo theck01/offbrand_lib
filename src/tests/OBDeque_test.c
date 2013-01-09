@@ -70,10 +70,16 @@ int main (){
   assert(dequeLength(test_deque_a) == 5);
 
   test_deque_b = copyDeque(test_deque_a);
+
   assert(referenceCount((obj *)a) == 3);
+  assert(compare((obj *)test_deque_a, (obj *)test_deque_b) == OB_EQUAL_TO);
+  assert(hash((obj *)test_deque_a) ==  hash((obj *)test_deque_b));
 
   sortDeque(test_deque_a, OB_LEAST_TO_GREATEST);
+
   assert(dequeLength(test_deque_a) == 5);
+  assert(compare((obj *)test_deque_a, (obj *)test_deque_b) == OB_NOT_EQUAL);
+  assert(hash((obj *)test_deque_a) !=  hash((obj *)test_deque_b));
 
   i = 1;
   head_it = getDequeHeadIt(test_deque_a);

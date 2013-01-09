@@ -78,6 +78,25 @@ OBDeque * createDefaultDeque(void);
  * management overhead */
 OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct);
 
+/**
+ * @brief Hash function for OBDeque
+ * @param to_hash An obj pointer to an instance of OBDeque
+ * @return Key value (hash) for the given obj pointer to a OBDeque
+ */
+obhash_t hashDeque(const obj *to_hash);
+
+/**
+ * @brief Compares two instances of OBDeque
+ *
+ * @param a A non-NULL obj pointer to type OBDeque
+ * @param b A non-NULL obj pointer to type OBDeque
+ *
+ * @retval OB_LESS_THAN obj a is less than b
+ * @retval OB_GREATER_THAN obj a is equivalent to b
+ * @retval OB_EQUAL_TO obj a is greater than b
+ */
+int8_t compareDeques(const obj *a, const obj *b);
+
 /* deallocator, frees instance of class back to memory. Releases any contained
  * objs once. Should not be called manually, instance will be destroyed when 
  * reference count reaches 0 */
