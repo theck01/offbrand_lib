@@ -226,7 +226,7 @@ OBString * createDefaultString(void){
 obhash_t hashString(const obj *to_hash){
   
   OBString *instance = (OBString *)to_hash;
-  obhash_t value;
+  obhash_t value = 0;
   char *pos;
 
   assert(to_hash);
@@ -234,16 +234,15 @@ obhash_t hashString(const obj *to_hash){
 
   /* A version of Jenkin's one at a time hash function */
   pos = instance->str;
-  value = 0;
   while(*pos != '\0'){
     value += *(pos++);
-    value += (value << 10);
-    value ^= (value >> 6);
+    value += value << 10;
+    value ^= value >> 6;
   }
 
-  value += (value << 3);
-  value ^= (value >> 11);
-  value += (value << 15);
+  value += value << 3;
+  value ^= value >> 11;
+  value += value << 15;
   return value;
 }
 
