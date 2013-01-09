@@ -56,6 +56,24 @@ void resizeVector(OBVector *v);
 obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
                              compare_fptr funct);
 
+/**
+ * @brief Hash function for OBVector
+ * @param to_hash An obj pointer to an instance of OBVector
+ * @return Key value (hash) for the given obj pointer to an OBVector
+ */
+obhash_t hashVector(const obj *to_hash);
+
+/**
+ * @brief Compares two instances of OBVector
+ *
+ * @param a A non-NULL obj pointer to type OBVector
+ * @param b A non-NULL obj pointer to type OBVector
+ *
+ * @retval OB_NOT_EQUAL a does not equal b
+ * @retval OB_EQUAL_TO a equals b
+ */
+int8_t compareVectors(const obj *a, const obj *b);
+
 /** 
  * @brief Destructor for OBVector
  * @param to_dealloc An obj pointer to an instance of OBVector with

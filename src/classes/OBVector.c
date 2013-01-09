@@ -17,7 +17,8 @@ OBVector * createVector(uint32_t initial_capacity){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocVector, NULL, NULL, classname);
+  initBase((obj *)new_instance, &deallocVector, &hashVector, &compareVectors,
+           classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
@@ -317,22 +318,8 @@ void clearVector(OBVector *v){
 }
 
 
-
 /* PRIVATE METHODS */
 
-void deallocVector(obj *to_dealloc){
-
-  /* cast generic obj to OBVector */
-  OBVector *instance = (OBVector *)to_dealloc;
-
-  assert(instance != NULL);
-  assert(objIsOfClass(to_dealloc, "OBVector"));
-
-  clearVector(instance); /* release all objs contained in vector */
-
-  free(instance->array);
-  return;
-}
 
 void resizeVector(OBVector *v){
 
@@ -364,6 +351,7 @@ void resizeVector(OBVector *v){
 
   return;
 }
+
 
 obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
                              compare_fptr funct){
@@ -430,3 +418,63 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
 
   return sorted;
 }
+
+
+obhash_t hashVector(const obj *to_hash){
+
+  uint32_t i;
+  obhash_t value = 0;
+  OBVector *instance = (OBVector *)to_hash;
+
+  assert(to_hash);
+  assert(objIsOfClass(to_hash, "OBVector"));
+  
+  for(i=0; i<instance->num_objs; i++){
+    value += hash(instance->array[i]);
+    value += value << 10;
+    value ^= value >> 6;
+  }
+
+  value += value << 3;
+  value ^= value >> 11;
+  value += value << 15;
+
+  return value;
+}
+
+
+int8_t compareVectors(const obj *a, const obj *b){
+
+  uint32_t i;
+  const OBVector *comp_a = (OBVector *)a;
+  const OBVector *comp_b = (OBVector *)b;
+
+  assert(a);
+  assert(b);
+  assert(objIsOfClass(a, "OBVector"));
+  assert(objIsOfClass(b, "OBVector"));
+
+  if(comp_a->num_objs != comp_b->num_objs) return OB_NOT_EQUAL;
+
+  for(i=0; i<comp_a->num_objs; i++)
+    if(compare(comp_a->array[i], comp_b->array[i]) != OB_EQUAL_TO)
+      return OB_NOT_EQUAL;
+
+  return OB_EQUAL_TO;
+}
+
+
+void deallocVector(obj *to_dealloc){
+
+  /* cast generic obj to OBVector */
+  OBVector *instance = (OBVector *)to_dealloc;
+
+  assert(instance != NULL);
+  assert(objIsOfClass(to_dealloc, "OBVector"));
+
+  clearVector(instance); /* release all objs contained in vector */
+
+  free(instance->array);
+  return;
+}
+

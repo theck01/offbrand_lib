@@ -122,16 +122,13 @@ int main(){
   
   copy_vec = copyVector(main_vec);
 
+  assert(compare((obj *)copy_vec, (obj *)main_vec) == OB_EQUAL_TO);
+  assert(hash((obj *)copy_vec) == hash((obj *)main_vec));
+
   release((obj *)singleton); /* release singleton once so it is only referenced
                                 by containing vectors */
 
   for(i=0; i<sizeOfVector(main_vec); i++){
-    if(compare(objAtVectorIndex(main_vec, i), objAtVectorIndex(copy_vec, i))){
-      fprintf(stderr, "OBVector_test: vector contents not copied correctly, "
-                      "TEST FAILED\n");
-      exit(1);
-    }
-    
     if(referenceCount((obj *)(OBTest *)objAtVectorIndex(main_vec, i)) != 2){
       fprintf(stderr, "OBVector_test: vector contents not retained on copy, "
                       "TEST FAILED\n");
@@ -144,6 +141,9 @@ int main(){
   retain((obj *)tmp);
 
   removeFromVectorIndex(main_vec, 3);
+
+  assert(compare((obj *)copy_vec, (obj *)main_vec) == OB_NOT_EQUAL);
+  assert(hash((obj *)copy_vec) != hash((obj *)main_vec));
 
   for(i=0; i<sizeOfVector(main_vec); i++){
     if(getTestID((OBTest *)objAtVectorIndex(main_vec,i)) == getTestID(tmp)){
@@ -174,6 +174,7 @@ int main(){
                     "FAILED\n");
     exit(1);
   }
+
 
   printf("OBVector_test: TESTS PASSED\n");
   return 0;
