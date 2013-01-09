@@ -234,7 +234,7 @@ void sortVector(OBVector *v, int8_t order){
   assert(v != NULL);
 
   /* custom comparison function was not added, use simple pointer comparator */
-  sorted = recursiveSortContents(v->array, v->num_objs, order);
+  sorted = recursiveSortContents(v->array, v->num_objs, order, &compare);
 
   free(v->array);
   v->array = sorted;
@@ -242,10 +242,29 @@ void sortVector(OBVector *v, int8_t order){
   return;
 }
 
+
+void sortVectorWithFunct(OBVector *v, int8_t order, compare_fptr funct){
+
+  obj **sorted;
+
+  assert(v != NULL);
+  assert(funct != NULL);
+
+  /* custom comparison function was not added, use simple pointer comparator */
+  sorted = recursiveSortContents(v->array, v->num_objs, order, funct);
+
+  free(v->array);
+  v->array = sorted;
+
+  return;
+}
+
+
 void removeFromVectorEnd(OBVector *v){
   assert(v != NULL);
   return removeFromVectorIndex(v, v->num_objs-1);
 }
+
 
 void removeFromVectorIndex(OBVector *v, int64_t index){
   
@@ -346,7 +365,8 @@ void resizeVector(OBVector *v){
   return;
 }
 
-obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order){
+obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
+                             compare_fptr funct){
   
   uint32_t i,j, split;
   int8_t comp_result;
@@ -364,9 +384,9 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order){
   split = size/2;
 
   /* sort left half and right half of array */
-  left_sorted = recursiveSortContents(to_sort, split, order);
+  left_sorted = recursiveSortContents(to_sort, split, order, funct);
   right_sorted = recursiveSortContents(to_sort+split, size-split, 
-                                       order);
+                                       order, funct);
   
   sorted = malloc(sizeof(obj *)*size);
   assert(sorted != NULL);
@@ -380,7 +400,7 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order){
     
     /* if the comparison of the left to the right matches the desired order,
      * then the next item to go in the sorted array is from the left */
-    if((comp_result = compare(left_sorted[i], right_sorted[j])) == order){
+    if((comp_result = funct(left_sorted[i], right_sorted[j])) == order){
       sorted[i+j] = left_sorted[i];
       i++;
     }

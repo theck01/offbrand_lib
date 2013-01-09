@@ -43,6 +43,8 @@ void resizeVector(OBVector *v);
  * used
  * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
  * orders
+ * @param funct A compare_fptr to a function that returns an int8_t when given
+ * two obj * arguments
  * 
  * @return The sorted primitive array of objects (a new primitive array, not
  * to_sort)
@@ -51,7 +53,8 @@ void resizeVector(OBVector *v);
  * sorting should use the publicly accessable function which calls this method
  * internally.
  */
-obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order);
+obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
+                             compare_fptr funct);
 
 /** 
  * @brief Destructor for OBVector

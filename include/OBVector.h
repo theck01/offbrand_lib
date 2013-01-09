@@ -139,8 +139,8 @@ obj * objAtVectorIndex(const OBVector *v, int64_t index);
 uint8_t findObjInVector(const OBVector *v, const obj *to_find);
 
 /**
- * @brief Sorts an OBVector from least-to-greatest or greatest-to-least using a 
- * specified comparision function 
+ * @brief Sorts an OBVector from least-to-greatest or greatest-to-least using
+ * the standard compare function
  *
  * @param v A pointer to an instance of OBVector
  * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
@@ -151,6 +151,18 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find);
  * reorder internal contents
  */
 void sortVector(OBVector *v, int8_t order);
+
+/**
+ * @brief Sorts an OBVector from least-to-greatest or greatest-to-least using a
+ * specified comparision function 
+ *
+ * @param v A pointer to an instance of OBVector
+ * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
+ * orders
+ * @param funct A compare_fptr to a function that returns an int8_t when given 
+ * two obj * arguments
+ */
+void sortVectorWithFunct(OBVector *v, int8_t order, compare_fptr funct);
 
 /**
  * @brief Removes the object at the end of the vector, doing nothing if the
