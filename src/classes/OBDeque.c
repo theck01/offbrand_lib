@@ -252,7 +252,7 @@ void sortDeque(OBDeque *deque, int8_t order){
   assert(deque);
   assert(order == OB_LEAST_TO_GREATEST || order == OB_GREATEST_TO_LEAST);
 
-  sorted = recursiveSort(*deque, order);
+  sorted = recursiveSort(*deque, order, &compare);
 
   /* connect head and tail of newly sorted list to deque */
   deque->head = sorted.head;
@@ -261,6 +261,24 @@ void sortDeque(OBDeque *deque, int8_t order){
   return;
 }
   
+
+void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct){
+
+  OBDeque sorted; /* stack variable to remove internal memory management
+                     burden */
+
+  assert(deque);
+  assert(order == OB_LEAST_TO_GREATEST || order == OB_GREATEST_TO_LEAST);
+  assert(funct);
+
+  sorted = recursiveSort(*deque, order, funct);
+
+  /* connect head and tail of newly sorted list to deque */
+  deque->head = sorted.head;
+  deque->tail = sorted.tail;
+
+  return;
+}
 
 
 obj * peekDequeHead(const OBDeque *deque){
@@ -512,7 +530,7 @@ OBDeque * createDefaultDeque(void){
 
 /* private recursive sort method uses stack variables to take advantage of
  * static memory management */
-OBDeque recursiveSort(OBDeque deque, int8_t order){
+OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct){
 
   uint64_t i, half_length;
   OBDeque left_sorted, right_sorted;
@@ -540,11 +558,11 @@ OBDeque recursiveSort(OBDeque deque, int8_t order){
   right_sorted.length = deque.length - half_length;
 
   /* sort deque halves recursively */
-  right_sorted = recursiveSort(right_sorted, order);
-  left_sorted = recursiveSort(left_sorted, order);
+  right_sorted = recursiveSort(right_sorted, order, funct);
+  left_sorted = recursiveSort(left_sorted, order, funct);
 
   /* set the head of the combined list appropriately */
-  if(compare(right_sorted.head->stored, left_sorted.head->stored) == order){
+  if(funct(right_sorted.head->stored, left_sorted.head->stored) == order){
     deque.head = right_sorted.head;
     right_sorted.head = right_sorted.head->next;
   }
@@ -558,7 +576,7 @@ OBDeque recursiveSort(OBDeque deque, int8_t order){
   /* merge lists with proper sequencing */
   while(right_sorted.head && left_sorted.head){
 
-    if(compare(right_sorted.head->stored, left_sorted.head->stored)
+    if(funct(right_sorted.head->stored, left_sorted.head->stored)
         == order){
       curnode->next = right_sorted.head;
       right_sorted.head->prev = curnode;

@@ -76,7 +76,7 @@ OBDeque * createDefaultDeque(void);
 
 /* recursive merge sort operation. runs on static variables to reduce the memory
  * management overhead */
-OBDeque recursiveSort(OBDeque deque, int8_t order);
+OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct);
 
 /* deallocator, frees instance of class back to memory. Releases any contained
  * objs once. Should not be called manually, instance will be destroyed when 

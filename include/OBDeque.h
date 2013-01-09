@@ -75,11 +75,15 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2);
  * will be used */
 uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find);
 
-/* sorts queue using the compare function passed in as an argument. ASSUMES
- * THAT ALL CONTAINED OBJ ARE OF THE SAME CLASS, assertions will fail if not.
+/* sorts queue using the the standard library compare function. 
  * Order (lowest to highest or highest to lowest) specified by sorting macros
  * defined in offbrand.h. Uses the merge sort algorithm. */
 void sortDeque(OBDeque *deque, int8_t order);
+
+/* sorts queue using the compare function passed in as an argument.
+ * Order (lowest to highest or highest to lowest) specified by sorting macros
+ * defined in offbrand.h. Uses the merge sort algorithm. */
+void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct);
 
 /* peek at the obj stored in the Deque head. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference
