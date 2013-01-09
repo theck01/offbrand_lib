@@ -28,7 +28,7 @@ OBDeque * copyDeque(const OBDeque *to_copy){
   /* while there are elements in the deque to copy add to the tail of the
    * deque */
   do{
-    element = peekDequeAtIt(to_copy, iter);
+    element = objAtDequeIt(to_copy, iter);
     addDequeTail(copy, element);
   } while(iterateDequeNext(to_copy, iter));
 
@@ -211,7 +211,7 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2){
   /* while there are elements in the deque to copy add to the tail of the
    * deque */
   do{
-    element = peekDequeAtIt(d2, it);
+    element = objAtDequeIt(d2, it);
     addDequeTail(joined, element);
   } while(iterateDequeNext(d2, it));
 
@@ -232,7 +232,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find){
   if(!it) return 0; /* obj is not in an empty list */
   
   do{
-    if(compare(peekDequeAtIt(deque, it), to_find) == OB_EQUAL_TO){
+    if(compare(objAtDequeIt(deque, it), to_find) == OB_EQUAL_TO){
       retval = 1;
       break;
     }
@@ -281,21 +281,21 @@ void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct){
 }
 
 
-obj * peekDequeHead(const OBDeque *deque){
+obj * objAtDequeHead(const OBDeque *deque){
   assert(deque);
   if(deque->head) return deque->head->stored;
   return NULL;
 }
 
 
-obj * peekDequeTail(const OBDeque *deque){
+obj * objAtDequeTail(const OBDeque *deque){
   assert(deque);
   if(deque->tail) return deque->tail->stored;
   return NULL;
 }
 
 
-obj * peekDequeAtIt(const OBDeque *deque, const OBDequeIterator *it){
+obj * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it){
 
   assert(deque);
   assert(it);
@@ -637,7 +637,7 @@ obhash_t hashDeque(const obj *to_hash){
   if(!it) return value;
 
   do{
-    value += hash(peekDequeAtIt(instance, it));
+    value += hash(objAtDequeIt(instance, it));
     value += value << 10;
     value ^= value >> 6;
   }while(iterateDequeNext(instance, it));
@@ -670,7 +670,7 @@ int8_t compareDeques(const obj *a, const obj *b){
   b_it = getDequeHeadIt(comp_b);
 
   do{
-    if(compare(peekDequeAtIt(comp_a, a_it), peekDequeAtIt(comp_b, b_it)) ==
+    if(compare(objAtDequeIt(comp_a, a_it), objAtDequeIt(comp_b, b_it)) ==
        OB_NOT_EQUAL){
       retval = OB_NOT_EQUAL;
       break;

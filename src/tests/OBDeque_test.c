@@ -31,16 +31,16 @@ int main (){
   assert(isDequeEmpty(test_deque_a) == 0);
   assert(dequeLength(test_deque_a) == 1);
   assert(referenceCount((obj *)a) == 2);
-  assert(getTestID((OBTest *)peekDequeHead(test_deque_a)) == 1);
-  assert(getTestID((OBTest *)peekDequeTail(test_deque_a)) == 1);
+  assert(getTestID((OBTest *)objAtDequeHead(test_deque_a)) == 1);
+  assert(getTestID((OBTest *)objAtDequeTail(test_deque_a)) == 1);
 
   head_it = getDequeHeadIt(test_deque_a);
   tail_it = getDequeTailIt(test_deque_a);
 
   assert(head_it != NULL);
   assert(tail_it != NULL);
-  assert(getTestID((OBTest *)peekDequeAtIt(test_deque_a, head_it)) == 1);
-  assert(getTestID((OBTest *)peekDequeAtIt(test_deque_a, tail_it)) == 1);
+  assert(getTestID((OBTest *)objAtDequeIt(test_deque_a, head_it)) == 1);
+  assert(getTestID((OBTest *)objAtDequeIt(test_deque_a, tail_it)) == 1);
 
   assert(findObjInDeque(test_deque_a, (obj *)a));
 
@@ -84,7 +84,7 @@ int main (){
   i = 1;
   head_it = getDequeHeadIt(test_deque_a);
   do{
-    assert(getTestID((OBTest *)peekDequeAtIt(test_deque_a, head_it)) == i);
+    assert(getTestID((OBTest *)objAtDequeIt(test_deque_a, head_it)) == i);
     i++;
   }while(iterateDequeNext(test_deque_a, head_it));
 
@@ -113,7 +113,7 @@ int main (){
   tail_it = getDequeTailIt(joined_deque);
 
   for(i=0; i<10; i++){
-    assert(getTestID((OBTest *)peekDequeAtIt(joined_deque, tail_it)) == i/2+1);
+    assert(getTestID((OBTest *)objAtDequeIt(joined_deque, tail_it)) == i/2+1);
     if(i != 9) assert(iterateDequePrev(joined_deque, tail_it));
   }
 

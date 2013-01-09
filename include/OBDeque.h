@@ -88,18 +88,18 @@ void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct);
 /* peek at the obj stored in the Deque head. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference
  * that it would like to get rid of. If the deque is empty returns NULL */
-obj * peekDequeHead(const OBDeque *deque);
+obj * objAtDequeHead(const OBDeque *deque);
 
 /* peek at the obj stored in the Deque tail. Returns a pointer to the actual
  * object, do not dereference unless the calling code already has a reference
  * that it would like to get rid of. If the deque is empty returns NULL */
-obj * peekDequeTail(const OBDeque *deque);
+obj * objAtDequeTail(const OBDeque *deque);
 
 /* peek at the obj stored in the Deque at the position indicated by the iterator
  * Returns a pointer to the actual object, do not dereference unless the calling
  * code already has a reference that it would like to get rid of. If the deque
  * is empty returns NULL */
-obj * peekDequeAtIt(const OBDeque *deque, const OBDequeIterator *it);
+obj * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it);
 
 /* remove obj from Deque head, releasing that obj and returning it if it still
  * has a reference, NULL if not */
