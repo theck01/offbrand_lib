@@ -1,0 +1,18 @@
+/**
+ * @addtogroup OBMap
+ * @brief Container class that stores an Offbrand compatible class instance
+ * using another Offbrand compatible class instance as a key
+ *
+ * @details An OBMap uses key-value based storage to provide constant lookup,
+ * insertion, and removal times. Maps need not contain instances of only one
+ * class and should handle any collection of classes used as both keys and
+ * values
+ *
+ * @{
+ * @file OBMap.h
+ * @file OBMap_Private.h
+ * @file OBMap.c
+ * @file OBMap_test.c
+ * @}
+ */
+
