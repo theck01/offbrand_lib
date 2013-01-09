@@ -616,13 +616,23 @@ OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct){
 
 obhash_t hashDeque(const obj *to_hash){
 
-  obhash_t value = 0;
+  static int8_t init = 0;
+  obhash_t value;
+  static obhash_t seed = 0;
   OBDeque *instance = (OBDeque *)to_hash;
   OBDequeIterator *it;
 
   assert(to_hash);
   assert(objIsOfClass(to_hash, "OBDeque"));
   
+  if(init == 0){
+    srand(time(NULL));
+    seed = rand();
+    init = 1;
+  }
+
+  value = seed;
+
   it = getDequeHeadIt(instance);
   if(!it) return value;
 

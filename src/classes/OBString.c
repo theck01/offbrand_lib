@@ -225,12 +225,23 @@ OBString * createDefaultString(void){
 
 obhash_t hashString(const obj *to_hash){
   
+  static int8_t init = 0;
+  static obhash_t seed;
+
   OBString *instance = (OBString *)to_hash;
-  obhash_t value = 0;
+  obhash_t value;
   char *pos;
 
   assert(to_hash);
   assert(objIsOfClass(to_hash, "OBString"));
+
+  if(init == 0){
+    srand(time(NULL));
+    seed = rand();
+    init = 1;
+  }
+  
+  value = seed;
 
   /* A version of Jenkin's one at a time hash function */
   pos = instance->str;

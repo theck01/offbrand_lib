@@ -35,11 +35,22 @@
 
 obhash_t hash%CODECLASSNAME%(const obj *to_hash){
 
-  obhash_t value = 0;
+  static int8_t init = 0;
+  static obhash_t seed = 0;
+
+  obhash_t value;
   %CODECLASSNAME% *instance = (%CODECLASSNAME% *)to_hash;
 
   assert(to_hash);
   assert(objIsOfClass(to_hash, "%CODECLASSNAME%"));
+
+  if(init == 0){
+    srand(time(NULL));
+    seed = rand();
+    init = 1;
+  }
+
+  value = seed;
 
   /* Implement a hash function suitable for uniquely itentifying
    * %CODECLASSNAME% instances if default hash is not adequate. If no
@@ -49,6 +60,7 @@ obhash_t hash%CODECLASSNAME%(const obj *to_hash){
    * issues in C versions less than C11 (even though it will work for single 
    * thread programs). If unneeded and above considerations are met then
    * this function can be deleted from all %CODECLASSNAME% Files*/
+
   return 0;
 }
 

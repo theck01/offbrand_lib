@@ -422,13 +422,23 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
 
 obhash_t hashVector(const obj *to_hash){
 
+  static int8_t init = 0;
+  static obhash_t seed;
+
   uint32_t i;
-  obhash_t value = 0;
+  obhash_t value;
   OBVector *instance = (OBVector *)to_hash;
 
   assert(to_hash);
   assert(objIsOfClass(to_hash, "OBVector"));
+
+  if(init == 0){
+    srand(time(NULL));
+    seed = rand();
+    init = 1;
+  }
   
+  value = seed;
   for(i=0; i<instance->num_objs; i++){
     value += hash(instance->array[i]);
     value += value << 10;

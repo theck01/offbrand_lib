@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <assert.h>
+#include <time.h>
 
 /** Comparison Constant, two elements are equal */
 #define OB_EQUAL_TO 0 
