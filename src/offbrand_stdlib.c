@@ -27,10 +27,16 @@ obj * release(obj *instance){
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
+
+    if(!(*instance)->dealloc) return NULL; /* do nothing if no deallocator
+                                              is specified */
+
     (*instance)->dealloc(instance); /*class specific memory cleanup called*/
+
     free((struct obj_struct *)*instance); /* free reference counted base */ 
-    (*instance) = NULL; /* mark instance as deallocated */
+    (*instance) = NULL; /* attempt to mark instance as deallocated */
     free(instance); /* free the entire object */
+
     return NULL;
   }
 
