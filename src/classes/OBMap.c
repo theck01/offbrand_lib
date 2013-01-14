@@ -17,23 +17,23 @@
 
 /* add arguments to complete initialization as needed, modify 
  * OBMap_Private.h as well if modifications are made */
-OBMap * createDefaultOBMap(void){
+OBMap * createDefaultMap(void){
 
   static const char classname[] = "OBMap";
   OBMap *new_instance = malloc(sizeof(OBMap));
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocOBMap, &hashOBMap,
-           &compareOBMaps, classname);
+  initBase((obj *)new_instance, &deallocMap, &hashMap,
+           &compareMaps, classname);
 
-  /* ADD CLASS SPECIFIC INITIALIZATION HERE */
+    
 
   return new_instance;
 }
 
 
-obhash_t hashOBMap(const obj *to_hash){
+obhash_t hashMap(const obj *to_hash){
 
   static int8_t init = 0;
   static obhash_t seed = 0;
@@ -65,7 +65,7 @@ obhash_t hashOBMap(const obj *to_hash){
 }
 
 
-int8_t compareOBMaps(const obj *a, const obj *b){
+int8_t compareMaps(const obj *a, const obj *b){
   
   const OBMap *comp_a = (OBMap *)a;  
   const OBMap *comp_b = (OBMap *)b;  
@@ -87,7 +87,7 @@ int8_t compareOBMaps(const obj *a, const obj *b){
 }
 
 
-void deallocOBMap(obj *to_dealloc){
+void deallocMap(obj *to_dealloc){
 
   /* cast generic obj to OBMap */
   OBMap *instance = (OBMap *)to_dealloc;
