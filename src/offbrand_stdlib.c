@@ -22,19 +22,16 @@ void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
 
 obj * release(obj *instance){
 
-  assert(instance != NULL);
-  assert(*instance != NULL); /* assertion protects against double dealloc */
+  if(!instance) return NULL;
 
   /* if no other part of the program references the instance, destroy it */
   if(--((*instance)->references) <= 0){
 
-    if(!(*instance)->dealloc) return NULL; /* do nothing if no deallocator
-                                              is specified */
-
-    (*instance)->dealloc(instance); /*class specific memory cleanup called*/
+    /* call class specific memory cleanup, if it exists */
+    if((*instance)->dealloc)
+      (*instance)->dealloc(instance); 
 
     free((struct obj_struct *)*instance); /* free reference counted base */ 
-    (*instance) = NULL; /* attempt to mark instance as deallocated */
     free(instance); /* free the entire object */
 
     return NULL;
@@ -45,35 +42,37 @@ obj * release(obj *instance){
 
 void retain(obj *instance){
 
-  assert(instance != NULL);
-  assert(*instance != NULL); /* assertion protects against double dealloc */
+  if(!instance) return;
 
-  if((*instance)->references < UINT32_MAX) ++((*instance)->references);
+  assert((*instance)->references < UINT32_MAX); /* reference count > UINT32_MAX
+                                                   cannot be handled by lib */
+  ++((*instance)->references);
 
   return;
 }
 
 uint32_t referenceCount(obj *instance){
-  assert(instance != NULL);
-  assert(*instance != NULL); /* assertion protects against double dealloc */
+  if(!instance) return 0;
   return (*instance)->references;
 }
 
 
 
 uint8_t objIsOfClass(const obj *a, const char *classname){
-  assert(a != NULL && classname != NULL);
-  assert(*a != NULL); /* assertion protects against double 
-                                       dealloc */
+
+  if(!a){
+    if(strcmp(classname, "NULL") == 0) return 1;
+    return 0;
+  }
   if(strcmp((*a)->classname, classname) == 0) return 1;
   else return 0;
 }
 
 
 uint8_t sameClass(const obj *a, const obj *b){
-  assert(a != NULL && b != NULL);
-  assert(*a != NULL && *b != NULL); /* assertion protects against double 
-                                       dealloc */
+  /* if both NULL, both are of the "NULL" class */
+  if(!a && !b) return 1;
+  else if(!a || !b) return 0;
   return objIsOfClass(a, (*b)->classname);
 }
 
@@ -90,10 +89,9 @@ obhash_t hash(const obj *to_hash){
                                 function before a return */
 #endif
 
-  call_count++;
+  if(!to_hash) return 0;
 
-  assert(to_hash);
-  assert(*to_hash); /* assertion protects against double dealloc */
+  call_count++;
 
   if((*to_hash)->hash && call_count == 1) retval = (*to_hash)->hash(to_hash);
   else{ 
@@ -121,11 +119,10 @@ int8_t compare(const obj *a, const obj *b){
                                 function before a return */
 #endif
 
-  call_count++;
+  if(a == NULL && b == NULL) return OB_EQUAL_TO;
+  else if(a == NULL || b == NULL) return OB_NOT_EQUAL;
 
-  assert(a != NULL && b != NULL);
-  assert(*a != NULL && *b != NULL); /* assertion protects against double 
-                                       dealloc */
+  call_count++;
 
   if(sameClass(a, b) && call_count == 1 && (*a)->compare != NULL) 
     retval = (*a)->compare(a, b);
