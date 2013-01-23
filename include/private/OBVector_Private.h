@@ -19,7 +19,7 @@ struct OBVector_struct{
   obj base; /**< obj containing reference count and class membership data */
   obj **array; /**< intenal dynamically sized array of pointers to Offbrand
                     compatible class instances */
-  uint32_t num_objs; /**< Integer count of the number of contained objects */
+  uint32_t length; /**< Integer size to find all objects stored in Vector */
   uint32_t capacity; /**< Integer count of the capacity of the internal array */
 };
 
@@ -27,11 +27,19 @@ struct OBVector_struct{
 /* PRIVATE METHODS */
 
 /**
+ * @brief Create the default OBVector
+ * @param initial_capacity Capacity of the vector to be created
+ * @return A new, partially initialized instance of OBVector
+ */
+OBVector * createDefaultVector(uint32_t initial_capacity);
+
+/**
  * @brief Resizes a vector if the number of objects it contains is equal to its
  * capacity by doubling the potential capacity of the vector
  * @param v Pointer to an instance of OBVector
+ * @param index Index that vector must be resized to contain
  */
-void resizeVector(OBVector *v);
+void resizeVector(OBVector *v, uint32_t index);
 
 /**
  * @brief Internal merge sort implementation for an OBVector
@@ -82,5 +90,19 @@ int8_t compareVectors(const obj *a, const obj *b);
  * instances reference count drops to 0!
  */
 void deallocVector(obj *to_dealloc);
+
+/* PRIVATE UTILITY METHODS */
+
+/**
+ * @brief Searches an array of obj for the first encountered non-NULL pointer,
+ * returning the index where this pointer is found
+ *
+ * @param array Array of pointers to instances of Offbrand compatible classes
+ * @param index Index from which to begin searching
+ *
+ * @retval <UINT32_MAX Index where a non-NULL pointer was found
+ * @retval UINT32_MAX No non-NULL pointer was found
+ */
+uint32_t findValidPrecursorIndex(obj **array, uint32_t index);
 
 #endif

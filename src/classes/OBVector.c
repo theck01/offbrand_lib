@@ -11,6 +11,172 @@
 
 OBVector * createVector(uint32_t initial_capacity){
 
+  uint32_t i, new_cap;
+
+  new_cap = 1;
+  while(initial_capacity > new_cap) new_cap *= 2;
+  if(new_cap > UINT32_MAX) new_cap = UINT32_MAX;
+
+  OBVector *new_instance = createDefaultVector(new_cap);
+  for(i=0; i<new_cap; i++) new_instance->array[i] = NULL;
+
+  return new_instance;
+}
+
+
+OBVector * copyVector(const OBVector *to_copy){
+
+  uint32_t i;
+  OBVector *new_vec;
+
+  /* if there is nothing to copy, do nothing */
+  assert(to_copy);
+
+  new_vec = createDefaultVector(to_copy->capacity);
+  new_vec->length = to_copy->length;
+
+  for(i=0; i<to_copy->capacity; i++){
+    new_vec->array[i] = to_copy->array[i];
+    retain((obj *)new_vec->array[i]); /*retain all objects, the new vector also
+                                        references them */
+  }
+
+  return new_vec;
+}
+
+
+uint32_t vectorLength(const OBVector *v){
+  assert(v != NULL);
+  return v->length;
+}
+
+
+void storeAtVectorIndex(OBVector *v, obj *to_store, int64_t index){
+
+  assert(v != NULL);
+
+  /* if negatively indexing, index from the end of the array backwards */
+  if(index < 0) index += v->length; 
+
+  assert(index < UINT32_MAX); /* assert not indexing beyond capacity */
+  assert(index >= 0); /* assert not negative indexing after offset */
+
+  /* ensure vector can store element at index */
+  resizeVector(v, (uint32_t)index);
+
+  retain(to_store);
+  release(v->array[index]);
+  v->array[index] = to_store;
+
+  /* find vector length if modifying beyond known length */
+  if(index+1 >= v->length) 
+    v->length = findValidPrecursorIndex(v->array, index) + 1;
+
+  return;
+}
+
+
+obj * objAtVectorIndex(const OBVector *v, int64_t index){
+
+  assert(v != NULL);
+
+  /* if negatively indexing, index from the end of the array backwards */
+  if(index < 0) index += v->length; 
+  assert(index < UINT32_MAX); /* assert not indexing beyond capacity */
+  assert(index >= 0); /* assert not negative indexing beyond 0 index */
+
+  if(index < v->length) return v->array[index];
+  return NULL;
+}
+
+
+void catVectors(OBVector *destination, OBVector *to_append){
+
+  uint64_t i;
+
+  assert(destination != NULL);
+  assert(to_append != NULL);
+  /* make sure that the two vectors will not overflow when concatenated */
+  assert(destination->length + to_append->length >= destination->length);
+ 
+  /* ensure vector can store all elements in to_append */
+  resizeVector(destination, destination->length + to_append->length - 1);
+
+  /* copy contents of to_append */
+  for(i=0; i<to_append->length; i++){
+    retain((obj *)to_append->array[i]);
+    destination->array[i+destination->length] = to_append->array[i];
+  }
+
+  destination->length += to_append->length;
+
+  return;
+}
+
+
+uint8_t findObjInVector(const OBVector *v, const obj *to_find){
+
+  uint32_t i;
+
+  assert(v != NULL);
+  assert(to_find != NULL);
+
+  for(i=0; i<v->length; i++){
+    /* if the object exists in the vector */
+    if(compare(to_find, v->array[i]) == OB_EQUAL_TO){
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+
+void sortVector(OBVector *v, int8_t order){
+  sortVectorWithFunct(v, order, &compare);
+}
+
+
+void sortVectorWithFunct(OBVector *v, int8_t order, compare_fptr funct){
+
+  obj **sorted;
+
+  assert(v != NULL);
+  assert(funct != NULL);
+  assert(order == OB_LEAST_TO_GREATEST || order == OB_GREATEST_TO_LEAST);
+
+  sorted = recursiveSortContents(v->array, v->capacity, order, funct);
+
+  free(v->array);
+  v->array = sorted;
+  v->length = findValidPrecursorIndex(v->array, v->length-1) + 1;
+
+  return;
+}
+
+
+void clearVector(OBVector *v){
+
+  uint32_t i;
+
+  assert(v != NULL);
+
+  for(i=0; i<v->length; i++){
+    release(v->array[i]);
+  }
+
+  v->length = 0;
+
+  return;
+}
+
+
+/* PRIVATE METHODS */
+
+
+OBVector * createDefaultVector(uint32_t initial_capacity){
+
+  uint32_t i;
   static const char classname[] = "OBVector";
 
   OBVector *new_instance = malloc(sizeof(OBVector));
@@ -26,328 +192,40 @@ OBVector * createVector(uint32_t initial_capacity){
     initial_capacity = 1;
   }
 
-  new_instance->array = malloc(sizeof(obj *)*initial_capacity);
+  new_instance->array = malloc(initial_capacity*sizeof(obj *));
   assert(new_instance->array != NULL);
 
   new_instance->capacity = initial_capacity;
-  new_instance->num_objs = 0;
+  new_instance->length = 0;
 
   return new_instance;
 }
 
 
-OBVector * copyVector(const OBVector *to_copy){
+void resizeVector(OBVector *v, uint32_t index){
 
   uint32_t i;
-  OBVector *new_vec;
-
-  /* if there is nothing to copy, do nothing */
-  assert(to_copy);
-
-  new_vec = createVector(to_copy->capacity);
-  new_vec->num_objs = to_copy->num_objs;
-  new_vec->capacity = to_copy->capacity;
-
-  for(i=0; i<to_copy->num_objs; i++){
-    new_vec->array[i] = to_copy->array[i];
-    retain((obj *)new_vec->array[i]); /*retain all objects, the new vector also
-                                        references them */
-  }
-
-  return new_vec;
-}
-
-
-uint32_t sizeOfVector(const OBVector *v){
-  assert(v != NULL);
-  return v->num_objs;
-}
-
-
-void fitVectorToContents(OBVector *v){
-
-  uint32_t i;
-  obj **new_array;
-  
-  assert(v);
-
-  new_array= malloc(sizeof(obj *)*v->num_objs);
-  assert(new_array);
-
-  for(i=0; i<v->num_objs; i++){
-    new_array[i] = v->array[i];
-  }
-
-  v->capacity = v->num_objs;
-  free(v->array);
-  v->array = new_array;
-
-  return;
-}
-
-
-void addToVector(OBVector *v, obj *to_add){
-  assert(v != NULL);
-  assert(to_add != NULL);
-  insertAtVectorIndex(v, to_add, v->num_objs);
-  return;
-}
-
-
-void insertAtVectorIndex(OBVector *v, obj *to_add, int64_t index){
-
-  int64_t i;
-
-  assert(v != NULL);
-  assert(to_add != NULL);
-  assert(index <= v->num_objs);
-
-  /* if indexing past array bounds, add to the end of the array */
-  if(index > v->num_objs) index = v->num_objs;
-  /* if negatively indexing, index from the end of the array backwards */
-  else if(index < 0){
-    if(index < -((int64_t)v->num_objs)) index = 0;
-    else index += v->num_objs; 
-  }
-
-  resizeVector(v);
-
-  /* shift all entries at or after index by 1 */
-  for(i=v->num_objs; i>index; i--){
-    v->array[i] = v->array[i-1];
-  }
-
-  retain(to_add);
-  v->array[index] = to_add;
-  v->num_objs++;
-
-  return;
-}
-
-
-void catVectors(OBVector *destination, OBVector *to_append){
-
-  uint64_t i, new_cap;
-  obj **new_array;
-
-  assert(destination != NULL);
-  assert(to_append != NULL);
-  /* make sure that the two vectors will not overflow when concatenated */
-  assert(destination->num_objs + to_append->num_objs > destination->num_objs);
-
-  new_cap = destination->capacity;
-  while(new_cap < destination->num_objs + to_append->num_objs){
-    new_cap <<= 1;
-    if(new_cap > UINT32_MAX){
-      new_cap = UINT32_MAX;
-      break;
-    }
-  }
-
-  /* ensure that the new capacity is indeed big enough for the concatenation */
-  assert(new_cap > destination->num_objs + to_append->num_objs);
-
-  new_array = malloc(sizeof(obj *)*new_cap);
-  assert(new_array != NULL);
-
-  /* copy contents of destination first, without retaining because objs are
-   * still held in the same container */
-  for(i=0; i<destination->num_objs; i++){
-    new_array[i] = destination->array[i];
-  }
-
-  /* copy contents of to_append */
-  for(i=0; i<to_append->num_objs; i++){
-    retain((obj *)to_append->array[i]);
-    new_array[i+destination->num_objs] = to_append->array[i];
-  }
-
-  free(destination->array);
-  destination->array = new_array;
-  destination->num_objs += to_append->num_objs;
-  destination->capacity = new_cap;
-
-  return;
-}
-
-
-void replaceInVector(OBVector *v, obj *new_obj, int64_t index){
-
-  assert(v != NULL);
-  assert(new_obj != NULL);
-
-  /* if indexing past array bounds, do nothing */
-  if(index > v->num_objs) return;
-  /* if negatively indexing, index from the end of the array backwards */
-  else if(index < 0){
-    if(index < -((int64_t)v->num_objs)) return;
-    else index += v->num_objs; 
-  }
-
-  retain(new_obj);
-  release(v->array[index]);
-  v->array[index] = new_obj;
-
-  return;
-}
-
-
-obj * objAtVectorIndex(const OBVector *v, int64_t index){
-  assert(v != NULL);
-
-  /* if indexing past array bounds, return NULL */
-  if(index > v->num_objs) return NULL;
-
-  /* if negatively indexing, index from the end of the array backwards, where
-   * -1 corresponds to the very end of the array (and is equivalent to 
-   *  a call to addToVector */
-  if(index < 0){
-    if(index < -((int64_t)v->num_objs)) return NULL;
-    else index += v->num_objs; 
-  }
-
-  return v->array[index];
-}
-
-
-uint8_t findObjInVector(const OBVector *v, const obj *to_find){
-
-  uint32_t i;
-
-  assert(v != NULL);
-  assert(to_find != NULL);
-
-  for(i=0; i<v->num_objs; i++){
-    /* if the object exists in the vector */
-    if(compare(to_find, v->array[i]) == OB_EQUAL_TO){
-      return 1;
-    }
-  }
-
-  return 0;
-}
-
-
-void sortVector(OBVector *v, int8_t order){
-
-  obj **sorted;
-
-  assert(v != NULL);
-
-  /* custom comparison function was not added, use simple pointer comparator */
-  sorted = recursiveSortContents(v->array, v->num_objs, order, &compare);
-
-  free(v->array);
-  v->array = sorted;
-
-  return;
-}
-
-
-void sortVectorWithFunct(OBVector *v, int8_t order, compare_fptr funct){
-
-  obj **sorted;
-
-  assert(v != NULL);
-  assert(funct != NULL);
-
-  /* custom comparison function was not added, use simple pointer comparator */
-  sorted = recursiveSortContents(v->array, v->num_objs, order, funct);
-
-  free(v->array);
-  v->array = sorted;
-
-  return;
-}
-
-
-void removeFromVectorEnd(OBVector *v){
-  assert(v != NULL);
-  return removeFromVectorIndex(v, v->num_objs-1);
-}
-
-
-void removeFromVectorIndex(OBVector *v, int64_t index){
-  
-  int64_t i;
-
-  assert(v != NULL);
-
-  /* if the vector is empty, do nothing */
-  if(v->num_objs < 1){
-    return;
-  }
-
-  /* if indexing past array bounds do nothing */
-  if(index > v->num_objs) return;
-
-  /* if negatively indexing, index from the end of the array backwards, where
-   * -1 corresponds to the very end of the array (and is equivalent to 
-   *  a call to addToVector */
-  if(index < 0){
-    if(index < -((int64_t)v->num_objs)) return;
-    else index += v->num_objs; 
-  }
-
-  /* release object being removed */
-  release(v->array[index]);
-  
-  /* fill in space left by object removal */
-  for(i=index+1; i<v->num_objs; i++){
-    v->array[i-1] = v->array[i];
-  }
-
-  v->num_objs--;
-
-  return;
-}
-
-void clearVector(OBVector *v){
-
-  uint32_t i;
-
-  assert(v != NULL);
-
-  for(i=0; i<v->num_objs; i++){
-    release(v->array[i]);
-  }
-
-  v->num_objs = 0;
-
-  return;
-}
-
-
-/* PRIVATE METHODS */
-
-
-void resizeVector(OBVector *v){
-
-  uint32_t i, new_cap;
+  uint64_t new_cap;
   obj **array;
 
-  if(v->num_objs == v->capacity){
-    
-    /* if maximum size has been reached fail*/
-    assert(v->capacity != UINT32_MAX);
-    
-    new_cap = v->capacity*2;
+  assert(index < UINT32_MAX);
 
-    if(new_cap > UINT32_MAX){
-      new_cap = UINT32_MAX;
-    }
-    
-    array = malloc(sizeof(obj *)*new_cap);
-    assert(array != NULL);
+  if(index < v->capacity) return;
 
-    for(i=0; i<v->num_objs; i++){
-      array[i] = v->array[i];
-    }
+  /* find the next power of two capacity that can store the index */
+  new_cap = v->capacity;
+  while(index+1 > new_cap) new_cap *= 2;
+  if(new_cap > UINT32_MAX) new_cap = UINT32_MAX;
 
-    free(v->array);
-    v->array = array;
-    v->capacity = new_cap;
-  }
+  array = malloc(new_cap*sizeof(obj *));
+
+  assert(array != NULL);
+  for(i=0; i<v->capacity; i++) array[i] = v->array[i];
+  for(i=v->capacity; i<new_cap; i++) array[i] = NULL;
+
+  free(v->array);
+  v->array = array;
+  v->capacity = new_cap;
 
   return;
 }
@@ -357,7 +235,6 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
                              compare_fptr funct){
   
   uint32_t i,j, split;
-  int8_t comp_result;
   obj **left_sorted, **right_sorted;
   obj **sorted;
 
@@ -387,8 +264,10 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
   while(i < split && j < (size-split)){
     
     /* if the comparison of the left to the right matches the desired order,
-     * then the next item to go in the sorted array is from the left */
-    if((comp_result = funct(left_sorted[i], right_sorted[j])) == order){
+     * then the next item to go in the sorted array is from the left. Ensure
+     * that NULL is left at the tail of the sorted array as well */
+    if(funct(left_sorted[i], right_sorted[j]) == order || 
+        right_sorted[j] == NULL){
       sorted[i+j] = left_sorted[i];
       i++;
     }
@@ -439,7 +318,7 @@ obhash_t hashVector(const obj *to_hash){
   }
   
   value = seed;
-  for(i=0; i<instance->num_objs; i++){
+  for(i=0; i<instance->length; i++){
     value += hash(instance->array[i]);
     value += value << 10;
     value ^= value >> 6;
@@ -464,9 +343,9 @@ int8_t compareVectors(const obj *a, const obj *b){
   assert(objIsOfClass(a, "OBVector"));
   assert(objIsOfClass(b, "OBVector"));
 
-  if(comp_a->num_objs != comp_b->num_objs) return OB_NOT_EQUAL;
+  if(comp_a->length != comp_b->length) return OB_NOT_EQUAL;
 
-  for(i=0; i<comp_a->num_objs; i++)
+  for(i=0; i<comp_a->length; i++)
     if(compare(comp_a->array[i], comp_b->array[i]) != OB_EQUAL_TO)
       return OB_NOT_EQUAL;
 
@@ -488,3 +367,10 @@ void deallocVector(obj *to_dealloc){
   return;
 }
 
+
+/* PRIVATE UTILITY METHODS */
+
+uint32_t findValidPrecursorIndex(obj **array, uint32_t index){
+  while(index < UINT32_MAX && !array[index]) index--;
+  return index;
+}
