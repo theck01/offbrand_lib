@@ -94,7 +94,7 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
     cur_term_int = atoi(cur_term);
 
     new_term_obj = createTerm(cur_term_int);
-    addToVector(terms,(obj *)new_term_obj);
+    storeAtVectorIndex(terms,(obj *)new_term_obj, vectorLength(terms));
     release((obj *)new_term_obj);
 
     curhead += match.rm_eo;
@@ -111,7 +111,8 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
       cur_term_int = atoi(cur_term);
 
       new_term_obj = createTerm(cur_term_int);
-      addToVector(dont_cares, (obj *)new_term_obj);
+      storeAtVectorIndex(dont_cares, (obj *)new_term_obj, 
+                         vectorLength(dont_cares));
       release((obj *)new_term_obj);
 
       curhead += match.rm_eo;
@@ -125,7 +126,7 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
   regfree(&sop_regex);
 
   /* check that some terms were read in */
-  if(sizeOfVector(terms) == 0){
+  if(vectorLength(terms) == 0){
     fprintf(stderr, "minlog:parseEqnStr - No terms supplied in the "
                     "equation,\nProgram exits due to bad equation format\n");
     exit(1);
@@ -136,15 +137,15 @@ uint8_t parseEqnString(const char *eqnstr, OBVector *terms,
 
     if(retval == MINLOG_MINTERMS) printf("Minterms parsed from equation:\n");
     else printf("Maxterms parsed from equation:\n");
-    for(i=0; i<sizeOfVector(terms); i++){
+    for(i=0; i<vectorLength(terms); i++){
       printf("%u\n", getTermValue((Term *)objAtVectorIndex(terms, i)));
     }
 
     printf("\n");
 
-    if(sizeOfVector(dont_cares) > 0){
+    if(vectorLength(dont_cares) > 0){
       printf("Dont cares parsed from equation:\n");
-      for(i=0; i<sizeOfVector(dont_cares); i++){
+      for(i=0; i<vectorLength(dont_cares); i++){
         printf("%u\n", getTermValue((Term *)objAtVectorIndex(dont_cares, i)));
       }
     }
@@ -164,12 +165,12 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
   NCube *tmp_cube, *a, *b;
   Term *tmp_term;
 
-  assert(terms != NULL && sizeOfVector(terms) != 0);
+  assert(terms != NULL && vectorLength(terms) != 0);
 
-  maxi = sizeOfVector(terms);
+  maxi = vectorLength(terms);
 
   /* create vector for 0 cubes */
-  cur_cube_vector = createVector(sizeOfVector(terms)+sizeOfVector(dont_cares));
+  cur_cube_vector = createVector(vectorLength(terms)+vectorLength(dont_cares));
 
   /* create all cubes associated with terms */
   for(i=0; i<maxi; i++){
@@ -181,7 +182,8 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
     tmp_cube = createNCube(getTermValue(tmp_term), 0);
 
     /* add cube to cur_cube_vector */
-    addToVector(cur_cube_vector, (obj *)tmp_cube);
+    storeAtVectorIndex(cur_cube_vector, (obj *)tmp_cube, 
+                       vectorLength(cur_cube_vector));
 
     /* release tmp_cube so only vector maintains valid reference */
     release((obj *)tmp_cube);
@@ -190,7 +192,7 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
   /* if dont_care terms are supplied, create cubes for them */
   if(dont_cares){
 
-    maxi = sizeOfVector(dont_cares);
+    maxi = vectorLength(dont_cares);
 
     for(i=0; i<maxi; i++){
       /* get term for cube creation */
@@ -201,7 +203,8 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
       tmp_cube = createNCube(getTermValue(tmp_term), 1);
 
       /* add cube to cur_cube_vector */
-      addToVector(cur_cube_vector, (obj *)tmp_cube);
+      storeAtVectorIndex(cur_cube_vector, (obj *)tmp_cube,
+                         vectorLength(cur_cube_vector));
 
       /* release tmp_cube so only vector maintains valid reference */
       release((obj *)tmp_cube);
@@ -214,7 +217,8 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
   cube_vectors = createVector(1);
   
   /* add 0 cube vector to vector of vectors */
-  addToVector(cube_vectors, (obj *)cur_cube_vector);
+  storeAtVectorIndex(cube_vectors, (obj *)cur_cube_vector, 
+                     vectorLength(cube_vectors));
 
   /* release cur_cube_vector so only cube_vectors maintains valid reference */
   release((obj *)cur_cube_vector);
@@ -230,10 +234,10 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
 
     /* get previous cube vector, and create new vector for next order of cubes*/
     prev_cube_vector = (OBVector *)objAtVectorIndex(cube_vectors, k);
-    cur_cube_vector = createVector(sizeOfVector(prev_cube_vector)/4);
+    cur_cube_vector = createVector(vectorLength(prev_cube_vector)/4);
 
     /* for all pairs cubes, attempt to merge */
-    maxi = sizeOfVector(prev_cube_vector);
+    maxi = vectorLength(prev_cube_vector);
     for(i=0; i<maxi-1; i++){
 
       a = (NCube *)objAtVectorIndex(prev_cube_vector, i);
@@ -247,7 +251,8 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
          * the cur cube vector */
         if((tmp_cube = mergeNCubes(a, b))){
           if(!findObjInVector(cur_cube_vector,(obj *)tmp_cube)){
-            addToVector(cur_cube_vector, (obj *)tmp_cube);
+            storeAtVectorIndex(cur_cube_vector, (obj *)tmp_cube,
+                               vectorLength(cur_cube_vector));
             /* increment loop to indicate that larger cube was created */
             loop++;
           } 
@@ -258,7 +263,8 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
       }
     }
     
-    addToVector(cube_vectors, (obj *)cur_cube_vector);
+    storeAtVectorIndex(cube_vectors, (obj *)cur_cube_vector,
+                       vectorLength(cube_vectors));
     /* release cur_cube_vector so cube_vectors maintains only valid reference */
     release((obj *)cur_cube_vector);
     /* increment k to work on next order of cube vectors */
@@ -268,16 +274,16 @@ OBVector * findLargestPrimeImplicants(const OBVector *terms,
   /* Create final vector of only prime implicant cubes */
   result = createVector(1);
 
-  maxi = sizeOfVector(cube_vectors);
+  maxi = vectorLength(cube_vectors);
   for(i=0; i<maxi; i++){
     
     cur_cube_vector = (OBVector *)objAtVectorIndex(cube_vectors, i);
-    maxj = sizeOfVector(cur_cube_vector);
+    maxj = vectorLength(cur_cube_vector);
 
     for(j=0; j<maxj; j++){
       tmp_cube = (NCube *)objAtVectorIndex(cur_cube_vector, j);
       if(isNCubePrimeImplicant(tmp_cube)){
-        addToVector(result, (obj *)tmp_cube);
+        storeAtVectorIndex(result, (obj *)tmp_cube, vectorLength(result));
       }
     }
   }
@@ -293,7 +299,7 @@ void printEqnVector(const OBVector *essential_pis, uint8_t is_sop,
   char *cubestr;
 
   printf("\nReduced Equation:\n");
-  for(i=0; i<sizeOfVector(essential_pis); i++){
+  for(i=0; i<vectorLength(essential_pis); i++){
 
     assert(objIsOfClass(objAtVectorIndex(essential_pis, i), "NCube"));
     cubestr = nCubeStr((NCube *)objAtVectorIndex(essential_pis, i), is_sop,
@@ -302,7 +308,7 @@ void printEqnVector(const OBVector *essential_pis, uint8_t is_sop,
     free(cubestr);
     
     /* if printing terms in sum of products, print '+' in proper places */
-    if(is_sop && i != sizeOfVector(essential_pis)-1) printf("+");
+    if(is_sop && i != vectorLength(essential_pis)-1) printf("+");
   }
 
   printf("\n");
