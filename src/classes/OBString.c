@@ -115,7 +115,7 @@ OBVector * splitString(const OBString *s, const char *delim){
   OBVector *tokens;
   OBString *copy, *substring;
   char *marker;
-  uint32_t i, delim_len;
+  uint32_t i, delim_len, substrs;
 
 
   assert(s);
@@ -137,10 +137,11 @@ OBVector * splitString(const OBString *s, const char *delim){
   marker = copy->str;
 
   /* copy all found substrings into new OBStrings for Vector */
+  substrs=0;
   while(marker < copy->str+copy->length){
     substring = createString(marker);
     marker += substring->length;
-    addToVector(tokens, (obj *)substring);
+    storeAtVectorIndex(tokens, (obj *)substring, substrs++);
     release((obj *)substring); /* only tokens vector needs a reference */
     while(*marker == '\0' && marker < copy->str + copy->length) marker++;
   }
