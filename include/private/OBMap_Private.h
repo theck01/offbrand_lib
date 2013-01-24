@@ -11,6 +11,16 @@
 #include "../OBVector.h"
 #include "../OBDeque.h"
 
+/* capacity lookup table */
+uint32_t MAP_CAPACITIES[] = {
+  127,  /* ~ 2^7 */
+  8191, /* ~ 2^13 */
+  131071, /* ~ 2^17 */
+  524287, /* ~ 2^19 */
+  2147483647, /* ~ 2^31 */
+
+};
+
 /* OBMapPair DATA */
 
 /**
@@ -19,9 +29,8 @@
  */
 typedef struct OBMapPair_struct{
   obj base; /**< obj containing reference count and class membership data */
-  obj *key;
-  obj *value;
-  OBDequeIterator *list_it;
+  obj *key; /**< obj pointer to the key used to lookup within the hash */
+  obj *value; /**< obj pointer to the value stored in the hash */
 } OBMapPair;
 
 /* OBMapPair PRIVATE METHODS */
@@ -32,12 +41,14 @@ typedef struct OBMapPair_struct{
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBMapPair * createDefaultMapPair(void);
+OBMapPair * createMapPair(obj *key, obj *value);
 
 /** 
  * @brief Destructor for OBMapPair
+ *
  * @param to_dealloc An obj pointer to an instance of OBMap with
  * reference count of 0
+ *
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
@@ -52,24 +63,34 @@ void deallocMapPair(obj *to_dealloc);
  */
 struct OBMap_struct{
   obj base; /**< obj containing reference count and class membership data */
-  size_t capacity;
-  OBVector *pairs;
-  OBDeque *pair_list;
+  uint8_t cap_idx; /**< index within MAP_CAPACITIES used as lookup for
+                     capacity of map */
+  OBVector *hash_table; /**< map lookup table */
+  OBDeque *pairs; /**< A dense list of all MapPairs within the map, for speedy
+                    rehash */
+  uint32_t collisions; /**< variable that tracks the number of hashing
+                         colisions encountered when adding keys to the table */
 };
 
 /* OBMap PRIVATE METHODS */
 
 /**
  * @brief Default constructor for OBMap
+ *
+ * @param cap_idx Lookup value for capacity within MAP_CAPACITIES table
+ *
  * @return An instance of class OBMap
+ *
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBMap * createDefaultMap(void);
+OBMap * createDefaultMap(uint8_t cap_idx);
 
 /**
  * @brief Hash function for OBMap
+ *
  * @param to_hash An obj pointer to an instance of OBMap
+ *
  * @return Key value (hash) for the given obj pointer to a OBMap
  */
 obhash_t hashMap(const obj *to_hash);
@@ -90,19 +111,52 @@ int8_t compareMaps(const obj *a, const obj *b);
 
 /** 
  * @brief Destructor for OBMap
+ *
  * @param to_dealloc An obj pointer to an instance of OBMap with
  * reference count of 0
+ *
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
 void deallocMap(obj *to_dealloc);
 
 /**
- * @brief Resizes an OBMap to have capacity to store n pairs
- * @param n An integer corresponding to the new capacity of the OBMap
- * @warning Cannot be called with an n < number of elements in the OBMap
+ * @brief Increases the size of the map to the next capacity within 
+ * MAP_CAPACITIES array
+ *
+ * @param to_size OBMap to resize
  */
-void resizeMap(OBMap *to_size, size_t n);
+void increaseMapSize(OBMap *to_size);
+
+/**
+ * @brief Adds an OBDequeIterator to the proper location within the OBMap
+ *
+ * @param m The OBMap to add the iterator to
+ * @param it The OBDequeIterator to add to the hash table
+ */
+void addToHashTable(OBMap *m, OBDequeIterator *it);
+
+/**
+ * @brief Finds a key within the hash table, it exists
+ *
+ * @param m The OBMap in which to search for the key
+ * @param key The key to serach for within the OBMap
+ *
+ * retval NULL Key was not found in the OBMap
+ * retavl non-NULL Pointer to and OBDequeIterator, pinpointing key-value
+ * pair in pairs list
+ */
+void findKeyInHashTable(OBMap *m, obj *key
+
+/**
+ * @brief Generates an offset from the hash value to rectify collisions
+ *
+ * @param prev_offset Last offset provided (0 if initiating call for the first
+ * time)
+ *
+ * @return New offset to the next possible location to insert within table
+ */
+uint32_t collisionOffset(uint32_t prev_offset);
 
 #endif
 
