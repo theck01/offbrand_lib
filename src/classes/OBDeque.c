@@ -6,7 +6,7 @@
 /* PUBLIC METHODS */
 
 
-OBDeque * createEmptyDeque(void){
+OBDeque * createDeque(void){
   return createDefaultDeque();
 }
 
@@ -19,7 +19,7 @@ OBDeque * copyDeque(const OBDeque *to_copy){
   
   assert(to_copy);
 
-  copy = createEmptyDeque();
+  copy = createDefaultDeque();
 
   iter = getDequeHeadIt(to_copy);
   

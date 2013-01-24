@@ -11,7 +11,7 @@ int main (){
   uint32_t i;
 
   /* create test objects */
-  test_deque_a = createEmptyDeque();
+  test_deque_a = createDeque();
   a = createTest(1);
   b = createTest(2);
   c = createTest(3);

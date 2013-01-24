@@ -21,7 +21,7 @@ typedef struct OBDequeIterator_struct OBDequeIterator;
 
 /* constructor, creates a new OBDeque with not contents and a reference count
  * of 1 */
-OBDeque * createEmptyDeque(void);
+OBDeque * createDeque(void);
 
 /* copy constructor, creates a new OBDeque with its own memory (a deep copy)
  * that references the same objs */
