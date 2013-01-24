@@ -8,9 +8,10 @@
 #define OBMAP_PRIVATE_H
 
 #include "../OBMap.h"
-#include "OBDeque_Private.h" /* required for access to OBDeque data */
+#include "../OBVector.h"
+#include "../OBDeque.h"
 
-/* DATA */
+/* OBMapPair DATA */
 
 /**
  * @brief OBMap pair internal structure, encapsulates a key-value pair for the
@@ -20,19 +21,8 @@ typedef struct OBMapPair_struct{
   obj base; /**< obj containing reference count and class membership data */
   obj *key;
   obj *value;
-  OBDequeNode *list_node;
+  OBDequeIterator *list_it;
 } OBMapPair;
-
-/**
- * @brief OBMap internal structure, encapsulating all data needed for
- * an instance of OBMap
- */
-struct OBMap_struct{
-  obj base; /**< obj containing reference count and class membership data */
-  size_t capacity;
-  OBMapPair **pairs;
-  OBDeque *pair_list;
-};
 
 /* OBMapPair PRIVATE METHODS */
 
@@ -43,6 +33,29 @@ struct OBMap_struct{
  * individual members as needed, so that all base data is initialized properly.
  */
 OBMapPair * createDefaultMapPair(void);
+
+/** 
+ * @brief Destructor for OBMapPair
+ * @param to_dealloc An obj pointer to an instance of OBMap with
+ * reference count of 0
+ * @warning Do not call manually, release will call automatically when the
+ * instances reference count drops to 0!
+ */
+void deallocMapPair(obj *to_dealloc); 
+
+
+/* OBMap DATA */
+
+/**
+ * @brief OBMap internal structure, encapsulating all data needed for
+ * an instance of OBMap
+ */
+struct OBMap_struct{
+  obj base; /**< obj containing reference count and class membership data */
+  size_t capacity;
+  OBVector *pairs;
+  OBDeque *pair_list;
+};
 
 /* OBMap PRIVATE METHODS */
 
