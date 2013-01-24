@@ -42,7 +42,11 @@ $(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
 
 # Build tests executables (special builds encountered first)
 $(BIN_TEST)/OBString_test: $(TESTS)/OBString_test.c $(BIN_CLASS)/OBString.o \
-	$(TEST_DEP) $(BIN_CLASS)/OBVector.o
+	$(BIN_CLASS)/OBVector.o $(TEST_DEP)
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(BIN_TEST)/OBMap_test: $(TESTS)/OBMap_test.c $(BIN_CLASS)/OBMap.o \
+	$(BIN_CLASS)/OBDeque.o $(BIN_CLASS)/OBVector.o $(TEST_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
 $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
