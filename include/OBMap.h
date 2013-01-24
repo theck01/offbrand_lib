@@ -22,6 +22,21 @@ typedef struct OBMap_struct OBMap;
 OBMap * createMap(void);
 
 /**
+ * @brief Constructor, creates a new, empty OBMap instance with capacity given
+ * @param capacity, Capacity required for OBMap instance
+ * @return Pointer to the newly created OBMap instance
+ */
+OBMap *createMapWithCapacity(uint32_t capacity);
+
+/**
+ * @brief Copy constructor, creates a new OBMap with the exact same contents
+ * of another OBMap
+ * @param map, Pointer to an instance of OBMap to copy
+ * @return A copy of the provided OBMap
+ */
+OBMap * copyMap(const OBMap *to_copy);
+
+/**
  * @brief Add a key-value pair to an OBMap
  *
  * @param map, Pointer to an instance of OBMap
