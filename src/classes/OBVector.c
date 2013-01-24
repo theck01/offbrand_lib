@@ -176,7 +176,6 @@ void clearVector(OBVector *v){
 
 OBVector * createDefaultVector(uint32_t initial_capacity){
 
-  uint32_t i;
   static const char classname[] = "OBVector";
 
   OBVector *new_instance = malloc(sizeof(OBVector));
