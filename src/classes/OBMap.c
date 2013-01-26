@@ -15,10 +15,10 @@
 
 /* OBMapPair PRIVATE METHODS */
 
-OBMap * createMapPair(obj *key, obj *value){
+OBMapPair * createMapPair(obj *key, obj *value){
 
   static const char classname[] = "OBMapPair";
-  OBMap *new_instance = malloc(sizeof(OBMapPair));
+  OBMapPair *new_instance = malloc(sizeof(OBMapPair));
   assert(new_instance != NULL);
 
   /* initialize base class data */
@@ -36,7 +36,7 @@ OBMap * createMapPair(obj *key, obj *value){
 void deallocMapPair(obj *to_dealloc){
 
   /* cast generic obj to OBMap */
-  OBMap *instance = (OBMapPair *)to_dealloc;
+  OBMapPair *instance = (OBMapPair *)to_dealloc;
 
   assert(to_dealloc);
   assert(objIsOfClass(to_dealloc, "OBMapPair"));
@@ -132,3 +132,41 @@ void deallocMap(obj *to_dealloc){
   return;
 }
 
+
+void increaseMapSize(OBMap *to_size){
+
+  assert(to_size);
+  assert(to_size->cap_idx < 32);
+
+  to_size->cap_idx++;
+  to_size->collisions = 0; /* before resize reset collisions */
+
+  rehashMap(to_size);
+}
+
+void addToHashTable(OBMap *m, OBDequeIterator *it){
+
+  obhash_t hash_value;
+  OBMapPair *pair;
+
+  assert(m);
+  assert(it);
+
+  pair = (OBMapPair *)objAtDequeIt(m->pairs, it);
+  hash_value = hash(pair->key)%MAP_CAPACITIES[m->cap_idx];
+  offset = 0;
+
+  while(objAtVectorIndex(m->hash_table, hash_value)){
+    offset = collisionOffset(offset);
+    hash_value = (hash_value+offset)%MAP_CAPACITIES[m->cap_idx];
+    m->collisions++;
+  }
+
+  storeAtVectorIndex(m->hash_table, it);
+}
+
+
+
+
+
+  
