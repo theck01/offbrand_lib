@@ -6,7 +6,7 @@
 int main (){
 
   OBDeque *test_deque_a, *test_deque_b, *joined_deque;
-  OBDequeIterator *head_it, *tail_it;
+  OBDequeIterator *head_it, *tail_it, *copy_it;
   OBTest *a, *b, *c, *d, *e;
   uint32_t i;
 
@@ -111,6 +111,10 @@ int main (){
   release((obj *)tail_it);
 
   tail_it = getDequeTailIt(joined_deque);
+  copy_it = copyDequeIterator(tail_it);
+  release(tail_it);
+  tail_it = copy_it;
+  
 
   for(i=0; i<10; i++){
     assert(getTestID((OBTest *)objAtDequeIt(joined_deque, tail_it)) == i/2+1);
