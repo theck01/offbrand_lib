@@ -250,20 +250,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find){
 
 
 void sortDeque(OBDeque *deque, int8_t order){
-
-  OBDeque sorted; /* stack variable to remove internal memory management
-                     burden */
-
-  assert(deque);
-  assert(order == OB_LEAST_TO_GREATEST || order == OB_GREATEST_TO_LEAST);
-
-  sorted = recursiveSort(*deque, order, &compare);
-
-  /* connect head and tail of newly sorted list to deque */
-  deque->head = sorted.head;
-  deque->tail = sorted.tail;
-
-  return;
+  sortDequeWithFunct(deque, order, &compare);
 }
   
 
