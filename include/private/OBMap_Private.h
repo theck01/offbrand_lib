@@ -17,7 +17,7 @@ uint32_t MAP_CAPACITIES[] = {
   8191, /* ~ 2^13 */
   131071, /* ~ 2^17 */
   524287, /* ~ 2^19 */
-  2147483647, /* ~ 2^31 */
+  2147483647 /* ~ 2^31 */
 
 };
 
@@ -146,7 +146,7 @@ void addToHashTable(OBMap *m, OBDequeIterator *it);
  * retavl non-NULL Pointer to and OBDequeIterator, pinpointing key-value
  * pair in pairs list
  */
-void findKeyInHashTable(OBMap *m, obj *key
+OBDequeIterator * findKeyInHashTable(OBMap *m, obj *key);
 
 /**
  * @brief Generates an offset from the hash value to rectify collisions
