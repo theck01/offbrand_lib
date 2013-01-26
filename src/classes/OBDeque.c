@@ -62,6 +62,11 @@ OBDequeIterator * getDequeTailIt(const OBDeque *deque){
 }
 
 
+OBDequeIterator * copyDequeIterator(const OBDequeIterator *it){
+  return createDequeIterator(it->deque, it->node);
+}
+
+
 uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it){
 
   assert(deque);

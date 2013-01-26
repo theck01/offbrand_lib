@@ -41,6 +41,9 @@ OBDequeIterator * getDequeHeadIt(const OBDeque *deque);
  * NULL if the deque is empty */
 OBDequeIterator * getDequeTailIt(const OBDeque *deque);
 
+/* Copy Constructor, copies an OBDeque iterator */
+OBDequeIterator * copyDequeIterator(const OBDequeIterator *it);
+
 /* updates the OBDequeIterator to the next position in the deque closer to the
  * tail, returns 0 if there are no elements closer to the tail, 1 if there
  * are more elements closer to the tail. */
