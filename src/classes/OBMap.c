@@ -78,12 +78,74 @@ OBMap * copyMap(const OBMap *to_copy){
   copy->hash_table = copyVector(to_copy->hash_table);
   copy->pairs = copyDeque(to_copy->pairs);
   copy->cap_idx = to_copy->cap_idx;
+  copy->collisions = to_copy->collisions;
 
   return copy;
 }
 
 
+void addToMap(OBMap *m, obj *key, obj *value){
+
+  OBMapPair *mp;
+  OBDequeIterator *it;
+  obhash_t hash_value;
+
+  assert(m);
+  
+  hash_value = findKeyInHashTable(m, key);
+  it = (OBDequeIterator *)objAtVectorIndex(m->hash_table, hash_value);
+
+  /* If the key already exists in the map then overwrite the existing
+   * value */
+  if(it){
+    mp = (OBMapPair *)objAtDequeIt(m->pairs, it);
+    replaceMapPairValue(mp, value);
+    return;
+  }
+
+  /* if add operation will overload the map then resize the map */
+  if((dequeLength(m->pairs)+1)/MAP_CAPACITIES[m->cap_idx] > MAX_LOAD_FACTOR)
+    increaseMapSize(m);
+
+  mp = createMapPair(key, value);
+  addDequeTail(m->pairs, (obj *)mp);
+  release((obj *)mp); /* map deque has only reference to mp */
+
+  assert(it = getDequeTailIt(m->pairs));
+
+  addToHashTable(m, it);
+  release((obj *)it); /* map vector hash only reference to it */
+  
+  return; 
+}
+
+
+obj * lookupMapKey(const OBMap *m, const obj *key){
+
+  OBDequeIterator *it;
+  OBMapPair *mp;
+  obhash_t hash_value;
+
+  assert(m);
+
+  hash_value = findKeyInHashTable(m, key);
+  it = (OBDequeIterator *)objAtVectorIndex(m->hash_table, hash_value);
+
+  if(!it){
+    printf("key with hash: %u\n", hash_value);
+    printf("capacity of table: %u\n", MAP_CAPACITIES[m->cap_idx]);
+    printf("not found\n");
+    return NULL;
+  }
+
+  mp = (OBMapPair *)objAtDequeIt(m->pairs, it);
+  return mp->value;
+}
+
+  
 void rehashMap(OBMap *m){}
+
+
 
 /* OBMapPair PRIVATE METHODS */
 
@@ -131,6 +193,8 @@ void deallocMapPair(obj *to_dealloc){
 }
   
 
+
+/* OBMap PRIVATE METHODS */
 
 OBMap * createDefaultMap(void){
 
@@ -219,9 +283,11 @@ void deallocMap(obj *to_dealloc){
 void increaseMapSize(OBMap *to_size){
 
   assert(to_size);
-  assert(to_size->cap_idx < NUM_CAPACITIES);
+  assert(to_size->cap_idx < NUM_CAPACITIES-1); /* cannot resize beyond largest
+                                                  capacity */
 
-  to_size->cap_idx++;
+  to_size->cap_idx+=2;
+  if(to_size->cap_idx >= NUM_CAPACITIES) to_size->cap_idx = NUM_CAPACITIES-1;
   to_size->collisions = 0; /* before resize reset collisions */
 
   rehashMap(to_size);
@@ -246,17 +312,18 @@ void addToHashTable(OBMap *m, OBDequeIterator *it){
     m->collisions++;
   }
 
+  printf("Stored at hash value: %u\n", hash_value);
   storeAtVectorIndex(m->hash_table, (obj *)it, hash_value);
 }
 
 
-OBDequeIterator * findKeyInHashTable(const OBMap *m, const obj *key){
+obhash_t findKeyInHashTable(const OBMap *m, const obj *key){
   
   obhash_t hash_value, offset;
   OBMapPair *mp;
   OBDequeIterator *it;
 
-  hash_value = hash(key);
+  hash_value = hash(key)%MAP_CAPACITIES[m->cap_idx];
   offset = 0;
   
   while((it = (OBDequeIterator *)objAtVectorIndex(m->hash_table, hash_value))){
@@ -267,8 +334,7 @@ OBDequeIterator * findKeyInHashTable(const OBMap *m, const obj *key){
     hash_value = (hash_value+offset)%MAP_CAPACITIES[m->cap_idx];
   }
 
-  return it; /* either a valid OBDequeIterator or NULL, depending on whether
-                an item was found */
+  return hash_value; /* the hash value where key is actually found */
 }
 
 
