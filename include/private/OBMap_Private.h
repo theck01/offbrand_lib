@@ -11,15 +11,44 @@
 #include "../OBVector.h"
 #include "../OBDeque.h"
 
-/* capacity lookup table */
-uint32_t MAP_CAPACITIES[] = {
-  127,  /* ~ 2^7 */
-  8191, /* ~ 2^13 */
-  131071, /* ~ 2^17 */
-  524287, /* ~ 2^19 */
-  2147483647 /* ~ 2^31 */
+/* OBMAP CONSTANTS */
 
+/* capacity table, where capacities are the nearest prime numbers less than
+ * powers of 2 */
+const uint32_t MAP_CAPACITIES[] = {
+  (1<<7)-1,
+  (1<<8)-5,
+  (1<<9)-3,
+  (1<<10)-3,
+  (1<<11)-9,
+  (1<<12)-3,
+  (1<<13)-1,
+  (1<<14)-3,
+  (1<<15)-19,
+  (1<<16)-15,
+  (1<<17)-1,
+  (1<<18)-5,
+  (1<<19)-1,
+  (1<<20)-3,
+  (1<<21)-9,
+  (1<<22)-3,
+  (1<<23)-15,
+  (1<<24)-3,
+  (1<<25)-39,
+  (1<<26)-5,
+  (1<<27)-39,
+  (1<<28)-57,
+  (1<<29)-3,
+  (1<<30)-35,
+  ((uint64_t)1<<31)-1,
+  ((uint64_t)1<<32)-5
 };
+
+const uint32_t NUM_CAPACITIES = 
+                              sizeof(MAP_CAPACITIES)/sizeof(MAP_CAPACITIES[0]);
+
+const double MAX_LOAD_FACTOR = 0.75;
+
 
 /* OBMapPair DATA */
 
