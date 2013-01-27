@@ -106,14 +106,12 @@ struct OBMap_struct{
 /**
  * @brief Default constructor for OBMap
  *
- * @param cap_idx Lookup value for capacity within MAP_CAPACITIES table
- *
  * @return An instance of class OBMap
  *
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBMap * createDefaultMap(uint8_t cap_idx);
+OBMap * createDefaultMap(void);
 
 /**
  * @brief Hash function for OBMap
@@ -175,7 +173,7 @@ void addToHashTable(OBMap *m, OBDequeIterator *it);
  * retavl non-NULL Pointer to and OBDequeIterator, pinpointing key-value
  * pair in pairs list
  */
-OBDequeIterator * findKeyInHashTable(OBMap *m, obj *key);
+OBDequeIterator * findKeyInHashTable(const OBMap *m, const obj *key);
 
 /**
  * @brief Generates an offset from the hash value to rectify collisions
@@ -185,7 +183,7 @@ OBDequeIterator * findKeyInHashTable(OBMap *m, obj *key);
  *
  * @return New offset to the next possible location to insert within table
  */
-uint32_t collisionOffset(uint32_t prev_offset);
+obhash_t collisionOffset(obhash_t prev_offset);
 
 #endif
 

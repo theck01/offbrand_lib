@@ -16,7 +16,8 @@ typedef struct OBMap_struct OBMap;
 /* PUBLIC METHODS */
 
 /**
- * @brief Constructor, creates a new, empty, OBMap instance
+ * @brief Constructor, creates a new, empty, OBMap instance with a small initial
+ * capacity
  * @return Pointer to the newly created OBMap instance
  */
 OBMap * createMap(void);
