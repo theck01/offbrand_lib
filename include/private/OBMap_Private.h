@@ -66,7 +66,9 @@ typedef struct OBMapPair_struct{
 
 /**
  * @brief Default constructor for an OBMapPair
+ *
  * @return An instance of class OBMapPair
+ *
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */

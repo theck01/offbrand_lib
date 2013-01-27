@@ -44,8 +44,8 @@ OBMap * copyMap(const OBMap *to_copy);
  * @param key, Pointer to any Offbrand compatible class to use as a lookup key
  * @param key, Pointer to any Offbrand compatible class 
  *
- * @details If the key is already contained within the m then the old key
- * is replaced with the provided key
+ * @details If the key is already contained within the m then the old value
+ * stored at that key is replaced with the new value
  */
 void addToMap(OBMap *m, obj *key, obj *value);
 
@@ -67,6 +67,9 @@ obj * lookupMapKey(const OBMap *m, const obj *key);
  * @param key, Pointer to any Offbrand compatible class to use as a lookup key
  * 
  * @details If no key exists then the funciton will silently do nothing
+ *
+ * @warning This function runs in O(n), and is inherently more expensive
+ * than an add or lookup.
  */
 void removeMapKey(OBMap *m, obj *key);
 
