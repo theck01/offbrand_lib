@@ -43,9 +43,9 @@ int8_t compareTests(const obj *a, const obj *b){
   assert(objIsOfClass(a, "OBTest"));
   assert(objIsOfClass(b, "OBTest"));
 
-  if(((OBTest *)a)->id >((OBTest *)b)->id) return 1;
-  if(((OBTest *)a)->id == ((OBTest *)b)->id) return 0;
-  return -1;
+  if(((OBTest *)a)->id >((OBTest *)b)->id) return OB_GREATER_THAN;
+  if(((OBTest *)a)->id == ((OBTest *)b)->id) return OB_EQUAL_TO;
+  return OB_LESS_THAN;
 }
 
 
