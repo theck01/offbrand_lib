@@ -9,9 +9,42 @@
 
 /* PUBLIC METHODS */
 
+OBMap * createMap(void){
+  return createMapWithCapacity(MAP_CAPACITIES[0]);
+}
 
-/* DEFINE PUBLIC METHODS HERE */
 
+OBMap * createMapWithCapacity(uint32_t capacity){
+
+  OBMap *m = createDefaultMap();
+
+  uint32_t i = 0;
+  while(MAP_CAPACITIES[i] < capacity && i < NUM_CAPACITIES - 1) i++;
+
+  m->hash_table = createVector(MAP_CAPACITIES[i]);
+  m->pairs = createDeque();
+  m->cap_idx = i;
+  
+  return m;
+}
+
+
+OBMap * copyMap(const OBMap *to_copy){
+
+  OBMap *copy;
+  
+  assert(to_copy);
+
+  copy = createDefaultMap();
+  copy->hash_table = copyVector(to_copy->hash_table);
+  copy->pairs = copyDeque(to_copy->pairs);
+  copy->cap_idx = to_copy->cap_idx;
+
+  return copy;
+}
+
+
+void rehashMap(OBMap *m){}
 
 /* OBMapPair PRIVATE METHODS */
 
@@ -49,7 +82,7 @@ void deallocMapPair(obj *to_dealloc){
   
 
 
-OBMap * createDefaultMap(uint8_t cap_idx){
+OBMap * createDefaultMap(void){
 
   static const char classname[] = "OBMap";
   OBMap *new_instance = malloc(sizeof(OBMap));
@@ -59,9 +92,9 @@ OBMap * createDefaultMap(uint8_t cap_idx){
   initBase((obj *)new_instance, &deallocMap, &hashMap,
            &compareMaps, classname);
 
-  new_instance->hash_table = createVector(MAP_CAPACITIES[cap_idx]);
-  new_instance->pairs = createDeque();
-  new_instance->cap_idx = cap_idx;
+  new_instance->hash_table = NULL;
+  new_instance->pairs = NULL;
+  new_instance->cap_idx = 0;
   new_instance->collisions = 0;
 
   return new_instance;
@@ -136,7 +169,7 @@ void deallocMap(obj *to_dealloc){
 void increaseMapSize(OBMap *to_size){
 
   assert(to_size);
-  assert(to_size->cap_idx < 32);
+  assert(to_size->cap_idx < NUM_CAPACITIES);
 
   to_size->cap_idx++;
   to_size->collisions = 0; /* before resize reset collisions */
@@ -144,9 +177,10 @@ void increaseMapSize(OBMap *to_size){
   rehashMap(to_size);
 }
 
+
 void addToHashTable(OBMap *m, OBDequeIterator *it){
 
-  obhash_t hash_value;
+  obhash_t hash_value, offset;
   OBMapPair *pair;
 
   assert(m);
@@ -162,11 +196,36 @@ void addToHashTable(OBMap *m, OBDequeIterator *it){
     m->collisions++;
   }
 
-  storeAtVectorIndex(m->hash_table, it);
+  storeAtVectorIndex(m->hash_table, (obj *)it, hash_value);
 }
 
 
-
-
-
+OBDequeIterator * findKeyInHashTable(const OBMap *m, const obj *key){
   
+  obhash_t hash_value, offset;
+  OBMapPair *mp;
+  OBDequeIterator *it;
+
+  hash_value = hash(key);
+  offset = 0;
+  
+  while((it = (OBDequeIterator *)objAtVectorIndex(m->hash_table, hash_value))){
+    mp = (OBMapPair *)objAtDequeIt(m->pairs, it);
+    if(compare(mp->key, key) == OB_EQUAL_TO)
+      break;
+    offset = collisionOffset(offset);
+    hash_value = (hash_value+offset)%MAP_CAPACITIES[m->cap_idx];
+  }
+
+  return it; /* either a valid OBDequeIterator or NULL, depending on whether
+                an item was found */
+}
+
+
+obhash_t collisionOffset(obhash_t prev_offset){
+  if(prev_offset == 0) return 1;
+  else if(prev_offset == 1) return 2;
+  else return prev_offset*prev_offset - 1;
+}
+
+
