@@ -112,7 +112,7 @@ int main (){
 
   tail_it = getDequeTailIt(joined_deque);
   copy_it = copyDequeIterator(tail_it);
-  release(tail_it);
+  release((obj *)tail_it);
   tail_it = copy_it;
   
 
