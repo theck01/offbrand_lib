@@ -6,7 +6,10 @@
  * @details An OBMap uses key-value based storage to provide constant lookup,
  * insertion, and removal times. Maps need not contain instances of only one
  * class and should handle any collection of classes used as both keys and
- * values
+ * values.
+ * The OBMap class uses an open addressing collision handling mechanism, which
+ * is responsible for a lesser memory overhead compared to separate chaining at
+ * the expense of acceptable load factor and O(n) key removal
  *
  * @{
  * @file OBMap.h
