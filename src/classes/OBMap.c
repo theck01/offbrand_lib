@@ -105,6 +105,17 @@ OBMapPair * createMapPair(obj *key, obj *value){
 }
 
 
+void replaceMapPairValue(OBMapPair *mp, obj *value){
+
+  assert(mp);
+  
+  retain(value);
+  release(mp->value);
+  mp->value = value;
+  return;
+}
+
+
 void deallocMapPair(obj *to_dealloc){
 
   /* cast generic obj to OBMap */

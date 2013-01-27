@@ -52,6 +52,14 @@ typedef struct OBMapPair_struct{
  */
 OBMapPair * createMapPair(obj *key, obj *value);
 
+/**
+ * @brief Replaces existing value in an OBMapPair with the supplied value
+ * 
+ * @param mp An instance of OBMapPair
+ * @param value The new value to replace the existing value
+ */
+void replaceMapPairValue(OBMapPair *mp, obj *value);
+
 /** 
  * @brief Destructor for OBMapPair
  *
