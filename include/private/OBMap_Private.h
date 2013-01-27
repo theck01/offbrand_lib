@@ -157,11 +157,10 @@ void addToHashTable(OBMap *m, OBDequeIterator *it);
  * @param m The OBMap in which to search for the key
  * @param key The key to serach for within the OBMap
  *
- * retval NULL Key was not found in the OBMap
- * retavl non-NULL Pointer to and OBDequeIterator, pinpointing key-value
- * pair in pairs list
+ * @return Index in the hash_table where a result can be found or where a NULL
+ * value resides if key was not found
  */
-OBDequeIterator * findKeyInHashTable(const OBMap *m, const obj *key);
+obhash_t findKeyInHashTable(const OBMap *m, const obj *key);
 
 /**
  * @brief Generates an offset from the hash value to rectify collisions
