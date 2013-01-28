@@ -309,8 +309,8 @@ void removeDequeHead(OBDeque *deque){
 
   /* repair deque after removal */
   deque->head = deque->head->next;
-  if(!deque->head) deque->tail = NULL;
-  else deque->head->prev = NULL;
+  if(deque->head) deque->head->prev = NULL;
+  else deque->tail = NULL;
 
   deque->length--;
 
@@ -336,8 +336,8 @@ void removeDequeTail(OBDeque *deque){
 
   /* repair deque after removal */
   deque->tail = deque->tail->prev;
-  if(!deque->tail) deque->head = NULL;
-  else deque->tail->next = NULL;
+  if(deque->tail) deque->tail->next = NULL;
+  else deque->head = NULL;
 
   deque->length--;
 
@@ -363,22 +363,15 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
   if(!it->node) return; /* if iterator points to no node (an empty deque)
                            do nothing */
 
-  temp_node = it->node;
-  it->node = it->node->next;
-
-  /* if removing the last element from the list */
-  if(temp_node == deque->head && temp_node == deque->tail){
-    deque->head = NULL;
-    deque->tail = NULL;
-  }
-  else{ /* join list pieces separated by the node */
-    if(temp_node != deque->head)
-      temp_node->prev->next = temp_node->next;
-    if(temp_node != deque->tail)
-      temp_node->next->prev = temp_node->prev;
-  }
+  if(it->node == deque->head) deque->head = it->node->next;
+  if(it->node == deque->tail) deque->tail = it->node->prev;
+  if(it->node->prev) it->node->prev->next = it->node->next;
+  if(it->node->next) it->node->next->prev = it->node->prev;
 
   deque->length--;
+
+  temp_node = it->node;
+  it->node = it->node->next;
 
   /* set temp_node next and prev to null, to separate the node completely from
    * the deque if it lives on through a reference in an iterator */
