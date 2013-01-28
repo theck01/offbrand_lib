@@ -54,6 +54,9 @@ typedef void (*dealloc_fptr)(obj *);
 /** hash value, used returned from hash functions */
 typedef size_t obhash_t;
 
+/** function pointerto a copy function for any offbrand compatible class */
+typedef obj * (*copy_fptr)(obj *);
+
 /** function pointer to a hash function for any offbrand compatible class */
 typedef obhash_t (*hash_fptr)(const obj *);
 
@@ -64,6 +67,9 @@ typedef obhash_t (*hash_fptr)(const obj *);
  */
 typedef int8_t (*compare_fptr)(const obj *, const obj *);
 
+/** function pointer to a display function for any offbrand compatible class */
+typedef void (*display_fptr)(const obj *);
+
 
 /* OFFBRAND STANDARD LIB */
 
@@ -73,12 +79,16 @@ typedef int8_t (*compare_fptr)(const obj *, const obj *);
  * name
  *
  * @param instance An newly allocated instance of any Offbrand compatible class
- * @param dealloc Function pointer to the deallocator for the instances class
- * @param hash Function pointer to the hash function for the instances class
+ * @param dealloc_funct Function pointer to the deallocator for the instances 
+ * class
+ * @param hash_funct Function pointer to the hash function for the instances 
+ * class
+ * @param compare_funct Function pointer to the compare function for the 
+ * instances class
  * @param classname C string containing instances classname.
  */
-void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash, 
-              compare_fptr compare, const char *classname);
+void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct, 
+              compare_fptr compare_funct, const char *classname);
 
 /**
  * @brief Decrements the instances reference count by 1. If the reference count
@@ -131,6 +141,16 @@ uint8_t objIsOfClass(const obj *a, const char *classname);
 uint8_t sameClass(const obj *a, const obj *b);
 
 /**
+ * @brief Copies any instance of an Offbrand compatible class using the class
+ * specific copy constructor.
+ *
+ * @param to_copy An instance of any Offbrand compatible class
+ *
+ * @return A duplicate of the provided class instance
+ */
+obj * copy(obj *to_copy);
+
+/**
  * @brief Computes the hash value of the instance using a class specific hash
  * function if one is available or the defaultHash function if not
  *
@@ -152,6 +172,14 @@ obhash_t hash(const obj *to_hash);
  * be infered
  */
 int8_t compare(const obj *a, const obj *b);
+
+/**
+ * @brief display operation prints information about the instance of any
+ * Offbrand compatible class to stderr
+ *
+ * @param to_print An instance of any Offbrand compativle class
+ */
+void display(const obj *to_print);
 
 #endif
 

@@ -22,10 +22,13 @@
  */
 struct obj_struct{
   ref_count_t references; /**< reference count for each instance */
+  copy_fptr copy; /**< pointer to the class specific copy function */
   dealloc_fptr dealloc; /**< pointer to class specific deallocation function */
   hash_fptr hash; /**< pointer to class specific hash function */
   compare_fptr compare; /**< pointer to class specific comparison function */
-  const char *classname; /**< C String classname to which the instance belongs */
+  display_fptr display; /**< pointer to the class specific display function */
+  const char *classname; /**< C String classname to which the instance 
+                           belongs */
 };
 
 #endif

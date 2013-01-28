@@ -2,8 +2,8 @@
 #include "../include/offbrand.h"
 #include "../include/private/obj_Private.h"
 
-void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
-              compare_fptr compare, const char *classname){
+void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
+              compare_fptr compare_funct, const char *classname){
 
   assert(classname != NULL);
 
@@ -12,13 +12,24 @@ void initBase(obj *instance, dealloc_fptr dealloc, hash_fptr hash,
   assert((*instance) != NULL);
 
   (*instance)->references = 1;
-  (*instance)->dealloc = dealloc;
-  (*instance)->hash = hash;
-  (*instance)->compare = compare;
+
+  /* temporary, until classes can be updated with copy and display functions */
+  (*instance)->copy = NULL;
+  (*instance)->display = NULL;
+
+  (*instance)->dealloc = dealloc_funct;
+
+  if(hash_funct != &hash) (*instance)->hash = hash_funct;
+  else (*instance)->hash = NULL;
+
+  if(compare_funct != &compare) (*instance)->compare = compare_funct;
+  else (*instance)->compare = NULL;
+
   (*instance)->classname = classname;
 
   return;
 }
+
 
 obj * release(obj *instance){
 
@@ -40,6 +51,7 @@ obj * release(obj *instance){
   return instance;
 }
 
+
 void retain(obj *instance){
 
   if(!instance) return;
@@ -51,11 +63,11 @@ void retain(obj *instance){
   return;
 }
 
+
 uint32_t referenceCount(obj *instance){
   if(!instance) return 0;
   return (*instance)->references;
 }
-
 
 
 uint8_t objIsOfClass(const obj *a, const char *classname){
@@ -77,23 +89,24 @@ uint8_t sameClass(const obj *a, const obj *b){
 }
 
 
+obj * copy(obj *to_copy){
+
+  if(!to_copy) return NULL;
+
+  if((*to_copy)->copy) return (*to_copy)->copy(to_copy);
+  
+  retain(to_copy);
+  return to_copy;
+}
+
+
 obhash_t hash(const obj *to_hash){
 
   obhash_t retval;
 
-#if __STD_C_VERSION__ >= 201112L
-  static _Thread_local int call_count = 0; /* number of calls to the compare
-                                              function before a return */
-#else
-  static int call_count = 0; /* number of calls to the compare
-                                function before a return */
-#endif
-
   if(!to_hash) return 0;
 
-  call_count++;
-
-  if((*to_hash)->hash && call_count == 1) retval = (*to_hash)->hash(to_hash);
+  if((*to_hash)->hash) retval = (*to_hash)->hash(to_hash);
   else{ 
     retval = (obhash_t)to_hash;
     retval += (retval << 6);
@@ -102,34 +115,31 @@ obhash_t hash(const obj *to_hash){
     retval ^= (retval << 12);
   }
 
-  call_count--;
-
   return retval;
 }
+
 
 int8_t compare(const obj *a, const obj *b){
 
   int8_t retval;
 
-#if __STD_C_VERSION__ >= 201112L
-  static _Thread_local int call_count = 0; /* number of calls to the compare
-                                              function before a return */
-#else
-  static int call_count = 0; /* number of calls to the compare
-                                function before a return */
-#endif
-
   if(a == NULL && b == NULL) return OB_EQUAL_TO;
   else if(a == NULL || b == NULL) return OB_NOT_EQUAL;
 
-  call_count++;
 
-  if(sameClass(a, b) && call_count == 1 && (*a)->compare != NULL) 
+  if(sameClass(a, b) && (*a)->compare != NULL) 
     retval = (*a)->compare(a, b);
   else if(a == b) retval = OB_EQUAL_TO;
   else retval = OB_NOT_EQUAL;
-
-  call_count--;
   
   return retval;
 }
+
+
+void display(const obj *to_print){
+  if(!to_print) fprintf(stderr, "NULL value\n");
+  if((*to_print)->display) (*to_print)->display(to_print);
+  else fprintf(stderr, "Instance of class %s, at address %u\n",
+                       (*to_print)->classname, (size_t)to_print);
+}
+
