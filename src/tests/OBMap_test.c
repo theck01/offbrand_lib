@@ -64,13 +64,29 @@ int main (){
   assert(compare((obj *)f, (obj *)test) == OB_EQUAL_TO);
 
   map_copy = copyMap(test_map);
+  addToMap(test_map, (obj *)e, NULL); /* remove binding of e -> c */
+  test = (OBTest *)lookupMapKey(map_copy, (obj *)e);
+
+  assert(compare((obj *)test, (obj *)c) == OB_EQUAL_TO);
+  
   removeMapKey(test_map, (obj *)e);
   test = (OBTest *)lookupMapKey(map_copy, (obj *)e);
 
-  assert(compare((obj *)test, (obj *)e) == OB_EQUAL_TO);
-  
+  assert(compare((obj *)test, (obj *)c) == OB_EQUAL_TO);
+
   test = (OBTest *)lookupMapKey(test_map, (obj *)e);
+
   assert(test == NULL);
+
+  assert(hash((obj *)test_map) != hash((obj *)map_copy));
+  assert(compare((obj *)test_map, (obj *)map_copy) != OB_EQUAL_TO);
+
+  addToMap(test_map, (obj *)e, (obj *)c);
+
+  printf("test_map hash: %u, map_copy hash: %u\n", hash((obj *)test_map),
+                                                   hash((obj *)map_copy));
+  assert(hash((obj *)test_map) == hash((obj *)map_copy));
+  assert(compare((obj *)test_map, (obj *)map_copy) == OB_EQUAL_TO);
 
   printf("OBMap_test: TESTS PASSED\n");
   return 0;
