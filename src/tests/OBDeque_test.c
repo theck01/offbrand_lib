@@ -72,13 +72,15 @@ int main (){
   /* test deque removal functions */
   head_it = getDequeHeadIt(test_deque_a);
   removeDequeAtIt(test_deque_a, head_it);
-  release(head_it);
+  release((obj *)head_it);
 
   head_it = getDequeHeadIt(test_deque_a);
-  i = 2;
   do{
-    assert(getTestID((OBTest *)objAtDequeIt(test_deque_a, head_it)) == i++);
+    assert(getTestID((OBTest *)objAtDequeIt(test_deque_a, head_it)) != 4);
   }while(iterateDequeNext(test_deque_a, head_it));
+
+  release((obj *)head_it);
+  addDequeHead(test_deque_a, (obj *)d);
 
   test_deque_b = copyDeque(test_deque_a);
 
