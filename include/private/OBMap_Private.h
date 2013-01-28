@@ -53,12 +53,32 @@ typedef struct OBMapPair_struct{
 OBMapPair * createMapPair(obj *key, obj *value);
 
 /**
+ * @brief Copy constructor, creates a new OBMapPair with the same key-value of
+ * an existing OBMapPair
+ *
+ * @param mp The OBMap instance to copy
+ * 
+ * @return An instance of class OBMapPair that contains the same key-value as
+ * mp
+ */
+OBMapPair * copyMapPair(OBMapPair *mp);
+
+/**
  * @brief Replaces existing value in an OBMapPair with the supplied value
  * 
  * @param mp An instance of OBMapPair
  * @param value The new value to replace the existing value
  */
 void replaceMapPairValue(OBMapPair *mp, obj *value);
+
+/**
+ * @brief Hash function for OBMapPair
+ *
+ * @param to_hash An obj pointer to an instance of OBMapPair
+ *
+ * @return Key value (hash) for the given obj pointer to a OBMapPair
+ */
+obhash_t hashMapPair(const obj *to_hash);
 
 /** 
  * @brief Destructor for OBMapPair
