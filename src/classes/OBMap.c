@@ -75,10 +75,13 @@ OBMap * copyMap(const OBMap *to_copy){
   assert(to_copy);
 
   copy = createDefaultMap();
-  copy->hash_table = copyVector(to_copy->hash_table);
+
   copy->pairs = copyDeque(to_copy->pairs);
   copy->cap_idx = to_copy->cap_idx;
   copy->collisions = to_copy->collisions;
+
+  rehashMap(copy); /* cannot grab to_copy->hash_table directly, stored iterators
+                      must point to values within copy, not to copy */
 
   return copy;
 }
@@ -112,7 +115,6 @@ void addToMap(OBMap *m, obj *key, obj *value){
   release((obj *)mp); /* map deque has only reference to mp */
 
   assert(it = getDequeTailIt(m->pairs));
-
   addToHashTable(m, it);
   release((obj *)it); /* map vector hash only reference to it */
   
@@ -131,20 +133,64 @@ obj * lookupMapKey(const OBMap *m, const obj *key){
   hash_value = findKeyInHashTable(m, key);
   it = (OBDequeIterator *)objAtVectorIndex(m->hash_table, hash_value);
 
-  if(!it){
-    printf("key with hash: %u\n", hash_value);
-    printf("capacity of table: %u\n", MAP_CAPACITIES[m->cap_idx]);
-    printf("not found\n");
-    return NULL;
-  }
+  if(!it) return NULL;
 
   mp = (OBMapPair *)objAtDequeIt(m->pairs, it);
   return mp->value;
 }
 
   
-void rehashMap(OBMap *m){}
+void removeMapKey(OBMap *m, obj *key){
 
+  OBDequeIterator *it;
+  obhash_t hash_value;
+
+  assert(m);
+
+  hash_value = findKeyInHashTable(m, key);
+  it = (OBDequeIterator *)objAtVectorIndex(m->hash_table, hash_value);
+
+  if(!it) return;
+
+  removeDequeAtIt(m->pairs, it);
+  rehashMap(m);
+
+  return;
+}
+  
+
+void rehashMap(OBMap *m){
+
+  OBDequeIterator *it, *it_copy;
+
+  assert(m);
+
+  release((obj *)m->hash_table);
+  m->hash_table = createVector(MAP_CAPACITIES[m->cap_idx]);
+
+  it = getDequeHeadIt(m->pairs);
+  if(!it) return;
+
+  do{
+    it_copy = copyDequeIterator(it);
+    addToHashTable(m, it_copy);
+    release((obj *)it_copy);
+  }while(iterateDequeNext(m->pairs, it));
+
+  return;
+}
+
+
+void clearMap(OBMap *m){
+
+  assert(m);
+
+  release((obj *)m->hash_table);
+  release((obj *)m->pairs);
+
+  m->hash_table = createVector(MAP_CAPACITIES[m->cap_idx]);
+  m->pairs = createDeque();
+}
 
 
 /* OBMapPair PRIVATE METHODS */
@@ -312,7 +358,6 @@ void addToHashTable(OBMap *m, OBDequeIterator *it){
     m->collisions++;
   }
 
-  printf("Stored at hash value: %u\n", hash_value);
   storeAtVectorIndex(m->hash_table, (obj *)it, hash_value);
 }
 

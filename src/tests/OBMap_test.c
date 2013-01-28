@@ -63,6 +63,15 @@ int main (){
   test = (OBTest *)lookupMapKey(test_map, (obj *)h);
   assert(compare((obj *)f, (obj *)test) == OB_EQUAL_TO);
 
+  map_copy = copyMap(test_map);
+  removeMapKey(test_map, (obj *)e);
+  test = (OBTest *)lookupMapKey(map_copy, (obj *)e);
+
+  assert(compare((obj *)test, (obj *)e) == OB_EQUAL_TO);
+  
+  test = (OBTest *)lookupMapKey(test_map, (obj *)e);
+  assert(test == NULL);
+
   printf("OBMap_test: TESTS PASSED\n");
   return 0;
 }
