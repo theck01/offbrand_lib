@@ -371,9 +371,13 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
   deque->length--;
 
   temp_node = it->node;
-  retain((obj *)it->node->next); /* retain next node so that release of it does
-                                    not free valid node */
-  it->node = it->node->next;
+
+  /* advance iterator to next valid node */
+  if(it->node->next) it->node = it->node->next;
+  else if(it->node->prev) it->node = it->node->prev;
+  else it->node = NULL;
+  retain((obj *)it->node); /* retain iterator node so that iterator release does
+                              not free node */
 
   /* set temp_node next and prev to null, to separate the node completely from
    * the deque if it lives on through a reference in an iterator */
