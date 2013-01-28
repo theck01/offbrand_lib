@@ -45,6 +45,11 @@ typedef struct OBMapPair_struct{
 /**
  * @brief Default constructor for an OBMapPair
  *
+ * @param key Offbrand compatible class instance used to lookup value within
+ * hash table
+ * @param value Offbrand compatible class stored within the OBMap at a position
+ * denoted by key
+ *
  * @return An instance of class OBMapPair
  *
  * @warning All public constructors should call this constructor and intialize
