@@ -71,14 +71,26 @@ OBMap * createMapWithCapacity(uint32_t capacity){
 OBMap * copyMap(const OBMap *to_copy){
 
   OBMap *copy;
+  OBMapPair *mp;
+  OBDequeIterator *it;
   
   assert(to_copy);
 
   copy = createDefaultMap();
 
-  copy->pairs = copyDeque(to_copy->pairs);
   copy->cap_idx = to_copy->cap_idx;
   copy->collisions = to_copy->collisions;
+  copy->pairs = createDeque();
+
+  /* copy deque manually, internal objects need to be copied as well as Deque
+   * itself */
+  it = getDequeHeadIt(to_copy->pairs);
+  if(it){
+    do{
+       mp = copyMapPair((OBMapPair *)objAtDequeIt(to_copy->pairs, it));
+       addDequeTail(copy->pairs, (obj *)mp);
+    }while(iterateDequeNext(to_copy->pairs, it));
+  }
 
   rehashMap(copy); /* cannot grab to_copy->hash_table directly, stored iterators
                       must point to values within copy, not to copy */
