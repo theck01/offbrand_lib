@@ -55,7 +55,7 @@ void addToMap(OBMap *m, obj *key, obj *value);
  * @param m, Pointer to an instance of OBMap
  * @param key, Pointer to any Offbrand compatible class to use as a lookup key
  *
- * @retval NULL Key not found in OBMap instance
+ * @retval NULL Key not found in OBMap instance or key bound to NULL value
  * @retval non-NULL Value found at key in OBMap
  */
 obj * lookupMapKey(const OBMap *m, const obj *key);
