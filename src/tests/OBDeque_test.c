@@ -47,7 +47,7 @@ int main (){
   /* test removing the only element from the deque */
   removeDequeTail(test_deque_a);
 
-  /* check that element is still referenced by existing iterators */
+  /* check that element is still referenced because of existing iterators */
   assert(referenceCount((obj *)a) == 2);
   release((obj *)head_it);
   release((obj *)tail_it);
@@ -68,6 +68,17 @@ int main (){
 
   assert(isDequeEmpty(test_deque_a) == 0);
   assert(dequeLength(test_deque_a) == 5);
+
+  /* test deque removal functions */
+  head_it = getDequeHeadIt(test_deque_a);
+  removeDequeAtIt(test_deque_a, head_it);
+  release(head_it);
+
+  head_it = getDequeHeadIt(test_deque_a);
+  i = 2;
+  do{
+    assert(getTestID((OBTest *)objAtDequeIt(test_deque_a, head_it)) == i++);
+  }while(iterateDequeNext(test_deque_a, head_it));
 
   test_deque_b = copyDeque(test_deque_a);
 
