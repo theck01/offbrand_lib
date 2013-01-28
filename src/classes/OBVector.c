@@ -161,7 +161,7 @@ void clearVector(OBVector *v){
 
   assert(v != NULL);
 
-  for(i=0; i<v->length; i++){
+  for(i=0; i<v->capacity; i++){
     release(v->array[i]);
   }
 
@@ -361,8 +361,8 @@ void deallocVector(obj *to_dealloc){
   assert(objIsOfClass(to_dealloc, "OBVector"));
 
   clearVector(instance); /* release all objs contained in vector */
-
   free(instance->array);
+
   return;
 }
 
