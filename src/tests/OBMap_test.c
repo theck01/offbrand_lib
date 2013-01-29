@@ -102,7 +102,8 @@ int main (){
   }
 
   for(i=0; i<ARRAY_SIZE; i++)
-    assert(lookupMapKey(test_map, (obj *)test_array[i]) != NULL);
+    assert(compare((obj *) test_array[i], 
+                   lookupMapKey(test_map, (obj *)test_array[i])) ==OB_EQUAL_TO);
 
   release((obj *)a);
   release((obj *)b);
