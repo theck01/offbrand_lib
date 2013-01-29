@@ -9,14 +9,18 @@
 #include "../../include/private/OBMap_Private.h"
 #include "../../include/OBTest.h"
 
+#define ARRAY_SIZE 2048
+
 /**
  * @brief Main unit testing routine
  */
 int main (){
 
-  /* ADD NECESSARY UNIT TESTS HERE */
+  uint32_t i;
+
   OBMap *test_map, *map_copy;
   OBTest *a, *b, *c, *d, *e, *f, *g, *h;
+  OBTest *test_array[ARRAY_SIZE];
   OBTest *test;
 
   test_map = createMap(); 
@@ -83,11 +87,39 @@ int main (){
 
   addToMap(test_map, (obj *)e, (obj *)c);
 
-  printf("test_map hash: %u, map_copy hash: %u\n", hash((obj *)test_map),
-                                                   hash((obj *)map_copy));
   assert(hash((obj *)test_map) == hash((obj *)map_copy));
   assert(compare((obj *)test_map, (obj *)map_copy) == OB_EQUAL_TO);
 
+  clearMap(map_copy);
+
+  assert(lookupMapKey(map_copy, (obj *)e) == NULL);
+  assert(lookupMapKey(map_copy, (obj *)a) == NULL);
+  assert(lookupMapKey(map_copy, (obj *)f) == NULL);
+
+  for(i=0; i<ARRAY_SIZE; i++){
+    test_array[i] = createTest(i);
+    addToMap(test_map, (obj *)test_array[i], (obj *)test_array[i]);
+  }
+
+  for(i=0; i<ARRAY_SIZE; i++)
+    assert(lookupMapKey(test_map, (obj *)test_array[i]) != NULL);
+
+  release((obj *)a);
+  release((obj *)b);
+  release((obj *)c);
+  release((obj *)d);
+  release((obj *)e);
+  release((obj *)f);
+  release((obj *)g);
+  release((obj *)h);
+
+  release((obj *)test_map);
+  release((obj *)map_copy);
+
+  for(i=0; i<ARRAY_SIZE; i++)
+    release((obj *)test_array[i]);
+    
   printf("OBMap_test: TESTS PASSED\n");
+
   return 0;
 }
