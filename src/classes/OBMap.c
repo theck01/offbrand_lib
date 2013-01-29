@@ -89,8 +89,10 @@ OBMap * copyMap(const OBMap *to_copy){
     do{
        mp = copyMapPair((OBMapPair *)objAtDequeIt(to_copy->pairs, it));
        addDequeTail(copy->pairs, (obj *)mp);
+       release((obj *)mp);
     }while(iterateDequeNext(to_copy->pairs, it));
   }
+  release((obj *)it);
 
   rehashMap(copy); /* cannot grab to_copy->hash_table directly, stored iterators
                       must point to values within copy, not to copy */
@@ -188,6 +190,8 @@ void rehashMap(OBMap *m){
     addToHashTable(m, it_copy);
     release((obj *)it_copy);
   }while(iterateDequeNext(m->pairs, it));
+
+  release((obj *)it);
 
   return;
 }
