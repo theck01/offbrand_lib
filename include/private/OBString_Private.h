@@ -51,6 +51,13 @@ obhash_t hashString(const obj *to_hash);
  */
 int8_t compareStrings(const obj *a, const obj *b);
 
+/**
+ * @brief Display function for an instance of OBString
+ *
+ * @param str A non-NULL obj pointer to type OBString
+ */
+void displayString(const obj *str);
+
 /** 
  * @brief Destructor for OBString
  * @param to_dealloc An obj pointer to an instance of OBString with

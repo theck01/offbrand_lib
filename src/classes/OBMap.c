@@ -218,7 +218,8 @@ OBMapPair * createMapPair(obj *key, obj *value){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocMapPair, &hashMapPair, NULL, classname);
+  initBase((obj *)new_instance, &deallocMapPair, &hashMapPair, NULL, NULL,
+           NULL, classname);
 
   retain(key);
   new_instance->key = key;
@@ -301,7 +302,7 @@ OBMap * createDefaultMap(void){
 
   /* initialize base class data */
   initBase((obj *)new_instance, &deallocMap, &hashMap,
-           &compareMaps, classname);
+           &compareMaps, NULL, NULL, classname);
 
   new_instance->hash_table = NULL;
   new_instance->pairs = NULL;

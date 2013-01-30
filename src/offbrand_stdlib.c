@@ -3,7 +3,8 @@
 #include "../include/private/obj_Private.h"
 
 void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
-              compare_fptr compare_funct, const char *classname){
+              compare_fptr compare_funct, copy_fptr copy_funct,
+              display_fptr display_funct, const char *classname){
 
   assert(classname != NULL);
 
@@ -13,10 +14,6 @@ void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
 
   (*instance)->references = 1;
 
-  /* temporary, until classes can be updated with copy and display functions */
-  (*instance)->copy = NULL;
-  (*instance)->display = NULL;
-
   (*instance)->dealloc = dealloc_funct;
 
   if(hash_funct != &hash) (*instance)->hash = hash_funct;
@@ -24,6 +21,12 @@ void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
 
   if(compare_funct != &compare) (*instance)->compare = compare_funct;
   else (*instance)->compare = NULL;
+
+  if(copy_funct != &copy) (*instance)->copy = copy_funct;
+  else (*instance)->copy = NULL;
+    
+  if(display_funct != &display) (*instance)->display = display_funct;
+  else (*instance)->display = NULL;
 
   (*instance)->classname = classname;
 
@@ -89,15 +92,6 @@ uint8_t sameClass(const obj *a, const obj *b){
 }
 
 
-obj * copy(obj *to_copy){
-
-  if(!to_copy) return NULL;
-
-  if((*to_copy)->copy) return (*to_copy)->copy(to_copy);
-  
-  retain(to_copy);
-  return to_copy;
-}
 
 
 obhash_t hash(const obj *to_hash){
@@ -136,10 +130,21 @@ int8_t compare(const obj *a, const obj *b){
 }
 
 
+obj * copy(obj *to_copy){
+
+  if(!to_copy) return NULL;
+
+  if((*to_copy)->copy) return (*to_copy)->copy(to_copy);
+  
+  retain(to_copy);
+  return to_copy;
+}
+
+
 void display(const obj *to_print){
   if(!to_print) fprintf(stderr, "NULL value\n");
+  fprintf(stderr, "Instance of class %s, at address 0x%x\n",
+                  (*to_print)->classname, (size_t)to_print);
   if((*to_print)->display) (*to_print)->display(to_print);
-  else fprintf(stderr, "Instance of class %s, at address %u\n",
-                       (*to_print)->classname, (size_t)to_print);
 }
 

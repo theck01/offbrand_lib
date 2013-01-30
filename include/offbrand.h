@@ -85,10 +85,15 @@ typedef void (*display_fptr)(const obj *);
  * class
  * @param compare_funct Function pointer to the compare function for the 
  * instances class
+ * @param copy_funct Function pointer ot the copy function of the instances
+ * class
+ * @param display_funct Function pointer to the display function for the
+ * instances class
  * @param classname C string containing instances classname.
  */
-void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct, 
-              compare_fptr compare_funct, const char *classname);
+void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
+              compare_fptr compare_funct, copy_fptr copy_funct,
+              display_fptr display_funct, const char *classname);
 
 /**
  * @brief Decrements the instances reference count by 1. If the reference count

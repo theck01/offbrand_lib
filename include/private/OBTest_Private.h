@@ -40,6 +40,13 @@ obhash_t hashTest(const obj *to_hash);
 int8_t compareTests(const obj *a, const obj *b);
 
 /**
+ * @brief Display function for an instance of OBTest
+ *
+ * @param test A non-NULL obj pointer to type OBTest
+ */
+void displayTest(const obj *test);
+
+/**
  * @brief Destructor for OBTest
  * @param to_dealloc An obj pointer to an instance of OBTest with reference
  * count of 0

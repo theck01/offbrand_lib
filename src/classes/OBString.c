@@ -213,7 +213,7 @@ OBString * createDefaultString(void){
 
   /* initialize base class data */
   initBase((obj *)new_instance, &deallocString, &hashString, &compareStrings,
-           classname);
+           NULL, &displayString, classname);
 
   new_instance->str = malloc(sizeof(char));
   assert(new_instance->str);
@@ -280,6 +280,13 @@ int8_t compareStrings(const obj *a, const obj *b){
   if(comp_a->length < comp_b->length) return OB_LESS_THAN;
   else if(comp_b->length < comp_a->length) return OB_GREATER_THAN;
   return OB_EQUAL_TO;
+}
+
+
+void displayString(const obj *str){
+  assert(str != NULL);
+  assert(objIsOfClass(str, "OBString"));
+  fprintf(stderr, "String Contents: %s\n", ((OBString *)str)->str);
 }
 
 

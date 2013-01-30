@@ -35,11 +35,8 @@ OBVector * copyVector(const OBVector *to_copy){
   new_vec = createDefaultVector(to_copy->capacity);
   new_vec->length = to_copy->length;
 
-  for(i=0; i<to_copy->capacity; i++){
-    new_vec->array[i] = to_copy->array[i];
-    retain((obj *)new_vec->array[i]); /*retain all objects, the new vector also
-                                        references them */
-  }
+  for(i=0; i<to_copy->capacity; i++)
+    new_vec->array[i] = copy(to_copy->array[i]);
 
   return new_vec;
 }
@@ -183,7 +180,7 @@ OBVector * createDefaultVector(uint32_t initial_capacity){
 
   /* initialize reference counting base data */
   initBase((obj *)new_instance, &deallocVector, &hashVector, &compareVectors,
-           classname);
+           NULL, NULL, classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
