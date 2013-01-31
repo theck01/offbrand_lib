@@ -1,3 +1,8 @@
+/**
+ * @file OBDeque.c
+ * @brief OBDeque Method Implementation
+ * @author theck
+ */
 
 #include "../../include/OBDeque.h"
 #include "../../include/private/OBDeque_Private.h"

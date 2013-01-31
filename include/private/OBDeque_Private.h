@@ -1,6 +1,7 @@
-
-/*
- * Private header for OBDeque
+/**
+ * @file OBDeque_Private.h
+ * @brief OBDeque Private Interace
+ * @author theck
  */
 
 #ifndef OBDEQUE_PRIVATE_H
@@ -11,71 +12,120 @@
 #define OBDEQUENODE_NEXT 0
 #define OBDEQUENODE_PREV 1
 
-/* OBDequeNode Type */
+/* OBDequeNode TYPE */
 
-/* internal data type, represents a single node in the doubly linked list.
- * for internal class use */
+/**
+ * @brief OBDequeNode internal structure, encapsulating the data needed for an
+ * node within a doubly linked list. Internally referenced only
+ */
 typedef struct OBDequeNode_struct{
-  obj base;
-  obj *stored;
-  struct OBDequeNode_struct *next;
-  struct OBDequeNode_struct *prev;
+  obj base; /**< obj containing reference count and class membership data */
+  obj *stored; /**< obj stored within the node in the deque */
+  struct OBDequeNode_struct *next; /**< Pointer to the next node in the list */
+  struct OBDequeNode_struct *prev; /**< Pointer to the prev node in the list */
 } OBDequeNode;
 
-/* OBDequeNode Private Methods */
+/* OBDequeNode PRIVATE METHODS */
 
-/* creates a new OBDequeNode with associated object and next/prev pointers
- * set to NULL */
+/**
+ * @brief Constructor, creates a new OBDequeNode containing an obj
+ *
+ * @param to_store A non-NULL instance of any Offbrand compatible class
+ *
+ * @return A new instance of OBDeque node storing to_store and with NULL
+ * references to next and prev nodes
+ */
 OBDequeNode * createDequeNode(obj *to_store);
 
-/* frees the node while maintaining deque continuity */
+/**
+ * @brief Destructor for OBDequeNode
+ * @param to_dealloc An obj pointer to an instance of OBDequeNode with reference
+ * count 0
+ * @warning Do not call manually, release will call automatically when the
+ * instances reference count drops to 0!
+ */
 void deallocDequeNode(obj *to_dealloc);
 
 
 /* OBDequeIterator type */
 
-/* external data type, represents an iterator used externally to traverse
- * the deque. */
+/**
+ * @brief OBDequeNodeIterator internal structure, encapsulating the data needed
+ * for an iterator of a doubly linked list.
+ */
 struct OBDequeIterator_struct{
-  obj base;
-  const OBDeque *deque;
-  OBDequeNode *node;
+  obj base; /**< obj containing reference count and class membership data */
+  const OBDeque *deque; /**< OBDeque that the iterator is bound to */
+  OBDequeNode *node; /**< The OBDequeNode that the iterator references within
+                       deque */
 };
 
 /* OBDequeIterator Private Methods */
 
-/* Constructor, builds an iterator for the OBDeque starting at the given node.
- * Retains the DequeNode once, so that as long as the iterator exists and
- * has a reference to that node it will exist. Advancing or regressing the
- * iterator will change which node is being pointed to */
+/**
+ * @brief Constructor, creates an instance of OBDequeIterator bound to an
+ * OBDeque and an OBDequeNode within that deque
+ *
+ * @param deque An instance of OBDeque
+ * @param node An instance of OBDequeNode contained within deque
+ *
+ * @return An instance of OBDequeIterator
+ */
 struct OBDequeIterator_struct * createDequeIterator(const OBDeque *deque, 
                                                     OBDequeNode *node);
 
-/* Destructor, destroys the iterator and releases the associated deque */
+/**
+ * @brief Destructor for OBDequeIterator
+ * @param to_dealloc An obj pointer to an instance of OBDequeIterator with 
+ * reference count 0
+ * @warning Do not call manually, release will call automatically when the
+ * instances reference count drops to 0!
+ */
 void deallocDequeIterator(obj *to_dealloc);
 
 
 /* OBDeque Type */
 
+/**
+ * @brief OBDeque internal structure, encapsulating the data needed for a 
+ * doubly linked list
+ */
 struct OBDeque_struct{
-  obj base;
-  OBDequeNode *head;
-  OBDequeNode *tail;
-  uint64_t length;
+  obj base; /**< obj containing reference count and class membership data */
+  OBDequeNode *head; /**< pointer to the OBDequeNode at the head of the deque */
+  OBDequeNode *tail; /**< pointer to the OBDequeNode at the tail of the deque */
+  uint64_t length; /**< integer length of the deque (or number of elements
+                     stored within) */
 };
 
 
 /* OBDeque Private Methods */
 
-/* default constructor allocates and initializes an instance of OBDeque.
- * ALL OTHER CONSTRUCTOR METHODS SHOULD CALL THIS DEFAULT CONSTRUCTOR, which
- * should set up a bare bones instance of the class that others will initialize.
- * Ensures base obj is properly initialized.
- * Add additional arguments as needed */
+/**
+ * @brief Default constructor for OBDeque
+ *
+ * @return An instance of class OBDeque
+ *
+ * @warning All public constructors should call this constructor and initialize
+ * individual members as needed, so that all base data is initialized properly
+ */
 OBDeque * createDefaultDeque(void);
 
-/* recursive merge sort operation. runs on static variables to reduce the memory
- * management overhead */
+/**
+ * @brief Internal merge sort implementation for an OBDeque
+ *
+ * @param to_sort Static OBDeque to be sorted
+ * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
+ * orders
+ * @param funct A compare_fptr to a function that returns an int8_t when given
+ * two obj * arguments
+ * 
+ * @return A sorted static deque
+ *
+ * @warning There is little to no parameter checking in this function, all
+ * sorting should use the publicly accessable function which calls this method
+ * internally.
+ */
 OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct);
 
 /**
@@ -97,9 +147,13 @@ obhash_t hashDeque(const obj *to_hash);
  */
 int8_t compareDeques(const obj *a, const obj *b);
 
-/* deallocator, frees instance of class back to memory. Releases any contained
- * objs once. Should not be called manually, instance will be destroyed when 
- * reference count reaches 0 */
+/**
+ * @brief Destructor for OBDeque
+ * @param to_dealloc An obj pointer to an instance of OBDeque with 
+ * reference count 0
+ * @warning Do not call manually, release will call automatically when the
+ * instances reference count drops to 0!
+ */
 void deallocDeque(obj *to_dealloc);
 
 

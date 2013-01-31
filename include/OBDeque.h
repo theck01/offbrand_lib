@@ -1,8 +1,8 @@
 
-/*
- * OBDeque:
- * A double ended queue class that can be used as is and also forms the basis 
- * for the OBStack and OBQueue
+/**
+ * @file OBDeque.h
+ * @brief OBDeque Public Interface
+ * @author
  */
 
 #ifndef OBDEQUE_H
@@ -10,114 +10,258 @@
 
 #include "offbrand.h"
 
-/* Class type declaration */
+/** Class type declaration */
 typedef struct OBDeque_struct OBDeque;
 
-/* iterator type declaration. */
+/** Class specific iterator type declaration. */
 typedef struct OBDequeIterator_struct OBDequeIterator;
 
 
 /* PUBLIC METHODS */
 
-/* constructor, creates a new OBDeque with not contents and a reference count
- * of 1 */
+/**
+ * @brief Constructor, creates a new instance of OBDeque with no contents
+ * @return Pointer to a newly created and initialized instance of OBDeque
+ */
 OBDeque * createDeque(void);
 
-/* copy constructor, creates a new OBDeque with its own memory (a deep copy)
- * that references the same objs */
+/**
+ * @brief Copy Constructor, creates a new OBDeque that contains the same
+ * contents as an OBDeque instance
+ *
+ * @param to_copy An instance of OBDeque to copy
+ *
+ * @return Pointer to a newly created and initialized instance of OBDeque
+ */
 OBDeque * copyDeque(const OBDeque *to_copy);
 
-/* returns non-zero if the deque is empty, and 0 if it contains elements */
+/**
+ * @brief The emptyness state of an OBDeque, either empty or non-empty
+ * 
+ * @param deque An instance of OBDeque
+ *
+ * @retval 0 The deque is empty
+ * @retval non-zero The deque contains elements
+ */
 uint8_t isDequeEmpty(const OBDeque *deque);
 
-/* returns the number of elements contained within the deque */
+/**
+ * @brief Number of elements stored within an OBDeque
+ *
+ * @param deque An instance of OBDeque
+ *
+ * @return An integer corresponding the the number of objects in the deque
+ */
 uint64_t dequeLength(const OBDeque *deque);
 
-/* returns an OBDequeIterator representing the head of the Deque, returns
- * NULL if the deque is empty */
+/**
+ * @brief Constructor for an iterator for an OBDeque that is directed at the
+ * head of the OBDeque.
+ *
+ * @param deque An instance of OBDeque
+ *
+ * @retval NULL The OBDeque provided is empty and cannot be iterated
+ * @retval non-NULL An OBDequeIterator instance bound to the provided instance 
+ * of OBDeque and directed at the head of that OBDeque
+ *
+ * @warning The OBDequeIterator created by this method MUST be released by the
+ * user, else a memory leak will occur
+ */
 OBDequeIterator * getDequeHeadIt(const OBDeque *deque);
 
-/* returns an OBDequeIterator representing the tail of the Deque, returns
- * NULL if the deque is empty */
+/**
+ * @brief Constructor for an iterator for an OBDeque that is directed at the
+ * tail of the OBDeque.
+ *
+ * @param deque An instance of OBDeque
+ *
+ * @retval NULL The OBDeque provided is empty and cannot be iterated
+ * @retval non-NULL An OBDequeIterator instance bound to the provided instance 
+ * and directed at the tail of that OBDeque
+ *
+ * @warning The OBDequeIterator created by this method MUST be released by the
+ * user, else a memory leak will occur
+ */
 OBDequeIterator * getDequeTailIt(const OBDeque *deque);
 
-/* Copy Constructor, copies an OBDeque iterator */
+/**
+ * @brief Copy Constructor for an OBDequeIterator from another OBDequeIterator
+ *
+ * @param it An instance of OBDequeIterator
+ *
+ * @return An OBDequeIterator instance bound to the same OBDeque as the provided
+ * OBDequeIterator and directect at the same location within that OBDeque
+ *
+ * @warning The OBDequeIterator created by this method MUST be released by the
+ * user, else a memory leak will occur
+ */
 OBDequeIterator * copyDequeIterator(const OBDequeIterator *it);
 
-/* updates the OBDequeIterator to the next position in the deque closer to the
- * tail, returns 0 if there are no elements closer to the tail, 1 if there
- * are more elements closer to the tail. */
+/**
+ * @brief Advance an OBDequeIterator bound to an OBDeque to the next element
+ * within the OBDeque closer to the tail of the OBDeque
+ *
+ * @param deque An instance of OBDeque
+ * @param it An intstance of OBDequeIterator that is bound to deque
+ *
+ * @retval non-zero Advancement was successful.
+ * @retval 0 Advancement failed because no more elements exist in the OBDeque
+ * closer to the deque tail
+ */
 uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it);
 
-/* updates the OBDequeIterator to the next position in the deque closer to the
- * head, returns 0 if there are no elements closer to the head, 1 if there are
- * more elements closer to the head */
+/**
+ * @brief Advance an OBDequeIterator bound to an OBDeque to the previous element
+ * within the OBDeque closer to the OBDeque head
+ *
+ * @param deque An instance of OBDeque
+ * @param it An intstance of OBDequeIterator that is bound to deque
+ *
+ * @retval non-zero Advancement was successful.
+ * @retval 0 Advancement failed because no more elements exist in the OBDeque
+ * closer to the deque head
+ */
 uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it);
 
-/* add obj to Deque head, retaining the obj once */
+/**
+ * @brief Add an obj to the head of an OBDeque
+ *
+ * @param deque An instance of OBDeque
+ * @param to_add Any instance of an Offbrand compatible class to add to deque
+ */
 void addDequeHead(OBDeque *deque, obj *to_add);
 
-/* add obj to Deque tail, retaining the obj once */
+/**
+ * @brief Add an obj to the tail of an OBDeque
+ *
+ * @param deque An instance of OBDeque
+ * @param to_add Any instance of an Offbrand compatible class to add to deque
+ */
 void addDequeTail(OBDeque *deque, obj *to_add);
 
-/* add obj to Deque at the iterator, pushing everything including the obj at the
- * iterator one position toward the tail. If iterator is NULL then add to the 
- * tail of the Deque. The iterator then points to the same position in the Deque
- * (the position of the newly added obj). Retains obj once */
+/**
+ * @brief Add an obj to an OBDeque at position before the element specified by
+ * an OBDequeIterator
+ *
+ * @param deque An instance of OBDeque
+ * @param it An instance of OBDequeIterator bound to deque
+ * @param to_add Any instance of an Offbrand compatible class to add to deque
+ */
 void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add);
 
-/* joins d1 and d2 into one deque by appending the contents of d2 to the end of
- * d1, and returning the result as a new deque */
+/**
+ * @brief creates a new OBDeque that contains the ordered contents of two 
+ * OBDeques
+ * 
+ * @param d1 First OBDeque to copy into the resultant OBDeque
+ * @param d2 Second OBDeque to copy onto the end of the resultant OBDeque
+ *
+ * @return An OBDeque instance that contains the contents of d1 followed by d2
+ */
 OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2);
 
-/* function returns 1 if the provided object is found within the deque, 0 if
- * not. If using a specific class comparision operator (other than the default
- * obj comparision) then the deque must contain only that class of objects. The
- * function will fail assertions if the deque is a heterogenous collection. If
- * the comparition function pointer is null then the default pointer comparision
- * will be used */
+/**
+ * @brief Searches an OBDeque for an obj
+ *
+ * @param deque An instance of OBDeque
+ * @param to_find An instance of any Offbrand compatible class to search for
+ * within the deque
+ *
+ * @retval 0 to_find not found within deque
+ * @retval 1 to_find found within the deque
+ */
 uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find);
 
-/* sorts queue using the the standard library compare function. 
- * Order (lowest to highest or highest to lowest) specified by sorting macros
- * defined in offbrand.h. Uses the merge sort algorithm. */
+/**
+ * @brief Sorts an OBDeque from least-to-greatest or greatest-to-least using
+ * the standard compare function
+ *
+ * @param deque An instance of OBDeque
+ * @param order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid
+ * sorting orders
+ *
+ * @warning If called on an OBDeque containing instances of multiple Offbrand
+ * compatible classes the call will likely not sort members in any expected
+ * order, but will reorder components
+ */
 void sortDeque(OBDeque *deque, int8_t order);
 
-/* sorts queue using the compare function passed in as an argument.
- * Order (lowest to highest or highest to lowest) specified by sorting macros
- * defined in offbrand.h. Uses the merge sort algorithm. */
+/**
+ * @brief Sorts an OBDeque from least-to-greatest or greatest-to-least using
+ * a specified comparision function
+ *
+ * @param deque An instance of OBDeque
+ * @param order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid
+ * sorting orders
+ * @param funct A pointer to a comparision function that returns a int8_t when
+ * given two obj * arguments
+ */
 void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct);
 
-/* peek at the obj stored in the Deque head. Returns a pointer to the actual
- * object, do not dereference unless the calling code already has a reference
- * that it would like to get rid of. If the deque is empty returns NULL */
+/**
+ * @brief Peek at the obj stored at the head of an OBDeque
+ *
+ * @param deque An instance of OBDeque
+ *
+ * @retval NULL No elements exist within deque
+ * @retval non-NULL The element stored at the head of deque
+ */
 obj * objAtDequeHead(const OBDeque *deque);
 
-/* peek at the obj stored in the Deque tail. Returns a pointer to the actual
- * object, do not dereference unless the calling code already has a reference
- * that it would like to get rid of. If the deque is empty returns NULL */
+/**
+ * @brief Peek at the obj stored at the tail of an OBDeque
+ *
+ * @param deque An instance of OBDeque
+ *
+ * @retval NULL No elements exist within deque
+ * @retval non-NULL The element stored at the tail of deque
+ */
 obj * objAtDequeTail(const OBDeque *deque);
 
-/* peek at the obj stored in the Deque at the position indicated by the iterator
- * Returns a pointer to the actual object, do not dereference unless the calling
- * code already has a reference that it would like to get rid of. If the deque
- * is empty returns NULL */
+/**
+ * @brief Peek at the obj stored within a OBDeque stored at the position denoted
+ * by an OBDequeIterator bound to that OBDeque
+ *
+ * @param deque An instance of OBDeque
+ * @param it An instance of OBDequeIterator bound to deque
+ *
+ * @retval NULL No elements exist within deque
+ * @retval non-NULL The element stored at the tail of deque
+ */
 obj * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it);
 
-/* remove obj from Deque head, releasing that obj and returning it if it still
- * has a reference, NULL if not */
+
+/**
+ * @brief Remove the obj stored at the head of an OBDeque, shrinking the OBDeque
+ * by one element
+ * @param deque An instance of OBDeque
+ */
 void removeDequeHead(OBDeque *deque);
 
-/* remove obj from Deque tail, releasing that obj and returning it if it still
- * has a reference, NULL if not */
+/**
+ * @brief Remove the obj stored at the tail of an OBDeque, shrinking the OBDeque
+ * by one element
+ * @param deque An instance of OBDeque
+ */
 void removeDequeTail(OBDeque *deque);
 
-/* remove obj form Deque at the position indicated by the iterator, returning
- * the obj at that location if it has a reference, NULL if not. The iterator
- * points to the next obj in the queue after the call (closer to the tail) */
+/**
+ * @brief Remove the obj stored within an OBDeque at the position denoted by the
+ * OBDequeIterator bound to that OBDeque, shrinking the OBDeque by one element
+ *
+ * @param deque An instance of OBDeque
+ * @param it An instance of OBDequeIterator bound to deque
+ *
+ * @details The provided OBDequeIterator will be advanced toward the OBDeque
+ * tail, unless removing the tail then it will be advanced to the element before
+ * the tail (NULL if no more elements exist)
+ */
 void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it);
 
-/* removes all obj's from the Deque, leaving the Deque empty */
+/**
+ * @brief removes all obj's from the Deque, leaving the Deque empty
+ * @param deque An instance of OBDeque
+ */
 void clearDeque(OBDeque *deque);
 
 #endif
