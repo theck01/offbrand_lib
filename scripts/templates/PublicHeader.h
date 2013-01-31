@@ -1,16 +1,16 @@
 /**
- * @file %CODECLASSNAME%.h
- * @brief %CODECLASSNAME% Public Interface
+ * @file %CLASSNAME%.h
+ * @brief %CLASSNAME% Public Interface
  * @author %CLASSAUTHOR%
  */
 
-#ifndef %MACROCLASSNAME%_H
-#define %MACROCLASSNAME%_H
+#ifndef %FILENAME%_H
+#define %FILENAME%_H
 
 #include "offbrand.h"
 
-/* Class type declaration */
-typedef struct %CODECLASSNAME%_struct %CODECLASSNAME%;
+/** Class type declaration */
+typedef struct %CLASSNAME%_struct %CLASSNAME%;
 
 
 /* PUBLIC METHODS */

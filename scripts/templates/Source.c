@@ -1,11 +1,11 @@
 /**
- * @file %CODECLASSNAME%.c
- * @brief %CODECLASSNAME% Method Implementation
+ * @file %CLASSNAME%.c
+ * @brief %CLASSNAME% Method Implementation
  * @author %CLASSAUTHOR%
  */
 
-#include "../../include/%CODECLASSNAME%.h"
-#include "../../include/private/%CODECLASSNAME%_Private.h"
+#include "../../include/%CLASSNAME%.h"
+#include "../../include/private/%CLASSNAME%_Private.h"
 
 /* PUBLIC METHODS */
 
@@ -16,16 +16,17 @@
 /* PRIVATE METHODS */
 
 /* add arguments to complete initialization as needed, modify 
- * %CODECLASSNAME%_Private.h as well if modifications are made */
-%CODECLASSNAME% * createDefault%CODECLASSNAME%(void){
+ * %CLASSNAME%_Private.h as well if modifications are made */
+%CLASSNAME% * createDefault%METHODCLASSNAME%(void){
 
-  static const char classname[] = "%CODECLASSNAME%";
-  %CODECLASSNAME% *new_instance = malloc(sizeof(%CODECLASSNAME%));
+  static const char classname[] = "%CLASSNAME%";
+  %CLASSNAME% *new_instance = malloc(sizeof(%CLASSNAME%));
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &dealloc%CODECLASSNAME%, &hash%CODECLASSNAME%,
-           &compare%CODECLASSNAME%s, classname);
+  initBase((obj *)new_instance, &dealloc%METHODCLASSNAME%, 
+           &hash%METHODCLASSNAME%, &compare%METHODCLASSNAME%s, 
+           &copy%METHODCLASSNAME%, &display%METHODCLASSNAME%, classname);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
@@ -33,16 +34,16 @@
 }
 
 
-obhash_t hash%CODECLASSNAME%(const obj *to_hash){
+obhash_t hash%METHODCLASSNAME%(const obj *to_hash){
 
   static int8_t init = 0;
   static obhash_t seed = 0;
 
   obhash_t value;
-  %CODECLASSNAME% *instance = (%CODECLASSNAME% *)to_hash;
+  %CLASSNAME% *instance = (%CLASSNAME% *)to_hash;
 
   assert(to_hash);
-  assert(objIsOfClass(to_hash, "%CODECLASSNAME%"));
+  assert(objIsOfClass(to_hash, "%CLASSNAME%"));
 
   if(init == 0){
     srand(time(NULL));
@@ -53,47 +54,74 @@ obhash_t hash%CODECLASSNAME%(const obj *to_hash){
   value = seed;
 
   /* Implement a hash function suitable for uniquely itentifying
-   * %CODECLASSNAME% instances if default hash is not adequate. If no
-   * hash function is desired then be sure to pass NULL as the hash argument
-   * for initBase in createDefault%CODECLASSNAME% to use the default hash 
-   * function. Returning the stdlib hash function here can cause concurrency
-   * issues in C versions less than C11 (even though it will work for single 
-   * thread programs). If unneeded and above considerations are met then
-   * this function can be deleted from all %CODECLASSNAME% Files*/
+   * %CLASSNAME% instances. If instance address munging is an acceptable
+   * hash then this method can be deleted and NULL should be supplied to the
+   * hash_funct argument of initBase in createdDefault%METHODCLASSNAME% */
 
   return 0;
 }
 
 
-int8_t compare%CODECLASSNAME%s(const obj *a, const obj *b){
+int8_t compare%METHODCLASSNAME%s(const obj *a, const obj *b){
   
-  const %CODECLASSNAME% *comp_a = (%CODECLASSNAME% *)a;  
-  const %CODECLASSNAME% *comp_b = (%CODECLASSNAME% *)b;  
+  const %CLASSNAME% *comp_a = (%CLASSNAME% *)a;  
+  const %CLASSNAME% *comp_b = (%CLASSNAME% *)b;  
 
   assert(a);
   assert(b);
-  assert(objIsOfClass(a, "%CODECLASSNAME%"));
-  assert(objIsOfClass(b, "%CODECLASSNAME%"));
+  assert(objIsOfClass(a, "%CLASSNAME%"));
+  assert(objIsOfClass(b, "%CLASSNAME%"));
 
   /* add specific comparison logic, following the description in the header
-   * file. If no comparison function is desired then be sure to pass NULL to
-   * the compare argument of initBase in the createDefault%CODECLASSNAME%
-   * function to use the default pointer comparision Returning the stdlib 
-   * compare function here can cause concurrency issues in C versions less than
-   * C11 (even though it will work for single thread programs) If unneeded and 
-   * above considerations are met then this function can be deleted from all 
-   * %CODECLASSNAME% Files*/
+   * file. If pointer based comparision is all that is needed then this method 
+   * can be deleted and NULL should be supplied to the compare_funct argument of
+   * initBase in createdDefault%METHODCLASSNAME% */
+
   return OB_EQUAL_TO;
 }
 
 
-void dealloc%CODECLASSNAME%(obj *to_dealloc){
+obj * copy%METHODCLASSNAME%(obj *to_copy){
 
-  /* cast generic obj to %CODECLASSNAME% */
-  %CODECLASSNAME% *instance = (%CODECLASSNAME% *)to_dealloc;
+  %CLASSNAME% *copy;
+  const %CLASSNAME% *instance = (%CLASSNAME% *)to_copy;
+  
+  assert(to_copy);
+  assert(objIsOfClass(to_copy, "%CLASSNAME%"));
+
+
+  /* add class specific copy logic. If a shallow address copy and retain are
+   * all that are needed then this method can be deleted and NULL should be
+   * supplied to the copy_funct argument of initBase in 
+   * createdDefault%METHODCLASSNAME% */
+
+  return (obj *)copy;
+}
+
+
+void display%METHODCLASSNAME%(const obj *to_print){
+
+  const %CLASSNAME% *instance = (%CLASSNAME% *)to_print;
+  
+  assert(to_print);
+  assert(objIsOfClass(to_print, "%CLASSNAME%"));
+
+  /* add class specific display logic. If printing the classname and address
+   * of an instance is all that is needed then this method can be deleted and
+   * NULL should be supplid to the display_funct argument of initBase in
+   * createDefault%METHODCLASSNAME% */
+
+  return;
+}
+
+
+void dealloc%METHODCLASSNAME%(obj *to_dealloc){
+
+  /* cast generic obj to %CLASSNAME% */
+  %CLASSNAME% *instance = (%CLASSNAME% *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "%CODECLASSNAME%"));
+  assert(objIsOfClass(to_dealloc, "%CLASSNAME%"));
 
   /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE BUT DO NOT
    * FREE INSTANCE, THE LIBRARY WILL DO THAT */

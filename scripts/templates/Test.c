@@ -1,11 +1,11 @@
 /**
- * @file %CODECLASSNAME%_test.c
- * @brief %CODECLASSNAME% Unit Tests
+ * @file %CLASSNAME%_test.c
+ * @brief %CLASSNAME% Unit Tests
  * @author %CLASSAUTHOR%
  */
 
 #include "../../include/offbrand.h"
-#include "../../include/%CODECLASSNAME%.h"
+#include "../../include/%CLASSNAME%.h"
 #include "../../include/OBTest.h"
 
 /**
@@ -15,6 +15,6 @@ int main (){
 
   /* ADD NECESSARY UNIT TESTS HERE */
 
-  printf("%CODECLASSNAME%_test: TESTS PASSED\n");
+  printf("%CLASSNAME%_test: TESTS PASSED\n");
   return 0;
 }
