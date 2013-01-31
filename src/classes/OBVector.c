@@ -180,7 +180,7 @@ OBVector * createDefaultVector(uint32_t initial_capacity){
 
   /* initialize reference counting base data */
   initBase((obj *)new_instance, &deallocVector, &hashVector, &compareVectors,
-           NULL, NULL, classname);
+           NULL, &displayVector, classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
@@ -347,6 +347,26 @@ int8_t compareVectors(const obj *a, const obj *b){
 
   return OB_EQUAL_TO;
 }
+
+
+void displayVector(const obj *to_print){
+
+  uint32_t i;
+  OBVector *v = (OBVector *)to_print;
+
+  assert(to_print != NULL);
+  assert(objIsOfClass(to_print, "OBVector"));
+  fprintf(stderr, "Number of elements: %u\n", v->length);
+
+  for(i=0; i<v->length; i++){
+    fprintf(stderr, "[index: %u]\n", i);
+    display(v->array[i]);
+    fprintf(stderr, "\n");
+  }
+
+  fprintf(stderr, "[end]\n");
+}
+
 
 
 void deallocVector(obj *to_dealloc){

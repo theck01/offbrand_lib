@@ -79,6 +79,13 @@ obhash_t hashVector(const obj *to_hash);
  */
 int8_t compareVectors(const obj *a, const obj *b);
 
+/**
+ * @brief Display function for an instance of OBString
+ *
+ * @param to_print A non-NULL obj pointer to type OBString
+ */
+void displayVector(const obj *to_print);
+
 /** 
  * @brief Destructor for OBVector
  * @param to_dealloc An obj pointer to an instance of OBVector with
