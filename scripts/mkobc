@@ -88,32 +88,32 @@ echo
 #names to the current directory
 cat $module_template | sed "s/%CLASSNAME%/$classname/g" | \
   sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%MACRONAME%/$file_name/g" | \
   sed "s/%METHODCLASSNAME%/$method_classnamename/g" > $doc_module
 echo "Add class description to newly created Doxygen Module: $doc_module"
 
 cat $public_template | sed "s/%CLASSNAME%/$classname/g" | \
   sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%MACRONAME%/$file_name/g" | \
   sed "s/%METHODCLASSNAME%/$method_classname/g" > $public_header
 echo "Add public class method declarations to newly created file: $public_header"
 
 cat $private_template | sed "s/%CLASSNAME%/$classname/g" | \
   sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%MACRONAME%/$file_name/g" | \
   sed "s/%METHODCLASSNAME%/$method_classname/g" > $private_header
 echo "Add private class method declarations and members to newly created file: "
 echo "  $private_header"
 
 cat $source_template | sed "s/%CLASSNAME%/$classname/g" | \
   sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%MACRONAME%/$file_name/g" | \
   sed "s/%METHODCLASSNAME%/$method_classname/g" > $source_file
 echo "Add method implementation to newly created file: $source_file"
 
 cat $test_template | sed "s/%CLASSNAME%/$classname/g" | \
   sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%MACRONAME%/$file_name/g" | \
   sed "s/%METHODCLASSNAME%/$method_classname/g" > $test_file
 echo "Add unit tests to newly created file: $test_file"
 

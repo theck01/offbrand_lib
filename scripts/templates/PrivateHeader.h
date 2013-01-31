@@ -4,8 +4,8 @@
  * @author %CLASSAUTHOR%
  */
 
-#ifndef %FILENAME%_PRIVATE_H
-#define %FILENAME%_PRIVATE_H
+#ifndef %MACRONAME%_PRIVATE_H
+#define %MACRONAME%_PRIVATE_H
 
 #include "../%CLASSNAME%.h"
 

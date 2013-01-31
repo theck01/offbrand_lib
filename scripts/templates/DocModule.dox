@@ -1,14 +1,14 @@
 /**
- * @addtogroup %CODECLASSNAME%
+ * @addtogroup %CLASSNAME%
  * @brief  [short class description]
  *
  * @details [detailed class description]
  *
  * @{
- * @file %CODECLASSNAME%.h
- * @file %CODECLASSNAME%_Private.h
- * @file %CODECLASSNAME%.c
- * @file %CODECLASSNAME%_test.c
+ * @file %CLASSNAME%.h
+ * @file %CLASSNAME%_Private.h
+ * @file %CLASSNAME%.c
+ * @file %CLASSNAME%_test.c
  * @}
  */
 

@@ -4,8 +4,8 @@
  * @author %CLASSAUTHOR%
  */
 
-#ifndef %FILENAME%_H
-#define %FILENAME%_H
+#ifndef %MACRONAME%_H
+#define %MACRONAME%_H
 
 #include "offbrand.h"
 
