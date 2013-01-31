@@ -1,7 +1,7 @@
 /**
  * @file OBVector_test.c
  * @brief OBVector Unit Tests
- * @author anonymous
+ * @author theck
  */
 
 #include "../../include/offbrand.h"
@@ -10,7 +10,7 @@
                                                        only */
 #include "../../include/OBTest.h"
 
-
+/** main unit testing routine */
 int main(){
 
   uint32_t i, id;

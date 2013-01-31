@@ -55,7 +55,7 @@ typedef void (*dealloc_fptr)(obj *);
 typedef size_t obhash_t;
 
 /** function pointerto a copy function for any offbrand compatible class */
-typedef obj * (*copy_fptr)(obj *);
+typedef obj * (*copy_fptr)(const obj *);
 
 /** function pointer to a hash function for any offbrand compatible class */
 typedef obhash_t (*hash_fptr)(const obj *);

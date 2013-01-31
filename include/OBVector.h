@@ -9,7 +9,7 @@
 
 #include "offbrand.h"
 
-/* Class type declaration */
+/** Class type declaration */
 typedef struct OBVector_struct OBVector;
 
 
@@ -18,7 +18,9 @@ typedef struct OBVector_struct OBVector;
 /**
  * @brief Constructor, creates a new instance of OBVector with a given initial
  * capacity
+ *
  * @param initial_capacity Integer size for the vector capacity
+ *
  * @return Pointer to the newly created vector
  */
 OBVector * createVector(uint32_t initial_capacity);
@@ -36,8 +38,10 @@ OBVector * createVector(uint32_t initial_capacity);
 OBVector * copyVector(const OBVector *to_copy); 
 
 /**
- * @brief Returns the length of the OBVector
+ * @brief Number of elements encompassed within the OBVector
+ *
  * @param v A pointer to an instance of OBVector
+ *
  * @return An integer corresponding to the length required to span all elements
  * contained within the vector (including all NULL elements added by the user)
  */
@@ -100,9 +104,6 @@ void catVectors(OBVector *destination, OBVector *to_append);
  *
  * @param v A pointer to an instance of OBVector
  * @param to_find A pointer to an instance of any Offbrand compatible class
- * @param compare A function pointer to a comparision function with signature
- * matching the compare_fptr type. If NULL then default pointer comparisions are
- * used
  *
  * @retval 0 to_find was not found in the OBVector
  * @retval 1 to_find exists in the OBVector

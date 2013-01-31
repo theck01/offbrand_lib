@@ -10,6 +10,7 @@
 
 #include "offbrand.h"
 
+/** Class type declaration */
 typedef struct OBTest_struct OBTest;
 
 /**

@@ -8,6 +8,7 @@
 #include "../../include/private/OBString_Private.h"
 #include <regex.h>
 
+/** Buffer size for a string to print on a regex error */
 #define REGEX_ERROR_BUFFER_SIZE 256
 
 /* PUBLIC METHODS */

@@ -8,6 +8,7 @@
 #include "../../include/OBDeque.h"
 #include "../../include/OBTest.h"
 
+/** main unit test routine */
 int main (){
 
   OBDeque *test_deque_a, *test_deque_b, *joined_deque;

@@ -1,7 +1,7 @@
 /**
  * @file OBVector.c
  * @brief OBVector Method Implementation
- * @author anonymous
+ * @author theck
  */
 
 #include "../../include/OBVector.h"

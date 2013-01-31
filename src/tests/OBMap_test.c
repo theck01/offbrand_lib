@@ -9,6 +9,7 @@
 #include "../../include/private/OBMap_Private.h"
 #include "../../include/OBTest.h"
 
+/** Size of array to use in testing larger Map capacities */
 #define ARRAY_SIZE 2048
 
 /**

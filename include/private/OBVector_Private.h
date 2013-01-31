@@ -46,11 +46,8 @@ void resizeVector(OBVector *v, uint32_t index);
  *
  * @param to_sort Primitive array of objects to be sorted
  * @param size Size of to_sort
- * @param compare A function pointer to a comparision function with signature
- * matching the compare_fptr type. If NULL then default pointer comparisions are
- * used
- * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
- * orders
+ * @param order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid 
+ * sorting orders
  * @param funct A compare_fptr to a function that returns an int8_t when given
  * two obj * arguments
  * 

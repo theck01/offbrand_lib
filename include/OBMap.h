@@ -9,7 +9,7 @@
 
 #include "offbrand.h"
 
-/* Class type declaration */
+/** Class type declaration */
 typedef struct OBMap_struct OBMap;
 
 
@@ -32,7 +32,7 @@ OBMap *createMapWithCapacity(uint32_t capacity);
 /**
  * @brief Copy constructor, creates a new OBMap with the exact same contents
  * of another OBMap
- * @param m Pointer to an instance of OBMap to copy
+ * @param to_copy Pointer to an instance of OBMap to copy
  * @return A copy of the provided OBMap
  */
 OBMap * copyMap(const OBMap *to_copy);

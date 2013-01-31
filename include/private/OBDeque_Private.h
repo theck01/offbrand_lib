@@ -9,9 +9,6 @@
 
 #include "../OBDeque.h"
 
-#define OBDEQUENODE_NEXT 0
-#define OBDEQUENODE_PREV 1
-
 /* OBDequeNode TYPE */
 
 /**
@@ -114,9 +111,9 @@ OBDeque * createDefaultDeque(void);
 /**
  * @brief Internal merge sort implementation for an OBDeque
  *
- * @param to_sort Static OBDeque to be sorted
- * @order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid sorting
- * orders
+ * @param deque Static OBDeque to be sorted
+ * @param order Accepts OB_LEAST_TO_GREATEST or OB_GREATEST_TO_LEAST as valid 
+ * sorting orders
  * @param funct A compare_fptr to a function that returns an int8_t when given
  * two obj * arguments
  * 

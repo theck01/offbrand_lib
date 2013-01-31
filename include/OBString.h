@@ -10,7 +10,7 @@
 #include "offbrand.h"
 #include "OBVector.h"
 
-/* Class type declaration */
+/** Class type declaration */
 typedef struct OBString_struct OBString;
 
 
@@ -123,7 +123,7 @@ OBVector * splitString(const OBString *s, const char *delim);
  * @brief Searches for an substring in an OBString
  *
  * @param s A pointer to an instance of OBString to be searched
- * @param substring A NUL terminated C string containing the sequence of 
+ * @param to_find A NUL terminated C string containing the sequence of 
  * characters to find
  *
  * @retval 0 The substring was not found in the search string
