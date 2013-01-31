@@ -6,7 +6,7 @@ SOURCE_TEMPLATE=scripts/templates/Source.c
 TEST_TEMPLATE=scripts/templates/Test.c
 DOX_MODULE=scripts/templates/DocModule.dox
 
-function print_usage() {
+function printUsage() {
   echo "Usage: $(basename $0) [options]"
   echo
   echo "Script generates new files for a Offbrand compatible class with the"
@@ -27,81 +27,96 @@ function print_usage() {
   echo "   author's name contains any spaces. Default value is \"anonymous\""
   echo "-h"
   echo "   Print usage and exit"
+  echo "-m <method classname>"
+  echo "   Classname to use for methods of the class. This is useful for"
+  echo "   classnames with unnecessary prefixes in method names (such as"
+  echo "   OBVector, whose method classname would simply be Vector)"
   echo
 }
 
-codeClassName=
-docFlag=
-authorName="anonymous"
+classname=
+author_name="anonymous"
+method_classname=
 
-while getopts a:c:dh option
+while getopts a:c:hm: option
 do
   case $option in
-  a)  authorName="$OPTARG" ;;
-  c)  codeClassName="$OPTARG" ;;
-  h)  print_usage
+  a)  author_name="$OPTARG" ;;
+  c)  classname="$OPTARG" ;;
+  h)  printUsage
       exit 0;;
-  ?)  print_usage
+  m)  method_classname="$OPTARG" ;;
+  ?)  printUsage
       exit 1;;
   esac
 done
 
 
 #check usage
-if [[ -z $codeClassName ]]
+if [[ -z $classname ]]
 then
   echo "Class name was not specified"
-  print_usage
+  printUsage
   exit 1
 fi
 
+if [[ -z $method_classname ]]
+then
+  method_classname=$classname
+fi
+
 #Generate substitution strings
-macroClassName=$(echo $codeClassName | tr '[a-z]' '[A-Z]') #capitalize class name
+file_name=$(echo $classname | tr '[a-z]' '[A-Z]') #capitalize class name
 
 #input templates
-moduleTemplate=$DOX_MODULE
-publicTemplate=$PUBLIC_TEMPLATE
-privateTemplate=$PRIVATE_TEMPLATE
-sourceTemplate=$SOURCE_TEMPLATE
-testTemplate=$TEST_TEMPLATE
+module_template=$DOX_MODULE
+public_template=$PUBLIC_TEMPLATE
+private_template=$PRIVATE_TEMPLATE
+source_template=$SOURCE_TEMPLATE
+test_template=$TEST_TEMPLATE
 
 #output filenames
-docModule=$codeClassName"Module.dox"
-publicHeader=$codeClassName".h"
-privateHeader=$codeClassName"_Private.h"
-sourceFile=$codeClassName".c"
-testFile=$codeClassName"_test.c"
+doc_module=$classname"Module.dox"
+public_header=$classname".h"
+private_header=$classname"_Private.h"
+source_file=$classname".c"
+test_file=$classname"_test.c"
 
 echo
 
 #substitute class name into template files and write files with proper file
 #names to the current directory
-cat $moduleTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
-  sed "s/%CLASSAUTHOR%/$authorName/g" | \
-  sed "s/%MACROCLASSNAME%/$macroClassName/g" > $docModule
-echo "Add class description to newly created Doxygen Module: $docModule"
+cat $module_template | sed "s/%CLASSNAME%/$classname/g" | \
+  sed "s/%CLASSAUTHOR%/$author_name/g" | \
+  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%METHODCLASSNAME%/$method_classnamename/g" > $doc_module
+echo "Add class description to newly created Doxygen Module: $doc_module"
 
-cat $publicTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
-  sed "s/%CLASSAUTHOR%/$authorName/g" | \
-  sed "s/%MACROCLASSNAME%/$macroClassName/g" > $publicHeader
-echo "Add public class method declarations to newly created file: $publicHeader"
+cat $public_template | sed "s/%CLASSNAME%/$classname/g" | \
+  sed "s/%CLASSAUTHOR%/$author_name/g" | \
+  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%METHODCLASSNAME%/$method_classname/g" > $public_header
+echo "Add public class method declarations to newly created file: $public_header"
 
-cat $privateTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
-  sed "s/%CLASSAUTHOR%/$authorName/g" | \
-  sed "s/%MACROCLASSNAME%/$macroClassName/g" > $privateHeader
+cat $private_template | sed "s/%CLASSNAME%/$classname/g" | \
+  sed "s/%CLASSAUTHOR%/$author_name/g" | \
+  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%METHODCLASSNAME%/$method_classname/g" > $private_header
 echo "Add private class method declarations and members to newly created file: "
-echo "  $privateHeader"
+echo "  $private_header"
 
-cat $sourceTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
-  sed "s/%CLASSAUTHOR%/$authorName/g" | \
-  sed "s/%MACROCLASSNAME%/$macroClassName/g" > $sourceFile
-echo "Add method implementation to newly created file: $sourceFile"
+cat $source_template | sed "s/%CLASSNAME%/$classname/g" | \
+  sed "s/%CLASSAUTHOR%/$author_name/g" | \
+  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%METHODCLASSNAME%/$method_classname/g" > $source_file
+echo "Add method implementation to newly created file: $source_file"
 
-cat $testTemplate | sed "s/%CODECLASSNAME%/$codeClassName/g" | \
-  sed "s/%CLASSAUTHOR%/$authorName/g" | \
-  sed "s/%MACROCLASSNAME%/$macroClassName/g" > $testFile
-echo "Add unit tests to newly created file: $testFile"
+cat $test_template | sed "s/%CLASSNAME%/$classname/g" | \
+  sed "s/%CLASSAUTHOR%/$author_name/g" | \
+  sed "s/%FILENAME%/$file_name/g" | \
+  sed "s/%METHODCLASSNAME%/$method_classname/g" > $test_file
+echo "Add unit tests to newly created file: $test_file"
 
 echo ""
-echo "$codeClassName offbrand compatible class created."
+echo "$classname offbrand compatible class created."
 echo
