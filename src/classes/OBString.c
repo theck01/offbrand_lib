@@ -214,7 +214,7 @@ OBString * createDefaultString(void){
 
   /* initialize base class data */
   initBase((obj *)new_instance, &deallocString, &hashString, &compareStrings,
-           NULL, &displayString, classname);
+           &displayString, classname);
 
   new_instance->str = malloc(sizeof(char));
   assert(new_instance->str);

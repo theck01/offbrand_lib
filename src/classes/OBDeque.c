@@ -437,8 +437,7 @@ OBDequeNode * createDequeNode(obj *to_store){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDequeNode, NULL, NULL, NULL, NULL,
-           classname);
+  initBase((obj *)new_instance, &deallocDequeNode, NULL, NULL, NULL, classname);
 
   retain(to_store);
   new_instance->stored = to_store;
@@ -477,7 +476,7 @@ OBDequeIterator * createDequeIterator(const OBDeque *deque, OBDequeNode *node){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDequeIterator, NULL, NULL, NULL, NULL,
+  initBase((obj *)new_instance, &deallocDequeIterator, NULL, NULL, NULL,
            classname);
 
   retain((obj *)node);
@@ -514,7 +513,7 @@ OBDeque * createDefaultDeque(void){
 
   /* initialize base class data */
   initBase((obj *)new_instance, &deallocDeque, &hashDeque, &compareDeques,
-           NULL, NULL, classname);
+           NULL, classname);
 
   new_instance->head = NULL;
   new_instance->tail = NULL;

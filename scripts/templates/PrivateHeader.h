@@ -53,16 +53,6 @@ int8_t compare%METHODCLASSNAME%s(const obj *a, const obj *b);
  * class sorting/search */
 
 /**
- * @brief Copy Constructor for an instance of %CLASSNAME%
- *
- * @param to_copy A non-NULL obj pointer to an instance of type
- * %CODECLASSANE%
- *
- * @return A copy of to_copy
- */
-obj * copy%METHODCLASSNAME%(obj *to_copy);
-
-/**
  * @brief Descriptor for an instance of %CLASSNAME%, prints relevant
  * information about the class to stderr
  *

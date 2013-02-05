@@ -3,8 +3,8 @@
 #include "../include/private/obj_Private.h"
 
 void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
-              compare_fptr compare_funct, copy_fptr copy_funct,
-              display_fptr display_funct, const char *classname){
+              compare_fptr compare_funct, display_fptr display_funct,
+              const char *classname){
 
   assert(classname != NULL);
 
@@ -22,9 +22,6 @@ void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
   if(compare_funct != &compare) (*instance)->compare = compare_funct;
   else (*instance)->compare = NULL;
 
-  if(copy_funct != &copy) (*instance)->copy = copy_funct;
-  else (*instance)->copy = NULL;
-    
   if(display_funct != &display) (*instance)->display = display_funct;
   else (*instance)->display = NULL;
 
@@ -92,8 +89,6 @@ uint8_t sameClass(const obj *a, const obj *b){
 }
 
 
-
-
 obhash_t hash(const obj *to_hash){
 
   obhash_t retval;
@@ -127,17 +122,6 @@ int8_t compare(const obj *a, const obj *b){
   else retval = OB_NOT_EQUAL;
   
   return retval;
-}
-
-
-obj * copy(obj *to_copy){
-
-  if(!to_copy) return NULL;
-
-  if((*to_copy)->copy) return (*to_copy)->copy(to_copy);
-  
-  retain(to_copy);
-  return to_copy;
 }
 
 

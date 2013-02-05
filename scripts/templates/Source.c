@@ -81,24 +81,6 @@ int8_t compare%METHODCLASSNAME%s(const obj *a, const obj *b){
 }
 
 
-obj * copy%METHODCLASSNAME%(obj *to_copy){
-
-  %CLASSNAME% *copy;
-  const %CLASSNAME% *instance = (%CLASSNAME% *)to_copy;
-  
-  assert(to_copy);
-  assert(objIsOfClass(to_copy, "%CLASSNAME%"));
-
-
-  /* add class specific copy logic. If a shallow address copy and retain are
-   * all that are needed then this method can be deleted and NULL should be
-   * supplied to the copy_funct argument of initBase in 
-   * createdDefault%METHODCLASSNAME% */
-
-  return (obj *)copy;
-}
-
-
 void display%METHODCLASSNAME%(const obj *to_print){
 
   const %CLASSNAME% *instance = (%CLASSNAME% *)to_print;

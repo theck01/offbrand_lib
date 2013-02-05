@@ -54,9 +54,6 @@ typedef void (*dealloc_fptr)(obj *);
 /** hash value, used returned from hash functions */
 typedef size_t obhash_t;
 
-/** function pointerto a copy function for any offbrand compatible class */
-typedef obj * (*copy_fptr)(const obj *);
-
 /** function pointer to a hash function for any offbrand compatible class */
 typedef obhash_t (*hash_fptr)(const obj *);
 
@@ -92,8 +89,8 @@ typedef void (*display_fptr)(const obj *);
  * @param classname C string containing instances classname.
  */
 void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
-              compare_fptr compare_funct, copy_fptr copy_funct,
-              display_fptr display_funct, const char *classname);
+              compare_fptr compare_funct, display_fptr display_funct,
+              const char *classname);
 
 /**
  * @brief Decrements the instances reference count by 1. If the reference count
@@ -144,16 +141,6 @@ uint8_t objIsOfClass(const obj *a, const char *classname);
  * @retval non-zero a and b are of the same class
  */
 uint8_t sameClass(const obj *a, const obj *b);
-
-/**
- * @brief Copies any instance of an Offbrand compatible class using the class
- * specific copy constructor.
- *
- * @param to_copy An instance of any Offbrand compatible class
- *
- * @return A duplicate of the provided class instance
- */
-obj * copy(obj *to_copy);
 
 /**
  * @brief Computes the hash value of the instance using a class specific hash
