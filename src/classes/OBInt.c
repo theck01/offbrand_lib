@@ -24,9 +24,8 @@ OBInt * createDefaultInt(void){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocInt, 
-           &hashInt, &compareInts, 
-           &copyInt, &displayInt, classname);
+  initBase((obj *)new_instance, &deallocInt, &hashInt, &compareInts, 
+           &displayInt, classname);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
