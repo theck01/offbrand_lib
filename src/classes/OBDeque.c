@@ -663,13 +663,18 @@ int8_t compareDeques(const obj *a, const obj *b){
   a_it = getDequeHeadIt(comp_a);
   b_it = getDequeHeadIt(comp_b);
 
-  do{
-    if(compare(objAtDequeIt(comp_a, a_it), objAtDequeIt(comp_b, b_it)) !=
+  if(!a_it && !b_it) return OB_EQUAL_TO;
+
+  if(a_it && b_it){
+    do{
+      if(compare(objAtDequeIt(comp_a, a_it), objAtDequeIt(comp_b, b_it)) !=
        OB_EQUAL_TO){
       retval = OB_NOT_EQUAL;
       break;
     }
-  }while(iterateDequeNext(comp_a, a_it) && iterateDequeNext(comp_b, b_it));
+    }while(iterateDequeNext(comp_a, a_it) && iterateDequeNext(comp_b, b_it));
+  }
+  else retval = OB_NOT_EQUAL;
 
   release((obj *)a_it);
   release((obj *)b_it);
