@@ -126,7 +126,11 @@ int8_t compare(const obj *a, const obj *b){
 
 
 void display(const obj *to_print){
-  if(!to_print) fprintf(stderr, "NULL value\n");
+  if(!to_print){
+    fprintf(stderr, "NULL value\n");
+    return;
+  }
+
   fprintf(stderr, "Instance of class %s, at address 0x%x\n",
                   (*to_print)->classname, (size_t)to_print);
   if((*to_print)->display) (*to_print)->display(to_print);
