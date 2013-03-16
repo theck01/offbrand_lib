@@ -218,8 +218,8 @@ OBMapPair * createMapPair(obj *key, obj *value){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocMapPair, &hashMapPair, NULL, NULL,
-           classname);
+  initBase((obj *)new_instance, &deallocMapPair, &hashMapPair, NULL, 
+           &displayMapPair, classname);
 
   retain(key);
   new_instance->key = key;
@@ -275,6 +275,21 @@ obhash_t hashMapPair(const obj *to_hash){
   return value;
 }
 
+void displayMapPair(const obj *to_print){
+
+  OBMapPair *mp = (OBMapPair *)to_print;
+
+  assert(to_print != NULL);
+  assert(objIsOfClass(to_print, "OBMapPair"));
+  
+  fprintf(stderr, "Key:\n");
+  display(mp->key);
+  fprintf(stderr, "Value:\n");
+  display(mp->value);
+  fprintf(stderr, "\n");
+  return;
+}
+
 
 void deallocMapPair(obj *to_dealloc){
 
@@ -302,7 +317,7 @@ OBMap * createDefaultMap(void){
 
   /* initialize base class data */
   initBase((obj *)new_instance, &deallocMap, &hashMap,
-           &compareMaps, NULL, classname);
+           &compareMaps, &displayMap, classname);
 
   new_instance->hash_table = NULL;
   new_instance->pairs = NULL;
@@ -360,6 +375,30 @@ int8_t compareMaps(const obj *a, const obj *b){
 
   if(hash(a) == hash(b)) return OB_EQUAL_TO;
   return OB_NOT_EQUAL;
+}
+
+
+void displayMap(const obj *to_print){
+  
+  uint32_t i;
+  OBMap *m = (OBMap *)to_print;
+  OBDequeIterator *it;
+
+  assert(to_print != NULL);
+  assert(objIsOfClass(to_print, "OBMap"));
+  fprintf(stderr, "OBMap with key-value pairs:\n");
+
+  it = getDequeHeadIt(m->pairs);
+
+  if(!it) return;
+
+  do{
+    display(objAtDequeIt(m->pairs, it));
+  }while(iterateDequeNext(m->pairs, it));
+
+  release((obj *)it);
+
+  return;
 }
 
 
@@ -440,5 +479,4 @@ obhash_t collisionOffset(obhash_t prev_offset){
   else if(prev_offset == 1) return 2;
   else return prev_offset*prev_offset - 1;
 }
-
 

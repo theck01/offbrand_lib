@@ -85,6 +85,13 @@ void replaceMapPairValue(OBMapPair *mp, obj *value);
  */
 obhash_t hashMapPair(const obj *to_hash);
 
+/**
+ * @brief Displays an instance of OBMapPair to stderr
+ *
+ * @param to_print A non-NULL obj pointer to type OBMapPair
+ */
+void displayMapPair(const obj *to_print);
+
 /** 
  * @brief Destructor for OBMapPair
  *
@@ -148,6 +155,13 @@ obhash_t hashMap(const obj *to_hash);
 int8_t compareMaps(const obj *a, const obj *b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
+
+/**
+ * @brief Displays an instance of OBMap to stderr
+ *
+ * @param to_print A non-NULL obj pointer to type OBMap
+ */
+void displayMap(const obj *to_print);
 
 /** 
  * @brief Destructor for OBMap
