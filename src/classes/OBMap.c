@@ -37,7 +37,7 @@ const uint32_t MAP_CAPACITIES[] = {
   (1<<29)-3,
   (1<<30)-35,
   ((uint64_t)1<<31)-1,
-  ((uint64_t)1<<32)-5
+  (((uint64_t)1)<<32)-5
 };
 
 const uint32_t NUM_CAPACITIES = 
