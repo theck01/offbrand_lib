@@ -1,8 +1,9 @@
 /**
  * @addtogroup OBInt
- * @brief  [short class description]
+ * @brief  Offbrand compatible integer class
  *
- * @details An integer with size bound only by available system memory.
+ * @details An immutable integer with size bound only by available system 
+ * memory. 
  *
  * @{
  * @file OBInt.h

@@ -17,7 +17,9 @@
  */
 struct OBInt_struct{
   obj base; /**< obj containing reference count and class membership data */
-  /* Additional private data added here, MUST COME AFTER THE obj */
+  uint8_t sign; /**< Sign of integer value, positive or negative */
+  uint8_t digits; /**< Digit array, in little endian order */
+  uint64_t num_digits; /**< Number of digits in the digit array */
 };
 
 
