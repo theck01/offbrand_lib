@@ -366,7 +366,7 @@ void displayVector(const obj *to_print){
     fprintf(stderr, "\n");
   }
 
-  fprintf(stderr, "[end]\n");
+  fprintf(stderr, "[vector end]\n");
 }
 
 

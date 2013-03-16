@@ -282,11 +282,10 @@ void displayMapPair(const obj *to_print){
   assert(to_print != NULL);
   assert(objIsOfClass(to_print, "OBMapPair"));
   
-  fprintf(stderr, "Key:\n");
+  fprintf(stderr, "  [key]\n");
   display(mp->key);
-  fprintf(stderr, "Value:\n");
+  fprintf(stderr, "  [value]\n");
   display(mp->value);
-  fprintf(stderr, "\n");
   return;
 }
 
@@ -380,7 +379,6 @@ int8_t compareMaps(const obj *a, const obj *b){
 
 void displayMap(const obj *to_print){
   
-  uint32_t i;
   OBMap *m = (OBMap *)to_print;
   OBDequeIterator *it;
 
@@ -395,6 +393,8 @@ void displayMap(const obj *to_print){
   do{
     display(objAtDequeIt(m->pairs, it));
   }while(iterateDequeNext(m->pairs, it));
+
+  fprintf(stderr, "  [map end]\n");
 
   release((obj *)it);
 
