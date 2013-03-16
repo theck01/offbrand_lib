@@ -26,7 +26,7 @@
   /* initialize base class data */
   initBase((obj *)new_instance, &dealloc%METHODCLASSNAME%, 
            &hash%METHODCLASSNAME%, &compare%METHODCLASSNAME%s, 
-           &copy%METHODCLASSNAME%, &display%METHODCLASSNAME%, classname);
+           &display%METHODCLASSNAME%, classname);
 
   /* ADD CLASS SPECIFIC INITIALIZATION HERE */
 
