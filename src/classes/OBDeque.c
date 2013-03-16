@@ -513,7 +513,7 @@ OBDeque * createDefaultDeque(void){
 
   /* initialize base class data */
   initBase((obj *)new_instance, &deallocDeque, &hashDeque, &compareDeques,
-           NULL, classname);
+           &displayDeque, classname);
 
   new_instance->head = NULL;
   new_instance->tail = NULL;
@@ -680,6 +680,29 @@ int8_t compareDeques(const obj *a, const obj *b){
   release((obj *)b_it);
   
   return retval;
+}
+
+void displayDeque(const obj *to_print){
+  
+  uint32_t i;
+  OBDeque *d = (OBDeque *)to_print;
+  OBDequeIterator *it;
+
+  assert(to_print != NULL);
+  assert(objIsOfClass(to_print, "OBDeque"));
+  fprintf(stderr, "OBDeque with %u elements\n", dequeLength(d));
+
+  it = getDequeHeadIt(d);
+
+  if(!it) return;
+
+  do{
+    display(objAtDequeIt(d, it));
+  }while(iterateDequeNext(d, it));
+
+  release((obj *)it);
+
+  return;
 }
 
 

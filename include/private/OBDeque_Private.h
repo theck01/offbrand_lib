@@ -145,6 +145,13 @@ obhash_t hashDeque(const obj *to_hash);
 int8_t compareDeques(const obj *a, const obj *b);
 
 /**
+ * @brief Displays information about an OBDeque to stderr
+ *
+ * @param to_print A non-NULL obj pointer to type OBDeque
+ */
+void displayDeque(const obj *to_print);
+
+/**
  * @brief Destructor for OBDeque
  * @param to_dealloc An obj pointer to an instance of OBDeque with 
  * reference count 0
