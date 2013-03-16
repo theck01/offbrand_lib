@@ -358,7 +358,7 @@ void displayVector(const obj *to_print){
 
   assert(to_print != NULL);
   assert(objIsOfClass(to_print, "OBVector"));
-  fprintf(stderr, "Number of elements: %u\n", v->length);
+  fprintf(stderr, "OBVector with %u elements\n", v->length);
 
   for(i=0; i<v->length; i++){
     fprintf(stderr, "[index: %u]\n", i);
