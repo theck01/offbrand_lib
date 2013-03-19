@@ -287,7 +287,7 @@ int8_t compareStrings(const obj *a, const obj *b){
 void displayString(const obj *str){
   assert(str != NULL);
   assert(objIsOfClass(str, "OBString"));
-  fprintf(stderr, "String Contents: %s\n", ((OBString *)str)->str);
+  fprintf(stderr, "OBString with Contents:\n  %s\n", ((OBString *)str)->str);
 }
 
 
