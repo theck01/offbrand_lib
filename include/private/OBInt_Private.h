@@ -27,11 +27,13 @@ struct OBInt_struct{
 
 /**
  * @brief Default constructor for OBInt
+ * @param num_digits Approximate number of digits required to store the entire,
+ * always overestimate to ensure enough space is reserved
  * @return An instance of class OBInt
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBInt * createDefaultInt(void);
+OBInt * createDefaultInt(uint64_t num_digits);
 
 /**
  * @brief Hash function for OBInt
@@ -72,7 +74,64 @@ void displayInt(const obj *to_print);
  */
 void deallocInt(obj *to_dealloc);
 
-/* ADDITIONAL PRIVATE METHOD DECLARATIONS HERE*/
+/**
+ * @brief Creates a new integer as a result of addition between two OBInts
+ * with sign value ignored
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A non-NULL pointer to type OBInt
+ *
+ * @return An instance of OBInt, which may or may not have proper sign
+ */
+OBInt * addUnsignedInts(const OBInt *a, const OBInt *b);
+
+/**
+ * @brief Creates a new integer as a result of subtraction between two OBInts
+ * with sign ignored
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A non-NULL pointer to type OBInt
+ *
+ * @return An instance of OBInt, which may or may not have proper sign
+ */
+OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b);
+
+/**
+ * @brief Creates a new integer as a result of multiplication between two OBInts
+ * with sign ignored
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A non-NULL pointer to type OBInt
+ *
+ * @return An instance of OBInt, which may or may not have proper sign
+ */
+OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b);
+
+/**
+ * @brief Creates a new integer as a result of multiplication between two OBInts
+ * with sign ignored
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A non-NULL pointer to type OBInt
+ * @param c A non-NULL pointer to type OBInt used to accumulate a quotient value
+ * @param quotient_or_remainder A boolean value, 0 indicates that a remainder 
+ * should be returned, non-zero indicates a quotient should be returned
+ *
+ * @return An instance of OBInt, which may or may not have proper sign
+ */
+OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *c, 
+                           uint8_t quotient_or_remainder);
+
+/**
+ * @brief Returns the index where the most significant non-zero digit occurs, or
+ * zero if there are no non-zero digits
+ *
+ * @param a A non-NULL pointer to type OBInt
+ *
+ * @return An integer index where the most significant non-zero digit in a can
+ * be found
+ */
+uint64_t mostSigNonZero(const OBInt *a);
 
 #endif
 
