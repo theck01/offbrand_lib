@@ -3,6 +3,4 @@ bin/
 *.o
 apps/minlog/bin/
 docs/html
-docs/latex
-docs/doxygen.conf
 
