@@ -17,8 +17,9 @@
 
 /* add arguments to complete initialization as needed, modify 
  * OBInt_Private.h as well if modifications are made */
-OBInt * createDefaultInt(void){
+OBInt * createDefaultInt(uint64_t num_digits){
 
+  uint64_t i;
   static const char classname[] = "OBInt";
   OBInt *new_instance = malloc(sizeof(OBInt));
   assert(new_instance != NULL);
@@ -27,7 +28,14 @@ OBInt * createDefaultInt(void){
   initBase((obj *)new_instance, &deallocInt, &hashInt, &compareInts, 
            &displayInt, classname);
 
-  /* ADD CLASS SPECIFIC INITIALIZATION HERE */
+
+  new_instance->sign = 1;
+
+  new_instance->digits = malloc(sizeof(uint8_t)*num_digits);
+  assert(new_instance->digits != NULL);
+  for(i=0; i<num_digits; i++) new_instance->digits[i] = 0;
+
+  new_instance->num_digits = num_digits;
 
   return new_instance;
 }
@@ -38,6 +46,7 @@ obhash_t hashInt(const obj *to_hash){
   static int8_t init = 0;
   static obhash_t seed = 0;
 
+  uint64_t i;
   obhash_t value;
   OBInt *instance = (OBInt *)to_hash;
 
@@ -52,17 +61,25 @@ obhash_t hashInt(const obj *to_hash){
 
   value = seed;
 
-  /* Implement a hash function suitable for uniquely itentifying
-   * OBInt instances. If instance address munging is an acceptable
-   * hash then this method can be deleted and NULL should be supplied to the
-   * hash_funct argument of initBase in createdDefaultInt */
+  i = mostSigNonZero(instance);
 
-  return 0;
+  /* A version of Jenkin's one at a time hash function */
+  for( ; i<instance->num_digits; i--){
+    value += instance->digits[i];
+    value += value << 10;
+    value ^= value >> 6;
+  }
+
+  value += value << 3;
+  value ^= value >> 11;
+  value *= value << 15;
+  return value;
 }
 
 
 int8_t compareInts(const obj *a, const obj *b){
   
+  uint64_t i,j;
   const OBInt *comp_a = (OBInt *)a;  
   const OBInt *comp_b = (OBInt *)b;  
 
@@ -71,26 +88,35 @@ int8_t compareInts(const obj *a, const obj *b){
   assert(objIsOfClass(a, "OBInt"));
   assert(objIsOfClass(b, "OBInt"));
 
-  /* add specific comparison logic, following the description in the header
-   * file. If pointer based comparision is all that is needed then this method 
-   * can be deleted and NULL should be supplied to the compare_funct argument of
-   * initBase in createdDefaultInt */
+  i = mostSigNonZero(comp_a);
+  j = mostSigNonZero(comp_b);
 
+  if(i<j) return OB_LESS_THAN;
+  if(i>j) return OB_GREATER_THAN;
+
+  /* number of digits is equal, resort to digit by digit comparision */
+  for( ; i<comp_a->num_digits; i--){
+    if(comp_a->digits[i] < comp_b->digits[i]) return OB_LESS_THAN;
+    if(comp_a->digits[i] > comp_b->digits[i]) return OB_LESS_THAN;
+  }
+
+  /* all digits are equal, OBInts must be equal */
   return OB_EQUAL_TO;
 }
 
 
 void displayInt(const obj *to_print){
 
+  OBString *str;
   const OBInt *instance = (OBInt *)to_print;
   
   assert(to_print);
   assert(objIsOfClass(to_print, "OBInt"));
 
-  /* add class specific display logic. If printing the classname and address
-   * of an instance is all that is needed then this method can be deleted and
-   * NULL should be supplid to the display_funct argument of initBase in
-   * createDefaultInt */
+  str = stringFromInt(instance);
+  fprintf(stderr, "OBInt with value:\n  %s\n", getCString(str));
+  
+  release((obj *)str);
 
   return;
 }
@@ -104,10 +130,50 @@ void deallocInt(obj *to_dealloc){
   assert(to_dealloc);
   assert(objIsOfClass(to_dealloc, "OBInt"));
 
-  /* PERFORM CLASS SPECIFIC MEMORY MANAGEMENT ON instance HERE BUT DO NOT
-   * FREE INSTANCE, THE LIBRARY WILL DO THAT */
+  free(instance->digits);
 
   return;
 }
 
-/* DEFINE ADDITIONAL PRIVATE METHODS HERE */
+OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
+
+  uint64_t i, large_most_sig, small_most_sig;
+  uint8_t carry = 0;
+  OBInt *result, *larger, *smaller;
+
+  larger = mostSigNonZero(a) > mostSigNonZero(b) ? a : b;
+  smaller = mostSigNonZero(a) <= mostSigNonZero(b) ? a : b;
+
+  large_most_sig = mostSigNonZero(larger);
+  small_most_sig = mostSigNonZero(smaller);
+
+  /* reserve enough space for the result, +2 required for actual size of larger
+   * and possible extra digit needed to catch any addition overflow */
+  result = createDefaultInt(large_most_sig+2);
+
+  for(i=0; i<= small_most_sig; i++){
+    result->digits[i] = (larger->digits[i] + smaller->digits[i] + carry)%10;
+    carry = (larger->digits[i] + smaller->digits[i] + carry)/10;
+  }
+
+  for( ; i<= large_most_sig; i++){
+    result->digits[i] = (larger->digits[i] + carry)%10;
+    carry = (larger->digits[i] + carry)/10;
+  }
+
+  result->digits[i] = carry;
+
+  return result;
+}
+
+
+uint64_t mostSigNonZero(const OBInt *a){
+
+  uint64_t i;
+
+  assert(a != NULL);
+
+  i = a->num_digits - 1;
+  while(!a->digits[i] && i>0) i--;
+  return i;
+}
