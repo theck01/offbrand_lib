@@ -8,6 +8,7 @@
 #define OBINT_H
 
 #include "offbrand.h"
+#include "OBString.h"
 
 /** Class type declaration */
 typedef struct OBInt_struct OBInt;
@@ -28,13 +29,24 @@ OBInt * createIntWithInt(int64_t num);
 /**
  * @brief Creates a new OBInt with value indicated by given string
  *
- * @param numstr A NUL terminated C string containing only digit characters and
- * possibly one '-' character at the beginning of the string to indicate 
- * a negative value
+ * @param numstr A non-NULL pointer to an OBString instance containing only 
+ * digit characters and possibly one '-' character at the beginning of the 
+ * string to indicate a negative value
  *
  * @return An instance of OBInt with value given by numstr
  */
-OBInt * createIntWithString(const char *numstr);
+OBInt * intFromString(const OBString *numstr);
+
+/**
+ * @brief Creates an instance of OBString containing a string representation
+ * of the value of an OBInt
+ *
+ * @param a A non-NULL pointer to type OBInt
+ *
+ * @return An instance of OBString
+ */
+OBString * stringFromInt(const OBInt *a);
+
 
 /**
  * @brief Creates a new OBInt containing the sum of two OBInt values
