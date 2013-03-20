@@ -82,8 +82,6 @@ typedef void (*display_fptr)(const obj *);
  * class
  * @param compare_funct Function pointer to the compare function for the 
  * instances class
- * @param copy_funct Function pointer ot the copy function of the instances
- * class
  * @param display_funct Function pointer to the display function for the
  * instances class
  * @param classname C string containing instances classname.
