@@ -6,13 +6,6 @@
 
 mesgstr="Made"
 
-if [[ $(basename $PWD) != "offbrand" ]]
-then
-  echo "$(basename $0) must be run from the base directory of the Offbrand"
-  echo "library"
-  exit 1
-fi
-
 # check for directories, make non-existant
 if [[ ! -d "bin" ]]
 then
