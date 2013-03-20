@@ -19,7 +19,6 @@
  * OBInt_Private.h as well if modifications are made */
 OBInt * createDefaultInt(uint64_t num_digits){
 
-  uint64_t i;
   static const char classname[] = "OBInt";
   OBInt *new_instance = malloc(sizeof(OBInt));
   assert(new_instance != NULL);
@@ -33,7 +32,7 @@ OBInt * createDefaultInt(uint64_t num_digits){
 
   new_instance->digits = malloc(sizeof(uint8_t)*num_digits);
   assert(new_instance->digits != NULL);
-  for(i=0; i<num_digits; i++) new_instance->digits[i] = 0;
+  memset(new_instance->digits, 0, num_digits);
 
   new_instance->num_digits = num_digits;
 
@@ -135,6 +134,7 @@ void deallocInt(obj *to_dealloc){
   return;
 }
 
+
 OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
 
   uint64_t i, large_most_sig, small_most_sig;
@@ -167,13 +167,130 @@ OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
 }
 
 
+OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
+
+  uint64_t i, j, b_most_sig;
+  OBInt *result;
+
+  a_most_sig = mostSigNonZero(a);
+
+  result = createDefaultInt(a_most_sig);
+  memcpy(result->digits, a->digits, a_most_sig);
+
+  b_most_sig = mostSigNonZero(b);
+
+  for(i=0; i<b_most_sig; i++){
+
+    /* perform borrow operation if needed */
+    if(result->digit[i] < b->digit[i]){
+      j = i+1;
+      while(!result->digit[j]) j++;
+      result->digit[j]--;
+      for(--j; j>i; j--) result->digit[j] += 9;
+      result->digit[j] += 10;
+    }
+
+    result->digit[i] -= b->digit[i];
+  }
+
+  return result;
+}
+
+
+OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
+
+  uint64_t i, large_most_sig, small_most_sig, split_point;
+  uint8_t carry = 0;
+  OBInt *larger, *smaller;
+  OBInt *x0, *x1, *y0, *y1; /* split versions of a and b */
+  OBInt *z0, *z1, *z1a, *z1b, *z1c, *z1d, *z2; /* partial results of 
+                                                  Karatsuba algorithm */
+  OBInt *partial_result, *result;
+
+
+  larger = mostSigNonZero(a) > mostSigNonZero(b) ? a : b;
+  smaller = mostSigNonZero(a) <= mostSigNonZero(b) ? a : b;
+
+  large_most_sig = mostSigNonZero(larger);
+  small_most_sig = mostSigNonZero(smaller);
+
+  /* base case, a and b are single digits */
+  if(large_most_sig == 1 && small_most_sig == 1) 
+    return createIntFromInt(a->digit[0]*b->digit[0]);
+
+  split_point = large_most_sig/2;
+  splitInt(a, split_point, &x1, &x0);
+  splitInt(b, split_point, &y1, &y0);
+
+  z2 = multiplyUnsignedInts(x1, y1);
+  z0 = multiplyUnsignedInts(x0, y0);
+
+  z1a = addUnsignedInts(x1, x0);
+  z1b = addUnsignedInts(x1, x0);
+  z1c = multiplyUnsignedInts(z1a, z1b);
+
+  release((obj *)z1a);
+  release((obj *)z1b);
+
+  z1d = subtractUnsignedInts(z1c, z2);
+  release((obj *)z1c);
+  z1 = subtractUnsignedInts(z1d, z0);
+  release((obj *)z1d);
+
+  partial_result = addUnsignedInts(shiftInt(z2, 2*split_point),
+                                   shiftInt(z1, split_point));
+
+  release((obj *) z2);
+  release((obj *) z1);
+
+  result = addUnsignedInts(partial_result, z0);
+  
+  release((obj *) partial_result);
+  release((obj *) z0);
+
+  return result;
+}
+
+
 uint64_t mostSigNonZero(const OBInt *a){
 
   uint64_t i;
 
-  assert(a != NULL);
-
   i = a->num_digits - 1;
   while(!a->digits[i] && i>0) i--;
   return i;
+}
+
+
+void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0){
+
+  if(a->num_digits >= i){
+    *b1 = createDefaultInt(1);
+    *b0 = createDefaultInt(a->num_digits);
+    memcpy((*b0)->digits, a->digits, a->num_digits);
+  }
+  else{
+    *b1 = createDefaultInt(a->num_digits - i);
+    memcpy((*b1)->digits, (a->digits + i), a->num_digits-i);
+    *b0 = createDefaultInt(i);
+    memcpy((*b0)->digits, (a->digits), i);
+  }
+
+  return;
+}
+
+
+void shiftInt(OBInt *a, uint64_t m){
+
+  uint8_t *digits = malloc(sizeof(uint8_t)*(a->num_digits + m));
+  assert(digits);
+
+  memset(digits, 0, m);
+  memcpy(digits+m, a->digits, a->num_digits);
+
+  free(a->digits);
+  a->digits = digits;
+  a->num_digits += m;
+
+  return;
 }

@@ -89,10 +89,13 @@ OBInt * addUnsignedInts(const OBInt *a, const OBInt *b);
  * @brief Creates a new integer as a result of subtraction between two OBInts
  * with sign ignored
  *
- * @param a A non-NULL pointer to type OBInt
- * @param b A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type OBInt, larger or equal to b
+ * @param b A non-NULL pointer to type OBInt, smaller or equal to a
  *
  * @return An instance of OBInt, which may or may not have proper sign
+ *
+ * @warning Proper results guaranteed only for a >= b, a < b will not work and
+ * probably will cause segmentation faults
  */
 OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b);
 
@@ -104,6 +107,8 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b);
  * @param b A non-NULL pointer to type OBInt
  *
  * @return An instance of OBInt, which may or may not have proper sign
+ *
+ * @details Multiplication performed using the Karatsuba multiplcation algorithm
  */
 OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b);
 
@@ -132,6 +137,32 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *c,
  * be found
  */
 uint64_t mostSigNonZero(const OBInt *a);
+
+/**
+ * @brief Splits the OBInt into two OBInt instances at given index.
+ *
+ * @param a A non-NULL pointer to type OBInt to be split
+ * @param i The integer index where the split occurs, where a-digits[i] is
+ * placed in the most significant section of the split
+ * @param b1 A reference to a pointer to type OBInt, used to return the most
+ * significant section of the OBInt being split
+ * @param b0 A reference to a pointer to type OBInt, used to return the least
+ * significant section of the OBInt being split
+ *
+ * @details If index i extends beyond the bounds of a then b1 is set to point
+ * to a 0 OBInt and b2 is set to point to a copy of a. a is treated as unsigned
+ * for this operation
+ */
+void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0);
+
+/**
+ * @brief Shifts the OBInt the given number of digits to the left, in place, 
+ * essentially unsigned multiplication by 10^m 
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param m Number of digits to shift
+ */
+void shiftInt(OBInt *a, uint64_t m);
 
 #endif
 
