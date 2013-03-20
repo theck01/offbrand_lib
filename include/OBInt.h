@@ -25,7 +25,6 @@ typedef struct OBInt_struct OBInt;
  */
 OBInt * createIntWithInt(int64_t num);
 
-
 /**
  * @brief Creates a new OBInt with value indicated by given string
  *
