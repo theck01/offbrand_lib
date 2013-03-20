@@ -684,13 +684,12 @@ int8_t compareDeques(const obj *a, const obj *b){
 
 void displayDeque(const obj *to_print){
   
-  uint32_t i = 0;
   OBDeque *d = (OBDeque *)to_print;
   OBDequeIterator *it;
 
   assert(to_print != NULL);
   assert(objIsOfClass(to_print, "OBDeque"));
-  fprintf(stderr, "OBDeque with %u elements\n"
+  fprintf(stderr, "OBDeque with %llu elements\n"
                   "  [deque head]", dequeLength(d));
 
   it = getDequeHeadIt(d);
