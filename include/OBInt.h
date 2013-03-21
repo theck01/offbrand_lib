@@ -26,6 +26,18 @@ typedef struct OBInt_struct OBInt;
 OBInt * createIntWithInt(int64_t num);
 
 /**
+ * @brief Returns the value stored in OBInt as an integer
+ *
+ * @param a A non-NULL pointer to type OBInt
+ *
+ * @return A signed 64 bit integer representing value stored in a
+ *
+ * @warning If the value of the OBInt cannot be represented in 64 bits then
+ * returned value will not represent the true value of the OBInt
+ */
+int64_t intValue(const OBInt *a);
+
+/**
  * @brief Creates a new OBInt with value indicated by given string
  *
  * @param numstr A non-NULL pointer to an OBString instance containing only 
