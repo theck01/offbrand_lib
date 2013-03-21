@@ -1,3 +1,8 @@
+/**
+ * @file offbrand_stdlib.c
+ * @brief Standard Library Implementation
+ * @author theck
+ */
 
 #include "../include/offbrand.h"
 #include "../include/private/obj_Private.h"
