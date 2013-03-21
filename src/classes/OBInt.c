@@ -28,7 +28,7 @@ OBInt * createDefaultInt(uint64_t num_digits){
            &displayInt, classname);
 
 
-  new_instance->sign = 1;
+  new_instance->sign = 1; /* positive by default */
 
   new_instance->digits = malloc(sizeof(uint8_t)*num_digits);
   assert(new_instance->digits != NULL);
@@ -139,7 +139,8 @@ OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
 
   uint64_t i, large_most_sig, small_most_sig;
   uint8_t carry = 0;
-  OBInt *result, *larger, *smaller;
+  OBInt *result;
+  const OBInt *larger, *smaller;
 
   larger = mostSigNonZero(a) > mostSigNonZero(b) ? a : b;
   smaller = mostSigNonZero(a) <= mostSigNonZero(b) ? a : b;
@@ -169,7 +170,7 @@ OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
 
 OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
 
-  uint64_t i, j, b_most_sig;
+  uint64_t i, j, a_most_sig, b_most_sig;
   OBInt *result;
 
   a_most_sig = mostSigNonZero(a);
@@ -182,15 +183,15 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
   for(i=0; i<b_most_sig; i++){
 
     /* perform borrow operation if needed */
-    if(result->digit[i] < b->digit[i]){
+    if(result->digits[i] < b->digits[i]){
       j = i+1;
-      while(!result->digit[j]) j++;
-      result->digit[j]--;
-      for(--j; j>i; j--) result->digit[j] += 9;
-      result->digit[j] += 10;
+      while(!result->digits[j]) j++;
+      result->digits[j]--;
+      for(--j; j>i; j--) result->digits[j] += 9;
+      result->digits[j] += 10;
     }
 
-    result->digit[i] -= b->digit[i];
+    result->digits[i] -= b->digits[i];
   }
 
   return result;
@@ -199,14 +200,12 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
 
 OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
 
-  uint64_t i, large_most_sig, small_most_sig, split_point;
-  uint8_t carry = 0;
-  OBInt *larger, *smaller;
+  uint64_t large_most_sig, small_most_sig, split_point;
+  const OBInt *larger, *smaller;
   OBInt *x0, *x1, *y0, *y1; /* split versions of a and b */
   OBInt *z0, *z1, *z1a, *z1b, *z1c, *z1d, *z2; /* partial results of 
                                                   Karatsuba algorithm */
   OBInt *partial_result, *result;
-
 
   larger = mostSigNonZero(a) > mostSigNonZero(b) ? a : b;
   smaller = mostSigNonZero(a) <= mostSigNonZero(b) ? a : b;
@@ -216,7 +215,7 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
 
   /* base case, a and b are single digits */
   if(large_most_sig == 1 && small_most_sig == 1) 
-    return createIntFromInt(a->digit[0]*b->digit[0]);
+    return createIntWithInt(a->digits[0]*b->digits[0]);
 
   split_point = large_most_sig/2;
   splitInt(a, split_point, &x1, &x0);
@@ -237,8 +236,9 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   z1 = subtractUnsignedInts(z1d, z0);
   release((obj *)z1d);
 
-  partial_result = addUnsignedInts(shiftInt(z2, 2*split_point),
-                                   shiftInt(z1, split_point));
+  shiftInt(z2, 2*split_point);
+  shiftInt(z1, split_point);
+  partial_result = addUnsignedInts(z2, z1);
 
   release((obj *) z2);
   release((obj *) z1);
@@ -250,6 +250,15 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
 
   return result;
 }
+
+
+OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *c,
+                           uint8_t quotient_or_remainder){
+
+  
+
+}
+
 
 
 uint64_t mostSigNonZero(const OBInt *a){
