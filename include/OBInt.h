@@ -60,6 +60,17 @@ OBString * stringFromInt(const OBInt *a);
 
 
 /**
+ * @brief Creates an instance of OBInt with the same value as the argument
+ * OBInt
+ *
+ * @param A non-NULL pointer to type OBInt
+ *
+ * @return A copy of the argument OBInt
+ */
+OBInt * copyInt(const OBInt *a);
+
+
+/**
  * @brief Creates a new OBInt containing the sum of two OBInt values
  *
  * @param a A non-NULL pointer to type OBInt
