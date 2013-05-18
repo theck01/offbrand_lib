@@ -203,8 +203,8 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   uint64_t large_most_sig, small_most_sig, split_point;
   const OBInt *larger, *smaller;
   OBInt *x0, *x1, *y0, *y1; /* split versions of a and b */
-  OBInt *z0, *z1, *z1a, *z1b, *z1c, *z1d, *z2; /* partial results of 
-                                                  Karatsuba algorithm */
+  OBInt *z0, *z1, *z1a, *z1b, *z1c, *z1d, *z2; /* partial results of Karatsuba 
+                                                  algorithm */
   OBInt *partial_result, *result;
 
   larger = mostSigNonZero(a) > mostSigNonZero(b) ? a : b;
@@ -214,8 +214,8 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   small_most_sig = mostSigNonZero(smaller);
 
   /* base case, a and b are single digits */
-  if(large_most_sig == 1 && small_most_sig == 1) 
-    return createIntWithInt(a->digits[0]*b->digits[0]);
+  if(large_most_sig + small_most_sig < 18)
+    return createIntWithInt(intValue(a) * intValue(b));
 
   split_point = large_most_sig/2;
   splitInt(a, split_point, &x1, &x0);
