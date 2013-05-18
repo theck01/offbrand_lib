@@ -19,7 +19,7 @@
  * Any Linux distro or OS X with developer tools installed should be able to 
  * build the library with no issue. At this time Windows is not supported. 
  * If you would like to build the documentation for the project on your local 
- * machine then an the Doxygen package is required 
+ * machine then the Doxygen package is also required.
  *
  * <b>Knowledge Base: </b>
  * While the library is not terribly complex to use or understand, you should
@@ -38,15 +38,16 @@
  * $ make test
  * @endcode
  *
- * Use the header files in the include/ subdirectory, and when compiling your
- * app link with needed object files found in the bin/class/ subdirectory.
+ * Include desired class header files from the include/ subdirectory and link 
+ * with needed object files found in the bin/class/ subdirectory when compiling
+ * to integrate offbrand into your app.
  * <br><br><br>
  * 
  *
  * @section Overview Overview
  *
  * <i>NOTE</i>: The phrase "class" is used in the documentation to refer to a C 
- * style approximation of a class built from an incomplete type rather than a 
+ * style approximation of a class built from an incomplete type, rather than a 
  * true class in a language like Java or Obj-C.
  *
  * offbrand is based on a section of the C standard that dictates
