@@ -30,7 +30,7 @@ OBInt * createDefaultInt(uint64_t num_digits){
 
   new_instance->sign = 1; /* positive by default */
 
-  new_instance->digits = malloc(sizeof(uint8_t)*num_digits);
+  new_instance->digits = malloc(sizeof(int8_t)*num_digits);
   assert(new_instance->digits != NULL);
   memset(new_instance->digits, 0, num_digits);
 
@@ -138,7 +138,7 @@ void deallocInt(obj *to_dealloc){
 OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
 
   uint64_t i, large_most_sig, small_most_sig;
-  uint8_t carry = 0;
+  int8_t carry = 0;
   OBInt *result;
   const OBInt *larger, *smaller;
 
@@ -173,25 +173,25 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
   uint64_t i, j, a_most_sig, b_most_sig;
   OBInt *result;
 
+  result = copyInt(a);
+
   a_most_sig = mostSigNonZero(a);
-
-  result = createDefaultInt(a_most_sig);
-  memcpy(result->digits, a->digits, a_most_sig);
-
   b_most_sig = mostSigNonZero(b);
 
   for(i=0; i<b_most_sig; i++){
-
     /* perform borrow operation if needed */
     if(result->digits[i] < b->digits[i]){
-      j = i+1;
-      while(!result->digits[j]) j++;
-      result->digits[j]--;
-      for(--j; j>i; j--) result->digits[j] += 9;
-      result->digits[j] += 10;
+      result->digits[i+1]--;
+      result->digits[i] += 10;
     }
 
     result->digits[i] -= b->digits[i];
+  }
+
+  /* propagate any final borrow */
+  while(i < a_most_sig && result->digits < 0){
+    result->digits[i+1]--;
+    result->digits[i] += 10;
   }
 
   return result;
