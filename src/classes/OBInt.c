@@ -215,7 +215,7 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
 
   /* base case, a and b are single digits */
   if(large_most_sig + small_most_sig < 18)
-    return createIntWithInt(intValue(a) * intValue(b));
+    return createIntWithInt(unsignedValue(a) * unsignedValue(b));
 
   split_point = large_most_sig/2;
   splitInt(a, split_point, &x1, &x0);
@@ -302,4 +302,9 @@ void shiftInt(OBInt *a, uint64_t m){
   a->num_digits += m;
 
   return;
+}
+
+
+int64_t unsignedValue(const OBInt *a){
+
 }

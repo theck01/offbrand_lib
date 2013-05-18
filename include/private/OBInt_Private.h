@@ -155,7 +155,7 @@ uint64_t mostSigNonZero(const OBInt *a);
  */
 void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0);
 
-/**
+/**int
  * @brief Shifts the OBInt the given number of digits to the left, in place, 
  * essentially unsigned multiplication by 10^m 
  *
@@ -163,6 +163,15 @@ void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0);
  * @param m Number of digits to shift
  */
 void shiftInt(OBInt *a, uint64_t m);
+
+/**
+ * @brief Returns the unsigned value of the OBInt 
+ *
+ * @param a A non-NULL pointer to type OBInt
+ *
+ * @return a positive int64_t representing the value of the argument OBInt
+ */
+int64_t unsignedValue(const OBInt *a);
 
 #endif
 
