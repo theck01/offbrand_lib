@@ -113,8 +113,8 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b);
 OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b);
 
 /**
- * @brief Creates a new integer as a result of multiplication between two OBInts
- * with sign ignored
+ * @brief Creates a new integer as a result of divison or modulus between two 
+ * OBInts with sign ignored
  *
  * @param a A non-NULL pointer to type OBInt
  * @param b A non-NULL pointer to type OBInt
