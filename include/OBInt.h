@@ -63,12 +63,33 @@ OBString * stringFromInt(const OBInt *a);
  * @brief Creates an instance of OBInt with the same value as the argument
  * OBInt
  *
- * @param A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type OBInt
  *
  * @return A copy of the argument OBInt
  */
 OBInt * copyInt(const OBInt *a);
 
+/**
+ * @brief Checks if an instance of OBInt is zero and returns the boolean truth
+ * value
+ *
+ * @param a A non-NULL pointer to type OBInt
+ *
+ * @retval 0 The argument is non-zero
+ * @retval non-zero The argument is zero
+ */
+uint8_t isIntZero(const OBInt *a);
+
+/**
+ * @brief Checks if an instance of OBInt is negative and returns the boolean
+ * truth value
+ *
+ * @param a A non-NULL pointer to type OBInt
+ *
+ * @retval 0 The argument is positive
+ * @retval non-zero The argument is negative
+ */
+uint8_t isIntNegative(const OBInt *a);
 
 /**
  * @brief Creates a new OBInt containing the sum of two OBInt values
