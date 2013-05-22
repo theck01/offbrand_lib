@@ -27,7 +27,6 @@ OBInt * createDefaultInt(uint64_t num_digits){
   initBase((obj *)new_instance, &deallocInt, &hashInt, &compareInts, 
            &displayInt, classname);
 
-
   new_instance->sign = 1; /* positive by default */
 
   new_instance->digits = malloc(sizeof(int8_t)*num_digits);
@@ -60,7 +59,7 @@ obhash_t hashInt(const obj *to_hash){
 
   value = seed;
 
-  i = mostSigNonZero(instance);
+  i = mostSig(instance);
 
   /* A version of Jenkin's one at a time hash function */
   for( ; i<instance->num_digits; i--){
@@ -87,8 +86,8 @@ int8_t compareInts(const obj *a, const obj *b){
   assert(objIsOfClass(a, "OBInt"));
   assert(objIsOfClass(b, "OBInt"));
 
-  i = mostSigNonZero(comp_a);
-  j = mostSigNonZero(comp_b);
+  i = mostSig(comp_a);
+  j = mostSig(comp_b);
 
   if(i<j) return OB_LESS_THAN;
   if(i>j) return OB_GREATER_THAN;
@@ -142,11 +141,11 @@ OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
   OBInt *result;
   const OBInt *larger, *smaller;
 
-  larger = mostSigNonZero(a) > mostSigNonZero(b) ? a : b;
-  smaller = mostSigNonZero(a) <= mostSigNonZero(b) ? a : b;
+  larger = mostSig(a) > mostSig(b) ? a : b;
+  smaller = mostSig(a) <= mostSig(b) ? a : b;
 
-  large_most_sig = mostSigNonZero(larger);
-  small_most_sig = mostSigNonZero(smaller);
+  large_most_sig = mostSig(larger);
+  small_most_sig = mostSig(smaller);
 
   /* reserve enough space for the result, +2 required for actual size of larger
    * and possible extra digit needed to catch any addition overflow */
@@ -175,8 +174,8 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
 
   result = copyInt(a);
 
-  a_most_sig = mostSigNonZero(a);
-  b_most_sig = mostSigNonZero(b);
+  a_most_sig = mostSig(a);
+  b_most_sig = mostSig(b);
 
   for(i=0; i<b_most_sig; i++){
     /* perform borrow operation if needed */
@@ -207,11 +206,11 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
                                                   algorithm */
   OBInt *partial_result, *result;
 
-  larger = mostSigNonZero(a) > mostSigNonZero(b) ? a : b;
-  smaller = mostSigNonZero(a) <= mostSigNonZero(b) ? a : b;
+  larger = mostSig(a) > mostSig(b) ? a : b;
+  smaller = mostSig(a) <= mostSig(b) ? a : b;
 
-  large_most_sig = mostSigNonZero(larger);
-  small_most_sig = mostSigNonZero(smaller);
+  large_most_sig = mostSig(larger);
+  small_most_sig = mostSig(smaller);
 
   /* base case, a and b are single digits */
   if(large_most_sig + small_most_sig < 18)
@@ -260,8 +259,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *c,
 }
 
 
-
-uint64_t mostSigNonZero(const OBInt *a){
+uint64_t mostSig(const OBInt *a){
 
   uint64_t i;
 

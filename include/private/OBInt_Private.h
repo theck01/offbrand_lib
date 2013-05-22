@@ -136,7 +136,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *c,
  * @return An integer index where the most significant non-zero digit in a can
  * be found
  */
-uint64_t mostSigNonZero(const OBInt *a);
+uint64_t mostSig(const OBInt *a);
 
 /**
  * @brief Splits the OBInt into two OBInt instances at given index.
