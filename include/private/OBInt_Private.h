@@ -118,14 +118,15 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b);
  *
  * @param a A non-NULL pointer to type OBInt
  * @param b A non-NULL pointer to type OBInt
- * @param c A non-NULL pointer to type OBInt used to accumulate a quotient value
- * @param quotient_or_remainder A boolean value, 0 indicates that a remainder 
+ * @param approx A non-NULL pointer to type OBInt used to accumulate a quotient
+ * value
+ * @param quotient A boolean value, 0 indicates that a remainder 
  * should be returned, non-zero indicates a quotient should be returned
  *
  * @return An instance of OBInt, which may or may not have proper sign
  */
-OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *c, 
-                           uint8_t quotient_or_remainder);
+OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx, 
+                           uint8_t quotient);
 
 /**
  * @brief Returns the index where the most significant non-zero digit occurs, or
@@ -172,6 +173,18 @@ void shiftInt(OBInt *a, uint64_t m);
  * @return a positive int64_t representing the value of the argument OBInt
  */
 int64_t unsignedValue(const OBInt *a);
+
+/**
+ * @brief Sets the number of digits operated on in a primitive from 1 to 17
+ *
+ * @param digits An integer between 1 and 17 inclusive
+ *
+ * @warning If digits does not fall in the 1 to 17 inclusive range nothing
+ * is done
+ * @warning The default value of 17 is most efficient, this method exists for
+ * testing purposes only!
+ */
+void setMaxDigits(uint8_t digits);
 
 #endif
 

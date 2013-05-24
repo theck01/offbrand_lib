@@ -7,6 +7,9 @@
 #include "../../include/OBInt.h"
 #include "../../include/private/OBInt_Private.h"
 
+/* maximum number of decimal digits in a int64_t */
+uint8_t int64_max_digits = 17;
+
 /* PUBLIC METHODS */
 
 
@@ -213,7 +216,7 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   small_most_sig = mostSig(smaller);
 
   /* base case, a and b are single digits */
-  if(large_most_sig + small_most_sig < 18)
+  if(large_most_sig + small_most_sig < int64_max_digits)
     return createIntWithInt(unsignedValue(a) * unsignedValue(b));
 
   split_point = large_most_sig/2;
@@ -251,11 +254,83 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *c,
-                           uint8_t quotient_or_remainder){
-
+OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
+                           uint8_t quotient){
   
+  int8_t comp_val;
+  int64_t a_val, b_val, result_val;
+  uint64_t a_most_sig, b_most_sig, i, j;
+  OBInt *unshifted; /* unshifted partial results */
+  OBInt *partial; /* partial results */
+  OBInt *product; /* quotient approximation multiplied by b */
+  OBInt *new_approx; /* improved approximation */
+  OBInt *new_dividend; /* reduced dividend */
+  OBInt *result; /* approximation */
 
+
+  a_most_sig = mostSig(a);
+  b_most_sig = mostSig(b);
+
+  /* if operation can be computed outright do so */
+  if(a_most_sig < int64_max_digits && b_most_sig < int64_max_digits){
+
+    a_val = unsignedValue(a);
+    b_val = unsignedValue(b);
+
+    if(quotient) result_val = a_val/b_val;
+    else result_val = a_val%b_val;
+
+    return createIntWithInt(result_val);
+  }
+
+  /* if a < b (so a/b = 0, a%b = a) */
+  comp_val = compareInts(a,b);
+  if(comp_val == OB_LESS_THAN){
+    if(quotient) return copyInt(approx);
+    else return copyInt(a);
+  }
+  /* if a == b (so a/b = 1, a%b = 0) */
+  else if(comp_val == OB_EQUAL_TO){
+    if(quotient) return addIntAndPrim(approx,1);
+    else return createIntWithInt(0);
+  }
+
+  /* else recursive division approximation */
+
+  /* generate machine integers for approximation */
+  a_val = 0;
+  for(i=a_most_sig; i>a_most_sig - int64_max_digits; i--){
+    a_val *= 10;
+    a_val += a->digits[i];
+  }
+  
+  b_val = 0;
+  for(j=b_most_sig; j>b_most_sig - int64_max_digits; j--){
+    b_val *= 10;
+    b_val += b->digits[j];
+  }
+
+  /* increment b_val to account for possible remaining portion in b to 
+   * ensure that approximate result is not too great does not overflow */
+  if(b_most_sig >= int64_max_digits) b_val++; 
+
+  /* perform approximation division, shift into proper decimal place, and add
+   * to approximation */
+  unshifted = createIntWithInt(a_val/b_val);
+  partial = shiftInt(unshifed, i-j);
+  release((obj *)partial);
+  product = multiplyUnsignedInts(partial, b);
+  new_dividend = subtractUnsignedInts(a, product);
+  release((obj *)product);
+  new_approx = addUnsignedInts(a, partial);
+  release((obj *)partial);
+
+  result = reduceUnsignedInts(new_dividend, b, new_appox, quotient);
+
+  release((obj *)new_approx);
+  release((obj *)new_dividend);
+
+  return result;
 }
 
 
@@ -304,5 +379,22 @@ void shiftInt(OBInt *a, uint64_t m){
 
 
 int64_t unsignedValue(const OBInt *a){
+  
+  uint64_t i;
+  int64_t val;
 
+  i = mostSig(a);
+  val = 0;
+
+  for( ; i >= 0; i--){
+    val *= 10;
+    val += a->digits[i];
+  }
+
+  return val;
+}
+
+
+void setMaxDigits(uint8_t digits){
+  if(digits >= 1 && digits <= 17) int64_max_digits = digits;
 }
