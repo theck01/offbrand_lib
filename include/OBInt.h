@@ -102,6 +102,17 @@ uint8_t isIntNegative(const OBInt *a);
 OBInt * addInts(const OBInt *a, const OBInt *b);
 
 /**
+ * @brief Creates a new OBInt containing the sum of an OBInt and a machine
+ * integer
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A signed 64 bit machine integer
+ *
+ * @return An instance of OBInt with value given by a+b
+ */
+OBInt * addIntAndPrim(const OBInt *a, int64_t b);
+
+/**
  * @brief Creates a new OBInt containing the difference of two OBInt values
  *
  * @param a A non-NULL pointer to type OBInt
@@ -112,6 +123,17 @@ OBInt * addInts(const OBInt *a, const OBInt *b);
 OBInt * subtractInts(const OBInt *a, const OBInt *b);
 
 /**
+ * @brief Creates a new OBInt containing the difference of an OBInt and a 
+ * machine integer
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A signed 64 bit machine integer
+ *
+ * @return An instance of OBInt with value given by a-b
+ */
+OBInt * subtractIntAndPrim(const OBInt *a, int64_t b);
+
+/**
  * @brief Creates a new OBInt containing the product of two OBInt values
  *
  * @param a A non-NULL pointer to type OBInt
@@ -120,6 +142,17 @@ OBInt * subtractInts(const OBInt *a, const OBInt *b);
  * @return An instance of OBInt with value given by a*b
  */
 OBInt * multiplyInts(const OBInt *a, const OBInt *b);
+
+/**
+ * @brief Creates a new OBInt containing the product of an OBInt and a 
+ * machine integer
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A signed 64 bit machine integer
+ *
+ * @return An instance of OBInt with value given by a*b
+ */
+OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b);
 
 /**
  * @brief Creates a new OBInt containing the quotient resule of integer division
@@ -133,6 +166,17 @@ OBInt * multiplyInts(const OBInt *a, const OBInt *b);
 OBInt * divideInts(const OBInt *a, const OBInt *b);
 
 /**
+ * @brief Creates a new OBInt containing the quotient of an OBInt and a 
+ * machine integer
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A signed 64 bit machine integer
+ *
+ * @return An instance of OBInt with value given by a/b
+ */
+OBInt * divideIntAndPrim(const OBInt *a, int64_t b);
+
+/**
  * @brief Creates a new OBInt containing the remainder of integer division
  * between two OBInt values,
  *
@@ -142,6 +186,17 @@ OBInt * divideInts(const OBInt *a, const OBInt *b);
  * @return An instance of OBInt with value given by a%b
  */
 OBInt * modInts(const OBInt *a, const OBInt *b);
+
+/**
+ * @brief Creates a new OBInt containing the remainder of integer division
+ * of an OBInt and a machine integer
+ *
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A signed 64 bit machine integer
+ *
+ * @return An instance of OBInt with value given by a%b
+ */
+OBInt * modIntAndPrim(const OBInt *a, int64_t b);
 
 #endif
 
