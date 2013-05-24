@@ -13,7 +13,13 @@
  */
 int main (){
 
-  /* ADD NECESSARY UNIT TESTS HERE */
+  OBInt *a, *b;
+
+  /* test creation and value methods */
+  a = createIntWithInt(1024);
+  assert(intValue(a) == 1024);
+  b = createIntWithInt(9581085);
+  assert(intValue(b) == 9581085);
 
   printf("OBInt_test: TESTS PASSED\n");
   return 0;

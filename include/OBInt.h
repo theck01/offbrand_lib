@@ -58,7 +58,6 @@ OBInt * intFromString(const OBString *numstr);
  */
 OBString * stringFromInt(const OBInt *a);
 
-
 /**
  * @brief Creates an instance of OBInt with the same value as the argument
  * OBInt

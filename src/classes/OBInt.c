@@ -12,9 +12,63 @@ uint8_t int64_max_digits = 17;
 
 /* PUBLIC METHODS */
 
+OBInt * createIntWithInt(int64_t num){
+  
+  uint64_t i, ds;
+  int64_t partial_num;
+  OBInt *instance;
 
-/* DEFINE PUBLIC METHODS HERE */
+  ds = 0;
+  partial_num = num;
+  while(partial_num){
+    partial_num /= 10;
+    ds++;
+  }
 
+  ds = ds ? ds : 1;
+
+  instance = createDefaultInt(ds);
+  if(num < 0) instance->sign = -1;
+  for(i = 0; i < ds; i++){
+    instance->digits[i] = num%10;
+    num /= 10;
+  }
+
+  return instance;
+}
+
+
+int64_t intValue(const OBInt *a){
+
+  uint64_t i, most_sig;
+  int64_t val;
+
+  most_sig = mostSig(a);
+  val = 0;
+  for(i=most_sig; i<= most_sig; i--){
+    val *= 10;
+    val += a->digits[i];
+  }
+
+  return val;
+}
+
+
+OBInt * intFromString(const OBString *numstr){ return NULL; }
+OBString * stringFromInt(const OBInt *a){ return NULL; }
+OBInt * copyInt(const OBInt *a){ return NULL; }
+uint8_t isIntZero(const OBInt *a){ return 0; }
+uint8_t isIntNegative(const OBInt *a){ return a->sign == -1; }
+OBInt * addInts(const OBInt *a, const OBInt *b){ return NULL; }
+OBInt * addIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
+OBInt * subtractInts(const OBInt *a, const OBInt *b){ return NULL; }
+OBInt * subtractIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
+OBInt * multiplyInts(const OBInt *a, const OBInt *b){ return NULL; }
+OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
+OBInt * divideInts(const OBInt *a, const OBInt *b){ return NULL; }
+OBInt * divideIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
+OBInt * modInts(const OBInt *a, const OBInt *b){ return NULL; }
+OBInt * modIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
 
 /* PRIVATE METHODS */
 
