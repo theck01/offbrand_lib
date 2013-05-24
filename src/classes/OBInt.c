@@ -172,7 +172,7 @@ OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
 
 OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
 
-  uint64_t i, j, a_most_sig, b_most_sig;
+  uint64_t i, a_most_sig, b_most_sig;
   OBInt *result;
 
   result = copyInt(a);
@@ -191,9 +191,10 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
   }
 
   /* propagate any final borrow */
-  while(i < a_most_sig && result->digits < 0){
+  while(i < a_most_sig && result->digits[i] < 0){
     result->digits[i+1]--;
     result->digits[i] += 10;
+    i++;
   }
 
   return result;
@@ -260,7 +261,6 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   int8_t comp_val;
   int64_t a_val, b_val, result_val;
   uint64_t a_most_sig, b_most_sig, i, j;
-  OBInt *unshifted; /* unshifted partial results */
   OBInt *partial; /* partial results */
   OBInt *product; /* quotient approximation multiplied by b */
   OBInt *new_approx; /* improved approximation */
@@ -284,7 +284,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   }
 
   /* if a < b (so a/b = 0, a%b = a) */
-  comp_val = compareInts(a,b);
+  comp_val = compareInts((obj *)a, (obj *)b);
   if(comp_val == OB_LESS_THAN){
     if(quotient) return copyInt(approx);
     else return copyInt(a);
@@ -316,16 +316,15 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
 
   /* perform approximation division, shift into proper decimal place, and add
    * to approximation */
-  unshifted = createIntWithInt(a_val/b_val);
-  partial = shiftInt(unshifed, i-j);
-  release((obj *)partial);
+  partial = createIntWithInt(a_val/b_val);
+  shiftInt(partial, i-j);
   product = multiplyUnsignedInts(partial, b);
   new_dividend = subtractUnsignedInts(a, product);
   release((obj *)product);
   new_approx = addUnsignedInts(a, partial);
   release((obj *)partial);
 
-  result = reduceUnsignedInts(new_dividend, b, new_appox, quotient);
+  result = reduceUnsignedInts(new_dividend, b, new_approx, quotient);
 
   release((obj *)new_approx);
   release((obj *)new_dividend);
@@ -364,7 +363,7 @@ void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0){
 
 void shiftInt(OBInt *a, uint64_t m){
 
-  uint8_t *digits = malloc(sizeof(uint8_t)*(a->num_digits + m));
+  int8_t *digits = malloc(sizeof(int8_t)*(a->num_digits + m));
   assert(digits);
 
   memset(digits, 0, m);
@@ -380,13 +379,13 @@ void shiftInt(OBInt *a, uint64_t m){
 
 int64_t unsignedValue(const OBInt *a){
   
-  uint64_t i;
+  uint64_t i, most_sig;
   int64_t val;
 
-  i = mostSig(a);
+  most_sig = mostSig(a);
   val = 0;
 
-  for( ; i >= 0; i--){
+  for(i=most_sig ; i <= most_sig; i--){
     val *= 10;
     val += a->digits[i];
   }
