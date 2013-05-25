@@ -43,6 +43,8 @@ int64_t intValue(const OBInt *a){
   uint64_t i, most_sig;
   int64_t val;
 
+  assert(a != NULL);
+
   most_sig = mostSig(a);
   val = 0;
   for(i=most_sig; i<= most_sig; i--){
@@ -50,23 +52,262 @@ int64_t intValue(const OBInt *a){
     val += a->digits[i];
   }
 
-  return val;
+  return val*a->sign;
 }
 
 
-OBInt * intFromString(const OBString *numstr){ return NULL; }
-OBString * stringFromInt(const OBInt *a){ return NULL; }
-OBInt * copyInt(const OBInt *a){ return NULL; }
-uint8_t isIntZero(const OBInt *a){ return 0; }
-uint8_t isIntNegative(const OBInt *a){ return a->sign == -1; }
-OBInt * addInts(const OBInt *a, const OBInt *b){ return NULL; }
-OBInt * addIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
-OBInt * subtractInts(const OBInt *a, const OBInt *b){ return NULL; }
-OBInt * subtractIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
-OBInt * multiplyInts(const OBInt *a, const OBInt *b){ return NULL; }
-OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
-OBInt * divideInts(const OBInt *a, const OBInt *b){ return NULL; }
-OBInt * divideIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
+OBInt * intFromString(const OBString *numstr){ 
+
+  int8_t offset, sign;
+
+  int32_t num;
+  uint32_t strlen, i;
+  uint64_t digits;
+  OBInt *instance;
+
+  assert(numstr != NULL);
+
+  strlen = stringLength(numstr);
+  if(charAtStringIndex(numstr, 0) == '-'){
+    sign = -1;
+    digits = strlen - 1;
+    offset = 1;
+  }
+  else{
+    sign = 1;
+    digits = strlen;
+    offset = 0;
+  }
+  assert(strlen > 0);
+
+  instance = createDefaultInt(digits);
+  instance->sign = sign;
+  for(i=0 ; i<digits; i++){
+    num = charAtStringIndex(numstr, i+offset) - '0';
+    assert(num >= 0 && num <= 9);
+    instance->digits[digits-i-1] = num;
+  }
+
+  /* zero is defined to be positive */
+  if(isIntZero(instance)) instance->sign = 1;
+
+  return instance;
+}
+
+
+OBString * stringFromInt(const OBInt *a){
+
+  uint8_t offset = 0;
+  uint64_t most_sig, i;
+  char *str;
+  OBString *result;
+
+  assert(a != NULL);
+
+  if(a->sign == -1) offset = 1;
+  most_sig = mostSig(a);
+  str = malloc(sizeof(char)*(most_sig+2+offset));
+
+  /* generate cstring from int */
+  str[0] = '-'; /* non-negatives will overwrite value in following loop */
+  for(i=most_sig; i<=most_sig; i--) str[most_sig-i+offset] = a->digits[i] + '0';
+  str[most_sig+1+offset] = '\0';
+
+  result = createString(str);
+  free(str);
+
+  return result;
+}
+
+
+OBInt * copyInt(const OBInt *a){
+
+  uint64_t i, most_sig;
+  OBInt *copy;
+
+  assert(a != NULL);
+
+  most_sig = mostSig(a);
+
+  copy = createDefaultInt(most_sig+1);
+  for(i=0; i<= most_sig; i++) copy->digits[i] = a->digits[i];
+  copy->sign = a->sign;
+
+  return copy;
+}
+
+
+uint8_t isIntZero(const OBInt *a){
+
+  uint64_t most_sig;
+
+  assert(a != NULL);
+
+  most_sig = mostSig(a);
+  return most_sig == 0 && a->digits[0] == 0;
+}
+
+
+uint8_t isIntNegative(const OBInt *a){ 
+  assert(a != NULL);
+  return a->sign == -1;
+}
+
+
+OBInt * addInts(const OBInt *a, const OBInt *b){ 
+
+  int8_t cmp_result;
+  OBInt *result;
+
+  assert(a != NULL);
+  assert(b != NULL);
+
+  /* a and b are  of same sign */
+  if((isIntNegative(a) && isIntNegative(b)) || 
+     (!isIntNegative(a) && !isIntNegative(b))){
+    result = addUnsignedInts(a,b);
+    result->sign = a->sign;
+    return result;
+  }
+
+  /* a and b are of opposite sign */
+  cmp_result = compareInts((obj *)a, (obj *)b);
+  if(cmp_result == OB_LESS_THAN){
+    result = subtractUnsignedInts(b,a);
+    result->sign = b->sign;
+    return result;
+  }
+  else if(cmp_result == OB_GREATER_THAN){
+    result = subtractUnsignedInts(a,b);
+    result->sign = a->sign;
+    return result;
+  }
+
+  /* a and b are equal and opposite, result is 0 */
+  return createIntWithInt(0);
+}
+
+
+OBInt * addIntAndPrim(const OBInt *a, int64_t b){ 
+
+  OBInt *wrapper, *result;
+
+  assert(a != NULL);
+
+  wrapper = createIntWithInt(b);
+  result = addInts(a, wrapper);
+  release((obj *)wrapper);
+
+  return result;
+}
+
+
+OBInt * subtractInts(const OBInt *a, const OBInt *b){ 
+
+  int8_t cmp_result;
+  OBInt *result;
+
+  assert(a != NULL);
+  assert(b != NULL);
+
+  /* a and b are  of opposite sign */
+  if((!isIntNegative(a) && isIntNegative(b)) || 
+     (isIntNegative(a) && !isIntNegative(b))){
+    result = addUnsignedInts(a,b);
+    result->sign = a->sign;
+    return result;
+  }
+
+  /* a and b are of same sign */
+  cmp_result = compareInts((obj *)a, (obj *)b);
+  if(cmp_result == OB_LESS_THAN){
+    result = subtractUnsignedInts(b,a);
+    result->sign = b->sign*-1;
+    return result;
+  }
+  else if(cmp_result == OB_GREATER_THAN){
+    result = subtractUnsignedInts(a,b);
+    result->sign = a->sign*-1;
+    return result;
+  }
+
+  /* a and b are equal and same, result is 0 */
+  return createIntWithInt(0);
+}
+
+
+OBInt * subtractIntAndPrim(const OBInt *a, int64_t b){
+
+  OBInt *wrapper, *result;
+
+  assert(a != NULL);
+
+  wrapper = createIntWithInt(b);
+  result = subtractInts(a, wrapper);
+  release((obj *)wrapper);
+
+  return result;
+}
+
+
+OBInt * multiplyInts(const OBInt *a, const OBInt *b){
+
+  OBInt *result;
+
+  assert(a != NULL);
+  assert(b != NULL);
+
+  result = multiplyUnsignedInts(a,b);
+  result->sign = a->sign * b->sign;
+
+  return result;
+}
+
+
+OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b){
+
+  OBInt *wrapper, *result;
+
+  assert(a != NULL);
+
+  wrapper = createIntWithInt(b);
+  result = multiplyInts(a, wrapper);
+  release((obj *)wrapper);
+
+  return result;
+}
+
+
+OBInt * divideInts(const OBInt *a, const OBInt *b){
+
+  OBInt *result, *seed;
+
+  assert(a != NULL);
+  assert(b != NULL);
+
+  seed = createIntWithInt(0);
+  result = reduceUnsignedInts(a, b, seed, 1);
+  result->sign = a->sign * b->sign;
+  release((obj *)seed);
+
+  return result;
+}
+
+
+OBInt * divideIntAndPrim(const OBInt *a, int64_t b){
+
+  OBInt *wrapper, *result;
+
+  assert(a != NULL);
+
+  wrapper = createIntWithInt(b);
+  result = divideInts(a, wrapper);
+  release((obj *)wrapper);
+
+  return result;
+}
+
+
 OBInt * modInts(const OBInt *a, const OBInt *b){ return NULL; }
 OBInt * modIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
 
