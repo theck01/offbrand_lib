@@ -22,9 +22,12 @@ int main (){
   assert(intValue(a) == 1024);
   b = createIntWithInt(9581085);
   assert(intValue(b) == 9581085);
+  c = createIntWithInt(-999);
+  assert(intValue(c) == -999);
 
 	release((obj *)a);
 	release((obj *)b);
+	release((obj *)c);
 
 	/* test string integer creation and value methods */
 	str1 = createString("12345");
@@ -64,7 +67,7 @@ int main (){
 	b = createIntWithInt(-1);
 	str1 = createString("-0");
 	c = intFromString(str1);
-	release(str1);
+	release((obj *)str1);
 	
 	assert(!isIntZero(a));
 	assert(!isIntZero(b));
@@ -73,6 +76,58 @@ int main (){
 	assert(!isIntNegative(a));
 	assert(isIntNegative(b));
 	assert(!isIntNegative(c));
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  /* test integer addition */
+  a = createIntWithInt(999);
+  b = addIntAndPrim(a, 1111);
+  assert(intValue(b) == 2110);
+  c = addInts(a, b);
+  assert(intValue(c) == 2110 + 999);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(-999);
+  b = addIntAndPrim(a, 1);
+  assert(intValue(b) == -998);
+  release((obj *)b);
+  b = addIntAndPrim(a, -1);
+  assert(intValue(b) == -1000);
+  release((obj *)b);
+  b = createIntWithInt(1000);
+  c = addInts(a, b);
+  assert(intValue(c) == 1);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  /* test integer subtraction */
+  a = createIntWithInt(999);
+  b = subtractIntAndPrim(a, 1111);
+  assert(intValue(b) == -112);
+  c = subtractInts(a, b);
+  assert(intValue(c) == 999 + 112);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(-999);
+  b = subtractIntAndPrim(a, 1);
+  assert(intValue(b) == -1000);
+  release((obj *)b);
+  b = subtractIntAndPrim(a, -1);
+  assert(intValue(b) == -998);
+  release((obj *)b);
+  b = createIntWithInt(1000);
+  c = subtractInts(a, b);
+  assert(intValue(c) == -1999);
 
 	release((obj *)a);
 	release((obj *)b);

@@ -7,7 +7,7 @@
 #include "../../include/OBInt.h"
 #include "../../include/private/OBInt_Private.h"
 
-/* maximum number of decimal digits in a int64_t */
+/* maximum number of decimal digits to operate on as one int64_t */
 uint8_t int64_max_digits = 17;
 
 /* PUBLIC METHODS */
@@ -18,8 +18,10 @@ OBInt * createIntWithInt(int64_t num){
   int64_t partial_num;
   OBInt *instance;
 
-  ds = 0;
-  partial_num = num;
+  /* find the number of digits in the primitive, ensuring at least one for 0
+   * case */
+  ds = 1;
+  partial_num = num/10;
   while(partial_num){
     partial_num /= 10;
     ds++;
@@ -28,7 +30,11 @@ OBInt * createIntWithInt(int64_t num){
   ds = ds ? ds : 1;
 
   instance = createDefaultInt(ds);
-  if(num < 0) instance->sign = -1;
+  if(num < 0){
+    instance->sign = -1;
+    num *= -1;
+  }
+
   for(i = 0; i < ds; i++){
     instance->digits[i] = num%10;
     num /= 10;
@@ -171,7 +177,7 @@ OBInt * addInts(const OBInt *a, const OBInt *b){
   }
 
   /* a and b are of opposite sign */
-  cmp_result = compareInts((obj *)a, (obj *)b);
+  cmp_result = compareMagnitudes(a,b);
   if(cmp_result == OB_LESS_THAN){
     result = subtractUnsignedInts(b,a);
     result->sign = b->sign;
@@ -219,15 +225,15 @@ OBInt * subtractInts(const OBInt *a, const OBInt *b){
   }
 
   /* a and b are of same sign */
-  cmp_result = compareInts((obj *)a, (obj *)b);
+  cmp_result = compareMagnitudes(a,b);
   if(cmp_result == OB_LESS_THAN){
     result = subtractUnsignedInts(b,a);
-    result->sign = b->sign*-1;
+    result->sign = b->sign * -1;
     return result;
   }
   else if(cmp_result == OB_GREATER_THAN){
     result = subtractUnsignedInts(a,b);
-    result->sign = a->sign*-1;
+    result->sign = a->sign;
     return result;
   }
 
@@ -375,7 +381,7 @@ obhash_t hashInt(const obj *to_hash){
 
 int8_t compareInts(const obj *a, const obj *b){
   
-  uint64_t i,j;
+  int8_t magnitude_comp;
   const OBInt *comp_a = (OBInt *)a;  
   const OBInt *comp_b = (OBInt *)b;  
 
@@ -432,7 +438,7 @@ void displayInt(const obj *to_print){
   assert(objIsOfClass(to_print, "OBInt"));
 
   str = stringFromInt(instance);
-  fprintf(stderr, "OBInt with value:\n  %s\n", getCString(str));
+  fprintf(stderr, "Value:\n  %s\n", getCString(str));
   
   release((obj *)str);
 
@@ -497,7 +503,7 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
   a_most_sig = mostSig(a);
   b_most_sig = mostSig(b);
 
-  for(i=0; i<b_most_sig; i++){
+  for(i=0; i<=b_most_sig; i++){
     /* perform borrow operation if needed */
     if(result->digits[i] < b->digits[i]){
       result->digits[i+1]--;
