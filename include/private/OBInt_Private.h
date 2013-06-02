@@ -49,12 +49,22 @@ obhash_t hashInt(const obj *to_hash);
  * @param b A non-NULL obj pointer to type OBInt
  *
  * @retval OB_LESS_THAN obj a is less than b
- * @retval OB_GREATER_THAN obj a is equivalent to b
- * @retval OB_EQUAL_TO obj a is greater than b
+ * @retval OB_GREATER_THAN obj a is greater than b
+ * @retval OB_EQUAL_TO obj a is equal to b
  */
 int8_t compareInts(const obj *a, const obj *b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
+
+/* @brief Compares magnitudes of two instances of OBInt
+ * 
+ * @param a A non-NULL pointer to type OBInt
+ * @param b A non-NULL pointer to type OBInt
+ * @retval OB_LESS_THAN Magnitude of a a is less than b
+ * @retval OB_GREATER_THAN Magnitude of a is greater than to b
+ * @retval OB_EQUAL_TO Magnitude of a is equal to b
+ */
+int8_t compareMagnitudes(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Descriptor for an instance of OBInt, prints relevant

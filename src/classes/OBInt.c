@@ -384,19 +384,41 @@ int8_t compareInts(const obj *a, const obj *b){
   assert(objIsOfClass(a, "OBInt"));
   assert(objIsOfClass(b, "OBInt"));
 
-  i = mostSig(comp_a);
-  j = mostSig(comp_b);
+  /* if signs are equal magnitude comparision is required */
+  if(comp_a->sign == comp_b->sign){
 
-  if(i<j) return OB_LESS_THAN;
-  if(i>j) return OB_GREATER_THAN;
+    magnitude_comp = compareMagnitudes(comp_a, comp_b);
 
-  /* number of digits is equal, resort to digit by digit comparision */
-  for( ; i<comp_a->num_digits; i--){
-    if(comp_a->digits[i] < comp_b->digits[i]) return OB_LESS_THAN;
-    if(comp_a->digits[i] > comp_b->digits[i]) return OB_LESS_THAN;
+    /* reverse magnitude comparision if both are negative */
+    if(comp_a->sign == -1){
+      if(magnitude_comp == OB_LESS_THAN) magnitude_comp = OB_GREATER_THAN;
+      else if(magnitude_comp == OB_GREATER_THAN) magnitude_comp = OB_LESS_THAN;
+    }
+
+    return magnitude_comp;
   }
 
-  /* all digits are equal, OBInts must be equal */
+  if(comp_a->sign == -1) return OB_LESS_THAN;
+  return OB_GREATER_THAN;
+}
+
+
+int8_t compareMagnitudes(const OBInt *a, const OBInt *b){
+
+  uint64_t i,j;
+
+  i = mostSig(a);
+  j = mostSig(b);
+
+  if(i < j) return OB_LESS_THAN;
+  if(i > j) return OB_GREATER_THAN;
+
+  /* number of digits is equal, resort to digit by digit comparision */
+  for( ; i<a->num_digits; i--){
+    if(a->digits[i] < b->digits[i]) return OB_LESS_THAN;
+    if(a->digits[i] > b->digits[i]) return OB_LESS_THAN;
+  }
+
   return OB_EQUAL_TO;
 }
 
