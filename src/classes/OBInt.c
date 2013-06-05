@@ -543,7 +543,7 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   if(large_most_sig + small_most_sig < int64_max_digits)
     return createIntWithInt(unsignedValue(a) * unsignedValue(b));
 
-  split_point = large_most_sig/2;
+  split_point = large_most_sig/2+1;
   splitInt(a, split_point, &x1, &x0);
   splitInt(b, split_point, &y1, &y0);
 
@@ -551,9 +551,13 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   z0 = multiplyUnsignedInts(x0, y0);
 
   z1a = addUnsignedInts(x1, x0);
-  z1b = addUnsignedInts(x1, x0);
+  z1b = addUnsignedInts(y1, y0);
   z1c = multiplyUnsignedInts(z1a, z1b);
 
+  release((obj *)x0);
+  release((obj *)x1);
+  release((obj *)y0);
+  release((obj *)y1);
   release((obj *)z1a);
   release((obj *)z1b);
 
@@ -668,7 +672,7 @@ uint64_t mostSig(const OBInt *a){
 
 void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0){
 
-  if(a->num_digits >= i){
+  if(a->num_digits <= i){
     *b1 = createDefaultInt(1);
     *b0 = createDefaultInt(a->num_digits);
     memcpy((*b0)->digits, a->digits, a->num_digits);

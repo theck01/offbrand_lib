@@ -133,6 +133,60 @@ int main (){
 	release((obj *)b);
 	release((obj *)c);
 
+  /* test integer multiplication (size under digit limit for explicit integer
+   * arithmetic) */
+  a = createIntWithInt(999);
+  b = multiplyIntAndPrim(a, -999);
+  assert(intValue(b) == 999*-999);
+  c = multiplyInts(a, b);
+  assert(intValue(c) == 999*999*-999);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(-1928491);
+  b = multiplyIntAndPrim(a, -58);
+  assert(intValue(b) == -1928491*-58);
+  release((obj *)b);
+  b = createIntWithInt(2);
+  c = multiplyInts(a, b);
+  assert(intValue(c) == -1928491*2);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  /* test integer division (size under digit limit for explicit integer
+   * arithmetic) */
+
+  /* set digit limit for integer arithmetic low, for test purposes */
+  setMaxDigits(2);
+
+  /* test integer multiplication (size over digit limit for explicit integer
+   * arithmetic) */
+  a = createIntWithInt(999);
+  b = multiplyIntAndPrim(a, -999);
+  assert(intValue(b) == 999*-999);
+  c = multiplyInts(a, b);
+  assert(intValue(c) == 999*999*-999);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(-1928491);
+  b = multiplyIntAndPrim(a, -58);
+  assert(intValue(b) == -1928491*-58);
+  release((obj *)b);
+  b = createIntWithInt(2);
+  c = multiplyInts(a, b);
+  assert(intValue(c) == -1928491*2);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
   printf("OBInt_test: TESTS PASSED\n");
   return 0;
 }
