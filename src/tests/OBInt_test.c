@@ -109,7 +109,7 @@ int main (){
 
   /* test integer subtraction */
   a = createIntWithInt(999);
-  b = subtractIntAndPrim(a, 1111);
+  b = subtractIntWithPrim(a, 1111);
   assert(intValue(b) == -112);
   c = subtractInts(a, b);
   assert(intValue(c) == 999 + 112);
@@ -119,10 +119,10 @@ int main (){
 	release((obj *)c);
 
   a = createIntWithInt(-999);
-  b = subtractIntAndPrim(a, 1);
+  b = subtractIntWithPrim(a, 1);
   assert(intValue(b) == -1000);
   release((obj *)b);
-  b = subtractIntAndPrim(a, -1);
+  b = subtractIntWithPrim(a, -1);
   assert(intValue(b) == -998);
   release((obj *)b);
   b = createIntWithInt(1000);
@@ -157,8 +157,56 @@ int main (){
 	release((obj *)b);
 	release((obj *)c);
 
+  a = createIntWithInt(29458);
+  b = multiplyIntAndPrim(a, 0);
+  assert(isIntZero(b) != 0);
+
+  release((obj *)a);
+  release((obj *)b);
+
   /* test integer division (size under digit limit for explicit integer
    * arithmetic) */
+  a = createIntWithInt(999);
+  b = divideIntWithPrim(a, -999);
+  assert(intValue(b) == -1);
+  c = divideIntWithPrim(a, 33);
+  assert(intValue(c) == 999/33);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(1940248);
+  b = divideIntWithPrim(a, -2848);
+  assert(intValue(b) == 1940248/(-2848));
+  c = divideInts(a, b);
+  assert(intValue(c) == 1940248/(1940248/(-2848)));
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  /* test integer modulus (size under digit limit for explicit integer
+   * arithmetic) */
+  a = createIntWithInt(999);
+  b = modIntWithPrim(a, -999);
+  assert(intValue(b) == 999%(-999));
+  c = modIntWithPrim(a, 33);
+  assert(intValue(c) == 999%33);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(1940248);
+  b = modIntWithPrim(a, -2848);
+  assert(intValue(b) == 1940248%(-2848));
+  c = modInts(a, b);
+  assert(intValue(c) == 1940248%(1940248%(-2848)));
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
 
   /* set digit limit for integer arithmetic low, for test purposes */
   setMaxDigits(2);
@@ -182,6 +230,57 @@ int main (){
   b = createIntWithInt(2);
   c = multiplyInts(a, b);
   assert(intValue(c) == -1928491*2);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(29458);
+  b = multiplyIntAndPrim(a, 0);
+  assert(isIntZero(b) != 0);
+
+  release((obj *)a);
+  release((obj *)b);
+
+  /* test integer division (size under digit limit for explicit integer
+   * arithmetic) */
+  a = createIntWithInt(999);
+  b = divideIntWithPrim(a, -999);
+  assert(intValue(b) == -1);
+  c = divideIntWithPrim(a, 33);
+  assert(intValue(c) == 999/33);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(1940248);
+  b = divideIntWithPrim(a, -2848);
+  assert(intValue(b) == 1940248/(-2848));
+  c = divideInts(a, b);
+  assert(intValue(c) == 1940248/(1940248/(-2848)));
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  /* test integer modulus (size over digit limit for explicit integer
+   * arithmetic) */
+  a = createIntWithInt(999);
+  b = modIntWithPrim(a, -999);
+  assert(intValue(b) == 999%(-999));
+  c = modIntWithPrim(a, 33);
+  assert(intValue(c) == 999%33);
+
+	release((obj *)a);
+	release((obj *)b);
+	release((obj *)c);
+
+  a = createIntWithInt(1940248);
+  b = modIntWithPrim(a, -2848);
+  assert(intValue(b) == 1940248%(-2848));
+  c = modInts(a, b);
+  assert(intValue(c) == 1940248%(1940248%(-2848)));
 
 	release((obj *)a);
 	release((obj *)b);

@@ -242,7 +242,7 @@ OBInt * subtractInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * subtractIntAndPrim(const OBInt *a, int64_t b){
+OBInt * subtractIntWithPrim(const OBInt *a, int64_t b){
 
   OBInt *wrapper, *result;
 
@@ -290,6 +290,7 @@ OBInt * divideInts(const OBInt *a, const OBInt *b){
 
   assert(a != NULL);
   assert(b != NULL);
+  assert(isIntZero(b) == 0);
 
   seed = createIntWithInt(0);
   result = reduceUnsignedInts(a, b, seed, 1);
@@ -300,11 +301,12 @@ OBInt * divideInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * divideIntAndPrim(const OBInt *a, int64_t b){
+OBInt * divideIntWithPrim(const OBInt *a, int64_t b){
 
   OBInt *wrapper, *result;
 
   assert(a != NULL);
+  assert(b != 0);
 
   wrapper = createIntWithInt(b);
   result = divideInts(a, wrapper);
@@ -314,8 +316,37 @@ OBInt * divideIntAndPrim(const OBInt *a, int64_t b){
 }
 
 
-OBInt * modInts(const OBInt *a, const OBInt *b){ return NULL; }
-OBInt * modIntAndPrim(const OBInt *a, int64_t b){ return NULL; }
+OBInt * modInts(const OBInt *a, const OBInt *b){
+
+  OBInt *result, *seed;
+
+  assert(a != NULL);
+  assert(b != NULL);
+  assert(isIntZero(b) == 0);
+
+  seed = createIntWithInt(0);
+  result = reduceUnsignedInts(a, b, seed, 0);
+  result->sign = a->sign;
+  release((obj *)seed);
+
+  return result;
+}
+
+
+OBInt * modIntWithPrim(const OBInt *a, int64_t b){
+
+  OBInt *wrapper, *result;
+
+  assert(a != NULL);
+  assert(b != 0);
+
+  wrapper = createIntWithInt(b);
+  result = modInts(a, wrapper);
+  release((obj *)wrapper);
+
+  return result;
+}
+
 
 /* PRIVATE METHODS */
 
@@ -422,7 +453,7 @@ int8_t compareMagnitudes(const OBInt *a, const OBInt *b){
   /* number of digits is equal, resort to digit by digit comparision */
   for( ; i<a->num_digits; i--){
     if(a->digits[i] < b->digits[i]) return OB_LESS_THAN;
-    if(a->digits[i] > b->digits[i]) return OB_LESS_THAN;
+    if(a->digits[i] > b->digits[i]) return OB_GREATER_THAN;
   }
 
   return OB_EQUAL_TO;
@@ -587,31 +618,38 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   
   int8_t comp_val;
   int64_t a_val, b_val, result_val;
-  uint64_t a_most_sig, b_most_sig, i, j;
+  uint64_t a_most_sig, b_most_sig, a_min, b_min, i, j;
   OBInt *partial; /* partial results */
   OBInt *product; /* quotient approximation multiplied by b */
   OBInt *new_approx; /* improved approximation */
   OBInt *new_dividend; /* reduced dividend */
   OBInt *result; /* approximation */
 
-
   a_most_sig = mostSig(a);
   b_most_sig = mostSig(b);
 
-  /* if operation can be computed outright do so */
+  /* if operation can be computed using integer arithmetic do so */
   if(a_most_sig < int64_max_digits && b_most_sig < int64_max_digits){
 
     a_val = unsignedValue(a);
     b_val = unsignedValue(b);
 
-    if(quotient) result_val = a_val/b_val;
-    else result_val = a_val%b_val;
+    if(quotient){
+      result_val = a_val/b_val;
+      partial = createIntWithInt(result_val);
+      result = addInts(approx, partial);
+      release((obj *)partial);
+    }
+    else{
+      result_val = a_val%b_val;
+      result = createIntWithInt(result_val);
+    }
 
-    return createIntWithInt(result_val);
+    return result;
   }
 
   /* if a < b (so a/b = 0, a%b = a) */
-  comp_val = compareInts((obj *)a, (obj *)b);
+  comp_val = compareMagnitudes(a, b);
   if(comp_val == OB_LESS_THAN){
     if(quotient) return copyInt(approx);
     else return copyInt(a);
@@ -625,30 +663,55 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   /* else recursive division approximation */
 
   /* generate machine integers for approximation */
-  a_val = 0;
-  for(i=a_most_sig; i>a_most_sig - int64_max_digits; i--){
-    a_val *= 10;
-    a_val += a->digits[i];
+
+  /* generate b_val to have one less digit than int64_max_digits, to ensure 
+   * b_val < a_val */
+  if(b_most_sig > (uint64_t)(int64_max_digits - 1)){
+    b_min = b_most_sig - (int64_max_digits - 1) + 1;
   }
-  
+  else{
+    b_min = 0;
+  }
   b_val = 0;
-  for(j=b_most_sig; j>b_most_sig - int64_max_digits; j--){
+  for(j=b_most_sig; j>=b_min && j<b->num_digits; j--){
     b_val *= 10;
     b_val += b->digits[j];
   }
 
-  /* increment b_val to account for possible remaining portion in b to 
-   * ensure that approximate result is not too great does not overflow */
-  if(b_most_sig >= int64_max_digits) b_val++; 
+  a_val = 0;
+  a_min = a_most_sig > int64_max_digits ? a_most_sig-int64_max_digits+1 : 0;
+
+  /* a_val approximation must be cutoff at the same point as b_val 
+   * approximation, to protect against overflow */
+  if(a_min < b_min) a_min = b_min;
+  for(i=a_most_sig; i>=a_min && i<a->num_digits; i--){
+    a_val *= 10;
+    a_val += a->digits[i];
+  }
 
   /* perform approximation division, shift into proper decimal place, and add
    * to approximation */
   partial = createIntWithInt(a_val/b_val);
   shiftInt(partial, i-j);
   product = multiplyUnsignedInts(partial, b);
+
+  comp_val = compareMagnitudes(product, a);
+  
+  /* if approximation is too great then increment b_val to account for remaining
+   * portion of b that is causing over approximation */
+  if(comp_val == OB_GREATER_THAN){
+    release((obj *)partial);
+    release((obj *)product);
+
+    b_val++; 
+    partial = createIntWithInt(a_val/b_val);
+    shiftInt(partial, i-j);
+    product = multiplyUnsignedInts(partial, b);
+  }
+
   new_dividend = subtractUnsignedInts(a, product);
   release((obj *)product);
-  new_approx = addUnsignedInts(a, partial);
+  new_approx = addUnsignedInts(approx, partial);
   release((obj *)partial);
 
   result = reduceUnsignedInts(new_dividend, b, new_approx, quotient);
@@ -690,7 +753,12 @@ void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0){
 
 void shiftInt(OBInt *a, uint64_t m){
 
-  int8_t *digits = malloc(sizeof(int8_t)*(a->num_digits + m));
+  int8_t *digits;
+
+  /* if shifting by zero do nothing */
+  if(m == 0) return;
+  
+  digits = malloc(sizeof(int8_t)*(a->num_digits + m));
   assert(digits);
 
   memset(digits, 0, m);
@@ -722,5 +790,5 @@ int64_t unsignedValue(const OBInt *a){
 
 
 void setMaxDigits(uint8_t digits){
-  if(digits >= 1 && digits <= 17) int64_max_digits = digits;
+  if(digits >= 2 && digits <= 17) int64_max_digits = digits;
 }

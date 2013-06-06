@@ -187,9 +187,9 @@ int64_t unsignedValue(const OBInt *a);
 /**
  * @brief Sets the number of digits operated on in a primitive from 1 to 17
  *
- * @param digits An integer between 1 and 17 inclusive
+ * @param digits An integer between 2 and 17 inclusive
  *
- * @warning If digits does not fall in the 1 to 17 inclusive range nothing
+ * @warning If digits does not fall in the 2 to 17 inclusive range nothing
  * is done
  * @warning The default value of 17 is most efficient, this method exists for
  * testing purposes only!

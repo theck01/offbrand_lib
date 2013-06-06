@@ -130,7 +130,7 @@ OBInt * subtractInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt with value given by a-b
  */
-OBInt * subtractIntAndPrim(const OBInt *a, int64_t b);
+OBInt * subtractIntWithPrim(const OBInt *a, int64_t b);
 
 /**
  * @brief Creates a new OBInt containing the product of two OBInt values
@@ -173,7 +173,7 @@ OBInt * divideInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt with value given by a/b
  */
-OBInt * divideIntAndPrim(const OBInt *a, int64_t b);
+OBInt * divideIntWithPrim(const OBInt *a, int64_t b);
 
 /**
  * @brief Creates a new OBInt containing the remainder of integer division
@@ -195,7 +195,7 @@ OBInt * modInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt with value given by a%b
  */
-OBInt * modIntAndPrim(const OBInt *a, int64_t b);
+OBInt * modIntWithPrim(const OBInt *a, int64_t b);
 
 #endif
 
