@@ -6,4 +6,3 @@ creation and testing of classes compatible with the framework.
 
 Doxygen based API documentation can be found at:
 theck01.github.com/offbrand_lib/
-
