@@ -7,7 +7,7 @@
 #include "../../include/OBInt.h"
 #include "../../include/private/OBInt_Private.h"
 
-/* maximum number of decimal digits to operate on as one int64_t */
+/** maximum number of decimal digits to operate on as one int64_t */
 uint8_t int64_max_digits = 17;
 
 /* PUBLIC METHODS */

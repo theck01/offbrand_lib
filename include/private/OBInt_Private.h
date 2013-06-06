@@ -56,7 +56,8 @@ int8_t compareInts(const obj *a, const obj *b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
 
-/* @brief Compares magnitudes of two instances of OBInt
+/**
+ * @brief Compares magnitudes of two instances of OBInt
  * 
  * @param a A non-NULL pointer to type OBInt
  * @param b A non-NULL pointer to type OBInt
