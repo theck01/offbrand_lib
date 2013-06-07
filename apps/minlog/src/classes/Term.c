@@ -12,7 +12,8 @@ Term * createTerm(uint32_t term){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocTerm, NULL, &compareTerms, classname);
+  initBase((obj *)new_instance, &deallocTerm, NULL, &compareTerms, NULL, 
+           classname);
 
   new_instance->term = term;
   return new_instance;

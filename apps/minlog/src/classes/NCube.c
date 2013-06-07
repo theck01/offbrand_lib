@@ -196,7 +196,8 @@ NCube * createNCubeWithOrder(uint8_t order){
   assert(new_cube != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_cube, &deallocNCube, NULL, &compareNCubes, classname);
+  initBase((obj *)new_cube, &deallocNCube, NULL, &compareNCubes, NULL,
+           classname);
 
   new_cube->terms = malloc(sizeof(uint32_t)*(1<<order));
   assert(new_cube->terms != NULL);
