@@ -16,8 +16,6 @@ OFLAGS = $(CFLAGS) -c	 #Flags for .o output files
 
 # common dependencies for many classes/tests
 TEST_DEP = $(BIN)/offbrand_stdlib.o $(BIN_CLASS)/OBTest.o
-THREAD_DEP = $(BIN)/offbrand_t_stdlib.o $(BIN)/offbrand_threadlib.o \
-						 $(BIN_CLASS)/OBTest.o
 
 # Enumerate/Find Objects to build
 STD_LIBS = $(BIN)/offbrand_stdlib.o 
@@ -31,6 +29,7 @@ ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
 # MAIN BUILD
 all: prepare $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
+	@echo 
 
 # Hand builds (STD_LIBS)
 $(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
@@ -58,32 +57,41 @@ $(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
 
 
 # OPTIONAL BUILDS
-test: clean all
-	@echo
-	@echo "Running tests on data structures after successful compilation..."
-	@run-parts $(BIN_TEST)
-
-# Prepare bin/ output directories
-prepare:
-	@scripts/prepare
-
 # Clean previous build
 clean: prepare
 	rm -f $(STD_LIBS)
 	rm -f $(ALL_TESTS)
 	rm -f $(ALL_CLASSES)
 
+# Compile the library from scratch and run tests
+fresh: clean all test
+
+# Prepare bin/ output directories
+prepare:
+	@scripts/prepare
+
+# Print information about configuration
 print:
-	@echo "BIN_LIB: $(BIN_LIB)"
+	@echo "BIN: $(BIN)"
+	@echo "BIN_CLASS: $(BIN_CLASS)"
 	@echo "BIN_TEST: $(BIN_TEST)"
 	@echo "PUBLIC: $(PUBLIC)"
 	@echo "PRIVATE: $(PRIVATE)"
 	@echo "SRC: $(SRC)"
+	@echo "CLASSES: $(CLASSES)"
 	@echo "TESTS: $(TESTS)"
 	@echo
 	@echo "Compiler: $(CC)"
 	@echo "CFLAGS: $(CFLAGS)"
 	@echo "OFLAGS: $(OFLAGS)"
 	@echo
-	@echo "Classes: $(ALL_CLASSES)"
-	@echo "Tests: $(ALL_TESTS)"
+	@echo "CLASS FILES:"
+	@echo "$(CLASS_SOURCES)"
+	@echo "TEST FILES:"
+	@echo "$(TEST_SOURCES)"
+
+# Run all test scripts
+test: 
+	@echo "Running all data strucutres tests..."
+	@echo 
+	@scripts/run_bin $(BIN_TEST)
