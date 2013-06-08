@@ -2,5 +2,6 @@
 bin/
 *.o
 apps/minlog/bin/
+apps/pfinder/pfinder
 docs/html
 
