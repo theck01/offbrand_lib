@@ -29,7 +29,8 @@ test_run=0
 
 for test in $(ls $1)
 do
-  if [[ -x "$(dirname $1)/$(basename $1)/$test" ]]
+  test_path="$(dirname $1)/$(basename $1)/$test"
+  if [[ -x $test_path ]] && [[ ! -d $test_path ]]
   then
     test_run=1
     $(dirname $1)/$(basename $1)/$test
