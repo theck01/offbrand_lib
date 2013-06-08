@@ -4,56 +4,157 @@
  * @section Introduction Introduction
  * offbrand is a collection of reference counted generic data structures written
  * in C for C. The library is intended to relieve the need to reimplement 
- * common data structures for the 1000th time, letting programmers focus on
- * interesting app specific code. 
+ * common data structures for the 1000th time, letting you focus on interesting
+ * app specific code.
+ *
+ * This software is released under the MIT license.
  * <br><br><br>
+ *
  *
  * @section Requirements Requirements
  *
  * offbrand requires the GNU toolchain, namely:
  *
- * - GCC
+ * - gcc 
  * - make
  * - glibc
  *
  * Any Linux distro or OS X with developer tools installed should be able to 
  * build the library with no issue. At this time Windows is not supported. 
  * If you would like to build the documentation for the project on your local 
- * machine then the Doxygen package is also required.
+ * machine then the Doxygen package is also required. 
  *
  * <b>Knowledge Base: </b>
  * While the library is not terribly complex to use or understand, you should
  * be comfortable with incomplete types, typecasting, and reference counted 
- * memory management to get the most out of offbrand.
- *
+ * memory management to get the most out of offbrand. Familiarity with gcc is
+ * also required to easily integrate offbrand into your project.
  * <br><br><br>
  * 
  *
- * @section Installation Installation
+ * @section Installation Installation and Use
  *
  * To build the library on your machine, clone the git repository and run make:
  * @code
  * $ git clone https://github.com/theck01/offbrand_lib.git
  * $ cd offbrand_lib
- * $ make test
+ * $ make fresh # builds library and runs all unit tests
  * @endcode
  *
- * Include desired class header files from the include/ subdirectory and link 
- * with needed object files found in the bin/class/ subdirectory when compiling
- * to integrate offbrand into your app.
+ * If you do not want or need to run unit tests then subsitutue "make fresh"
+ * with "make"
+ *
+ * Using offbrand is as simple as including some headers and linking to some
+ * object files. Include desired class header files from the include/ 
+ * subdirectory and link with needed object files found in the bin/class/ 
+ * subdirectory when compiling to integrate offbrand into your app. 
  * <br><br><br>
  * 
  *
- * @section Overview Overview
+ * @section Examples Examples
+ *
+ * Example applications can be found in the app/ subdirectory. These
+ * applications serve two purposes, proofs of that the library works as expected
+ * and examples of how the offbrand library can be used within an application.
+ *
+ * A short example of the code in action, within a prime finding program:
+ *
+ * @code {.c}
+ * #include "../../include/offbrand.h"
+ * #include "../../include/OBInt.h"
+ * #include "../../include/OBString.h"
+ * #include "../../include/OBVector.h"
+ * 
+ * int main(){
+ * 
+ *   uint64_t i, maybe_prime;
+ *   OBInt *candidate, *next, *remainder;
+ *   OBString *numstr;
+ *   OBVector *primes;
+ * 
+ *   // create vector with a small initial capacity
+ *   primes = createVector(1);
+ * 
+ *   // seed primes vector with initial prime 2. Note the cast of 
+ *   // the OBInt to obj, an OBVector stores the generic obj type rather than
+ *   // any specific type
+ *   candidate = createIntWithInt(2);
+ *   storeAtVectorIndex(primes, (obj *)candidate, 0);
+ * 
+ *   // release the candidate so the vector maintains the only reference to the
+ *   // prime number. release operates on the generic obj type, so the pointer
+ *   // is cast
+ *   release((obj *)candidate);
+ * 
+ *   // begin the main prime finding loop
+ *   candidate = createIntWithInt(3);
+ *   while(1){
+ * 
+ *     maybe_prime = 1;
+ * 
+ *     // search for a prime factor of candidate
+ *     for(i=0; i<vectorLength(primes); i++){
+ *       remainder = modInts(candidate, (OBInt *)objAtVectorIndex(primes, i));
+ *       // if the remainder is 0 then the candidate number is not prime
+ *       if(isIntZero(remainder)) maybe_prime = 0;
+ *       release((obj *)remainder);
+ *       if(!maybe_prime) break;
+ *     }
+ * 
+ *     // if the number is still maybe prime then it is now definitely prime,
+ *     // add it to the end of the primes vector
+ *     if(maybe_prime){
+ *       storeAtVectorIndex(primes, (obj *)candidate, vectorLength(primes));
+ *       numstr = stringFromInt(candidate);
+ *       printf("Prime found: %s\n", getCString(numstr));
+ *       release((obj *)numstr);
+ *     }
+ * 
+ *     // increment candidate by 2 and release old candidate, it is not needed
+ *     // by main loop
+ *     next = addIntAndPrim(candidate, 2); 
+ *     release((obj *)candidate);
+ *     candidate = next;
+ *   }
+ * }
+ * @endcode
+ *
+ * This bit of code is identical to the pfinder program found in apps/pfinder.
+ * <br><br><br>
+ * 
+ *
+ * @section Documentation Documentation
+ *
+ * The API references for classes can be found at this location, under Modules.
+ * The documentation for each class is broken down by file. The public header
+ * documentation outlines the entire public API for each class, and should have
+ * all of the information required to use offbrand with standard applications.
+ * Any apps that will extend or modify the library builtins may benefit from
+ * the private header documentation, where the structure of the classes data and
+ * private functions are documented.
+ *
+ * This Doxygen documentation can be built locally if the system has the doxygen
+ * package installed. From the base project directory:
+ * @code 
+ * $ cd docs
+ * $ doxygen doxygen.conf
+ * @endcode
+ *
+ * After a successful build, documentation can be accessed in the docs/html/ 
+ * subdirectory
+ * <br><br><br>
+ * 
+ *
+ * @section Overview How it Works
  *
  * <i>NOTE</i>: The phrase "class" is used in the documentation to refer to a C 
  * style approximation of a class built from an incomplete type, rather than a 
- * true class in a language like Java or Obj-C.
+ * traditional class in a language like Java or Ruby
  *
- * offbrand is based on a section of the C standard that dictates
- * that all structs be memory alligned. This enables a struct A, which has 
- * struct B as it's first element, to be typecast to struct B without data 
- * corruption. A contrived example of struct allignment in action:
+ * offbrand is based on a section of the C standard that dictates that all 
+ * structs be memory aligned. That is, the memory layout of types within a 
+ * struct can be reliably predicted and will not differ from struct to struct.
+ * A contrived example of how we can take advantage of this memory alignment:
  *
  * @code {.c}
  * struct B {
@@ -68,16 +169,17 @@
  * struct A *thing_a = malloc(sizeof(struct A)); 
  * thing_a->element_b.i = 10;
  *
- * // A perfectly valid cast. You loose some information but now struct A can be
- * // considered to be struct B if the need arises
+ * // A perfectly valid cast, you can now use the struct A as if it were a
+ * // struct B
  * struct B *thing_b = (struct B *)thing_a;
  *
- * // thing_b->i evaluates to 10
- * thing_b->i; 
+ * // prints 10 to stdout
+ * printf("%d\n", thing_b->i);
  * @endcode
  *
- * In offbrand struct A is any of the offbrand classes and struct B is a 
- * special structure, "obj".
+ * This memory alignment enables a struct A, which has struct B as it's first 
+ * element, to be typecast and used as if it were struct B. In offbrand struct A
+ * is any of the offbrand classes and struct B is a special structure, "obj".
  *
  * An obj ("object") encapsulates data common to all classes: a reference 
  * count, pointers to class specific versions of common functions, and a class
@@ -87,7 +189,7 @@
  * A standard library exists that operates exclusively on obj pointers. This
  * basis allows any class instances to be compared, hashed, retained, released,
  * etc. These functions call the class specific versions of each function, if 
- * they exist, hiding large numbers of class specific functions behind a small 
+ * they exist, hiding large numbers of class specific methods behind a small 
  * suite of common functions.
  * <br><br><br>
  * 
@@ -129,36 +231,6 @@
  * offbrand class compatible class. Comments included in the generated files 
  * explain why boilerplate code is included and what should and should not be
  * altered.
- * <br><br><br>
- * 
- *
- * @section Documentation Documentation
- *
- * The API references for classes can be found at this location, under Modules.
- * The documentation for each class is broken down by file. The public header
- * documentation outlines the entire public API for each class, and should have
- * all of the information required to use offbrand with standard applications.
- * Any apps that will extend or modify the library builtins may benefit from
- * the private header documentation, where the structure of the classes data and
- * private functions are documented.
- *
- * This Doxygen documentation can be built locally if the system has the doxygen
- * package installed. From the base project directory:
- * @code 
- * $ cd docs
- * $ doxygen doxygen.conf
- * @endcode
- *
- * After a successful build, documentation can be accessed in the docs/html/ 
- * subdirectory
- * <br><br><br>
- * 
- *
- * @section Examples Examples
- *
- * Example applications can be found in the app/ subdirectory. These
- * applications serve two purposes, proofs of that the library works as expected
- * and examples of how the offbrand library can be used within an application.
  * <br><br><br>
  * 
  *
