@@ -45,9 +45,9 @@ obj * release(obj *instance){
 
     /* call class specific memory cleanup, if it exists */
     if((*instance)->dealloc)
-      (*instance)->dealloc(instance); 
+      (*instance)->dealloc(instance);
 
-    free((struct obj_struct *)*instance); /* free reference counted base */ 
+    free((struct obj_struct *)*instance); /* free reference counted base */
     free(instance); /* free the entire object */
 
     return NULL;
@@ -101,7 +101,7 @@ obhash_t hash(const obj *to_hash){
   if(!to_hash) return 0;
 
   if((*to_hash)->hash) retval = (*to_hash)->hash(to_hash);
-  else{ 
+  else{
     retval = (obhash_t)to_hash;
     retval += (retval << 6);
     retval ^= (retval >> 10);
@@ -121,11 +121,11 @@ int8_t compare(const obj *a, const obj *b){
   else if(a == NULL || b == NULL) return OB_NOT_EQUAL;
 
 
-  if(sameClass(a, b) && (*a)->compare != NULL) 
+  if(sameClass(a, b) && (*a)->compare != NULL)
     retval = (*a)->compare(a, b);
   else if(a == b) retval = OB_EQUAL_TO;
   else retval = OB_NOT_EQUAL;
-  
+
   return retval;
 }
 
@@ -136,7 +136,7 @@ void display(const obj *to_print){
     return;
   }
 
-  fprintf(stderr, "Instance of class %s, at address 0x%x\n",
+  fprintf(stderr, "Instance of class %s, at address 0x%lx\n",
                   (*to_print)->classname, (size_t)to_print);
   if((*to_print)->display) (*to_print)->display(to_print);
 }
