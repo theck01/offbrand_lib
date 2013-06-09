@@ -1,8 +1,9 @@
 
 # Directories
 BIN = bin
-BIN_CLASS = bin/classes
+BIN_OBJECT = bin/objects
 BIN_TEST = bin/tests
+LIB_ARCHIVE = $(BIN)/offbrand.a
 PUBLIC = include
 PRIVATE = include/private
 SRC = src
@@ -10,50 +11,43 @@ CLASSES = src/classes
 TESTS = src/tests
 
 # Compiler Info
+AR = ar
+ARFLAGS = rvs
 CC = gcc
 CFLAGS = -Wall -Wextra -g #Common flags for all
 OFLAGS = $(CFLAGS) -c	 #Flags for .o output files
-
 # common dependencies for many classes/tests
-TEST_DEP = $(BIN)/offbrand_stdlib.o $(BIN_CLASS)/OBTest.o
+TEST_DEP = $(LIB_ARCHIVE)
 
 # Enumerate/Find Objects to build
-STD_LIBS = $(BIN)/offbrand_stdlib.o 
+STD_LIBS = $(BIN_OBJECT)/offbrand_stdlib.o 
 
 CLASS_SOURCES := $(wildcard $(CLASSES)/*.c)
-ALL_CLASSES = $(patsubst $(CLASSES)/%.c, $(BIN_CLASS)/%.o, $(CLASS_SOURCES))
+ALL_CLASSES = $(patsubst $(CLASSES)/%.c, $(BIN_OBJECT)/%.o, $(CLASS_SOURCES))
 
 TEST_SOURCES := $(wildcard $(TESTS)/*.c)
 ALL_TESTS = $(patsubst $(TESTS)/%.c, $(BIN_TEST)/%, $(TEST_SOURCES))
 
 
 # MAIN BUILD
-all: prepare $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS)
+all: prepare $(STD_LIBS) $(ALL_CLASSES)	$(ALL_TESTS) $(LIB_ARCHIVE)
 	@echo 
 
 # Hand builds (STD_LIBS)
-$(BIN)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
+$(BIN_OBJECT)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
 	$(CC) $(OFLAGS) $< -o $@
 
 # Build class objects
-$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
+$(BIN_OBJECT)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
 	$(CC) $(OFLAGS) $< -o $@
 
 # Build tests executables (special builds encountered first)
-$(BIN_TEST)/OBInt_test: $(TESTS)/OBInt_test.c $(BIN_CLASS)/OBInt.o \
-	$(BIN_CLASS)/OBString.o $(BIN_CLASS)/OBVector.o $(TEST_DEP)
+$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_OBJECT)/%.o $(TEST_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
-$(BIN_TEST)/OBMap_test: $(TESTS)/OBMap_test.c $(BIN_CLASS)/OBMap.o \
-	$(BIN_CLASS)/OBDeque.o $(BIN_CLASS)/OBVector.o $(TEST_DEP)
-	$(CC) $(CFLAGS) $^ -o $@
-
-$(BIN_TEST)/OBString_test: $(TESTS)/OBString_test.c $(BIN_CLASS)/OBString.o \
-	$(BIN_CLASS)/OBVector.o $(TEST_DEP)
-	$(CC) $(CFLAGS) $^ -o $@
-
-$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_CLASS)/%.o $(TEST_DEP)
-	$(CC) $(CFLAGS) $^ -o $@
+# Build library archive
+$(LIB_ARCHIVE): $(ALL_CLASSES) $(STD_LIBS)
+	$(AR) $(ARFLAGS) $@ $^
 
 
 # OPTIONAL BUILDS
@@ -62,6 +56,7 @@ clean: prepare
 	rm -f $(STD_LIBS)
 	rm -f $(ALL_TESTS)
 	rm -f $(ALL_CLASSES)
+	rm -f $(LIB_ARCHIVE)
 
 # Compile the library from scratch and run tests
 fresh: clean all test
@@ -73,7 +68,7 @@ prepare:
 # Print information about configuration
 print:
 	@echo "BIN: $(BIN)"
-	@echo "BIN_CLASS: $(BIN_CLASS)"
+	@echo "BIN_OBJECT: $(BIN_OBJECT)"
 	@echo "BIN_TEST: $(BIN_TEST)"
 	@echo "PUBLIC: $(PUBLIC)"
 	@echo "PRIVATE: $(PRIVATE)"

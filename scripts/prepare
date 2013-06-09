@@ -13,10 +13,10 @@ then
   mesgstr="$mesgstr bin"
 fi
 
-if [[ ! -d "bin/classes" ]]
+if [[ ! -d "bin/objects" ]]
 then
-  mkdir bin/classes
-  mesgstr="$mesgstr bin/classes"
+  mkdir bin/objects
+  mesgstr="$mesgstr bin/objects"
 fi
 
 if [[ ! -d "bin/tests" ]]
