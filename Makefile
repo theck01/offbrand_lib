@@ -3,6 +3,7 @@
 BIN = bin
 BIN_OBJECT = bin/objects
 BIN_TEST = bin/tests
+DOCS = docs/doxygen
 LIB_ARCHIVE = $(BIN)/offbrand.a
 PUBLIC = include
 PRIVATE = include/private
@@ -21,6 +22,10 @@ TEST_DEP = $(LIB_ARCHIVE)
 
 # Enumerate/Find Objects to build
 STD_LIBS = $(BIN_OBJECT)/offbrand_stdlib.o 
+
+DOC_FILES := $(wildcard $(DOCS)/*.dox)
+PUBLIC_HEADERS := $(wildcard $(PUBLIC)/*.h)
+PRIVATE_HEADERS := $(wildcard $(PRIVATE)/*.h)
 
 CLASS_SOURCES := $(wildcard $(CLASSES)/*.c)
 ALL_CLASSES = $(patsubst $(CLASSES)/%.c, $(BIN_OBJECT)/%.o, $(CLASS_SOURCES))
@@ -42,7 +47,7 @@ $(BIN_OBJECT)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
 	$(CC) $(OFLAGS) $< -o $@
 
 # Build tests executables (special builds encountered first)
-$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(BIN_OBJECT)/%.o $(TEST_DEP)
+$(BIN_TEST)/%_test: $(TESTS)/%_test.c $(TEST_DEP)
 	$(CC) $(CFLAGS) $^ -o $@
 
 # Build library archive
@@ -58,6 +63,11 @@ clean: prepare
 	rm -f $(ALL_CLASSES)
 	rm -f $(LIB_ARCHIVE)
 
+# build documentation with the optional doxygen dependency
+docs: $(DOC_FILES) $(PUBLIC_HEADERS) $(PRIVATE_HEADERS) $(CLASS_SOURCES) \
+	$(TEST_SOURCES) $(SRC)/offbrand_stdlib.c docs/doxygen.conf
+	@doxygen docs/doxygen.conf
+
 # Compile the library from scratch and run tests
 fresh: clean all test
 
@@ -70,18 +80,32 @@ print:
 	@echo "BIN: $(BIN)"
 	@echo "BIN_OBJECT: $(BIN_OBJECT)"
 	@echo "BIN_TEST: $(BIN_TEST)"
+	@echo "DOCS: $(DOCS)"
+	@echo "LIB_ARCHIVE: $(LIB_ARCHIVE)"
 	@echo "PUBLIC: $(PUBLIC)"
 	@echo "PRIVATE: $(PRIVATE)"
 	@echo "SRC: $(SRC)"
 	@echo "CLASSES: $(CLASSES)"
 	@echo "TESTS: $(TESTS)"
 	@echo
+	@echo "Archiver: $(AR)"
+	@echo "ARFLAGS: $(ARFLAGS)"
 	@echo "Compiler: $(CC)"
 	@echo "CFLAGS: $(CFLAGS)"
 	@echo "OFLAGS: $(OFLAGS)"
 	@echo
+	@echo "DOC FILES:"
+	@echo "$(DOC_FILES)"
+	@echo
+	@echo "PUBLIC HEADERS:"
+	@echo "$(PUBLIC_HEADERS)"
+	@echo
+	@echo "PRIVATE HEADERS:"
+	@echo "$(PRIVATE_HEADERS)"
+	@echo
 	@echo "CLASS FILES:"
 	@echo "$(CLASS_SOURCES)"
+	@echo
 	@echo "TEST FILES:"
 	@echo "$(TEST_SOURCES)"
 
