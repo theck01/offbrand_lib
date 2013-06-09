@@ -136,7 +136,7 @@ void display(const obj *to_print){
     return;
   }
 
-  fprintf(stderr, "Instance of class %s, at address 0x%lx\n",
+  fprintf(stderr, "Instance of class %s, at address 0x%p\n",
                   (*to_print)->classname, (size_t)to_print);
   if((*to_print)->display) (*to_print)->display(to_print);
 }
