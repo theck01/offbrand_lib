@@ -64,8 +64,7 @@ clean: prepare
 	rm -f $(LIB_ARCHIVE)
 
 # build documentation with the optional doxygen dependency
-docs: $(DOC_FILES) $(PUBLIC_HEADERS) $(PRIVATE_HEADERS) $(CLASS_SOURCES) \
-	$(TEST_SOURCES) $(SRC)/offbrand_stdlib.c docs/doxygen.conf
+documentation: 
 	@doxygen docs/doxygen.conf
 
 # Compile the library from scratch and run tests
