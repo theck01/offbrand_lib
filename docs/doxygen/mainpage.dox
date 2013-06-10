@@ -1,12 +1,28 @@
 /**
   @mainpage 
- 
-  @section Introduction Introduction
+
   offbrand is a collection of reference counted generic data structures written
-  in C for C. The library is intended to relieve the need to reimplement 
-  common data structures for the 1000th time, letting you focus on interesting
-  app specific code.
+  in pure C for the C programmer. The library is intended to relieve the common
+  need to reimplement a standard data structures in an application. Never again
+  need to write an automatically resizing array for your application specific
+  datatype and use the vector included in offbrand instead.
+
+  offbrand is based upon C style classes, and currently provides the following
+  data structures out of the box:
+
+  - OBDeque: A double ended linked list
+  - OBInt: an arbitrary precision integer
+  - OBMap: A hash table with constant time insert and lookup
+  - OBString: a classic string type with more convenience methods than your
+    standard c string.
+  - OBVector: an automatically resizing array
  
+  The library also includes a script, mkobc (MaKe OffBrand Class), that
+  generates new class skeletons for you, so you don't have to write a single
+  piece of the boilerplate code required to make a datatype compatible with the
+  data structure library. Just generate your new type with the script and add
+  application specific logic to the generated files.
+
   <i>NOTE</i>: The phrase "class" is used in this documentation to refer to a C 
   style approximation of a class built from functions and incomplete types,
   rather than a traditional class in a language like Java or Ruby
