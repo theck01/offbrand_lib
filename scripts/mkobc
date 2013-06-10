@@ -1,10 +1,10 @@
 #!/bin/bash
 
-PUBLIC_TEMPLATE=scripts/templates/PublicHeader.h
-PRIVATE_TEMPLATE=scripts/templates/PrivateHeader.h
-SOURCE_TEMPLATE=scripts/templates/Source.c
-TEST_TEMPLATE=scripts/templates/Test.c
-DOX_MODULE=scripts/templates/DocModule.dox
+PUBLIC_TEMPLATE=PublicHeader.h
+PRIVATE_TEMPLATE=PrivateHeader.h
+SOURCE_TEMPLATE=Source.c
+TEST_TEMPLATE=Test.c
+DOX_MODULE=DocModule.dox
 
 function printUsage() {
   echo "Usage: $(basename $0) [options]"
@@ -31,14 +31,22 @@ function printUsage() {
   echo "   Classname to use for methods of the class. This is useful for"
   echo "   classnames with unnecessary prefixes in method names (such as"
   echo "   OBVector, whose method classname would simply be Vector)"
+  echo "-t <template directory>"
+  echo "   Directory where offbrand class template files can be located. By"
+  echo "   default this directory is set to scripts/templates, which is the"
+  echo "   path to the offbrand template directory from the root directory of"
+  echo "   the library"
   echo
 }
 
+#option variables
 classname=
 author_name="anonymous"
 method_classname=
+temp_dir="scripts/templates"
+temp_default=
 
-while getopts a:c:hm: option
+while getopts a:c:hm:t: option
 do
   case $option in
   a)  author_name="$OPTARG" ;;
@@ -46,6 +54,8 @@ do
   h)  printUsage
       exit 0;;
   m)  method_classname="$OPTARG" ;;
+  t)  temp_dir="$OPTARG"
+      temp_default=1 ;;
   ?)  printUsage
       exit 1;;
   esac
@@ -53,27 +63,42 @@ done
 
 
 #check usage
-if [[ -z $classname ]]
+if [[ ! $classname ]]
 then
   echo "Class name was not specified"
   printUsage
   exit 1
 fi
 
-if [[ -z $method_classname ]]
+if [[ ! $method_classname ]]
 then
   method_classname=$classname
 fi
+
+if [[ ! -d $temp_dir ]]
+then
+  if [[ $temp_default ]]
+  then
+    echo "Default template path scripts/templates/ is not valid from the"
+    echo "current directory"
+  else
+    echo "Template path $temp_dir is not valid from the"
+    echo "current directory"
+  fi
+fi
+
+#error tracker
+with_err=
 
 #Generate substitution strings
 file_name=$(echo $classname | tr '[a-z]' '[A-Z]') #capitalize class name
 
 #input templates
-module_template=$DOX_MODULE
-public_template=$PUBLIC_TEMPLATE
-private_template=$PRIVATE_TEMPLATE
-source_template=$SOURCE_TEMPLATE
-test_template=$TEST_TEMPLATE
+module_template="$(dirname $temp_dir)/$(basename $temp_dir)/$DOX_MODULE"
+public_template="$(dirname $temp_dir)/$(basename $temp_dir)/$PUBLIC_TEMPLATE"
+private_template="$(dirname $temp_dir)/$(basename $temp_dir)/$PRIVATE_TEMPLATE"
+source_template="$(dirname $temp_dir)/$(basename $temp_dir)/$SOURCE_TEMPLATE"
+test_template="$(dirname $temp_dir)/$(basename $temp_dir)/$TEST_TEMPLATE"
 
 #output filenames
 doc_module=$classname"Module.dox"
@@ -86,37 +111,75 @@ echo
 
 #substitute class name into template files and write files with proper file
 #names to the current directory
-cat $module_template | sed "s/%CLASSNAME%/$classname/g" | \
-  sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%MACRONAME%/$file_name/g" | \
-  sed "s/%METHODCLASSNAME%/$method_classnamename/g" > $doc_module
-echo "Add class description to newly created Doxygen Module: $doc_module"
+if [[ -e $module_template ]]
+then
+  cat $module_template | sed "s/%CLASSNAME%/$classname/g" | \
+    sed "s/%CLASSAUTHOR%/$author_name/g" | \
+    sed "s/%MACRONAME%/$file_name/g" | \
+    sed "s/%METHODCLASSNAME%/$method_classnamename/g" > $doc_module
+  echo "Add class description to newly created Doxygen Module: $doc_module"
+else
+  echo "Module documentation template does not exist in $temp_dir"
+  with_err=1
+fi
 
-cat $public_template | sed "s/%CLASSNAME%/$classname/g" | \
-  sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%MACRONAME%/$file_name/g" | \
-  sed "s/%METHODCLASSNAME%/$method_classname/g" > $public_header
-echo "Add public class method declarations to newly created file: $public_header"
+if [[ -e $public_template ]]
+then
+  cat $public_template | sed "s/%CLASSNAME%/$classname/g" | \
+    sed "s/%CLASSAUTHOR%/$author_name/g" | \
+    sed "s/%MACRONAME%/$file_name/g" | \
+    sed "s/%METHODCLASSNAME%/$method_classname/g" > $public_header
+  echo "Add public class method declarations to newly created file:"
+  echo "$public_header"
+else
+  echo "Public header template does not exist in $temp_dir"
+  with_err=1
+fi
 
-cat $private_template | sed "s/%CLASSNAME%/$classname/g" | \
-  sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%MACRONAME%/$file_name/g" | \
-  sed "s/%METHODCLASSNAME%/$method_classname/g" > $private_header
-echo "Add private class method declarations and members to newly created file: "
-echo "  $private_header"
+if [[ -e $private_template ]]
+then
+  cat $private_template | sed "s/%CLASSNAME%/$classname/g" | \
+    sed "s/%CLASSAUTHOR%/$author_name/g" | \
+    sed "s/%MACRONAME%/$file_name/g" | \
+    sed "s/%METHODCLASSNAME%/$method_classname/g" > $private_header
+  echo "Add private class method declarations and members to newly created"
+  echo "file:  $private_header"
+else
+  echo "Private header template does not exist in $temp_dir"
+  with_err=1
+fi
 
-cat $source_template | sed "s/%CLASSNAME%/$classname/g" | \
-  sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%MACRONAME%/$file_name/g" | \
-  sed "s/%METHODCLASSNAME%/$method_classname/g" > $source_file
-echo "Add method implementation to newly created file: $source_file"
+if [[ -e $source_template ]]
+then
+  cat $source_template | sed "s/%CLASSNAME%/$classname/g" | \
+    sed "s/%CLASSAUTHOR%/$author_name/g" | \
+    sed "s/%MACRONAME%/$file_name/g" | \
+    sed "s/%METHODCLASSNAME%/$method_classname/g" > $source_file
+  echo "Add method implementation to newly created file: $source_file"
+else
+  echo "Source file template does not exist in $temp_dir"
+  with_err=1
+fi
 
-cat $test_template | sed "s/%CLASSNAME%/$classname/g" | \
-  sed "s/%CLASSAUTHOR%/$author_name/g" | \
-  sed "s/%MACRONAME%/$file_name/g" | \
-  sed "s/%METHODCLASSNAME%/$method_classname/g" > $test_file
-echo "Add unit tests to newly created file: $test_file"
+if [[ -e $test_template ]]
+then
+  cat $test_template | sed "s/%CLASSNAME%/$classname/g" | \
+    sed "s/%CLASSAUTHOR%/$author_name/g" | \
+    sed "s/%MACRONAME%/$file_name/g" | \
+    sed "s/%METHODCLASSNAME%/$method_classname/g" > $test_file
+  echo "Add unit tests to newly created file: $test_file"
+else
+  echo "Test file template does not exist in $temp_dir"
+  with_err=1
+fi
 
 echo ""
-echo "$classname offbrand compatible class created."
+
+if [[ $with_err ]]
+then
+  echo "$classname offbrand compatible class created, although some template"
+  echo "files could not be found and class skeleton may be incomplete"
+else
+  echo "$classname offbrand compatible class created."
+fi
 echo
