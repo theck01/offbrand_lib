@@ -269,8 +269,16 @@
   <br><br>
   
  
-  @section Contributing Contributing
- 
+  @section Contributing Next Steps and Contributing
+
+  The following tasks will/should/could be added to the library in the near
+  future:
+
+  - A red-black tree datastructure
+  - The ability to build library as a shared library and install to .so and
+    headers to system
+  - A better error handling mechanism (other than aborting on unexpected values)
+
   Clone, fork, submit issues and pull requests on github:
   https://github.com/theck01/offbrand_lib
   <br><br>
