@@ -26,6 +26,9 @@
   <i>NOTE</i>: The phrase "class" is used in this documentation to refer to a C 
   style approximation of a class built from functions and incomplete types,
   rather than a traditional class in a language like Java or Ruby
+
+  offbrand is released under the MIT license, see the LICENSE.txt file in
+  the root directory of the git repository for the license text.
   <br><br>
  
  
