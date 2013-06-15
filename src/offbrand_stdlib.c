@@ -13,7 +13,7 @@ void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
 
   assert(classname != NULL);
 
-  *instance = malloc(sizeof(struct obj_struct));
+  *instance = malloc(sizeof(struct OBObjStruct));
 
   assert((*instance) != NULL);
 
@@ -47,7 +47,7 @@ obj * release(obj *instance){
     if((*instance)->dealloc)
       (*instance)->dealloc(instance);
 
-    free((struct obj_struct *)*instance); /* free reference counted base */
+    free((struct OBObjStruct *)*instance); /* free reference counted base */
     free(instance); /* free the entire object */
 
     return NULL;

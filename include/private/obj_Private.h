@@ -8,7 +8,7 @@
  * instance of obj as it's base member so that functions can operate generically
  * on all Offbrand classes as if they were objs
  *
- * @author theck
+ * @author theck, danhd123/icodestuff
  */
 
 #ifndef OBJ_PRIVATE_H
@@ -20,7 +20,7 @@
  * @brief Base struct used for within all Offbrand compatible classes that
  * tracks information common to all classes.
  */
-struct obj_struct{
+struct OBObjStruct{
   ref_count_t references; /**< reference count for each instance */
   dealloc_fptr dealloc; /**< pointer to class specific deallocation function */
   hash_fptr hash; /**< pointer to class specific hash function */

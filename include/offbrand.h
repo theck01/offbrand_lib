@@ -7,7 +7,7 @@
  * required for memory management via reference count, class membership tests,
  * hashing, and others.
  *
- * @author theck
+ * @author theck, danhd123
  */
 
 #ifndef OFFBRAND_LIB
@@ -40,7 +40,7 @@
  * function pointers, and form the basis for all generic container classes
  * and functions.
  */
-typedef struct obj_struct * obj;
+typedef struct OBObjStruct * obj;
 
 /** 
  * reference count, tracks references to instances of Offbrand compatible
