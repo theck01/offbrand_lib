@@ -36,7 +36,7 @@ int main (){
 
   assert(isDequeEmpty(test_deque_a) == 0);
   assert(dequeLength(test_deque_a) == 1);
-  assert(referenceCount((OBObjType *)a) == 2);
+  assert(OBReferenceCount((OBObjType *)a) == 2);
   assert(getTestID((OBTest *)objAtDequeHead(test_deque_a)) == 1);
   assert(getTestID((OBTest *)objAtDequeTail(test_deque_a)) == 1);
 
@@ -54,10 +54,10 @@ int main (){
   removeDequeTail(test_deque_a);
 
   /* check that element is still referenced because of existing iterators */
-  assert(referenceCount((OBObjType *)a) == 2);
-  release((OBObjType *)head_it);
-  release((OBObjType *)tail_it);
-  assert(referenceCount((OBObjType *)a) == 1);
+  assert(OBReferenceCount((OBObjType *)a) == 2);
+  OBRelease((OBObjType *)head_it);
+  OBRelease((OBObjType *)tail_it);
+  assert(OBReferenceCount((OBObjType *)a) == 1);
 
 
   assert(isDequeEmpty(test_deque_a) != 0);
@@ -78,19 +78,19 @@ int main (){
   /* test deque removal functions */
   head_it = getDequeHeadIt(test_deque_a);
   removeDequeAtIt(test_deque_a, head_it);
-  release((OBObjType *)head_it);
+  OBRelease((OBObjType *)head_it);
 
   head_it = getDequeHeadIt(test_deque_a);
   do{
     assert(getTestID((OBTest *)objAtDequeIt(test_deque_a, head_it)) != 4);
   }while(iterateDequeNext(test_deque_a, head_it));
 
-  release((OBObjType *)head_it);
+  OBRelease((OBObjType *)head_it);
   addDequeHead(test_deque_a, (OBObjType *)d);
 
   test_deque_b = copyDeque(test_deque_a);
 
-  assert(referenceCount((OBObjType *)a) == 3);
+  assert(OBReferenceCount((OBObjType *)a) == 3);
   assert(compare((OBObjType *)test_deque_a, (OBObjType *)test_deque_b) == OB_EQUAL_TO);
   assert(hash((OBObjType *)test_deque_a) ==  hash((OBObjType *)test_deque_b));
 
@@ -107,31 +107,31 @@ int main (){
     i++;
   }while(iterateDequeNext(test_deque_a, head_it));
 
-  release((OBObjType *)head_it);
-  release((OBObjType *)test_deque_a);
-  assert(referenceCount((OBObjType *)a) == 2);
+  OBRelease((OBObjType *)head_it);
+  OBRelease((OBObjType *)test_deque_a);
+  assert(OBReferenceCount((OBObjType *)a) == 2);
 
   test_deque_a = copyDeque(test_deque_b);
   joined_deque = joinDeques(test_deque_a, test_deque_b);
   sortDeque(joined_deque, OB_GREATEST_TO_LEAST);
 
   assert(dequeLength(joined_deque) == 10);
-  assert(referenceCount((OBObjType *)a) == 5); /* the joined deque has two references,
+  assert(OBReferenceCount((OBObjType *)a) == 5); /* the joined deque has two references,
                                             as a is contained within twice */
   
   tail_it = getDequeTailIt(joined_deque);
   removeDequeTail(joined_deque);
   assert(iterateDequePrev(joined_deque, tail_it) == 0);
   assert(iterateDequeNext(joined_deque, tail_it) == 0);
-  release((OBObjType *)tail_it);
+  OBRelease((OBObjType *)tail_it);
 
   tail_it = getDequeTailIt(joined_deque);
   addAtDequeIt(joined_deque, tail_it, (OBObjType *)a);
-  release((OBObjType *)tail_it);
+  OBRelease((OBObjType *)tail_it);
 
   tail_it = getDequeTailIt(joined_deque);
   copy_it = copyDequeIterator(tail_it);
-  release((OBObjType *)tail_it);
+  OBRelease((OBObjType *)tail_it);
   tail_it = copy_it;
   
 
@@ -142,7 +142,7 @@ int main (){
 
   assert(iterateDequePrev(joined_deque, tail_it) == 0);
 
-  release((OBObjType *)tail_it);
+  OBRelease((OBObjType *)tail_it);
 
   clearDeque(test_deque_a);
   clearDeque(test_deque_b);
@@ -153,16 +153,16 @@ int main (){
 
   assert(isDequeEmpty(joined_deque) != 0);
   assert(dequeLength(joined_deque) == 0);
-  assert(referenceCount((OBObjType *)a) == 1);
+  assert(OBReferenceCount((OBObjType *)a) == 1);
 
-  release((OBObjType *)test_deque_a);
-  release((OBObjType *)test_deque_b);
-  release((OBObjType *)joined_deque);
-  release((OBObjType *)e);
-  release((OBObjType *)d);
-  release((OBObjType *)c);
-  release((OBObjType *)b);
-  release((OBObjType *)a);
+  OBRelease((OBObjType *)test_deque_a);
+  OBRelease((OBObjType *)test_deque_b);
+  OBRelease((OBObjType *)joined_deque);
+  OBRelease((OBObjType *)e);
+  OBRelease((OBObjType *)d);
+  OBRelease((OBObjType *)c);
+  OBRelease((OBObjType *)b);
+  OBRelease((OBObjType *)a);
 
   printf("OBDeque_test: TESTS PASSED\n");
   return 0;

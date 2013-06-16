@@ -143,11 +143,11 @@ OBVector * splitString(const OBString *s, const char *delim){
     substring = createString(marker);
     marker += substring->length;
     storeAtVectorIndex(tokens, (OBObjType *)substring, substrs++);
-    release((OBObjType *)substring); /* only tokens vector needs a reference */
+    OBRelease((OBObjType *)substring); /* only tokens vector needs a reference */
     while(*marker == '\0' && marker < copy->str + copy->length) marker++;
   }
 
-  release((OBObjType *)copy);
+  OBRelease((OBObjType *)copy);
   return tokens;
 }
 
@@ -213,7 +213,7 @@ OBString * createDefaultString(void){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((OBObjType *)new_instance, &deallocString, &hashString, &compareStrings,
+  OBInitBase((OBObjType *)new_instance, &deallocString, &hashString, &compareStrings,
            &displayString, classname);
 
   new_instance->str = malloc(sizeof(char));

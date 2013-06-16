@@ -41,31 +41,32 @@
  * and functions.
  */
 typedef struct OBObjStruct * OBObjType;
+typedef const void * OBTypeRef;
 
 /** 
  * reference count, tracks references to instances of Offbrand compatible
  * classes 
  */
-typedef uint32_t ref_count_t;
+typedef uint32_t obref_count_t;
 
 /** function pointer to a deallocator for any OffBrand compatible class */
-typedef void (*dealloc_fptr)(OBObjType *);
+typedef void (*obdealloc_fptr)(OBObjType *);
 
 /** hash value, used returned from hash functions */
 typedef size_t obhash_t;
 
 /** function pointer to a hash function for any offbrand compatible class */
-typedef obhash_t (*hash_fptr)(const OBObjType *);
+typedef obhash_t (*obhash_fptr)(const OBObjType *);
 
 /**
  * function pointer to a comparision function that takes pointers to any two
  * Offbrand compatible classes and returns one of the comparision constants
  * listed in the constants section.
  */
-typedef int8_t (*compare_fptr)(const OBObjType *, const OBObjType *);
+typedef int8_t (*obcompare_fptr)(const OBObjType *, const OBObjType *);
 
 /** function pointer to a display function for any offbrand compatible class */
-typedef void (*display_fptr)(const OBObjType *);
+typedef void (*obdisplay_fptr)(const OBObjType *);
 
 
 /* OFFBRAND STANDARD LIB */
@@ -86,8 +87,8 @@ typedef void (*display_fptr)(const OBObjType *);
  * instances class
  * @param classname C string containing instances classname.
  */
-void initBase(OBObjType *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
-              compare_fptr compare_funct, display_fptr display_funct,
+void OBInitBase(OBTypeRef instance, obdealloc_fptr dealloc_funct, obhash_fptr hash_funct,
+              obcompare_fptr compare_funct, obdisplay_fptr display_funct,
               const char *classname);
 
 /**
@@ -99,8 +100,14 @@ void initBase(OBObjType *instance, dealloc_fptr dealloc_funct, hash_fptr hash_fu
  * referenced
  * @retval NULL Reference count was decremented to 0 and deallocator was called
  * on instance
+ * @discussion Unlike certain other frameworks (CoreFoundation, Foundation),
+ * release returns the object or NULL, and retain does not. This leads to some
+ * possible safety improvements if applied well (e.g. obj = OBRelease(obj);)
+ * however if not used correctly will mask leaks when the assignment to obj is
+ * removed for performance reasons. Mixed use of as-void and as-OBTypeRef of
+ * this function is highly discouraged.
  */
-OBObjType * release(OBObjType *instance);
+OBTypeRef OBRelease(OBTypeRef instance);
 
 /**
  * @brief Increments the instances reference count by 1, indicating that the
@@ -108,7 +115,7 @@ OBObjType * release(OBObjType *instance);
  *
  * @param instance An instance of any Offbrand compatible class
  */
-void retain(OBObjType *instance);
+OBTypeRef OBRetain(OBTypeRef instance);
 
 /**
  * @brief Returns the current reference count of the given instance.
@@ -116,7 +123,7 @@ void retain(OBObjType *instance);
  * @param instance An instance of any Offbrand compatible class
  * @return An unsigned integer reference count
  */
-uint32_t referenceCount(OBObjType *instance);
+obref_count_t OBReferenceCount(OBObjType *instance);
 
 /**
  * @brief Checks that the given obj is of the provided class

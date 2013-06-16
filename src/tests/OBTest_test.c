@@ -20,10 +20,10 @@ int main(){
 
   /* retain object, reference count should be 4 */
   for(i=0; i<3; i++){
-    retain((OBObjType *)test_obj);
+    OBRetain((OBObjType *)test_obj);
   }
 
-  if(referenceCount((OBObjType *)test_obj) != 4){
+  if(OBReferenceCount((OBObjType *)test_obj) != 4){
     fprintf(stderr, "OBTest_test: reference count not incrememted correctly by "
                     "retain\nTEST FAILED\n");
     exit(1);
@@ -32,7 +32,7 @@ int main(){
   /* release object until test_obj is deallocated or until release has been
    * called more than 4 times */
   i=0;
-  while(++i < 5 && release((OBObjType *)test_obj) != NULL){}
+  while(++i < 5 && OBRelease((OBObjType *)test_obj) != NULL){}
 
   if(i<4){
     fprintf(stderr, "OBTest_test: test_obj released before reference count "

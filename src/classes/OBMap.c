@@ -89,10 +89,10 @@ OBMap * copyMap(const OBMap *to_copy){
     do{
        mp = copyMapPair((OBMapPair *)objAtDequeIt(to_copy->pairs, it));
        addDequeTail(copy->pairs, (OBObjType *)mp);
-       release((OBObjType *)mp);
+       OBRelease((OBObjType *)mp);
     }while(iterateDequeNext(to_copy->pairs, it));
   }
-  release((OBObjType *)it);
+  OBRelease((OBObjType *)it);
 
   rehashMap(copy); /* cannot grab to_copy->hash_table directly, stored iterators
                       must point to values within copy, not to copy */
@@ -126,11 +126,11 @@ void addToMap(OBMap *m, OBObjType *key, OBObjType *value){
 
   mp = createMapPair(key, value);
   addDequeTail(m->pairs, (OBObjType *)mp);
-  release((OBObjType *)mp); /* map deque has only reference to mp */
+  OBRelease((OBObjType *)mp); /* map deque has only reference to mp */
 
   assert(it = getDequeTailIt(m->pairs));
   addToHashTable(m, it);
-  release((OBObjType *)it); /* map vector hash only reference to it */
+  OBRelease((OBObjType *)it); /* map vector hash only reference to it */
   
   return; 
 }
@@ -179,7 +179,7 @@ void rehashMap(OBMap *m){
 
   assert(m);
 
-  release((OBObjType *)m->hash_table);
+  OBRelease((OBObjType *)m->hash_table);
   m->hash_table = createVector(MAP_CAPACITIES[m->cap_idx]);
 
   it = getDequeHeadIt(m->pairs);
@@ -188,10 +188,10 @@ void rehashMap(OBMap *m){
   do{
     it_copy = copyDequeIterator(it);
     addToHashTable(m, it_copy);
-    release((OBObjType *)it_copy);
+    OBRelease((OBObjType *)it_copy);
   }while(iterateDequeNext(m->pairs, it));
 
-  release((OBObjType *)it);
+  OBRelease((OBObjType *)it);
 
   return;
 }
@@ -201,8 +201,8 @@ void clearMap(OBMap *m){
 
   assert(m);
 
-  release((OBObjType *)m->hash_table);
-  release((OBObjType *)m->pairs);
+  OBRelease((OBObjType *)m->hash_table);
+  OBRelease((OBObjType *)m->pairs);
 
   m->hash_table = createVector(MAP_CAPACITIES[m->cap_idx]);
   m->pairs = createDeque();
@@ -218,12 +218,12 @@ OBMapPair * createMapPair(OBObjType *key, OBObjType *value){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((OBObjType *)new_instance, &deallocMapPair, &hashMapPair, NULL, 
+  OBInitBase((OBObjType *)new_instance, &deallocMapPair, &hashMapPair, NULL, 
            &displayMapPair, classname);
 
-  retain(key);
+  OBRetain(key);
   new_instance->key = key;
-  retain(value);
+  OBRetain(value);
   new_instance->value = value;
 
   return new_instance;
@@ -240,8 +240,8 @@ void replaceMapPairValue(OBMapPair *mp, OBObjType *value){
 
   assert(mp);
   
-  retain(value);
-  release(mp->value);
+  OBRetain(value);
+  OBRelease(mp->value);
   mp->value = value;
   return;
 }
@@ -298,8 +298,8 @@ void deallocMapPair(OBObjType *to_dealloc){
   assert(to_dealloc);
   assert(objIsOfClass(to_dealloc, "OBMapPair"));
 
-  release((OBObjType *)instance->key);
-  release((OBObjType *)instance->value);
+  OBRelease((OBObjType *)instance->key);
+  OBRelease((OBObjType *)instance->value);
 
   return;
 }
@@ -315,7 +315,7 @@ OBMap * createDefaultMap(void){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((OBObjType *)new_instance, &deallocMap, &hashMap,
+  OBInitBase((OBObjType *)new_instance, &deallocMap, &hashMap,
            &compareMaps, &displayMap, classname);
 
   new_instance->hash_table = NULL;
@@ -355,7 +355,7 @@ obhash_t hashMap(const OBObjType *to_hash){
     value += hash(objAtDequeIt(instance->pairs, it));
   }while(iterateDequeNext(instance->pairs, it));
 
-  release((OBObjType *)it);
+  OBRelease((OBObjType *)it);
 
   value += value << 3;
   value ^= value >> 11;
@@ -396,7 +396,7 @@ void displayMap(const OBObjType *to_print){
 
   fprintf(stderr, "  [map end]\n");
 
-  release((OBObjType *)it);
+  OBRelease((OBObjType *)it);
 
   return;
 }
@@ -410,8 +410,8 @@ void deallocMap(OBObjType *to_dealloc){
   assert(to_dealloc);
   assert(objIsOfClass(to_dealloc, "OBMap"));
 
-  release((OBObjType *)instance->hash_table);
-  release((OBObjType *)instance->pairs);
+  OBRelease((OBObjType *)instance->hash_table);
+  OBRelease((OBObjType *)instance->pairs);
 
   return;
 }

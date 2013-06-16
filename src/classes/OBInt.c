@@ -202,7 +202,7 @@ OBInt * addIntAndPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = addInts(a, wrapper);
-  release((OBObjType *)wrapper);
+  OBRelease((OBObjType *)wrapper);
 
   return result;
 }
@@ -250,7 +250,7 @@ OBInt * subtractIntWithPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = subtractInts(a, wrapper);
-  release((OBObjType *)wrapper);
+  OBRelease((OBObjType *)wrapper);
 
   return result;
 }
@@ -278,7 +278,7 @@ OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = multiplyInts(a, wrapper);
-  release((OBObjType *)wrapper);
+  OBRelease((OBObjType *)wrapper);
 
   return result;
 }
@@ -295,7 +295,7 @@ OBInt * divideInts(const OBInt *a, const OBInt *b){
   seed = createIntWithInt(0);
   result = reduceUnsignedInts(a, b, seed, 1);
   result->sign = a->sign * b->sign;
-  release((OBObjType *)seed);
+  OBRelease((OBObjType *)seed);
 
   return result;
 }
@@ -310,7 +310,7 @@ OBInt * divideIntWithPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = divideInts(a, wrapper);
-  release((OBObjType *)wrapper);
+  OBRelease((OBObjType *)wrapper);
 
   return result;
 }
@@ -327,7 +327,7 @@ OBInt * modInts(const OBInt *a, const OBInt *b){
   seed = createIntWithInt(0);
   result = reduceUnsignedInts(a, b, seed, 0);
   result->sign = a->sign;
-  release((OBObjType *)seed);
+  OBRelease((OBObjType *)seed);
 
   return result;
 }
@@ -342,7 +342,7 @@ OBInt * modIntWithPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = modInts(a, wrapper);
-  release((OBObjType *)wrapper);
+  OBRelease((OBObjType *)wrapper);
 
   return result;
 }
@@ -359,7 +359,7 @@ OBInt * createDefaultInt(uint64_t num_digits){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((OBObjType *)new_instance, &deallocInt, &hashInt, &compareInts, 
+  OBInitBase((OBObjType *)new_instance, &deallocInt, &hashInt, &compareInts, 
            &displayInt, classname);
 
   new_instance->sign = 1; /* positive by default */
@@ -471,7 +471,7 @@ void displayInt(const OBObjType *to_print){
   str = stringFromInt(instance);
   fprintf(stderr, "Value:\n  %s\n", getCString(str));
   
-  release((OBObjType *)str);
+  OBRelease((OBObjType *)str);
 
   return;
 }
@@ -585,29 +585,29 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   z1b = addUnsignedInts(y1, y0);
   z1c = multiplyUnsignedInts(z1a, z1b);
 
-  release((OBObjType *)x0);
-  release((OBObjType *)x1);
-  release((OBObjType *)y0);
-  release((OBObjType *)y1);
-  release((OBObjType *)z1a);
-  release((OBObjType *)z1b);
+  OBRelease((OBObjType *)x0);
+  OBRelease((OBObjType *)x1);
+  OBRelease((OBObjType *)y0);
+  OBRelease((OBObjType *)y1);
+  OBRelease((OBObjType *)z1a);
+  OBRelease((OBObjType *)z1b);
 
   z1d = subtractUnsignedInts(z1c, z2);
-  release((OBObjType *)z1c);
+  OBRelease((OBObjType *)z1c);
   z1 = subtractUnsignedInts(z1d, z0);
-  release((OBObjType *)z1d);
+  OBRelease((OBObjType *)z1d);
 
   shiftInt(z2, 2*split_point);
   shiftInt(z1, split_point);
   partial_result = addUnsignedInts(z2, z1);
 
-  release((OBObjType *) z2);
-  release((OBObjType *) z1);
+  OBRelease((OBObjType *) z2);
+  OBRelease((OBObjType *) z1);
 
   result = addUnsignedInts(partial_result, z0);
   
-  release((OBObjType *) partial_result);
-  release((OBObjType *) z0);
+  OBRelease((OBObjType *) partial_result);
+  OBRelease((OBObjType *) z0);
 
   return result;
 }
@@ -638,7 +638,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
       result_val = a_val/b_val;
       partial = createIntWithInt(result_val);
       result = addInts(approx, partial);
-      release((OBObjType *)partial);
+      OBRelease((OBObjType *)partial);
     }
     else{
       result_val = a_val%b_val;
@@ -700,8 +700,8 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   /* if approximation is too great then increment b_val to account for remaining
    * portion of b that is causing over approximation */
   if(comp_val == OB_GREATER_THAN){
-    release((OBObjType *)partial);
-    release((OBObjType *)product);
+    OBRelease((OBObjType *)partial);
+    OBRelease((OBObjType *)product);
 
     b_val++; 
     partial = createIntWithInt(a_val/b_val);
@@ -710,14 +710,14 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   }
 
   new_dividend = subtractUnsignedInts(a, product);
-  release((OBObjType *)product);
+  OBRelease((OBObjType *)product);
   new_approx = addUnsignedInts(approx, partial);
-  release((OBObjType *)partial);
+  OBRelease((OBObjType *)partial);
 
   result = reduceUnsignedInts(new_dividend, b, new_approx, quotient);
 
-  release((OBObjType *)new_approx);
-  release((OBObjType *)new_dividend);
+  OBRelease((OBObjType *)new_approx);
+  OBRelease((OBObjType *)new_dividend);
 
   return result;
 }

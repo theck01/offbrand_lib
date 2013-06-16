@@ -123,7 +123,7 @@ OBDeque * createDefaultDeque(void);
  * sorting should use the publicly accessable function which calls this method
  * internally.
  */
-OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct);
+OBDeque recursiveSort(OBDeque deque, int8_t order, obcompare_fptr funct);
 
 /**
  * @brief Hash function for OBDeque

@@ -7,10 +7,10 @@
 #include "../include/offbrand.h"
 #include "../include/private/obj_Private.h"
 
-void initBase(OBObjType *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
-              compare_fptr compare_funct, display_fptr display_funct,
+void OBInitBase(OBTypeRef tr_instance, obdealloc_fptr dealloc_funct, obhash_fptr hash_funct,
+              obcompare_fptr compare_funct, obdisplay_fptr display_funct,
               const char *classname){
-
+  OBObjType *instance = (OBObjType *)tr_instance;
   assert(classname != NULL);
 
   *instance = malloc(sizeof(struct OBObjStruct));
@@ -36,19 +36,19 @@ void initBase(OBObjType *instance, dealloc_fptr dealloc_funct, hash_fptr hash_fu
 }
 
 
-OBObjType * release(OBObjType *instance){
+OBTypeRef OBRelease(OBTypeRef instance){
 
   if(!instance) return NULL;
-
+  OBObjType *localInstance = (OBObjType *)instance;
   /* if no other part of the program references the instance, destroy it */
-  if(--((*instance)->references) <= 0){
+  if(--((*localInstance)->references) <= 0){
 
     /* call class specific memory cleanup, if it exists */
-    if((*instance)->dealloc)
-      (*instance)->dealloc(instance);
+    if((*localInstance)->dealloc)
+      (*localInstance)->dealloc(localInstance);
 
-    free((struct OBObjStruct *)*instance); /* free reference counted base */
-    free(instance); /* free the entire object */
+    free((struct OBObjStruct *)*localInstance); /* free reference counted base */
+    free(localInstance); /* free the entire object */
 
     return NULL;
   }
@@ -57,19 +57,20 @@ OBObjType * release(OBObjType *instance){
 }
 
 
-void retain(OBObjType *instance){
+OBTypeRef OBRetain(OBTypeRef instance){
 
-  if(!instance) return;
+  if(!instance) return NULL;
 
-  assert((*instance)->references < UINT32_MAX); /* reference count > UINT32_MAX
+  OBObjType *localInstance = (OBObjType *)instance;
+  assert((*localInstance)->references < UINT32_MAX); /* reference count > UINT32_MAX
                                                    cannot be handled by lib */
-  ++((*instance)->references);
+  ++((*localInstance)->references);
 
-  return;
+  return instance;
 }
 
 
-uint32_t referenceCount(OBObjType *instance){
+obref_count_t OBReferenceCount(OBObjType *instance){
   if(!instance) return 0;
   return (*instance)->references;
 }

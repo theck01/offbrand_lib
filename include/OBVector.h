@@ -143,7 +143,7 @@ void sortVector(OBVector *v, int8_t order);
  * @warning Sorting may appear to shrink vector as NULL values interspersed with
  * valid objects will be consolidated and removed
  */
-void sortVectorWithFunct(OBVector *v, int8_t order, compare_fptr funct);
+void sortVectorWithFunct(OBVector *v, int8_t order, obcompare_fptr funct);
 
 /**
  * @brief Removes all objects from an OBVector, leaving it empty

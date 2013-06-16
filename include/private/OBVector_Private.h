@@ -59,7 +59,7 @@ void resizeVector(OBVector *v, uint32_t index);
  * internally.
  */
 OBObjType ** recursiveSortContents(OBObjType **to_sort, uint32_t size, int8_t order,
-                             compare_fptr funct);
+                             obcompare_fptr funct);
 
 /**
  * @brief Hash function for OBVector

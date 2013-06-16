@@ -43,7 +43,7 @@ int main (){
 
   assert(test);
   assert(compare((OBObjType *)b, (OBObjType *)test) == OB_EQUAL_TO);
-  assert(referenceCount((OBObjType *)test) > 1);
+  assert(OBReferenceCount((OBObjType *)test) > 1);
 
   addToMap(test_map, (OBObjType *)e, (OBObjType *)c);
   addToMap(test_map, (OBObjType *)f, (OBObjType *)d);
@@ -63,7 +63,7 @@ int main (){
   addToMap(test_map, (OBObjType *)a, NULL); /* remove binding of a -> b */
 
   assert(lookupMapKey(test_map, (OBObjType *)a) == NULL);
-  assert(referenceCount((OBObjType *)test) == 1);
+  assert(OBReferenceCount((OBObjType *)test) == 1);
   
   test = (OBTest *)lookupMapKey(test_map, (OBObjType *)h);
   assert(compare((OBObjType *)f, (OBObjType *)test) == OB_EQUAL_TO);
@@ -106,20 +106,20 @@ int main (){
     assert(compare((OBObjType *) test_array[i], 
                    lookupMapKey(test_map, (OBObjType *)test_array[i])) ==OB_EQUAL_TO);
 
-  release((OBObjType *)a);
-  release((OBObjType *)b);
-  release((OBObjType *)c);
-  release((OBObjType *)d);
-  release((OBObjType *)e);
-  release((OBObjType *)f);
-  release((OBObjType *)g);
-  release((OBObjType *)h);
+  OBRelease((OBObjType *)a);
+  OBRelease((OBObjType *)b);
+  OBRelease((OBObjType *)c);
+  OBRelease((OBObjType *)d);
+  OBRelease((OBObjType *)e);
+  OBRelease((OBObjType *)f);
+  OBRelease((OBObjType *)g);
+  OBRelease((OBObjType *)h);
 
-  release((OBObjType *)test_map);
-  release((OBObjType *)map_copy);
+  OBRelease((OBObjType *)test_map);
+  OBRelease((OBObjType *)map_copy);
 
   for(i=0; i<ARRAY_SIZE; i++)
-    release((OBObjType *)test_array[i]);
+    OBRelease((OBObjType *)test_array[i]);
     
   printf("OBMap_test: TESTS PASSED\n");
 

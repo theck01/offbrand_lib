@@ -196,7 +196,7 @@ void sortDeque(OBDeque *deque, int8_t order);
  * @param funct A pointer to a comparision function that returns a int8_t when
  * given two obj * arguments
  */
-void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct);
+void sortDequeWithFunct(OBDeque *deque, int8_t order, obcompare_fptr funct);
 
 /**
  * @brief Peek at the obj stored at the head of an OBDeque

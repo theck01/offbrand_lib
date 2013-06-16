@@ -24,13 +24,13 @@ int main(){
     tests[i] = createTest(i);
     storeAtVectorIndex(main_vec, (OBObjType *)tests[i], i);
 
-    if(referenceCount((OBObjType *)tests[i]) != 2){
+    if(OBReferenceCount((OBObjType *)tests[i]) != 2){
       fprintf(stderr, "OBVector_test: vector did not properly retain element "
                       "TEST FAILED\n");
       exit(1);
     }
 
-    release((OBObjType *)tests[i]); /* vector should maintain only references */
+    OBRelease((OBObjType *)tests[i]); /* vector should maintain only references */
   }
 
   if(vectorLength(main_vec) != 6){
@@ -62,17 +62,17 @@ int main(){
     exit(1);
   }
 
-  if(referenceCount((OBObjType *)singleton) != 1){
+  if(OBReferenceCount((OBObjType *)singleton) != 1){
     fprintf(stderr, "OBVector_test: vector did not release element on removal "
                     "TEST FAILED\n");
     exit(1);
   }
 
   tmp = (OBTest *)objAtVectorIndex(main_vec, 3);
-  retain((OBObjType *)tmp);
+  OBRetain((OBObjType *)tmp);
 
   storeAtVectorIndex(main_vec, (OBObjType *)singleton, 3);
-  if(referenceCount((OBObjType *)tmp) != 1){
+  if(OBReferenceCount((OBObjType *)tmp) != 1){
     fprintf(stderr, "OBVector_test: vector did not release element on "
                     "replacement, TEST FAILED\n");
     exit(1);
@@ -89,7 +89,7 @@ int main(){
   storeAtVectorIndex(main_vec, (OBObjType *)tmp, 3);
 
   /* reduce reference count to 1, so only vector holds reference to obj */
-  release((OBObjType *)tmp);
+  OBRelease((OBObjType *)tmp);
 
   if(findObjInVector(main_vec, (OBObjType *)singleton)){
     fprintf(stderr, "OBVector_test: vector did not replace element correctly, "
@@ -152,11 +152,11 @@ int main(){
   assert(compare((OBObjType *)copy_vec, (OBObjType *)main_vec) == OB_EQUAL_TO);
   assert(hash((OBObjType *)copy_vec) == hash((OBObjType *)main_vec));
 
-  release((OBObjType *)singleton); /* release singleton once so it is only referenced
+  OBRelease((OBObjType *)singleton); /* release singleton once so it is only referenced
                                 by containing vectors */
 
   for(i=0; i<vectorLength(main_vec); i++){
-    if(referenceCount((OBObjType *)(OBTest *)objAtVectorIndex(main_vec, i)) != 2){
+    if(OBReferenceCount((OBObjType *)(OBTest *)objAtVectorIndex(main_vec, i)) != 2){
       fprintf(stderr, "OBVector_test: vector contents not retained on copy, "
                       "TEST FAILED\n");
       exit(1);
@@ -165,7 +165,7 @@ int main(){
   
   /* get obj at index and retain it so it isnt deallocated */
   tmp = (OBTest *)objAtVectorIndex(main_vec, 3);
-  retain((OBObjType *)tmp);
+  OBRetain((OBObjType *)tmp);
 
   storeAtVectorIndex(main_vec, NULL, 3);
 
@@ -192,17 +192,17 @@ int main(){
     }
   }
 
-  release((OBObjType *)main_vec);
-  release((OBObjType *)copy_vec);
+  OBRelease((OBObjType *)main_vec);
+  OBRelease((OBObjType *)copy_vec);
 
-  if(referenceCount((OBObjType *)tmp) != 1){
+  if(OBReferenceCount((OBObjType *)tmp) != 1){
     fprintf(stderr, "OBVector_test: releases of OBVector container did not "
                     "properly manage\ncontained OBTest reference count, TEST "
                     "FAILED\n");
     exit(1);
   }
 
-  release((OBObjType *)tmp);
+  OBRelease((OBObjType *)tmp);
 
   printf("OBVector_test: TESTS PASSED\n");
   return 0;

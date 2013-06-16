@@ -36,7 +36,7 @@ OBVector * copyVector(const OBVector *to_copy){
   new_vec->length = to_copy->length;
 
   for(i=0; i<to_copy->capacity; i++){
-    retain(to_copy->array[i]);
+    OBRetain(to_copy->array[i]);
     new_vec->array[i] = to_copy->array[i];
   }
 
@@ -63,8 +63,8 @@ void storeAtVectorIndex(OBVector *v, OBObjType *to_store, int64_t index){
   /* ensure vector can store element at index */
   resizeVector(v, (uint32_t)index);
 
-  retain(to_store);
-  release(v->array[index]);
+  OBRetain(to_store);
+  OBRelease(v->array[index]);
   v->array[index] = to_store;
 
   /* find vector length if modifying beyond known length */
@@ -103,7 +103,7 @@ void catVectors(OBVector *destination, OBVector *to_append){
 
   /* copy contents of to_append */
   for(i=0; i<to_append->length; i++){
-    retain((OBObjType *)to_append->array[i]);
+    OBRetain((OBObjType *)to_append->array[i]);
     destination->array[i+destination->length] = to_append->array[i];
   }
 
@@ -136,7 +136,7 @@ void sortVector(OBVector *v, int8_t order){
 }
 
 
-void sortVectorWithFunct(OBVector *v, int8_t order, compare_fptr funct){
+void sortVectorWithFunct(OBVector *v, int8_t order, obcompare_fptr funct){
 
   OBObjType **sorted;
 
@@ -161,7 +161,7 @@ void clearVector(OBVector *v){
   assert(v != NULL);
 
   for(i=0; i<v->capacity; i++){
-    release(v->array[i]);
+    OBRelease(v->array[i]);
   }
 
   v->length = 0;
@@ -181,7 +181,7 @@ OBVector * createDefaultVector(uint32_t initial_capacity){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((OBObjType *)new_instance, &deallocVector, &hashVector, &compareVectors,
+  OBInitBase((OBObjType *)new_instance, &deallocVector, &hashVector, &compareVectors,
            &displayVector, classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
@@ -230,7 +230,7 @@ void resizeVector(OBVector *v, uint32_t index){
 
 
 OBObjType ** recursiveSortContents(OBObjType **to_sort, uint32_t size, int8_t order,
-                             compare_fptr funct){
+                             obcompare_fptr funct){
   
   uint32_t i,j, split;
   OBObjType **left_sorted, **right_sorted;
