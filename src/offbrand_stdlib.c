@@ -1,7 +1,7 @@
 /**
  * @file offbrand_stdlib.c
  * @brief Standard Library Implementation
- * @author theck
+ * @author theck, danhd123
  */
 
 #include "../include/offbrand.h"
