@@ -35,9 +35,9 @@ extern const double MAX_LOAD_FACTOR;
  * given map
  */
 typedef struct OBMapPair_struct{
-  obj base; /**< obj containing reference count and class membership data */
-  obj *key; /**< obj pointer to the key used to lookup within the hash */
-  obj *value; /**< obj pointer to the value stored in the hash */
+  OBObjType base; /**< obj containing reference count and class membership data */
+  OBObjType *key; /**< obj pointer to the key used to lookup within the hash */
+  OBObjType *value; /**< obj pointer to the value stored in the hash */
 } OBMapPair;
 
 /* OBMapPair PRIVATE METHODS */
@@ -55,7 +55,7 @@ typedef struct OBMapPair_struct{
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBMapPair * createMapPair(obj *key, obj *value);
+OBMapPair * createMapPair(OBObjType *key, OBObjType *value);
 
 /**
  * @brief Copy constructor, creates a new OBMapPair with the same key-value of
@@ -74,7 +74,7 @@ OBMapPair * copyMapPair(OBMapPair *mp);
  * @param mp An instance of OBMapPair
  * @param value The new value to replace the existing value
  */
-void replaceMapPairValue(OBMapPair *mp, obj *value);
+void replaceMapPairValue(OBMapPair *mp, OBObjType *value);
 
 /**
  * @brief Hash function for OBMapPair
@@ -83,14 +83,14 @@ void replaceMapPairValue(OBMapPair *mp, obj *value);
  *
  * @return Key value (hash) for the given obj pointer to a OBMapPair
  */
-obhash_t hashMapPair(const obj *to_hash);
+obhash_t hashMapPair(const OBObjType *to_hash);
 
 /**
  * @brief Displays an instance of OBMapPair to stderr
  *
  * @param to_print A non-NULL obj pointer to type OBMapPair
  */
-void displayMapPair(const obj *to_print);
+void displayMapPair(const OBObjType *to_print);
 
 /** 
  * @brief Destructor for OBMapPair
@@ -101,7 +101,7 @@ void displayMapPair(const obj *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocMapPair(obj *to_dealloc); 
+void deallocMapPair(OBObjType *to_dealloc); 
 
 
 /* OBMap DATA */
@@ -111,7 +111,7 @@ void deallocMapPair(obj *to_dealloc);
  * an instance of OBMap
  */
 struct OBMap_struct{
-  obj base; /**< obj containing reference count and class membership data */
+  OBObjType base; /**< obj containing reference count and class membership data */
   uint8_t cap_idx; /**< index within MAP_CAPACITIES used as lookup for
                      capacity of map */
   OBVector *hash_table; /**< map lookup table */
@@ -140,7 +140,7 @@ OBMap * createDefaultMap(void);
  *
  * @return Key value (hash) for the given obj pointer to a OBMap
  */
-obhash_t hashMap(const obj *to_hash);
+obhash_t hashMap(const OBObjType *to_hash);
 
 /**
  * @brief Compares two instances of OBMap
@@ -152,7 +152,7 @@ obhash_t hashMap(const obj *to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareMaps(const obj *a, const obj *b);
+int8_t compareMaps(const OBObjType *a, const OBObjType *b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
 
@@ -161,7 +161,7 @@ int8_t compareMaps(const obj *a, const obj *b);
  *
  * @param to_print A non-NULL obj pointer to type OBMap
  */
-void displayMap(const obj *to_print);
+void displayMap(const OBObjType *to_print);
 
 /** 
  * @brief Destructor for OBMap
@@ -172,7 +172,7 @@ void displayMap(const obj *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocMap(obj *to_dealloc);
+void deallocMap(OBObjType *to_dealloc);
 
 /**
  * @brief Increases the size of the map to the next capacity within 
@@ -199,7 +199,7 @@ void addToHashTable(OBMap *m, OBDequeIterator *it);
  * @return Index in the hash_table where a result can be found or where a NULL
  * value resides if key was not found
  */
-obhash_t findKeyInHashTable(const OBMap *m, const obj *key);
+obhash_t findKeyInHashTable(const OBMap *m, const OBObjType *key);
 
 /**
  * @brief Generates an offset from the hash value to rectify collisions

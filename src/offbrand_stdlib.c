@@ -7,7 +7,7 @@
 #include "../include/offbrand.h"
 #include "../include/private/obj_Private.h"
 
-void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
+void initBase(OBObjType *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
               compare_fptr compare_funct, display_fptr display_funct,
               const char *classname){
 
@@ -36,7 +36,7 @@ void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
 }
 
 
-obj * release(obj *instance){
+OBObjType * release(OBObjType *instance){
 
   if(!instance) return NULL;
 
@@ -57,7 +57,7 @@ obj * release(obj *instance){
 }
 
 
-void retain(obj *instance){
+void retain(OBObjType *instance){
 
   if(!instance) return;
 
@@ -69,13 +69,13 @@ void retain(obj *instance){
 }
 
 
-uint32_t referenceCount(obj *instance){
+uint32_t referenceCount(OBObjType *instance){
   if(!instance) return 0;
   return (*instance)->references;
 }
 
 
-uint8_t objIsOfClass(const obj *a, const char *classname){
+uint8_t objIsOfClass(const OBObjType *a, const char *classname){
 
   if(!a){
     if(strcmp(classname, "NULL") == 0) return 1;
@@ -86,7 +86,7 @@ uint8_t objIsOfClass(const obj *a, const char *classname){
 }
 
 
-uint8_t sameClass(const obj *a, const obj *b){
+uint8_t sameClass(const OBObjType *a, const OBObjType *b){
   /* if both NULL, both are of the "NULL" class */
   if(!a && !b) return 1;
   else if(!a || !b) return 0;
@@ -94,7 +94,7 @@ uint8_t sameClass(const obj *a, const obj *b){
 }
 
 
-obhash_t hash(const obj *to_hash){
+obhash_t hash(const OBObjType *to_hash){
 
   obhash_t retval;
 
@@ -113,7 +113,7 @@ obhash_t hash(const obj *to_hash){
 }
 
 
-int8_t compare(const obj *a, const obj *b){
+int8_t compare(const OBObjType *a, const OBObjType *b){
 
   int8_t retval;
 
@@ -130,7 +130,7 @@ int8_t compare(const obj *a, const obj *b){
 }
 
 
-void display(const obj *to_print){
+void display(const OBObjType *to_print){
   if(!to_print){
     fprintf(stderr, "NULL value\n");
     return;

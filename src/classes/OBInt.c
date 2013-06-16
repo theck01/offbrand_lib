@@ -202,7 +202,7 @@ OBInt * addIntAndPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = addInts(a, wrapper);
-  release((obj *)wrapper);
+  release((OBObjType *)wrapper);
 
   return result;
 }
@@ -250,7 +250,7 @@ OBInt * subtractIntWithPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = subtractInts(a, wrapper);
-  release((obj *)wrapper);
+  release((OBObjType *)wrapper);
 
   return result;
 }
@@ -278,7 +278,7 @@ OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = multiplyInts(a, wrapper);
-  release((obj *)wrapper);
+  release((OBObjType *)wrapper);
 
   return result;
 }
@@ -295,7 +295,7 @@ OBInt * divideInts(const OBInt *a, const OBInt *b){
   seed = createIntWithInt(0);
   result = reduceUnsignedInts(a, b, seed, 1);
   result->sign = a->sign * b->sign;
-  release((obj *)seed);
+  release((OBObjType *)seed);
 
   return result;
 }
@@ -310,7 +310,7 @@ OBInt * divideIntWithPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = divideInts(a, wrapper);
-  release((obj *)wrapper);
+  release((OBObjType *)wrapper);
 
   return result;
 }
@@ -327,7 +327,7 @@ OBInt * modInts(const OBInt *a, const OBInt *b){
   seed = createIntWithInt(0);
   result = reduceUnsignedInts(a, b, seed, 0);
   result->sign = a->sign;
-  release((obj *)seed);
+  release((OBObjType *)seed);
 
   return result;
 }
@@ -342,7 +342,7 @@ OBInt * modIntWithPrim(const OBInt *a, int64_t b){
 
   wrapper = createIntWithInt(b);
   result = modInts(a, wrapper);
-  release((obj *)wrapper);
+  release((OBObjType *)wrapper);
 
   return result;
 }
@@ -359,7 +359,7 @@ OBInt * createDefaultInt(uint64_t num_digits){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocInt, &hashInt, &compareInts, 
+  initBase((OBObjType *)new_instance, &deallocInt, &hashInt, &compareInts, 
            &displayInt, classname);
 
   new_instance->sign = 1; /* positive by default */
@@ -374,7 +374,7 @@ OBInt * createDefaultInt(uint64_t num_digits){
 }
 
 
-obhash_t hashInt(const obj *to_hash){
+obhash_t hashInt(const OBObjType *to_hash){
 
   static int8_t init = 0;
   static obhash_t seed = 0;
@@ -410,7 +410,7 @@ obhash_t hashInt(const obj *to_hash){
 }
 
 
-int8_t compareInts(const obj *a, const obj *b){
+int8_t compareInts(const OBObjType *a, const OBObjType *b){
   
   int8_t magnitude_comp;
   const OBInt *comp_a = (OBInt *)a;  
@@ -460,7 +460,7 @@ int8_t compareMagnitudes(const OBInt *a, const OBInt *b){
 }
 
 
-void displayInt(const obj *to_print){
+void displayInt(const OBObjType *to_print){
 
   OBString *str;
   const OBInt *instance = (OBInt *)to_print;
@@ -471,13 +471,13 @@ void displayInt(const obj *to_print){
   str = stringFromInt(instance);
   fprintf(stderr, "Value:\n  %s\n", getCString(str));
   
-  release((obj *)str);
+  release((OBObjType *)str);
 
   return;
 }
 
 
-void deallocInt(obj *to_dealloc){
+void deallocInt(OBObjType *to_dealloc){
 
   /* cast generic obj to OBInt */
   OBInt *instance = (OBInt *)to_dealloc;
@@ -585,29 +585,29 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   z1b = addUnsignedInts(y1, y0);
   z1c = multiplyUnsignedInts(z1a, z1b);
 
-  release((obj *)x0);
-  release((obj *)x1);
-  release((obj *)y0);
-  release((obj *)y1);
-  release((obj *)z1a);
-  release((obj *)z1b);
+  release((OBObjType *)x0);
+  release((OBObjType *)x1);
+  release((OBObjType *)y0);
+  release((OBObjType *)y1);
+  release((OBObjType *)z1a);
+  release((OBObjType *)z1b);
 
   z1d = subtractUnsignedInts(z1c, z2);
-  release((obj *)z1c);
+  release((OBObjType *)z1c);
   z1 = subtractUnsignedInts(z1d, z0);
-  release((obj *)z1d);
+  release((OBObjType *)z1d);
 
   shiftInt(z2, 2*split_point);
   shiftInt(z1, split_point);
   partial_result = addUnsignedInts(z2, z1);
 
-  release((obj *) z2);
-  release((obj *) z1);
+  release((OBObjType *) z2);
+  release((OBObjType *) z1);
 
   result = addUnsignedInts(partial_result, z0);
   
-  release((obj *) partial_result);
-  release((obj *) z0);
+  release((OBObjType *) partial_result);
+  release((OBObjType *) z0);
 
   return result;
 }
@@ -638,7 +638,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
       result_val = a_val/b_val;
       partial = createIntWithInt(result_val);
       result = addInts(approx, partial);
-      release((obj *)partial);
+      release((OBObjType *)partial);
     }
     else{
       result_val = a_val%b_val;
@@ -700,8 +700,8 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   /* if approximation is too great then increment b_val to account for remaining
    * portion of b that is causing over approximation */
   if(comp_val == OB_GREATER_THAN){
-    release((obj *)partial);
-    release((obj *)product);
+    release((OBObjType *)partial);
+    release((OBObjType *)product);
 
     b_val++; 
     partial = createIntWithInt(a_val/b_val);
@@ -710,14 +710,14 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   }
 
   new_dividend = subtractUnsignedInts(a, product);
-  release((obj *)product);
+  release((OBObjType *)product);
   new_approx = addUnsignedInts(approx, partial);
-  release((obj *)partial);
+  release((OBObjType *)partial);
 
   result = reduceUnsignedInts(new_dividend, b, new_approx, quotient);
 
-  release((obj *)new_approx);
-  release((obj *)new_dividend);
+  release((OBObjType *)new_approx);
+  release((OBObjType *)new_dividend);
 
   return result;
 }

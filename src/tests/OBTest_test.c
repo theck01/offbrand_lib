@@ -20,10 +20,10 @@ int main(){
 
   /* retain object, reference count should be 4 */
   for(i=0; i<3; i++){
-    retain((obj *)test_obj);
+    retain((OBObjType *)test_obj);
   }
 
-  if(referenceCount((obj *)test_obj) != 4){
+  if(referenceCount((OBObjType *)test_obj) != 4){
     fprintf(stderr, "OBTest_test: reference count not incrememted correctly by "
                     "retain\nTEST FAILED\n");
     exit(1);
@@ -32,7 +32,7 @@ int main(){
   /* release object until test_obj is deallocated or until release has been
    * called more than 4 times */
   i=0;
-  while(++i < 5 && release((obj *)test_obj) != NULL){}
+  while(++i < 5 && release((OBObjType *)test_obj) != NULL){}
 
   if(i<4){
     fprintf(stderr, "OBTest_test: test_obj released before reference count "
@@ -45,19 +45,19 @@ int main(){
     exit(1);
 	}
 
-  if(!sameClass((obj *)a, (obj *)b)){
+  if(!sameClass((OBObjType *)a, (OBObjType *)b)){
     fprintf(stderr, "OBTest_test: Two OBTest objects were not of the same "
                     "class, TEST FAILED\n");
     exit(1);
   }
 
-  if(!objIsOfClass((obj *)a, "OBTest")){
+  if(!objIsOfClass((OBObjType *)a, "OBTest")){
     fprintf(stderr, "OBTest_test: An OBTest object was not considered to be an "
                     "OBTest object during check, TEST FAILED\n");
     exit(1);
   }
 
-  hash((obj *)a);
+  hash((OBObjType *)a);
 
   printf("OBTest_test: TEST PASSED\n");
   return 0;

@@ -40,7 +40,7 @@
  * function pointers, and form the basis for all generic container classes
  * and functions.
  */
-typedef struct OBObjStruct * obj;
+typedef struct OBObjStruct * OBObjType;
 
 /** 
  * reference count, tracks references to instances of Offbrand compatible
@@ -49,23 +49,23 @@ typedef struct OBObjStruct * obj;
 typedef uint32_t ref_count_t;
 
 /** function pointer to a deallocator for any OffBrand compatible class */
-typedef void (*dealloc_fptr)(obj *);
+typedef void (*dealloc_fptr)(OBObjType *);
 
 /** hash value, used returned from hash functions */
 typedef size_t obhash_t;
 
 /** function pointer to a hash function for any offbrand compatible class */
-typedef obhash_t (*hash_fptr)(const obj *);
+typedef obhash_t (*hash_fptr)(const OBObjType *);
 
 /**
  * function pointer to a comparision function that takes pointers to any two
  * Offbrand compatible classes and returns one of the comparision constants
  * listed in the constants section.
  */
-typedef int8_t (*compare_fptr)(const obj *, const obj *);
+typedef int8_t (*compare_fptr)(const OBObjType *, const OBObjType *);
 
 /** function pointer to a display function for any offbrand compatible class */
-typedef void (*display_fptr)(const obj *);
+typedef void (*display_fptr)(const OBObjType *);
 
 
 /* OFFBRAND STANDARD LIB */
@@ -86,7 +86,7 @@ typedef void (*display_fptr)(const obj *);
  * instances class
  * @param classname C string containing instances classname.
  */
-void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
+void initBase(OBObjType *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
               compare_fptr compare_funct, display_fptr display_funct,
               const char *classname);
 
@@ -100,7 +100,7 @@ void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
  * @retval NULL Reference count was decremented to 0 and deallocator was called
  * on instance
  */
-obj * release(obj *instance);
+OBObjType * release(OBObjType *instance);
 
 /**
  * @brief Increments the instances reference count by 1, indicating that the
@@ -108,7 +108,7 @@ obj * release(obj *instance);
  *
  * @param instance An instance of any Offbrand compatible class
  */
-void retain(obj *instance);
+void retain(OBObjType *instance);
 
 /**
  * @brief Returns the current reference count of the given instance.
@@ -116,7 +116,7 @@ void retain(obj *instance);
  * @param instance An instance of any Offbrand compatible class
  * @return An unsigned integer reference count
  */
-uint32_t referenceCount(obj *instance);
+uint32_t referenceCount(OBObjType *instance);
 
 /**
  * @brief Checks that the given obj is of the provided class
@@ -127,7 +127,7 @@ uint32_t referenceCount(obj *instance);
  * @retval 0 a is not an instance of classname
  * @retval non-zero a is an instance of classname
  */
-uint8_t objIsOfClass(const obj *a, const char *classname);
+uint8_t objIsOfClass(const OBObjType *a, const char *classname);
 
 /**
  * @brief Checks that two objs are of the same class
@@ -138,7 +138,7 @@ uint8_t objIsOfClass(const obj *a, const char *classname);
  * @retval 0 a and b are not of the same class
  * @retval non-zero a and b are of the same class
  */
-uint8_t sameClass(const obj *a, const obj *b);
+uint8_t sameClass(const OBObjType *a, const OBObjType *b);
 
 /**
  * @brief Computes the hash value of the instance using a class specific hash
@@ -147,7 +147,7 @@ uint8_t sameClass(const obj *a, const obj *b);
  * @param to_hash An instance of any Offbrand compatible class
  * @return Hash value
  */
-obhash_t hash(const obj *to_hash);
+obhash_t hash(const OBObjType *to_hash);
 
 /**
  * @brief comparision operator between any two Offbrand compatible classes
@@ -161,7 +161,7 @@ obhash_t hash(const obj *to_hash);
  * @retval OB_NOT_EQUAL obj a is not equal to b, but no other relationship can
  * be infered
  */
-int8_t compare(const obj *a, const obj *b);
+int8_t compare(const OBObjType *a, const OBObjType *b);
 
 /**
  * @brief display operation prints information about the instance of any
@@ -169,7 +169,7 @@ int8_t compare(const obj *a, const obj *b);
  *
  * @param to_print An instance of any Offbrand compativle class
  */
-void display(const obj *to_print);
+void display(const OBObjType *to_print);
 
 #endif
 

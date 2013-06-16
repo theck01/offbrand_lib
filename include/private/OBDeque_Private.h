@@ -16,8 +16,8 @@
  * node within a doubly linked list. Internally referenced only
  */
 typedef struct OBDequeNode_struct{
-  obj base; /**< obj containing reference count and class membership data */
-  obj *stored; /**< obj stored within the node in the deque */
+  OBObjType base; /**< obj containing reference count and class membership data */
+  OBObjType *stored; /**< obj stored within the node in the deque */
   struct OBDequeNode_struct *next; /**< Pointer to the next node in the list */
   struct OBDequeNode_struct *prev; /**< Pointer to the prev node in the list */
 } OBDequeNode;
@@ -32,7 +32,7 @@ typedef struct OBDequeNode_struct{
  * @return A new instance of OBDeque node storing to_store and with NULL
  * references to next and prev nodes
  */
-OBDequeNode * createDequeNode(obj *to_store);
+OBDequeNode * createDequeNode(OBObjType *to_store);
 
 /**
  * @brief Destructor for OBDequeNode
@@ -41,7 +41,7 @@ OBDequeNode * createDequeNode(obj *to_store);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDequeNode(obj *to_dealloc);
+void deallocDequeNode(OBObjType *to_dealloc);
 
 
 /* OBDequeIterator type */
@@ -51,7 +51,7 @@ void deallocDequeNode(obj *to_dealloc);
  * for an iterator of a doubly linked list.
  */
 struct OBDequeIterator_struct{
-  obj base; /**< obj containing reference count and class membership data */
+  OBObjType base; /**< obj containing reference count and class membership data */
   const OBDeque *deque; /**< OBDeque that the iterator is bound to */
   OBDequeNode *node; /**< The OBDequeNode that the iterator references within
                        deque */
@@ -78,7 +78,7 @@ struct OBDequeIterator_struct * createDequeIterator(const OBDeque *deque,
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDequeIterator(obj *to_dealloc);
+void deallocDequeIterator(OBObjType *to_dealloc);
 
 
 /* OBDeque Type */
@@ -88,7 +88,7 @@ void deallocDequeIterator(obj *to_dealloc);
  * doubly linked list
  */
 struct OBDeque_struct{
-  obj base; /**< obj containing reference count and class membership data */
+  OBObjType base; /**< obj containing reference count and class membership data */
   OBDequeNode *head; /**< pointer to the OBDequeNode at the head of the deque */
   OBDequeNode *tail; /**< pointer to the OBDequeNode at the tail of the deque */
   uint64_t length; /**< integer length of the deque (or number of elements
@@ -130,7 +130,7 @@ OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct);
  * @param to_hash An obj pointer to an instance of OBDeque
  * @return Key value (hash) for the given obj pointer to a OBDeque
  */
-obhash_t hashDeque(const obj *to_hash);
+obhash_t hashDeque(const OBObjType *to_hash);
 
 /**
  * @brief Compares two instances of OBDeque
@@ -142,14 +142,14 @@ obhash_t hashDeque(const obj *to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareDeques(const obj *a, const obj *b);
+int8_t compareDeques(const OBObjType *a, const OBObjType *b);
 
 /**
  * @brief Displays information about an OBDeque to stderr
  *
  * @param to_print A non-NULL obj pointer to type OBDeque
  */
-void displayDeque(const obj *to_print);
+void displayDeque(const OBObjType *to_print);
 
 /**
  * @brief Destructor for OBDeque
@@ -158,7 +158,7 @@ void displayDeque(const obj *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDeque(obj *to_dealloc);
+void deallocDeque(OBObjType *to_dealloc);
 
 
 #endif

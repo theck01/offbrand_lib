@@ -29,19 +29,19 @@ int main (){
   contents = getCString(str2);
   assert(strcmp(contents, "Hello") == 0);
 
-  release((obj *)str2);
+  release((OBObjType *)str2);
 
   str2 = copySubstring(str1, -15, 7);
   contents = getCString(str2);
   assert(strcmp(contents, "Hello") == 0);
 
-  release((obj *)str2);
+  release((OBObjType *)str2);
 
   str2 = copySubstring(str1, 0, stringLength(str1));
   contents = getCString(str2);
   assert(strcmp(contents, "Hello, World!") == 0);
 
-  release((obj *)str2);
+  release((OBObjType *)str2);
 
   null_str = copySubstring(str1, 20, 2);
   assert(stringLength(null_str) == 0);
@@ -59,19 +59,19 @@ int main (){
   contents = getCString(str3);
   assert(strcmp(contents, "Hello, World! And hello again!") == 0);
 
-  release((obj *)str2);
+  release((OBObjType *)str2);
 
   str2 = concatenateStrings(null_str, str1);
   contents = getCString(str2);
   assert(strcmp(contents, "Hello, World!") == 0);
 
   /* Test String Comparision */
-  assert(compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
-  assert(compare((obj *)str1, (obj *)str3) == OB_LESS_THAN);
-  assert(compare((obj *)str1, (obj *)null_str) == OB_GREATER_THAN);
+  assert(compare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
+  assert(compare((OBObjType *)str1, (OBObjType *)str3) == OB_LESS_THAN);
+  assert(compare((OBObjType *)str1, (OBObjType *)null_str) == OB_GREATER_THAN);
 
-  release((obj *)str2);
-  release((obj *)str3);
+  release((OBObjType *)str2);
+  release((OBObjType *)str3);
 
   /* Test String Splits */
   str2 = createString("Testing string split   into#!many");
@@ -81,7 +81,7 @@ int main (){
   assert(strcmp(getCString((OBString *)objAtVectorIndex(tokens, 3)),
                            "into#!many") == 0);
 
-  release((obj *)tokens);
+  release((OBObjType *)tokens);
 
   tokens = splitString(str2, "#!");
   assert(strcmp(getCString((OBString *)objAtVectorIndex(tokens, 0)),
@@ -89,7 +89,7 @@ int main (){
   assert(strcmp(getCString((OBString *)objAtVectorIndex(tokens, 1)), "many")
          == 0);
 
-  release((obj *)tokens);
+  release((OBObjType *)tokens);
 
   /* Test String Search */
 
@@ -100,15 +100,15 @@ int main (){
   /* Test Regex Match */
   str3 = matchStringRegex(str1, "[Hh]el{1,2}.");
   assert(strcmp(getCString(str3), "Hello") == 0);
-  release((obj *)str3);
+  release((OBObjType *)str3);
 
   str3 = matchStringRegex(str2, " *into[#!]{2,2}.*$");
   assert(strcmp(getCString(str3), "   into#!many") == 0);
 
-  release((obj *)str3);
-  release((obj *)str2);
-  release((obj *)str1);
-  release((obj *)null_str);
+  release((OBObjType *)str3);
+  release((OBObjType *)str2);
+  release((OBObjType *)str1);
+  release((OBObjType *)null_str);
     
   /* TESTS COMPLETE */
   printf("OBString_test: TESTS PASSED\n");

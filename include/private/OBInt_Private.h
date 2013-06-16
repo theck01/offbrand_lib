@@ -16,7 +16,7 @@
  * an instance of OBInt
  */
 struct OBInt_struct{
-  obj base; /**< obj containing reference count and class membership data */
+  OBObjType base; /**< obj containing reference count and class membership data */
   int8_t sign; /**< Sign of integer value, positive or negative */
   int8_t *digits; /**< Digit array, in little endian order */
   uint64_t num_digits; /**< Number of digits in the digit array */
@@ -40,7 +40,7 @@ OBInt * createDefaultInt(uint64_t num_digits);
  * @param to_hash An obj pointer to an instance of OBInt
  * @return Key value (hash) for the given obj pointer to a OBInt
  */
-obhash_t hashInt(const obj *to_hash);
+obhash_t hashInt(const OBObjType *to_hash);
 
 /**
  * @brief Compares two instances of OBInt
@@ -52,7 +52,7 @@ obhash_t hashInt(const obj *to_hash);
  * @retval OB_GREATER_THAN obj a is greater than b
  * @retval OB_EQUAL_TO obj a is equal to b
  */
-int8_t compareInts(const obj *a, const obj *b);
+int8_t compareInts(const OBObjType *a, const OBObjType *b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
 
@@ -74,7 +74,7 @@ int8_t compareMagnitudes(const OBInt *a, const OBInt *b);
  * @param to_print A non-NULL obj pointer to an instance of type
  * OBInt
  */
-void displayInt(const obj *to_print);
+void displayInt(const OBObjType *to_print);
 
 /** 
  * @brief Destructor for OBInt
@@ -83,7 +83,7 @@ void displayInt(const obj *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocInt(obj *to_dealloc);
+void deallocInt(OBObjType *to_dealloc);
 
 /**
  * @brief Creates a new integer as a result of addition between two OBInts

@@ -17,7 +17,7 @@ OBTest * createTest(uint32_t id){
   assert(new_instance != NULL);
 
   /*initialize reference counting base data*/
-  initBase((obj *)new_instance, &deallocTest, &hashTest, &compareTests,
+  initBase((OBObjType *)new_instance, &deallocTest, &hashTest, &compareTests,
            &displayTest, classname);
 
   new_instance->id = id;
@@ -32,12 +32,12 @@ uint32_t getTestID(OBTest *a){
 
 /* PRIVATE METHODS */
 
-obhash_t hashTest(const obj *to_hash){
+obhash_t hashTest(const OBObjType *to_hash){
   assert(to_hash);
   return (obhash_t)(((OBTest *)to_hash)->id);
 }
 
-int8_t compareTests(const obj *a, const obj *b){
+int8_t compareTests(const OBObjType *a, const OBObjType *b){
 
   assert(a != NULL);
   assert(b != NULL);
@@ -49,13 +49,13 @@ int8_t compareTests(const obj *a, const obj *b){
   return OB_LESS_THAN;
 }
 
-void displayTest(const obj *test){
+void displayTest(const OBObjType *test){
   assert(test != NULL);
   assert(objIsOfClass(test, "OBTest"));
   fprintf(stderr, "Test ID: %u\n", ((OBTest *)test)->id);
 }
 
-void deallocTest(obj *to_dealloc){
+void deallocTest(OBObjType *to_dealloc){
   assert(to_dealloc != NULL);
   return;
 }

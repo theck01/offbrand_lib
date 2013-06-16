@@ -129,7 +129,7 @@ uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it);
  * @param deque An instance of OBDeque
  * @param to_add Any instance of an Offbrand compatible class to add to deque
  */
-void addDequeHead(OBDeque *deque, obj *to_add);
+void addDequeHead(OBDeque *deque, OBObjType *to_add);
 
 /**
  * @brief Add an obj to the tail of an OBDeque
@@ -137,7 +137,7 @@ void addDequeHead(OBDeque *deque, obj *to_add);
  * @param deque An instance of OBDeque
  * @param to_add Any instance of an Offbrand compatible class to add to deque
  */
-void addDequeTail(OBDeque *deque, obj *to_add);
+void addDequeTail(OBDeque *deque, OBObjType *to_add);
 
 /**
  * @brief Add an obj to an OBDeque at position before the element specified by
@@ -147,7 +147,7 @@ void addDequeTail(OBDeque *deque, obj *to_add);
  * @param it An instance of OBDequeIterator bound to deque
  * @param to_add Any instance of an Offbrand compatible class to add to deque
  */
-void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add);
+void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, OBObjType *to_add);
 
 /**
  * @brief creates a new OBDeque that contains the ordered contents of two 
@@ -170,7 +170,7 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2);
  * @retval 0 to_find not found within deque
  * @retval 1 to_find found within the deque
  */
-uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find);
+uint8_t findObjInDeque(const OBDeque *deque, const OBObjType *to_find);
 
 /**
  * @brief Sorts an OBDeque from least-to-greatest or greatest-to-least using
@@ -206,7 +206,7 @@ void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct);
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the head of deque
  */
-obj * objAtDequeHead(const OBDeque *deque);
+OBObjType * objAtDequeHead(const OBDeque *deque);
 
 /**
  * @brief Peek at the obj stored at the tail of an OBDeque
@@ -216,7 +216,7 @@ obj * objAtDequeHead(const OBDeque *deque);
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the tail of deque
  */
-obj * objAtDequeTail(const OBDeque *deque);
+OBObjType * objAtDequeTail(const OBDeque *deque);
 
 /**
  * @brief Peek at the obj stored within a OBDeque stored at the position denoted
@@ -228,7 +228,7 @@ obj * objAtDequeTail(const OBDeque *deque);
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the tail of deque
  */
-obj * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it);
+OBObjType * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it);
 
 
 /**

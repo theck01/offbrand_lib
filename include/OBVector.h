@@ -65,7 +65,7 @@ uint32_t vectorLength(const OBVector *v);
  * @warning Positive indexing can occur past vector length, negative indexing
  * is limited to the range [-1, -(length of v)]
  */
-void storeAtVectorIndex(OBVector *v, obj *to_add, int64_t index);
+void storeAtVectorIndex(OBVector *v, OBObjType *to_add, int64_t index);
 
 /**
  * @brief Accesses the Offbrand compatile class instance stored an index in an
@@ -85,7 +85,7 @@ void storeAtVectorIndex(OBVector *v, obj *to_add, int64_t index);
  * @warning Positive indexing can occur past vector length, negative indexing
  * is limited to the range [-1, -(length of v)]
  */
-obj * objAtVectorIndex(const OBVector *v, int64_t index);
+OBObjType * objAtVectorIndex(const OBVector *v, int64_t index);
 
 /**
  * @brief Adds the contents of on vector to the end of another, concatenating
@@ -112,7 +112,7 @@ void catVectors(OBVector *destination, OBVector *to_append);
  * known to contain instances of may different classes else the function will
  * likely cause the program to be aborted
  */
-uint8_t findObjInVector(const OBVector *v, const obj *to_find);
+uint8_t findObjInVector(const OBVector *v, const OBObjType *to_find);
 
 /**
  * @brief Sorts an OBVector from least-to-greatest or greatest-to-least using

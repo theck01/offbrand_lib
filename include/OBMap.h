@@ -47,7 +47,7 @@ OBMap * copyMap(const OBMap *to_copy);
  * @details If the key is already contained within the m then the old value
  * stored at that key is replaced with the new value
  */
-void addToMap(OBMap *m, obj *key, obj *value);
+void addToMap(OBMap *m, OBObjType *key, OBObjType *value);
 
 /**
  * @brief Lookup the value stored at key in an OBMap
@@ -58,7 +58,7 @@ void addToMap(OBMap *m, obj *key, obj *value);
  * @retval NULL Key not found in OBMap instance or key bound to NULL value
  * @retval non-NULL Value found at key in OBMap
  */
-obj * lookupMapKey(const OBMap *m, const obj *key);
+OBObjType * lookupMapKey(const OBMap *m, const OBObjType *key);
 
 /**
  * @brief Removes a key-value pair from an OBMap
@@ -71,7 +71,7 @@ obj * lookupMapKey(const OBMap *m, const obj *key);
  * @warning This function runs in O(n), and is inherently more expensive
  * than an add or lookup.
  */
-void removeMapKey(OBMap *m, obj *key);
+void removeMapKey(OBMap *m, OBObjType *key);
 
 /**
  * @brief Rehashes all elements contained in an OBMap

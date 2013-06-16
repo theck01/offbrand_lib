@@ -142,12 +142,12 @@ OBVector * splitString(const OBString *s, const char *delim){
   while(marker < copy->str+copy->length){
     substring = createString(marker);
     marker += substring->length;
-    storeAtVectorIndex(tokens, (obj *)substring, substrs++);
-    release((obj *)substring); /* only tokens vector needs a reference */
+    storeAtVectorIndex(tokens, (OBObjType *)substring, substrs++);
+    release((OBObjType *)substring); /* only tokens vector needs a reference */
     while(*marker == '\0' && marker < copy->str + copy->length) marker++;
   }
 
-  release((obj *)copy);
+  release((OBObjType *)copy);
   return tokens;
 }
 
@@ -213,7 +213,7 @@ OBString * createDefaultString(void){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocString, &hashString, &compareStrings,
+  initBase((OBObjType *)new_instance, &deallocString, &hashString, &compareStrings,
            &displayString, classname);
 
   new_instance->str = malloc(sizeof(char));
@@ -225,7 +225,7 @@ OBString * createDefaultString(void){
 }
 
 
-obhash_t hashString(const obj *to_hash){
+obhash_t hashString(const OBObjType *to_hash){
   
   static int8_t init = 0;
   static obhash_t seed;
@@ -260,7 +260,7 @@ obhash_t hashString(const obj *to_hash){
 }
 
 
-int8_t compareStrings(const obj *a, const obj *b){
+int8_t compareStrings(const OBObjType *a, const OBObjType *b){
   
   uint32_t i;
   const OBString *comp_a = (OBString *)a;  
@@ -284,14 +284,14 @@ int8_t compareStrings(const obj *a, const obj *b){
 }
 
 
-void displayString(const obj *str){
+void displayString(const OBObjType *str){
   assert(str != NULL);
   assert(objIsOfClass(str, "OBString"));
   fprintf(stderr, "OBString with Contents:\n  %s\n", ((OBString *)str)->str);
 }
 
 
-void deallocString(obj *to_dealloc){
+void deallocString(OBObjType *to_dealloc){
 
   /* cast generic obj to OBString */
   OBString *instance = (OBString *)to_dealloc;
