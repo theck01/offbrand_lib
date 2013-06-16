@@ -69,7 +69,7 @@ void storeAtVectorIndex(OBVector *v, OBObjType *to_store, int64_t index){
 
   /* find vector length if modifying beyond known length */
   if(index+1 >= v->length) 
-    v->length = findValidPrecursorIndex(v->array, index) + 1;
+    v->length = findValidPrecursorIndex(v->array, (uint32_t)index) + 1;
 
   return;
 }
@@ -122,7 +122,7 @@ uint8_t findObjInVector(const OBVector *v, const OBObjType *to_find){
 
   for(i=0; i<v->length; i++){
     /* if the object exists in the vector */
-    if(compare(to_find, v->array[i]) == OB_EQUAL_TO){
+    if(OBCompare(to_find, v->array[i]) == OB_EQUAL_TO){
       return 1;
     }
   }
@@ -132,7 +132,7 @@ uint8_t findObjInVector(const OBVector *v, const OBObjType *to_find){
 
 
 void sortVector(OBVector *v, int8_t order){
-  sortVectorWithFunct(v, order, &compare);
+  sortVectorWithFunct(v, order, &OBCompare);
 }
 
 
@@ -223,7 +223,7 @@ void resizeVector(OBVector *v, uint32_t index){
 
   free(v->array);
   v->array = array;
-  v->capacity = new_cap;
+  v->capacity = (uint32_t)new_cap;
 
   return;
 }
@@ -297,7 +297,7 @@ OBObjType ** recursiveSortContents(OBObjType **to_sort, uint32_t size, int8_t or
 }
 
 
-obhash_t hashVector(const OBObjType *to_hash){
+obhash_t hashVector(OBTypeRef to_hash){
 
   static int8_t init = 0;
   static obhash_t seed;
@@ -307,7 +307,7 @@ obhash_t hashVector(const OBObjType *to_hash){
   OBVector *instance = (OBVector *)to_hash;
 
   assert(to_hash);
-  assert(objIsOfClass(to_hash, "OBVector"));
+  assert(OBObjIsOfClass(to_hash, "OBVector"));
 
   if(init == 0){
     srand(time(NULL));
@@ -317,7 +317,7 @@ obhash_t hashVector(const OBObjType *to_hash){
   
   value = seed;
   for(i=0; i<instance->length; i++){
-    value += hash(instance->array[i]);
+    value += OBHash(instance->array[i]);
     value += value << 10;
     value ^= value >> 6;
   }
@@ -330,7 +330,7 @@ obhash_t hashVector(const OBObjType *to_hash){
 }
 
 
-int8_t compareVectors(const OBObjType *a, const OBObjType *b){
+int8_t compareVectors(OBTypeRef a, OBTypeRef b){
 
   uint32_t i;
   const OBVector *comp_a = (OBVector *)a;
@@ -338,31 +338,31 @@ int8_t compareVectors(const OBObjType *a, const OBObjType *b){
 
   assert(a);
   assert(b);
-  assert(objIsOfClass(a, "OBVector"));
-  assert(objIsOfClass(b, "OBVector"));
+  assert(OBObjIsOfClass(a, "OBVector"));
+  assert(OBObjIsOfClass(b, "OBVector"));
 
   if(comp_a->length != comp_b->length) return OB_NOT_EQUAL;
 
   for(i=0; i<comp_a->length; i++)
-    if(compare(comp_a->array[i], comp_b->array[i]) != OB_EQUAL_TO)
+    if(OBCompare(comp_a->array[i], comp_b->array[i]) != OB_EQUAL_TO)
       return OB_NOT_EQUAL;
 
   return OB_EQUAL_TO;
 }
 
 
-void displayVector(const OBObjType *to_print){
+void displayVector(OBTypeRef to_print){
 
   uint32_t i;
   OBVector *v = (OBVector *)to_print;
 
   assert(to_print != NULL);
-  assert(objIsOfClass(to_print, "OBVector"));
+  assert(OBObjIsOfClass(to_print, "OBVector"));
   fprintf(stderr, "OBVector with %u elements\n", v->length);
 
   for(i=0; i<v->length; i++){
     fprintf(stderr, "[index: %u]\n", i);
-    display(v->array[i]);
+    OBDisplay(v->array[i]);
     fprintf(stderr, "\n");
   }
 
@@ -371,13 +371,13 @@ void displayVector(const OBObjType *to_print){
 
 
 
-void deallocVector(OBObjType *to_dealloc){
+void deallocVector(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBVector */
   OBVector *instance = (OBVector *)to_dealloc;
 
   assert(instance != NULL);
-  assert(objIsOfClass(to_dealloc, "OBVector"));
+  assert(OBObjIsOfClass(to_dealloc, "OBVector"));
 
   clearVector(instance); /* release all objs contained in vector */
   free(instance->array);

@@ -41,7 +41,7 @@ OBDequeNode * createDequeNode(OBObjType *to_store);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDequeNode(OBObjType *to_dealloc);
+void deallocDequeNode(OBTypeRef to_dealloc);
 
 
 /* OBDequeIterator type */
@@ -78,7 +78,7 @@ struct OBDequeIterator_struct * createDequeIterator(const OBDeque *deque,
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDequeIterator(OBObjType *to_dealloc);
+void deallocDequeIterator(OBTypeRef to_dealloc);
 
 
 /* OBDeque Type */
@@ -130,7 +130,7 @@ OBDeque recursiveSort(OBDeque deque, int8_t order, obcompare_fptr funct);
  * @param to_hash An obj pointer to an instance of OBDeque
  * @return Key value (hash) for the given obj pointer to a OBDeque
  */
-obhash_t hashDeque(const OBObjType *to_hash);
+obhash_t hashDeque(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBDeque
@@ -142,14 +142,14 @@ obhash_t hashDeque(const OBObjType *to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareDeques(const OBObjType *a, const OBObjType *b);
+int8_t compareDeques(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Displays information about an OBDeque to stderr
  *
  * @param to_print A non-NULL obj pointer to type OBDeque
  */
-void displayDeque(const OBObjType *to_print);
+void displayDeque(OBTypeRef to_print);
 
 /**
  * @brief Destructor for OBDeque
@@ -158,7 +158,7 @@ void displayDeque(const OBObjType *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDeque(OBObjType *to_dealloc);
+void deallocDeque(OBTypeRef to_dealloc);
 
 
 #endif

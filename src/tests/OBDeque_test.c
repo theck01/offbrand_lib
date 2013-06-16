@@ -91,14 +91,14 @@ int main (){
   test_deque_b = copyDeque(test_deque_a);
 
   assert(OBReferenceCount((OBObjType *)a) == 3);
-  assert(compare((OBObjType *)test_deque_a, (OBObjType *)test_deque_b) == OB_EQUAL_TO);
-  assert(hash((OBObjType *)test_deque_a) ==  hash((OBObjType *)test_deque_b));
+  assert(OBCompare((OBObjType *)test_deque_a, (OBObjType *)test_deque_b) == OB_EQUAL_TO);
+  assert(OBHash((OBObjType *)test_deque_a) ==  OBHash((OBObjType *)test_deque_b));
 
   sortDeque(test_deque_a, OB_LEAST_TO_GREATEST);
 
   assert(dequeLength(test_deque_a) == 5);
-  assert(compare((OBObjType *)test_deque_a, (OBObjType *)test_deque_b) == OB_NOT_EQUAL);
-  assert(hash((OBObjType *)test_deque_a) !=  hash((OBObjType *)test_deque_b));
+  assert(OBCompare((OBObjType *)test_deque_a, (OBObjType *)test_deque_b) == OB_NOT_EQUAL);
+  assert(OBHash((OBObjType *)test_deque_a) !=  OBHash((OBObjType *)test_deque_b));
 
   i = 1;
   head_it = getDequeHeadIt(test_deque_a);

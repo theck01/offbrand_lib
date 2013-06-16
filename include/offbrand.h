@@ -50,23 +50,23 @@ typedef const void * OBTypeRef;
 typedef uint32_t obref_count_t;
 
 /** function pointer to a deallocator for any OffBrand compatible class */
-typedef void (*obdealloc_fptr)(OBObjType *);
+typedef void (*obdealloc_fptr)(OBTypeRef);
 
 /** hash value, used returned from hash functions */
 typedef size_t obhash_t;
 
 /** function pointer to a hash function for any offbrand compatible class */
-typedef obhash_t (*obhash_fptr)(const OBObjType *);
+typedef obhash_t (*obhash_fptr)(OBTypeRef);
 
 /**
  * function pointer to a comparision function that takes pointers to any two
  * Offbrand compatible classes and returns one of the comparision constants
  * listed in the constants section.
  */
-typedef int8_t (*obcompare_fptr)(const OBObjType *, const OBObjType *);
+typedef int8_t (*obcompare_fptr)(OBTypeRef, OBTypeRef);
 
 /** function pointer to a display function for any offbrand compatible class */
-typedef void (*obdisplay_fptr)(const OBObjType *);
+typedef void (*obdisplay_fptr)(OBTypeRef);
 
 
 /* OFFBRAND STANDARD LIB */
@@ -134,7 +134,7 @@ obref_count_t OBReferenceCount(OBObjType *instance);
  * @retval 0 a is not an instance of classname
  * @retval non-zero a is an instance of classname
  */
-uint8_t objIsOfClass(const OBObjType *a, const char *classname);
+uint8_t OBObjIsOfClass(OBTypeRef a, const char *classname);
 
 /**
  * @brief Checks that two objs are of the same class
@@ -145,7 +145,7 @@ uint8_t objIsOfClass(const OBObjType *a, const char *classname);
  * @retval 0 a and b are not of the same class
  * @retval non-zero a and b are of the same class
  */
-uint8_t sameClass(const OBObjType *a, const OBObjType *b);
+uint8_t OBObjectsHaveSameClass(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Computes the hash value of the instance using a class specific hash
@@ -154,7 +154,7 @@ uint8_t sameClass(const OBObjType *a, const OBObjType *b);
  * @param to_hash An instance of any Offbrand compatible class
  * @return Hash value
  */
-obhash_t hash(const OBObjType *to_hash);
+obhash_t OBHash(OBTypeRef to_hash);
 
 /**
  * @brief comparision operator between any two Offbrand compatible classes
@@ -168,7 +168,7 @@ obhash_t hash(const OBObjType *to_hash);
  * @retval OB_NOT_EQUAL obj a is not equal to b, but no other relationship can
  * be infered
  */
-int8_t compare(const OBObjType *a, const OBObjType *b);
+int8_t OBCompare(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief display operation prints information about the instance of any
@@ -176,7 +176,7 @@ int8_t compare(const OBObjType *a, const OBObjType *b);
  *
  * @param to_print An instance of any Offbrand compativle class
  */
-void display(const OBObjType *to_print);
+void OBDisplay(OBTypeRef to_print);
 
 #endif
 

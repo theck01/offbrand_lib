@@ -242,7 +242,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const OBObjType *to_find){
   if(!it) return 0; /* obj is not in an empty list */
   
   do{
-    if(compare(objAtDequeIt(deque, it), to_find) == OB_EQUAL_TO){
+    if(OBCompare(objAtDequeIt(deque, it), to_find) == OB_EQUAL_TO){
       retval = 1;
       break;
     }
@@ -255,7 +255,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const OBObjType *to_find){
 
 
 void sortDeque(OBDeque *deque, int8_t order){
-  sortDequeWithFunct(deque, order, &compare);
+  sortDequeWithFunct(deque, order, &OBCompare);
 }
   
 
@@ -448,13 +448,13 @@ OBDequeNode * createDequeNode(OBObjType *to_store){
 }
 
 
-void deallocDequeNode(OBObjType *to_dealloc){
+void deallocDequeNode(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBDequeNode */
   OBDequeNode *instance = (OBDequeNode *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBDequeNode"));
+  assert(OBObjIsOfClass(to_dealloc, "OBDequeNode"));
 
   OBRelease(instance->stored);
 
@@ -487,13 +487,13 @@ OBDequeIterator * createDequeIterator(const OBDeque *deque, OBDequeNode *node){
 }
 
 
-void deallocDequeIterator(OBObjType *to_dealloc){
+void deallocDequeIterator(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBDequeNode */
   OBDequeIterator *instance = (OBDequeIterator *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBDequeIterator"));
+  assert(OBObjIsOfClass(to_dealloc, "OBDequeIterator"));
 
   OBRelease((OBObjType *)instance->node);
 
@@ -608,7 +608,7 @@ OBDeque recursiveSort(OBDeque deque, int8_t order, obcompare_fptr funct){
 }
 
 
-obhash_t hashDeque(const OBObjType *to_hash){
+obhash_t hashDeque(OBTypeRef to_hash){
 
   static int8_t init = 0;
   obhash_t value;
@@ -617,7 +617,7 @@ obhash_t hashDeque(const OBObjType *to_hash){
   OBDequeIterator *it;
 
   assert(to_hash);
-  assert(objIsOfClass(to_hash, "OBDeque"));
+  assert(OBObjIsOfClass(to_hash, "OBDeque"));
   
   if(init == 0){
     srand(time(NULL));
@@ -631,7 +631,7 @@ obhash_t hashDeque(const OBObjType *to_hash){
   if(!it) return value;
 
   do{
-    value += hash(objAtDequeIt(instance, it));
+    value += OBHash(objAtDequeIt(instance, it));
     value += value << 10;
     value ^= value >> 6;
   }while(iterateDequeNext(instance, it));
@@ -646,7 +646,7 @@ obhash_t hashDeque(const OBObjType *to_hash){
 }
 
 
-int8_t compareDeques(const OBObjType *a, const OBObjType *b){
+int8_t compareDeques(OBTypeRef a, OBTypeRef b){
 
   int8_t retval = OB_EQUAL_TO; /* assume equality and disprove if not */
   const OBDeque *comp_a = (OBDeque *)a;
@@ -655,8 +655,8 @@ int8_t compareDeques(const OBObjType *a, const OBObjType *b){
 
   assert(a);
   assert(b);
-  assert(objIsOfClass(a, "OBDeque"));
-  assert(objIsOfClass(b, "OBDeque"));
+  assert(OBObjIsOfClass(a, "OBDeque"));
+  assert(OBObjIsOfClass(b, "OBDeque"));
 
   if(comp_a->length != comp_b->length) return OB_NOT_EQUAL;
 
@@ -667,7 +667,7 @@ int8_t compareDeques(const OBObjType *a, const OBObjType *b){
 
   if(a_it && b_it){
     do{
-      if(compare(objAtDequeIt(comp_a, a_it), objAtDequeIt(comp_b, b_it)) !=
+      if(OBCompare(objAtDequeIt(comp_a, a_it), objAtDequeIt(comp_b, b_it)) !=
        OB_EQUAL_TO){
       retval = OB_NOT_EQUAL;
       break;
@@ -682,13 +682,13 @@ int8_t compareDeques(const OBObjType *a, const OBObjType *b){
   return retval;
 }
 
-void displayDeque(const OBObjType *to_print){
+void displayDeque(OBTypeRef to_print){
   
   OBDeque *d = (OBDeque *)to_print;
   OBDequeIterator *it;
 
   assert(to_print != NULL);
-  assert(objIsOfClass(to_print, "OBDeque"));
+  assert(OBObjIsOfClass(to_print, "OBDeque"));
   fprintf(stderr, "OBDeque with %llu elements\n"
                   "  [deque head]", dequeLength(d));
 
@@ -697,7 +697,7 @@ void displayDeque(const OBObjType *to_print){
   if(!it) return;
 
   do{
-    display(objAtDequeIt(d, it));
+    OBDisplay(objAtDequeIt(d, it));
     fprintf(stderr, "\n");
   }while(iterateDequeNext(d, it));
 
@@ -709,13 +709,13 @@ void displayDeque(const OBObjType *to_print){
 }
 
 
-void deallocDeque(OBObjType *to_dealloc){
+void deallocDeque(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBDeque */
   OBDeque *instance = (OBDeque *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBDeque"));
+  assert(OBObjIsOfClass(to_dealloc, "OBDeque"));
 
   clearDeque(instance);
 

@@ -32,30 +32,30 @@ uint32_t getTestID(OBTest *a){
 
 /* PRIVATE METHODS */
 
-obhash_t hashTest(const OBObjType *to_hash){
+obhash_t hashTest(OBTypeRef to_hash){
   assert(to_hash);
   return (obhash_t)(((OBTest *)to_hash)->id);
 }
 
-int8_t compareTests(const OBObjType *a, const OBObjType *b){
+int8_t compareTests(OBTypeRef a, OBTypeRef b){
 
   assert(a != NULL);
   assert(b != NULL);
-  assert(objIsOfClass(a, "OBTest"));
-  assert(objIsOfClass(b, "OBTest"));
+  assert(OBObjIsOfClass(a, "OBTest"));
+  assert(OBObjIsOfClass(b, "OBTest"));
 
   if(((OBTest *)a)->id >((OBTest *)b)->id) return OB_GREATER_THAN;
   if(((OBTest *)a)->id == ((OBTest *)b)->id) return OB_EQUAL_TO;
   return OB_LESS_THAN;
 }
 
-void displayTest(const OBObjType *test){
+void displayTest(OBTypeRef test){
   assert(test != NULL);
-  assert(objIsOfClass(test, "OBTest"));
+  assert(OBObjIsOfClass(test, "OBTest"));
   fprintf(stderr, "Test ID: %u\n", ((OBTest *)test)->id);
 }
 
-void deallocTest(OBObjType *to_dealloc){
+void deallocTest(OBTypeRef to_dealloc){
   assert(to_dealloc != NULL);
   return;
 }

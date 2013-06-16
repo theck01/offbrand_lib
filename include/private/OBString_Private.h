@@ -18,7 +18,7 @@
 struct OBString_struct{
   OBObjType base; /**< obj containing reference count and class membership data */
   char *str; /**< encapsulated NUL terminated C string */
-  uint32_t length; /**< integer tracking str length */
+  size_t length; /**< integer tracking str length */
 };
 
 
@@ -37,7 +37,7 @@ OBString * createDefaultString(void);
  * @param to_hash An obj pointer to an instance of OBString
  * @return Key value (hash) for the given obj pointer to a OBString
  */
-obhash_t hashString(const OBObjType *to_hash);
+obhash_t hashString(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBString
@@ -49,14 +49,14 @@ obhash_t hashString(const OBObjType *to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareStrings(const OBObjType *a, const OBObjType *b);
+int8_t compareStrings(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Display function for an instance of OBString
  *
  * @param str A non-NULL obj pointer to type OBString
  */
-void displayString(const OBObjType *str);
+void displayString(OBTypeRef str);
 
 /** 
  * @brief Destructor for OBString
@@ -65,7 +65,7 @@ void displayString(const OBObjType *str);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocString(OBObjType *to_dealloc);
+void deallocString(OBTypeRef to_dealloc);
 
 /* ADDITIONAL PRIVATE METHOD DECLARATIONS HERE*/
 

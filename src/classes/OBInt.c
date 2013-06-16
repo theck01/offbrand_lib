@@ -67,7 +67,7 @@ OBInt * intFromString(const OBString *numstr){
   int8_t offset, sign;
 
   int32_t num;
-  uint32_t strlen, i;
+  size_t strlen, i;
   uint64_t digits;
   OBInt *instance;
 
@@ -374,7 +374,7 @@ OBInt * createDefaultInt(uint64_t num_digits){
 }
 
 
-obhash_t hashInt(const OBObjType *to_hash){
+obhash_t hashInt(OBTypeRef to_hash){
 
   static int8_t init = 0;
   static obhash_t seed = 0;
@@ -384,7 +384,7 @@ obhash_t hashInt(const OBObjType *to_hash){
   OBInt *instance = (OBInt *)to_hash;
 
   assert(to_hash);
-  assert(objIsOfClass(to_hash, "OBInt"));
+  assert(OBObjIsOfClass(to_hash, "OBInt"));
 
   if(init == 0){
     srand(time(NULL));
@@ -410,7 +410,7 @@ obhash_t hashInt(const OBObjType *to_hash){
 }
 
 
-int8_t compareInts(const OBObjType *a, const OBObjType *b){
+int8_t compareInts(OBTypeRef a, OBTypeRef b){
   
   int8_t magnitude_comp;
   const OBInt *comp_a = (OBInt *)a;  
@@ -418,8 +418,8 @@ int8_t compareInts(const OBObjType *a, const OBObjType *b){
 
   assert(a);
   assert(b);
-  assert(objIsOfClass(a, "OBInt"));
-  assert(objIsOfClass(b, "OBInt"));
+  assert(OBObjIsOfClass(a, "OBInt"));
+  assert(OBObjIsOfClass(b, "OBInt"));
 
   /* if signs are equal magnitude comparision is required */
   if(comp_a->sign == comp_b->sign){
@@ -460,13 +460,13 @@ int8_t compareMagnitudes(const OBInt *a, const OBInt *b){
 }
 
 
-void displayInt(const OBObjType *to_print){
+void displayInt(OBTypeRef to_print){
 
   OBString *str;
   const OBInt *instance = (OBInt *)to_print;
   
   assert(to_print);
-  assert(objIsOfClass(to_print, "OBInt"));
+  assert(OBObjIsOfClass(to_print, "OBInt"));
 
   str = stringFromInt(instance);
   fprintf(stderr, "Value:\n  %s\n", getCString(str));
@@ -477,13 +477,13 @@ void displayInt(const OBObjType *to_print){
 }
 
 
-void deallocInt(OBObjType *to_dealloc){
+void deallocInt(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBInt */
   OBInt *instance = (OBInt *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBInt"));
+  assert(OBObjIsOfClass(to_dealloc, "OBInt"));
 
   free(instance->digits);
 

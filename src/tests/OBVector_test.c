@@ -149,8 +149,8 @@ int main(){
   
   copy_vec = copyVector(main_vec);
 
-  assert(compare((OBObjType *)copy_vec, (OBObjType *)main_vec) == OB_EQUAL_TO);
-  assert(hash((OBObjType *)copy_vec) == hash((OBObjType *)main_vec));
+  assert(OBCompare((OBObjType *)copy_vec, (OBObjType *)main_vec) == OB_EQUAL_TO);
+  assert(OBHash((OBObjType *)copy_vec) == OBHash((OBObjType *)main_vec));
 
   OBRelease((OBObjType *)singleton); /* release singleton once so it is only referenced
                                 by containing vectors */
@@ -169,8 +169,8 @@ int main(){
 
   storeAtVectorIndex(main_vec, NULL, 3);
 
-  assert(compare((OBObjType *)copy_vec, (OBObjType *)main_vec) == OB_NOT_EQUAL);
-  assert(hash((OBObjType *)copy_vec) != hash((OBObjType *)main_vec));
+  assert(OBCompare((OBObjType *)copy_vec, (OBObjType *)main_vec) == OB_NOT_EQUAL);
+  assert(OBHash((OBObjType *)copy_vec) != OBHash((OBObjType *)main_vec));
 
   if(findObjInVector(main_vec, (OBObjType *)tmp)){
     fprintf(stderr, "OBVector_test: Item was not removed properly from vector"

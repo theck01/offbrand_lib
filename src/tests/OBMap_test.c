@@ -34,7 +34,7 @@ int main (){
   g = createTest(1+3*MAP_CAPACITIES[0]);
   h = createTest(1+4*MAP_CAPACITIES[0]);
 
-  assert(hash((OBObjType *)a)%MAP_CAPACITIES[0] == hash((OBObjType *)e)%MAP_CAPACITIES[0]);
+  assert(OBHash((OBObjType *)a)%MAP_CAPACITIES[0] == OBHash((OBObjType *)e)%MAP_CAPACITIES[0]);
 
   assert(lookupMapKey(test_map, (OBObjType *)a) == NULL);
 
@@ -42,7 +42,7 @@ int main (){
   test = (OBTest *)lookupMapKey(test_map, (OBObjType *)a);
 
   assert(test);
-  assert(compare((OBObjType *)b, (OBObjType *)test) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)b, (OBObjType *)test) == OB_EQUAL_TO);
   assert(OBReferenceCount((OBObjType *)test) > 1);
 
   addToMap(test_map, (OBObjType *)e, (OBObjType *)c);
@@ -51,13 +51,13 @@ int main (){
   addToMap(test_map, (OBObjType *)h, (OBObjType *)f);
   test = (OBTest *)lookupMapKey(test_map, (OBObjType *)a);
 
-  assert(compare((OBObjType *)b, (OBObjType *)test) == OB_EQUAL_TO);
-  assert(compare((OBObjType *)c, (OBObjType *)test) != OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)b, (OBObjType *)test) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)c, (OBObjType *)test) != OB_EQUAL_TO);
 
   test = (OBTest *)lookupMapKey(test_map, (OBObjType *)e);
   
-  assert(compare((OBObjType *)c, (OBObjType *)test) == OB_EQUAL_TO);
-  assert(compare((OBObjType *)b, (OBObjType *)test) != OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)c, (OBObjType *)test) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)b, (OBObjType *)test) != OB_EQUAL_TO);
   
   test = (OBTest *)lookupMapKey(test_map, (OBObjType *)a);
   addToMap(test_map, (OBObjType *)a, NULL); /* remove binding of a -> b */
@@ -66,30 +66,30 @@ int main (){
   assert(OBReferenceCount((OBObjType *)test) == 1);
   
   test = (OBTest *)lookupMapKey(test_map, (OBObjType *)h);
-  assert(compare((OBObjType *)f, (OBObjType *)test) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)f, (OBObjType *)test) == OB_EQUAL_TO);
 
   map_copy = copyMap(test_map);
   addToMap(test_map, (OBObjType *)e, NULL); /* remove binding of e -> c */
   test = (OBTest *)lookupMapKey(map_copy, (OBObjType *)e);
 
-  assert(compare((OBObjType *)test, (OBObjType *)c) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)test, (OBObjType *)c) == OB_EQUAL_TO);
   
   removeMapKey(test_map, (OBObjType *)e);
   test = (OBTest *)lookupMapKey(map_copy, (OBObjType *)e);
 
-  assert(compare((OBObjType *)test, (OBObjType *)c) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)test, (OBObjType *)c) == OB_EQUAL_TO);
 
   test = (OBTest *)lookupMapKey(test_map, (OBObjType *)e);
 
   assert(test == NULL);
 
-  assert(hash((OBObjType *)test_map) != hash((OBObjType *)map_copy));
-  assert(compare((OBObjType *)test_map, (OBObjType *)map_copy) != OB_EQUAL_TO);
+  assert(OBHash((OBObjType *)test_map) != OBHash((OBObjType *)map_copy));
+  assert(OBCompare((OBObjType *)test_map, (OBObjType *)map_copy) != OB_EQUAL_TO);
 
   addToMap(test_map, (OBObjType *)e, (OBObjType *)c);
 
-  assert(hash((OBObjType *)test_map) == hash((OBObjType *)map_copy));
-  assert(compare((OBObjType *)test_map, (OBObjType *)map_copy) == OB_EQUAL_TO);
+  assert(OBHash((OBObjType *)test_map) == OBHash((OBObjType *)map_copy));
+  assert(OBCompare((OBObjType *)test_map, (OBObjType *)map_copy) == OB_EQUAL_TO);
 
   clearMap(map_copy);
 
@@ -103,7 +103,7 @@ int main (){
   }
 
   for(i=0; i<ARRAY_SIZE; i++)
-    assert(compare((OBObjType *) test_array[i], 
+    assert(OBCompare((OBObjType *) test_array[i], 
                    lookupMapKey(test_map, (OBObjType *)test_array[i])) ==OB_EQUAL_TO);
 
   OBRelease((OBObjType *)a);

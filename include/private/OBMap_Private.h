@@ -83,14 +83,14 @@ void replaceMapPairValue(OBMapPair *mp, OBObjType *value);
  *
  * @return Key value (hash) for the given obj pointer to a OBMapPair
  */
-obhash_t hashMapPair(const OBObjType *to_hash);
+obhash_t hashMapPair(OBTypeRef to_hash);
 
 /**
  * @brief Displays an instance of OBMapPair to stderr
  *
  * @param to_print A non-NULL obj pointer to type OBMapPair
  */
-void displayMapPair(const OBObjType *to_print);
+void displayMapPair(OBTypeRef to_print);
 
 /** 
  * @brief Destructor for OBMapPair
@@ -101,7 +101,7 @@ void displayMapPair(const OBObjType *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocMapPair(OBObjType *to_dealloc); 
+void deallocMapPair(OBTypeRef to_dealloc);
 
 
 /* OBMap DATA */
@@ -140,7 +140,7 @@ OBMap * createDefaultMap(void);
  *
  * @return Key value (hash) for the given obj pointer to a OBMap
  */
-obhash_t hashMap(const OBObjType *to_hash);
+obhash_t hashMap(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBMap
@@ -152,7 +152,7 @@ obhash_t hashMap(const OBObjType *to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareMaps(const OBObjType *a, const OBObjType *b);
+int8_t compareMaps(OBTypeRef a, OBTypeRef b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
 
@@ -161,7 +161,7 @@ int8_t compareMaps(const OBObjType *a, const OBObjType *b);
  *
  * @param to_print A non-NULL obj pointer to type OBMap
  */
-void displayMap(const OBObjType *to_print);
+void displayMap(OBTypeRef to_print);
 
 /** 
  * @brief Destructor for OBMap
@@ -172,7 +172,7 @@ void displayMap(const OBObjType *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocMap(OBObjType *to_dealloc);
+void deallocMap(OBTypeRef to_dealloc);
 
 /**
  * @brief Increases the size of the map to the next capacity within 

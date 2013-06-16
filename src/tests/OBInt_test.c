@@ -34,7 +34,7 @@ int main (){
 	a = intFromString(str1);
 	assert(intValue(a) == 12345);
 	str2 = stringFromInt(a);
-	assert(compare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
+	assert(OBCompare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
 	
 	OBRelease((OBObjType *)a);
 	OBRelease((OBObjType *)str1);
@@ -46,7 +46,7 @@ int main (){
 	assert(intValue(a) == -12345);
 	str1 = createString("-12345");
 	str2 = stringFromInt(a);
-	assert(compare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
+	assert(OBCompare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
 
 	OBRelease((OBObjType *)a);
 	OBRelease((OBObjType *)str1);
@@ -55,7 +55,7 @@ int main (){
 	/* test copy method */
 	a = createIntWithInt(918394);
 	b = copyInt(a);
-	assert(compare((OBObjType *)a, (OBObjType *)b) == OB_EQUAL_TO);
+	assert(OBCompare((OBObjType *)a, (OBObjType *)b) == OB_EQUAL_TO);
 	assert(a != b);
 	assert(a->digits != b->digits);
 

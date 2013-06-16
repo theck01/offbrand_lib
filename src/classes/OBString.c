@@ -31,7 +31,7 @@ OBString *createString(const char *str){
 }
 
 
-OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
+OBString * copySubstring(const OBString *s, int64_t start, size_t length){
   
   OBString *instance;
 
@@ -53,7 +53,7 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
   if(start+length > s->length) length = s->length - start;
 
   /* if specified range contains no characters return an "empty" string */
-  if(start > s->length || start+length < 0 || s->length == 0 || length <= 0)
+  if(start > s->length || start+(long)length < 0 || s->length == 0 || length <= 0)
     return instance;
 
   instance->length = length;
@@ -67,7 +67,7 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
 }
 
 
-uint32_t stringLength(const OBString *s){
+size_t stringLength(const OBString *s){
   assert(s);  
   return s->length;
 }
@@ -116,8 +116,8 @@ OBVector * splitString(const OBString *s, const char *delim){
   OBVector *tokens;
   OBString *copy, *substring;
   char *marker;
-  uint32_t i, delim_len, substrs;
-
+  uint32_t i, substrs;
+  size_t delim_len;
 
   assert(s);
   assert(delim);
@@ -154,7 +154,7 @@ OBVector * splitString(const OBString *s, const char *delim){
 
 uint8_t findSubstring(const OBString *s, const char *substring){
 
-  uint32_t sublen;
+  size_t sublen;
   char *marker;
 
   assert(s);
@@ -225,7 +225,7 @@ OBString * createDefaultString(void){
 }
 
 
-obhash_t hashString(const OBObjType *to_hash){
+obhash_t hashString(OBTypeRef to_hash){
   
   static int8_t init = 0;
   static obhash_t seed;
@@ -235,7 +235,7 @@ obhash_t hashString(const OBObjType *to_hash){
   char *pos;
 
   assert(to_hash);
-  assert(objIsOfClass(to_hash, "OBString"));
+  assert(OBObjIsOfClass(to_hash, "OBString"));
 
   if(init == 0){
     srand(time(NULL));
@@ -260,7 +260,7 @@ obhash_t hashString(const OBObjType *to_hash){
 }
 
 
-int8_t compareStrings(const OBObjType *a, const OBObjType *b){
+int8_t compareStrings(OBTypeRef a, OBTypeRef b){
   
   uint32_t i;
   const OBString *comp_a = (OBString *)a;  
@@ -268,8 +268,8 @@ int8_t compareStrings(const OBObjType *a, const OBObjType *b){
 
   assert(a);
   assert(b);
-  assert(objIsOfClass(a, "OBString"));
-  assert(objIsOfClass(b, "OBString"));
+  assert(OBObjIsOfClass(a, "OBString"));
+  assert(OBObjIsOfClass(b, "OBString"));
 
   /* compare string contents where both have characters */
   for(i=0; i<comp_a->length && i<comp_b->length; i++){
@@ -284,20 +284,20 @@ int8_t compareStrings(const OBObjType *a, const OBObjType *b){
 }
 
 
-void displayString(const OBObjType *str){
+void displayString(OBTypeRef str){
   assert(str != NULL);
-  assert(objIsOfClass(str, "OBString"));
+  assert(OBObjIsOfClass(str, "OBString"));
   fprintf(stderr, "OBString with Contents:\n  %s\n", ((OBString *)str)->str);
 }
 
 
-void deallocString(OBObjType *to_dealloc){
+void deallocString(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBString */
   OBString *instance = (OBString *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBString"));
+  assert(OBObjIsOfClass(to_dealloc, "OBString"));
 
   if(instance->str) free(instance->str);
 

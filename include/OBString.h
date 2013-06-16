@@ -51,7 +51,7 @@ OBString * createString(const char *str);
  * bounds then any extension beyond the bounds will return only existing
  * characters in the range, an empty string if none exist
  */
-OBString * copySubstring(const OBString *s, int64_t start, uint32_t length);
+OBString * copySubstring(const OBString *s, int64_t start, size_t length);
 
 /**
  * @brief Gets the length of an OBString
@@ -60,7 +60,7 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length);
  *
  * @return Integer length of the OBString instance
  */
-uint32_t stringLength(const OBString *s);
+size_t stringLength(const OBString *s);
 
 /**
  * @brief returns the character at the specified index

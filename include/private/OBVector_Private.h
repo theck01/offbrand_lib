@@ -66,7 +66,7 @@ OBObjType ** recursiveSortContents(OBObjType **to_sort, uint32_t size, int8_t or
  * @param to_hash An obj pointer to an instance of OBVector
  * @return Key value (hash) for the given obj pointer to an OBVector
  */
-obhash_t hashVector(const OBObjType *to_hash);
+obhash_t hashVector(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBVector
@@ -77,14 +77,14 @@ obhash_t hashVector(const OBObjType *to_hash);
  * @retval OB_NOT_EQUAL a does not equal b
  * @retval OB_EQUAL_TO a equals b
  */
-int8_t compareVectors(const OBObjType *a, const OBObjType *b);
+int8_t compareVectors(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Display function for an instance of OBString
  *
  * @param to_print A non-NULL obj pointer to type OBString
  */
-void displayVector(const OBObjType *to_print);
+void displayVector(OBTypeRef to_print);
 
 /** 
  * @brief Destructor for OBVector
@@ -93,7 +93,7 @@ void displayVector(const OBObjType *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocVector(OBObjType *to_dealloc);
+void deallocVector(OBTypeRef to_dealloc);
 
 /* PRIVATE UTILITY METHODS */
 

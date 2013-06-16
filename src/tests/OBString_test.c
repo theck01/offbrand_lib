@@ -66,9 +66,9 @@ int main (){
   assert(strcmp(contents, "Hello, World!") == 0);
 
   /* Test String Comparision */
-  assert(compare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
-  assert(compare((OBObjType *)str1, (OBObjType *)str3) == OB_LESS_THAN);
-  assert(compare((OBObjType *)str1, (OBObjType *)null_str) == OB_GREATER_THAN);
+  assert(OBCompare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)str1, (OBObjType *)str3) == OB_LESS_THAN);
+  assert(OBCompare((OBObjType *)str1, (OBObjType *)null_str) == OB_GREATER_THAN);
 
   OBRelease((OBObjType *)str2);
   OBRelease((OBObjType *)str3);

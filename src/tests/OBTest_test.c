@@ -45,19 +45,19 @@ int main(){
     exit(1);
 	}
 
-  if(!sameClass((OBObjType *)a, (OBObjType *)b)){
+  if(!OBObjectsHaveSameClass((OBObjType *)a, (OBObjType *)b)){
     fprintf(stderr, "OBTest_test: Two OBTest objects were not of the same "
                     "class, TEST FAILED\n");
     exit(1);
   }
 
-  if(!objIsOfClass((OBObjType *)a, "OBTest")){
+  if(!OBObjIsOfClass((OBObjType *)a, "OBTest")){
     fprintf(stderr, "OBTest_test: An OBTest object was not considered to be an "
                     "OBTest object during check, TEST FAILED\n");
     exit(1);
   }
 
-  hash((OBObjType *)a);
+  OBHash((OBObjType *)a);
 
   printf("OBTest_test: TEST PASSED\n");
   return 0;
