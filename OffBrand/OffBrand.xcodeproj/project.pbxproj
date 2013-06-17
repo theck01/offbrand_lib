@@ -14,9 +14,7 @@
 		BC3693A4176D34D700EBE188 /* Term_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369351176D34D700EBE188 /* Term_Private.h */; };
 		BC3693A5176D34D700EBE188 /* RTable.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369352176D34D700EBE188 /* RTable.h */; };
 		BC3693A6176D34D700EBE188 /* Term.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369353176D34D700EBE188 /* Term.h */; };
-		BC3693A7176D34D700EBE188 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = BC369354176D34D700EBE188 /* Makefile */; };
 		BC3693A8176D34D700EBE188 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = BC369357176D34D700EBE188 /* Makefile */; };
-		BC3693B1176D34D700EBE188 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = BC369367176D34D700EBE188 /* Makefile */; };
 		BC3693B2176D34D700EBE188 /* OBDeque.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369374176D34D700EBE188 /* OBDeque.h */; };
 		BC3693B3176D34D700EBE188 /* OBInt.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369375176D34D700EBE188 /* OBInt.h */; };
 		BC3693B4176D34D700EBE188 /* OBMap.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369376176D34D700EBE188 /* OBMap.h */; };
@@ -31,7 +29,6 @@
 		BC3693BD176D34D700EBE188 /* OBString_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369380176D34D700EBE188 /* OBString_Private.h */; };
 		BC3693BE176D34D700EBE188 /* OBTest_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369381176D34D700EBE188 /* OBTest_Private.h */; };
 		BC3693BF176D34D700EBE188 /* OBVector_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369382176D34D700EBE188 /* OBVector_Private.h */; };
-		BC3693C0176D34D700EBE188 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = BC369384176D34D700EBE188 /* Makefile */; };
 		BC3693C1176D34D700EBE188 /* PrivateHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36938C176D34D700EBE188 /* PrivateHeader.h */; };
 		BC3693C2176D34D700EBE188 /* PublicHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36938D176D34D700EBE188 /* PublicHeader.h */; };
 		BC3693C5176D34D700EBE188 /* OBDeque.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369392176D34D700EBE188 /* OBDeque.c */; };
@@ -119,6 +116,10 @@
 		BC36939D176D34D700EBE188 /* OBString_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBString_test.c; sourceTree = "<group>"; };
 		BC36939E176D34D700EBE188 /* OBTest_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBTest_test.c; sourceTree = "<group>"; };
 		BC36939F176D34D700EBE188 /* OBVector_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBVector_test.c; sourceTree = "<group>"; };
+		BC7978E9176E12290073143E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		BC7978EC176E12290073143E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		BC7978ED176E12290073143E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		BC7978EE176E12290073143E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +144,7 @@
 				BC369385176D34D700EBE188 /* README.txt */,
 				BC369386176D34D700EBE188 /* scripts */,
 				BC369390176D34D700EBE188 /* src */,
+				BC7978E6176E12290073143E /* Frameworks */,
 				BC369343176D34AA00EBE188 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -372,6 +374,25 @@
 			path = tests;
 			sourceTree = "<group>";
 		};
+		BC7978E6176E12290073143E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC7978E9176E12290073143E /* Cocoa.framework */,
+				BC7978EB176E12290073143E /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BC7978EB176E12290073143E /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC7978EC176E12290073143E /* AppKit.framework */,
+				BC7978ED176E12290073143E /* CoreData.framework */,
+				BC7978EE176E12290073143E /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -456,10 +477,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC3693A7176D34D700EBE188 /* Makefile in Sources */,
 				BC3693A8176D34D700EBE188 /* Makefile in Sources */,
-				BC3693B1176D34D700EBE188 /* Makefile in Sources */,
-				BC3693C0176D34D700EBE188 /* Makefile in Sources */,
 				BC3693C5176D34D700EBE188 /* OBDeque.c in Sources */,
 				BC3693C6176D34D700EBE188 /* OBInt.c in Sources */,
 				BC3693C7176D34D700EBE188 /* OBMap.c in Sources */,
@@ -573,6 +591,7 @@
 				BC369348176D34AA00EBE188 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

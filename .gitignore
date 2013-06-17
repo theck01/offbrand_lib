@@ -13,3 +13,5 @@ OffBrand/.DS_Store
 *.xcsettings
 
 *.xcbkptlist
+
+.DS_Store
