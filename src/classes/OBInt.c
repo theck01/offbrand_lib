@@ -12,7 +12,7 @@ uint8_t int64_max_digits = 17;
 
 /* PUBLIC METHODS */
 
-OBInt * createIntWithInt(int64_t num){
+OBInt * OBIntCreate(int64_t num){
   
   uint64_t i, ds;
   int64_t partial_num;
@@ -44,7 +44,7 @@ OBInt * createIntWithInt(int64_t num){
 }
 
 
-int64_t intValue(const OBInt *a){
+int64_t OBIntGetIntValue(const OBInt *a){
 
   uint64_t i, most_sig;
   int64_t val;
@@ -62,7 +62,7 @@ int64_t intValue(const OBInt *a){
 }
 
 
-OBInt * intFromString(const OBString *numstr){ 
+OBInt * OBIntCreateFromString(const OBString *numstr){ 
 
   int8_t offset, sign;
 
@@ -95,13 +95,13 @@ OBInt * intFromString(const OBString *numstr){
   }
 
   /* zero is defined to be positive */
-  if(isIntZero(instance)) instance->sign = 1;
+  if(OBIntIsZero(instance)) instance->sign = 1;
 
   return instance;
 }
 
 
-OBString * stringFromInt(const OBInt *a){
+OBString * OBIntGetStringValue(const OBInt *a){
 
   uint8_t offset = 0;
   uint64_t most_sig, i;
@@ -126,7 +126,7 @@ OBString * stringFromInt(const OBInt *a){
 }
 
 
-OBInt * copyInt(const OBInt *a){
+OBInt * OBIntCopy(const OBInt *a){
 
   uint64_t i, most_sig;
   OBInt *copy;
@@ -143,7 +143,7 @@ OBInt * copyInt(const OBInt *a){
 }
 
 
-uint8_t isIntZero(const OBInt *a){
+uint8_t OBIntIsZero(const OBInt *a){
 
   uint64_t most_sig;
 
@@ -154,13 +154,13 @@ uint8_t isIntZero(const OBInt *a){
 }
 
 
-uint8_t isIntNegative(const OBInt *a){ 
+uint8_t OBIntIsNegative(const OBInt *a){ 
   assert(a != NULL);
   return a->sign == -1;
 }
 
 
-OBInt * addInts(const OBInt *a, const OBInt *b){ 
+OBInt * OBIntAdd(const OBInt *a, const OBInt *b){ 
 
   int8_t cmp_result;
   OBInt *result;
@@ -169,8 +169,8 @@ OBInt * addInts(const OBInt *a, const OBInt *b){
   assert(b != NULL);
 
   /* a and b are  of same sign */
-  if((isIntNegative(a) && isIntNegative(b)) || 
-     (!isIntNegative(a) && !isIntNegative(b))){
+  if((OBIntIsNegative(a) && OBIntIsNegative(b)) || 
+     (!OBIntIsNegative(a) && !OBIntIsNegative(b))){
     result = addUnsignedInts(a,b);
     result->sign = a->sign;
     return result;
@@ -190,25 +190,25 @@ OBInt * addInts(const OBInt *a, const OBInt *b){
   }
 
   /* a and b are equal and opposite, result is 0 */
-  return createIntWithInt(0);
+  return OBIntCreate(0);
 }
 
 
-OBInt * addIntAndPrim(const OBInt *a, int64_t b){ 
+OBInt * OBIntAddPrimitive(const OBInt *a, int64_t b){ 
 
   OBInt *wrapper, *result;
 
   assert(a != NULL);
 
-  wrapper = createIntWithInt(b);
-  result = addInts(a, wrapper);
+  wrapper = OBIntCreate(b);
+  result = OBIntAdd(a, wrapper);
   OBRelease((OBObjType *)wrapper);
 
   return result;
 }
 
 
-OBInt * subtractInts(const OBInt *a, const OBInt *b){ 
+OBInt * OBIntSubtract(const OBInt *a, const OBInt *b){ 
 
   int8_t cmp_result;
   OBInt *result;
@@ -217,8 +217,8 @@ OBInt * subtractInts(const OBInt *a, const OBInt *b){
   assert(b != NULL);
 
   /* a and b are  of opposite sign */
-  if((!isIntNegative(a) && isIntNegative(b)) || 
-     (isIntNegative(a) && !isIntNegative(b))){
+  if((!OBIntIsNegative(a) && OBIntIsNegative(b)) || 
+     (OBIntIsNegative(a) && !OBIntIsNegative(b))){
     result = addUnsignedInts(a,b);
     result->sign = a->sign;
     return result;
@@ -238,25 +238,25 @@ OBInt * subtractInts(const OBInt *a, const OBInt *b){
   }
 
   /* a and b are equal and same, result is 0 */
-  return createIntWithInt(0);
+  return OBIntCreate(0);
 }
 
 
-OBInt * subtractIntWithPrim(const OBInt *a, int64_t b){
+OBInt * OBIntSubtractPrimitive(const OBInt *a, int64_t b){
 
   OBInt *wrapper, *result;
 
   assert(a != NULL);
 
-  wrapper = createIntWithInt(b);
-  result = subtractInts(a, wrapper);
+  wrapper = OBIntCreate(b);
+  result = OBIntSubtract(a, wrapper);
   OBRelease((OBObjType *)wrapper);
 
   return result;
 }
 
 
-OBInt * multiplyInts(const OBInt *a, const OBInt *b){
+OBInt * OBIntMultiply(const OBInt *a, const OBInt *b){
 
   OBInt *result;
 
@@ -270,29 +270,29 @@ OBInt * multiplyInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b){
+OBInt * OBIntMultiplyPrimitive(const OBInt *a, int64_t b){
 
   OBInt *wrapper, *result;
 
   assert(a != NULL);
 
-  wrapper = createIntWithInt(b);
-  result = multiplyInts(a, wrapper);
+  wrapper = OBIntCreate(b);
+  result = OBIntMultiply(a, wrapper);
   OBRelease((OBObjType *)wrapper);
 
   return result;
 }
 
 
-OBInt * divideInts(const OBInt *a, const OBInt *b){
+OBInt * OBIntDivide(const OBInt *a, const OBInt *b){
 
   OBInt *result, *seed;
 
   assert(a != NULL);
   assert(b != NULL);
-  assert(isIntZero(b) == 0);
+  assert(OBIntIsZero(b) == 0);
 
-  seed = createIntWithInt(0);
+  seed = OBIntCreate(0);
   result = reduceUnsignedInts(a, b, seed, 1);
   result->sign = a->sign * b->sign;
   OBRelease((OBObjType *)seed);
@@ -301,30 +301,30 @@ OBInt * divideInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * divideIntWithPrim(const OBInt *a, int64_t b){
+OBInt * OBIntDividePrimitive(const OBInt *a, int64_t b){
 
   OBInt *wrapper, *result;
 
   assert(a != NULL);
   assert(b != 0);
 
-  wrapper = createIntWithInt(b);
-  result = divideInts(a, wrapper);
+  wrapper = OBIntCreate(b);
+  result = OBIntDivide(a, wrapper);
   OBRelease((OBObjType *)wrapper);
 
   return result;
 }
 
 
-OBInt * modInts(const OBInt *a, const OBInt *b){
+OBInt * OBIntMod(const OBInt *a, const OBInt *b){
 
   OBInt *result, *seed;
 
   assert(a != NULL);
   assert(b != NULL);
-  assert(isIntZero(b) == 0);
+  assert(OBIntIsZero(b) == 0);
 
-  seed = createIntWithInt(0);
+  seed = OBIntCreate(0);
   result = reduceUnsignedInts(a, b, seed, 0);
   result->sign = a->sign;
   OBRelease((OBObjType *)seed);
@@ -333,15 +333,15 @@ OBInt * modInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * modIntWithPrim(const OBInt *a, int64_t b){
+OBInt * OBIntModPrimitive(const OBInt *a, int64_t b){
 
   OBInt *wrapper, *result;
 
   assert(a != NULL);
   assert(b != 0);
 
-  wrapper = createIntWithInt(b);
-  result = modInts(a, wrapper);
+  wrapper = OBIntCreate(b);
+  result = OBIntMod(a, wrapper);
   OBRelease((OBObjType *)wrapper);
 
   return result;
@@ -468,7 +468,7 @@ void displayInt(OBTypeRef to_print){
   assert(to_print);
   assert(OBObjIsOfClass(to_print, "OBInt"));
 
-  str = stringFromInt(instance);
+  str = OBIntGetStringValue(instance);
   fprintf(stderr, "Value:\n  %s\n", getCString(str));
   
   OBRelease((OBObjType *)str);
@@ -529,7 +529,7 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
   uint64_t i, a_most_sig, b_most_sig;
   OBInt *result;
 
-  result = copyInt(a);
+  result = OBIntCopy(a);
 
   a_most_sig = mostSig(a);
   b_most_sig = mostSig(b);
@@ -572,7 +572,7 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
 
   /* base case, a and b are single digits */
   if(large_most_sig + small_most_sig < int64_max_digits)
-    return createIntWithInt(unsignedValue(a) * unsignedValue(b));
+    return OBIntCreate(unsignedValue(a) * unsignedValue(b));
 
   split_point = large_most_sig/2+1;
   splitInt(a, split_point, &x1, &x0);
@@ -636,13 +636,13 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
 
     if(quotient){
       result_val = a_val/b_val;
-      partial = createIntWithInt(result_val);
-      result = addInts(approx, partial);
+      partial = OBIntCreate(result_val);
+      result = OBIntAdd(approx, partial);
       OBRelease((OBObjType *)partial);
     }
     else{
       result_val = a_val%b_val;
-      result = createIntWithInt(result_val);
+      result = OBIntCreate(result_val);
     }
 
     return result;
@@ -651,13 +651,13 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   /* if a < b (so a/b = 0, a%b = a) */
   comp_val = compareMagnitudes(a, b);
   if(comp_val == OB_LESS_THAN){
-    if(quotient) return copyInt(approx);
-    else return copyInt(a);
+    if(quotient) return OBIntCopy(approx);
+    else return OBIntCopy(a);
   }
   /* if a == b (so a/b = 1, a%b = 0) */
   else if(comp_val == OB_EQUAL_TO){
-    if(quotient) return addIntAndPrim(approx,1);
-    else return createIntWithInt(0);
+    if(quotient) return OBIntAddPrimitive(approx,1);
+    else return OBIntCreate(0);
   }
 
   /* else recursive division approximation */
@@ -691,7 +691,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
 
   /* perform approximation division, shift into proper decimal place, and add
    * to approximation */
-  partial = createIntWithInt(a_val/b_val);
+  partial = OBIntCreate(a_val/b_val);
   shiftInt(partial, i-j);
   product = multiplyUnsignedInts(partial, b);
 
@@ -704,7 +704,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
     OBRelease((OBObjType *)product);
 
     b_val++; 
-    partial = createIntWithInt(a_val/b_val);
+    partial = OBIntCreate(a_val/b_val);
     shiftInt(partial, i-j);
     product = multiplyUnsignedInts(partial, b);
   }

@@ -23,7 +23,7 @@ typedef struct OBInt_struct OBInt;
  *
  * @return An instance of OBInt with value given by num
  */
-OBInt * createIntWithInt(int64_t num);
+OBInt * OBIntCreate(int64_t num);
 
 /**
  * @brief Returns the value stored in OBInt as an integer
@@ -35,7 +35,7 @@ OBInt * createIntWithInt(int64_t num);
  * @warning If the value of the OBInt cannot be represented in 64 bits then
  * returned value will not represent the true value of the OBInt
  */
-int64_t intValue(const OBInt *a);
+int64_t OBIntGetIntValue(const OBInt *a);
 
 /**
  * @brief Creates a new OBInt with value indicated by given string
@@ -46,7 +46,7 @@ int64_t intValue(const OBInt *a);
  *
  * @return An instance of OBInt with value given by numstr
  */
-OBInt * intFromString(const OBString *numstr);
+OBInt * OBIntCreateFromString(const OBString *numstr);
 
 /**
  * @brief Creates an instance of OBString containing a string representation
@@ -56,7 +56,7 @@ OBInt * intFromString(const OBString *numstr);
  *
  * @return An instance of OBString
  */
-OBString * stringFromInt(const OBInt *a);
+OBString * OBIntGetStringValue(const OBInt *a);
 
 /**
  * @brief Creates an instance of OBInt with the same value as the argument
@@ -66,7 +66,7 @@ OBString * stringFromInt(const OBInt *a);
  *
  * @return A copy of the argument OBInt
  */
-OBInt * copyInt(const OBInt *a);
+OBInt * OBIntCopy(const OBInt *a);
 
 /**
  * @brief Checks if an instance of OBInt is zero and returns the boolean truth
@@ -77,7 +77,7 @@ OBInt * copyInt(const OBInt *a);
  * @retval 0 The argument is non-zero
  * @retval non-zero The argument is zero
  */
-uint8_t isIntZero(const OBInt *a);
+uint8_t OBIntIsZero(const OBInt *a);
 
 /**
  * @brief Checks if an instance of OBInt is negative and returns the boolean
@@ -88,7 +88,7 @@ uint8_t isIntZero(const OBInt *a);
  * @retval 0 The argument is positive
  * @retval non-zero The argument is negative
  */
-uint8_t isIntNegative(const OBInt *a);
+uint8_t OBIntIsNegative(const OBInt *a);
 
 /**
  * @brief Creates a new OBInt containing the sum of two OBInt values
@@ -98,7 +98,7 @@ uint8_t isIntNegative(const OBInt *a);
  *
  * @return An instance of OBInt with value given by a+b
  */
-OBInt * addInts(const OBInt *a, const OBInt *b);
+OBInt * OBIntAdd(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Creates a new OBInt containing the sum of an OBInt and a machine
@@ -109,17 +109,17 @@ OBInt * addInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt with value given by a+b
  */
-OBInt * addIntAndPrim(const OBInt *a, int64_t b);
+OBInt * OBIntAddPrimitive(const OBInt *a, int64_t b);
 
 /**
  * @brief Creates a new OBInt containing the difference of two OBInt values
  *
- * @param a A non-NULL pointer to type OBInt
- * @param b A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type OBInt, the minuend
+ * @param b A non-NULL pointer to type OBInt, the subtrahend
  *
  * @return An instance of OBInt with value given by a-b
  */
-OBInt * subtractInts(const OBInt *a, const OBInt *b);
+OBInt * OBIntSubtract(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Creates a new OBInt containing the difference of an OBInt and a 
@@ -130,7 +130,7 @@ OBInt * subtractInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt with value given by a-b
  */
-OBInt * subtractIntWithPrim(const OBInt *a, int64_t b);
+OBInt * OBIntSubtractPrimitive(const OBInt *a, int64_t b);
 
 /**
  * @brief Creates a new OBInt containing the product of two OBInt values
@@ -140,7 +140,7 @@ OBInt * subtractIntWithPrim(const OBInt *a, int64_t b);
  *
  * @return An instance of OBInt with value given by a*b
  */
-OBInt * multiplyInts(const OBInt *a, const OBInt *b);
+OBInt * OBIntMultiply(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Creates a new OBInt containing the product of an OBInt and a 
@@ -151,18 +151,18 @@ OBInt * multiplyInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt with value given by a*b
  */
-OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b);
+OBInt * OBIntMultiplyPrimitive(const OBInt *a, int64_t b);
 
 /**
  * @brief Creates a new OBInt containing the quotient resule of integer division
  * between two OBInt values,
  *
- * @param a A non-NULL pointer to type OBInt
- * @param b A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type OBInt, the dividend
+ * @param b A non-NULL pointer to type OBInt, the divisor
  *
  * @return An instance of OBInt with value given by a/b
  */
-OBInt * divideInts(const OBInt *a, const OBInt *b);
+OBInt * OBIntDivide(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Creates a new OBInt containing the quotient of an OBInt and a 
@@ -173,7 +173,7 @@ OBInt * divideInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt with value given by a/b
  */
-OBInt * divideIntWithPrim(const OBInt *a, int64_t b);
+OBInt * OBIntDividePrimitive(const OBInt *a, int64_t b);
 
 /**
  * @brief Creates a new OBInt containing the remainder of integer division
@@ -184,7 +184,7 @@ OBInt * divideIntWithPrim(const OBInt *a, int64_t b);
  *
  * @return An instance of OBInt with value given by a%b
  */
-OBInt * modInts(const OBInt *a, const OBInt *b);
+OBInt * OBIntMod(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Creates a new OBInt containing the remainder of integer division
@@ -195,7 +195,7 @@ OBInt * modInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt with value given by a%b
  */
-OBInt * modIntWithPrim(const OBInt *a, int64_t b);
+OBInt * OBIntModPrimitive(const OBInt *a, int64_t b);
 
 #endif
 

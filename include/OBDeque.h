@@ -52,7 +52,7 @@ uint8_t OBDequeIsEmpty(const OBDeque *deque);
  *
  * @return An integer corresponding the the number of objects in the deque
  */
-uint64_t OBDequeLength(const OBDeque *deque);
+uint64_t OBDequeGetLength(const OBDeque *deque);
 
 /**
  * @brief Constructor for an iterator for an OBDeque that is directed at the
@@ -206,7 +206,7 @@ void OBDequeSortWithFunction(OBDeque *deque, int8_t order, obcompare_fptr funct)
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the head of deque
  */
-OBTypeRef OBDequeFirstObject(const OBDeque *deque);
+OBTypeRef OBDequeGetFirstObject(const OBDeque *deque);
 
 /**
  * @brief Peek at the obj stored at the tail of an OBDeque
@@ -216,7 +216,7 @@ OBTypeRef OBDequeFirstObject(const OBDeque *deque);
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the tail of deque
  */
-OBTypeRef OBDequeLastObject(const OBDeque *deque);
+OBTypeRef OBDequeGetLastObject(const OBDeque *deque);
 
 /**
  * @brief Peek at the obj stored within a OBDeque stored at the position denoted
@@ -228,7 +228,7 @@ OBTypeRef OBDequeLastObject(const OBDeque *deque);
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the tail of deque
  */
-OBTypeRef OBDequeObjAtIterator(const OBDeque *deque, const OBDequeIterator *it);
+OBTypeRef OBDequeGetObjectAtIterator(const OBDeque *deque, const OBDequeIterator *it);
 
 
 /**
@@ -256,7 +256,7 @@ void OBDequeRemoveLastObject(OBDeque *deque);
  * tail, unless removing the tail then it will be advanced to the element before
  * the tail (NULL if no more elements exist)
  */
-void OBDequeRemoveAtIterator(OBDeque *deque, OBDequeIterator *it);
+void OBDequeRemoveObjectAtIterator(OBDeque *deque, OBDequeIterator *it);
 
 /**
  * @brief removes all obj's from the Deque, leaving the Deque empty
