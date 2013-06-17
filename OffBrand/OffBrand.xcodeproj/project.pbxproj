@@ -14,7 +14,6 @@
 		BC3693A4176D34D700EBE188 /* Term_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369351176D34D700EBE188 /* Term_Private.h */; };
 		BC3693A5176D34D700EBE188 /* RTable.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369352176D34D700EBE188 /* RTable.h */; };
 		BC3693A6176D34D700EBE188 /* Term.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369353176D34D700EBE188 /* Term.h */; };
-		BC3693A8176D34D700EBE188 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = BC369357176D34D700EBE188 /* Makefile */; };
 		BC3693B2176D34D700EBE188 /* OBDeque.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369374176D34D700EBE188 /* OBDeque.h */; };
 		BC3693B3176D34D700EBE188 /* OBInt.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369375176D34D700EBE188 /* OBInt.h */; };
 		BC3693B4176D34D700EBE188 /* OBMap.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369376176D34D700EBE188 /* OBMap.h */; };
@@ -477,7 +476,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC3693A8176D34D700EBE188 /* Makefile in Sources */,
 				BC3693C5176D34D700EBE188 /* OBDeque.c in Sources */,
 				BC3693C6176D34D700EBE188 /* OBInt.c in Sources */,
 				BC3693C7176D34D700EBE188 /* OBMap.c in Sources */,

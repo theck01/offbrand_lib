@@ -17,7 +17,7 @@
  */
 typedef struct OBDequeNode_struct{
   OBObjType base; /**< obj containing reference count and class membership data */
-  OBObjType *stored; /**< obj stored within the node in the deque */
+  OBTypeRef stored; /**< obj stored within the node in the deque */
   struct OBDequeNode_struct *next; /**< Pointer to the next node in the list */
   struct OBDequeNode_struct *prev; /**< Pointer to the prev node in the list */
 } OBDequeNode;
@@ -32,7 +32,7 @@ typedef struct OBDequeNode_struct{
  * @return A new instance of OBDeque node storing to_store and with NULL
  * references to next and prev nodes
  */
-OBDequeNode * createDequeNode(OBObjType *to_store);
+OBDequeNode * OBDequeNodeCreate(OBTypeRef to_store);
 
 /**
  * @brief Destructor for OBDequeNode
@@ -41,7 +41,7 @@ OBDequeNode * createDequeNode(OBObjType *to_store);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDequeNode(OBTypeRef to_dealloc);
+void OBDequeNodeDealloc(OBTypeRef to_dealloc);
 
 
 /* OBDequeIterator type */
@@ -68,7 +68,7 @@ struct OBDequeIterator_struct{
  *
  * @return An instance of OBDequeIterator
  */
-struct OBDequeIterator_struct * createDequeIterator(const OBDeque *deque, 
+struct OBDequeIterator_struct * OBDequeIteratorCreate(const OBDeque *deque, 
                                                     OBDequeNode *node);
 
 /**
@@ -78,7 +78,7 @@ struct OBDequeIterator_struct * createDequeIterator(const OBDeque *deque,
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDequeIterator(OBTypeRef to_dealloc);
+void OBDequeIteratorDealloc(OBTypeRef to_dealloc);
 
 
 /* OBDeque Type */
@@ -106,7 +106,7 @@ struct OBDeque_struct{
  * @warning All public constructors should call this constructor and initialize
  * individual members as needed, so that all base data is initialized properly
  */
-OBDeque * createDefaultDeque(void);
+OBDeque * OBDequeCreateDefault(void);
 
 /**
  * @brief Internal merge sort implementation for an OBDeque
@@ -123,14 +123,14 @@ OBDeque * createDefaultDeque(void);
  * sorting should use the publicly accessable function which calls this method
  * internally.
  */
-OBDeque recursiveSort(OBDeque deque, int8_t order, obcompare_fptr funct);
+OBDeque OBDequeSortRecursive(OBDeque deque, int8_t order, obcompare_fptr funct);
 
 /**
  * @brief Hash function for OBDeque
  * @param to_hash An obj pointer to an instance of OBDeque
  * @return Key value (hash) for the given obj pointer to a OBDeque
  */
-obhash_t hashDeque(OBTypeRef to_hash);
+obhash_t OBDequeHash(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBDeque
@@ -142,14 +142,14 @@ obhash_t hashDeque(OBTypeRef to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareDeques(OBTypeRef a, OBTypeRef b);
+int8_t OBDequeCompare(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Displays information about an OBDeque to stderr
  *
  * @param to_print A non-NULL obj pointer to type OBDeque
  */
-void displayDeque(OBTypeRef to_print);
+void OBDequeDisplay(OBTypeRef to_print);
 
 /**
  * @brief Destructor for OBDeque
@@ -158,7 +158,7 @@ void displayDeque(OBTypeRef to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocDeque(OBTypeRef to_dealloc);
+void OBDequeDealloc(OBTypeRef to_dealloc);
 
 
 #endif

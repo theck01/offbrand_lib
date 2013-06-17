@@ -61,7 +61,7 @@ OBMap * createMapWithCapacity(uint32_t capacity){
   while(MAP_CAPACITIES[i] < capacity && i < NUM_CAPACITIES - 1) i++;
 
   m->hash_table = createVector(MAP_CAPACITIES[i]);
-  m->pairs = createDeque();
+  m->pairs = OBDequeCreate();
   m->cap_idx = i;
   
   return m;
@@ -80,17 +80,17 @@ OBMap * copyMap(const OBMap *to_copy){
 
   copy->cap_idx = to_copy->cap_idx;
   copy->collisions = to_copy->collisions;
-  copy->pairs = createDeque();
+  copy->pairs = OBDequeCreate();
 
   /* copy deque manually, internal objects need to be copied as well as Deque
    * itself */
-  it = getDequeHeadIt(to_copy->pairs);
+  it = OBDequeGetHeadIterator(to_copy->pairs);
   if(it){
     do{
-       mp = copyMapPair((OBMapPair *)objAtDequeIt(to_copy->pairs, it));
-       addDequeTail(copy->pairs, (OBObjType *)mp);
+       mp = copyMapPair((OBMapPair *)OBDequeObjAtIterator(to_copy->pairs, it));
+       OBDequeAddTail(copy->pairs, (OBObjType *)mp);
        OBRelease((OBObjType *)mp);
-    }while(iterateDequeNext(to_copy->pairs, it));
+    }while(OBDequeIterateNext(to_copy->pairs, it));
   }
   OBRelease((OBObjType *)it);
 
@@ -115,20 +115,20 @@ void addToMap(OBMap *m, OBObjType *key, OBObjType *value){
   /* If the key already exists in the map then overwrite the existing
    * value */
   if(it){
-    mp = (OBMapPair *)objAtDequeIt(m->pairs, it);
+    mp = (OBMapPair *)OBDequeObjAtIterator(m->pairs, it);
     replaceMapPairValue(mp, value);
     return;
   }
 
   /* if add operation will overload the map then resize the map */
-  if((dequeLength(m->pairs)+1)/MAP_CAPACITIES[m->cap_idx] > MAX_LOAD_FACTOR)
+  if((OBDequeLength(m->pairs)+1)/MAP_CAPACITIES[m->cap_idx] > MAX_LOAD_FACTOR)
     increaseMapSize(m);
 
   mp = createMapPair(key, value);
-  addDequeTail(m->pairs, (OBObjType *)mp);
+  OBDequeAddTail(m->pairs, (OBObjType *)mp);
   OBRelease((OBObjType *)mp); /* map deque has only reference to mp */
 
-  assert(it = getDequeTailIt(m->pairs));
+  assert(it = OBDequeGetTailIterator(m->pairs));
   addToHashTable(m, it);
   OBRelease((OBObjType *)it); /* map vector hash only reference to it */
   
@@ -149,7 +149,7 @@ OBObjType * lookupMapKey(const OBMap *m, const OBObjType *key){
 
   if(!it) return NULL;
 
-  mp = (OBMapPair *)objAtDequeIt(m->pairs, it);
+  mp = (OBMapPair *)OBDequeObjAtIterator(m->pairs, it);
   return mp->value;
 }
 
@@ -166,7 +166,7 @@ void removeMapKey(OBMap *m, OBObjType *key){
 
   if(!it) return;
 
-  removeDequeAtIt(m->pairs, it);
+  OBDequeRemoveAtIterator(m->pairs, it);
   rehashMap(m);
 
   return;
@@ -182,14 +182,14 @@ void rehashMap(OBMap *m){
   OBRelease((OBObjType *)m->hash_table);
   m->hash_table = createVector(MAP_CAPACITIES[m->cap_idx]);
 
-  it = getDequeHeadIt(m->pairs);
+  it = OBDequeGetHeadIterator(m->pairs);
   if(!it) return;
 
   do{
-    it_copy = copyDequeIterator(it);
+    it_copy = OBDequeIteratorCopy(it);
     addToHashTable(m, it_copy);
     OBRelease((OBObjType *)it_copy);
-  }while(iterateDequeNext(m->pairs, it));
+  }while(OBDequeIterateNext(m->pairs, it));
 
   OBRelease((OBObjType *)it);
 
@@ -205,7 +205,7 @@ void clearMap(OBMap *m){
   OBRelease((OBObjType *)m->pairs);
 
   m->hash_table = createVector(MAP_CAPACITIES[m->cap_idx]);
-  m->pairs = createDeque();
+  m->pairs = OBDequeCreate();
 }
 
 
@@ -347,13 +347,13 @@ obhash_t hashMap(OBTypeRef to_hash){
 
   value = seed;
 
-  it = getDequeHeadIt(instance->pairs);
+  it = OBDequeGetHeadIterator(instance->pairs);
   if(!it) return value;
 
   /* perform commutative hash, so order of addition to table does not matter */
   do{
-    value += OBHash(objAtDequeIt(instance->pairs, it));
-  }while(iterateDequeNext(instance->pairs, it));
+    value += OBHash(OBDequeObjAtIterator(instance->pairs, it));
+  }while(OBDequeIterateNext(instance->pairs, it));
 
   OBRelease((OBObjType *)it);
 
@@ -386,13 +386,13 @@ void displayMap(OBTypeRef to_print){
   assert(OBObjIsOfClass(to_print, "OBMap"));
   fprintf(stderr, "OBMap with key-value pairs:\n");
 
-  it = getDequeHeadIt(m->pairs);
+  it = OBDequeGetHeadIterator(m->pairs);
 
   if(!it) return;
 
   do{
-    OBDisplay(objAtDequeIt(m->pairs, it));
-  }while(iterateDequeNext(m->pairs, it));
+    OBDisplay(OBDequeObjAtIterator(m->pairs, it));
+  }while(OBDequeIterateNext(m->pairs, it));
 
   fprintf(stderr, "  [map end]\n");
 
@@ -439,7 +439,7 @@ void addToHashTable(OBMap *m, OBDequeIterator *it){
   assert(m);
   assert(it);
 
-  pair = (OBMapPair *)objAtDequeIt(m->pairs, it);
+  pair = (OBMapPair *)OBDequeObjAtIterator(m->pairs, it);
   hash_value = OBHash(pair->key)%MAP_CAPACITIES[m->cap_idx];
   offset = 0;
 
@@ -463,7 +463,7 @@ obhash_t findKeyInHashTable(const OBMap *m, const OBObjType *key){
   offset = 0;
   
   while((it = (OBDequeIterator *)objAtVectorIndex(m->hash_table, hash_value))){
-    mp = (OBMapPair *)objAtDequeIt(m->pairs, it);
+    mp = (OBMapPair *)OBDequeObjAtIterator(m->pairs, it);
     if(OBCompare(mp->key, key) == OB_EQUAL_TO)
       break;
     offset = collisionOffset(offset);

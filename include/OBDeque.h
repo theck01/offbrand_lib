@@ -23,7 +23,7 @@ typedef struct OBDequeIterator_struct OBDequeIterator;
  * @brief Constructor, creates a new instance of OBDeque with no contents
  * @return Pointer to a newly created and initialized instance of OBDeque
  */
-OBDeque * createDeque(void);
+OBDeque * OBDequeCreate(void);
 
 /**
  * @brief Copy Constructor, creates a new OBDeque that contains the same
@@ -33,7 +33,7 @@ OBDeque * createDeque(void);
  *
  * @return Pointer to a newly created and initialized instance of OBDeque
  */
-OBDeque * copyDeque(const OBDeque *to_copy);
+OBDeque * OBDequeCopy(const OBDeque *to_copy);
 
 /**
  * @brief The emptyness state of an OBDeque, either empty or non-empty
@@ -43,7 +43,7 @@ OBDeque * copyDeque(const OBDeque *to_copy);
  * @retval 0 The deque is empty
  * @retval non-zero The deque contains elements
  */
-uint8_t isDequeEmpty(const OBDeque *deque);
+uint8_t OBDequeIsEmpty(const OBDeque *deque);
 
 /**
  * @brief Number of elements stored within an OBDeque
@@ -52,7 +52,7 @@ uint8_t isDequeEmpty(const OBDeque *deque);
  *
  * @return An integer corresponding the the number of objects in the deque
  */
-uint64_t dequeLength(const OBDeque *deque);
+uint64_t OBDequeLength(const OBDeque *deque);
 
 /**
  * @brief Constructor for an iterator for an OBDeque that is directed at the
@@ -67,7 +67,7 @@ uint64_t dequeLength(const OBDeque *deque);
  * @warning The OBDequeIterator created by this method MUST be released by the
  * user, else a memory leak will occur
  */
-OBDequeIterator * getDequeHeadIt(const OBDeque *deque);
+OBDequeIterator * OBDequeGetHeadIterator(const OBDeque *deque);
 
 /**
  * @brief Constructor for an iterator for an OBDeque that is directed at the
@@ -82,7 +82,7 @@ OBDequeIterator * getDequeHeadIt(const OBDeque *deque);
  * @warning The OBDequeIterator created by this method MUST be released by the
  * user, else a memory leak will occur
  */
-OBDequeIterator * getDequeTailIt(const OBDeque *deque);
+OBDequeIterator * OBDequeGetTailIterator(const OBDeque *deque);
 
 /**
  * @brief Copy Constructor for an OBDequeIterator from another OBDequeIterator
@@ -95,7 +95,7 @@ OBDequeIterator * getDequeTailIt(const OBDeque *deque);
  * @warning The OBDequeIterator created by this method MUST be released by the
  * user, else a memory leak will occur
  */
-OBDequeIterator * copyDequeIterator(const OBDequeIterator *it);
+OBDequeIterator * OBDequeIteratorCopy(const OBDequeIterator *it);
 
 /**
  * @brief Advance an OBDequeIterator bound to an OBDeque to the next element
@@ -108,7 +108,7 @@ OBDequeIterator * copyDequeIterator(const OBDequeIterator *it);
  * @retval 0 Advancement failed because no more elements exist in the OBDeque
  * closer to the deque tail
  */
-uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it);
+uint8_t OBDequeIterateNext(const OBDeque *deque, OBDequeIterator *it);
 
 /**
  * @brief Advance an OBDequeIterator bound to an OBDeque to the previous element
@@ -121,7 +121,7 @@ uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it);
  * @retval 0 Advancement failed because no more elements exist in the OBDeque
  * closer to the deque head
  */
-uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it);
+uint8_t OBDequeIteratePrevious(const OBDeque *deque, OBDequeIterator *it);
 
 /**
  * @brief Add an obj to the head of an OBDeque
@@ -129,7 +129,7 @@ uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it);
  * @param deque An instance of OBDeque
  * @param to_add Any instance of an Offbrand compatible class to add to deque
  */
-void addDequeHead(OBDeque *deque, OBObjType *to_add);
+void OBDequeAddHead(OBDeque *deque, OBTypeRef to_add);
 
 /**
  * @brief Add an obj to the tail of an OBDeque
@@ -137,7 +137,7 @@ void addDequeHead(OBDeque *deque, OBObjType *to_add);
  * @param deque An instance of OBDeque
  * @param to_add Any instance of an Offbrand compatible class to add to deque
  */
-void addDequeTail(OBDeque *deque, OBObjType *to_add);
+void OBDequeAddTail(OBDeque *deque, OBTypeRef to_add);
 
 /**
  * @brief Add an obj to an OBDeque at position before the element specified by
@@ -147,7 +147,7 @@ void addDequeTail(OBDeque *deque, OBObjType *to_add);
  * @param it An instance of OBDequeIterator bound to deque
  * @param to_add Any instance of an Offbrand compatible class to add to deque
  */
-void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, OBObjType *to_add);
+void OBDeuqueAddAtIterator(OBDeque *deque, OBDequeIterator *it, OBTypeRef to_add);
 
 /**
  * @brief creates a new OBDeque that contains the ordered contents of two 
@@ -158,7 +158,7 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, OBObjType *to_add);
  *
  * @return An OBDeque instance that contains the contents of d1 followed by d2
  */
-OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2);
+OBDeque * OBDequeJoin(const OBDeque *d1, const OBDeque *d2);
 
 /**
  * @brief Searches an OBDeque for an obj
@@ -170,7 +170,7 @@ OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2);
  * @retval 0 to_find not found within deque
  * @retval 1 to_find found within the deque
  */
-uint8_t findObjInDeque(const OBDeque *deque, const OBObjType *to_find);
+uint8_t OBDequeContains(const OBDeque *deque, OBTypeRef to_find);
 
 /**
  * @brief Sorts an OBDeque from least-to-greatest or greatest-to-least using
@@ -184,7 +184,7 @@ uint8_t findObjInDeque(const OBDeque *deque, const OBObjType *to_find);
  * compatible classes the call will likely not sort members in any expected
  * order, but will reorder components
  */
-void sortDeque(OBDeque *deque, int8_t order);
+void OBDequeSort(OBDeque *deque, int8_t order);
 
 /**
  * @brief Sorts an OBDeque from least-to-greatest or greatest-to-least using
@@ -196,7 +196,7 @@ void sortDeque(OBDeque *deque, int8_t order);
  * @param funct A pointer to a comparision function that returns a int8_t when
  * given two obj * arguments
  */
-void sortDequeWithFunct(OBDeque *deque, int8_t order, obcompare_fptr funct);
+void OBDequeSortWithFunction(OBDeque *deque, int8_t order, obcompare_fptr funct);
 
 /**
  * @brief Peek at the obj stored at the head of an OBDeque
@@ -206,7 +206,7 @@ void sortDequeWithFunct(OBDeque *deque, int8_t order, obcompare_fptr funct);
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the head of deque
  */
-OBObjType * objAtDequeHead(const OBDeque *deque);
+OBTypeRef OBDequeFirstObject(const OBDeque *deque);
 
 /**
  * @brief Peek at the obj stored at the tail of an OBDeque
@@ -216,7 +216,7 @@ OBObjType * objAtDequeHead(const OBDeque *deque);
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the tail of deque
  */
-OBObjType * objAtDequeTail(const OBDeque *deque);
+OBTypeRef OBDequeLastObject(const OBDeque *deque);
 
 /**
  * @brief Peek at the obj stored within a OBDeque stored at the position denoted
@@ -228,7 +228,7 @@ OBObjType * objAtDequeTail(const OBDeque *deque);
  * @retval NULL No elements exist within deque
  * @retval non-NULL The element stored at the tail of deque
  */
-OBObjType * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it);
+OBTypeRef OBDequeObjAtIterator(const OBDeque *deque, const OBDequeIterator *it);
 
 
 /**
@@ -236,14 +236,14 @@ OBObjType * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it);
  * by one element
  * @param deque An instance of OBDeque
  */
-void removeDequeHead(OBDeque *deque);
+void OBDequeRemoveFirstObject(OBDeque *deque);
 
 /**
  * @brief Remove the obj stored at the tail of an OBDeque, shrinking the OBDeque
  * by one element
  * @param deque An instance of OBDeque
  */
-void removeDequeTail(OBDeque *deque);
+void OBDequeRemoveLastObject(OBDeque *deque);
 
 /**
  * @brief Remove the obj stored within an OBDeque at the position denoted by the
@@ -256,12 +256,12 @@ void removeDequeTail(OBDeque *deque);
  * tail, unless removing the tail then it will be advanced to the element before
  * the tail (NULL if no more elements exist)
  */
-void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it);
+void OBDequeRemoveAtIterator(OBDeque *deque, OBDequeIterator *it);
 
 /**
  * @brief removes all obj's from the Deque, leaving the Deque empty
  * @param deque An instance of OBDeque
  */
-void clearDeque(OBDeque *deque);
+void OBDequeClear(OBDeque *deque);
 
 #endif
