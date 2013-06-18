@@ -18,14 +18,14 @@ typedef struct OBTest_struct OBTest;
  * @param id Integer id for the created OBTest
  * @return Instance of OBTest with id as given by parameter
  */
-OBTest * createTest(uint32_t id);
+OBTest * OBTestCreate(uint32_t id);
 
 /**
  * @brief Returns the id of an OBTest instance
  * @param a Pointer to an instance of OBTest
  * @return id value of the OBTest argument
  */
-uint32_t getTestID(OBTest *a);
+uint32_t OBTestGetID(OBTest *a);
 
 #endif
 

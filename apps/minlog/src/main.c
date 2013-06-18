@@ -12,7 +12,8 @@ int main(int argc, char **argv){
   OBVector *terms, *dont_cares, *pis, *essential_pis;
   RTable *reduction_table;
   uint8_t is_minterms, num_var;
-  uint32_t max_term, numchar, substrlen; 
+  uint32_t max_term, numchar;
+  size_t substrlen;
   int i;
   char eqnstr[MAX_EQN_SIZE];
 
@@ -58,8 +59,8 @@ int main(int argc, char **argv){
   }
   eqnstr[numchar] = '\0'; /* add null terminator to string */
     
-  terms = createVector(32);
-  dont_cares = createVector(32);
+  terms = OBVectorCreateWithCapacity(32);
+  dont_cares = OBVectorCreateWithCapacity(32);
 
 
   /* parse verbosely for testing */
@@ -67,8 +68,8 @@ int main(int argc, char **argv){
 
   /* find largest term, found by sorting and picking first term. Inefficient but
    * concise compared to iterating through each term and checking results */
-  sortVector(terms, OB_GREATEST_TO_LEAST);
-  max_term = getTermValue((Term *)objAtVectorIndex(terms, 0));
+  OBVectorSort(terms, OB_GREATEST_TO_LEAST);
+  max_term = getTermValue((Term *)OBVectorObjectAtIndex(terms, 0));
   num_var = 0;
   /* increase number of variables until 2^num_var > max_term */
   while(1u<<num_var <= max_term) num_var++;
@@ -76,24 +77,24 @@ int main(int argc, char **argv){
   /* find prime implicants */
   pis = findLargestPrimeImplicants(terms, dont_cares);
 
-  dont_cares = (OBVector *)release((obj *)dont_cares);
+  dont_cares = (OBVector *)OBRelease(dont_cares);
 
   /* create the table used to reduce the prime implicants to the minimal
    * essential prime implicants */
   reduction_table = createRTable(pis, terms);
   
-  terms = (OBVector *)release((obj *)terms);
-  pis = (OBVector *)release((obj *)pis);
+  terms = (OBVector *)OBRelease(terms);
+  pis = (OBVector *)OBRelease(pis);
 
   /* find the minimal function representation */
   essential_pis = findEssentialPIs(reduction_table, num_var); 
 
-  reduction_table = (RTable *)release((obj *)reduction_table);
+  reduction_table = (RTable *)OBRelease(reduction_table);
   
   /* print the result to stdout */
   printEqnVector(essential_pis, !is_minterms, num_var);
 
-  essential_pis = (OBVector *)release((obj *)essential_pis);
+  essential_pis = (OBVector *)OBRelease(essential_pis);
 
   return 0;
 }

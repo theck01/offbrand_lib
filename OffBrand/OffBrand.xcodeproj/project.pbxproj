@@ -1,0 +1,782 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BC3693A0176D34D700EBE188 /* minlog_funct.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36934C176D34D700EBE188 /* minlog_funct.h */; };
+		BC3693A1176D34D700EBE188 /* NCube.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36934D176D34D700EBE188 /* NCube.h */; };
+		BC3693A2176D34D700EBE188 /* NCube_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36934F176D34D700EBE188 /* NCube_Private.h */; };
+		BC3693A3176D34D700EBE188 /* RTable_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369350176D34D700EBE188 /* RTable_Private.h */; };
+		BC3693A4176D34D700EBE188 /* Term_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369351176D34D700EBE188 /* Term_Private.h */; };
+		BC3693A5176D34D700EBE188 /* RTable.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369352176D34D700EBE188 /* RTable.h */; };
+		BC3693A6176D34D700EBE188 /* Term.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369353176D34D700EBE188 /* Term.h */; };
+		BC3693B2176D34D700EBE188 /* OBDeque.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369374176D34D700EBE188 /* OBDeque.h */; };
+		BC3693B3176D34D700EBE188 /* OBInt.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369375176D34D700EBE188 /* OBInt.h */; };
+		BC3693B4176D34D700EBE188 /* OBMap.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369376176D34D700EBE188 /* OBMap.h */; };
+		BC3693B5176D34D700EBE188 /* OBString.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369377176D34D700EBE188 /* OBString.h */; };
+		BC3693B6176D34D700EBE188 /* OBTest.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369378176D34D700EBE188 /* OBTest.h */; };
+		BC3693B7176D34D700EBE188 /* OBVector.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369379176D34D700EBE188 /* OBVector.h */; };
+		BC3693B8176D34D700EBE188 /* offbrand.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36937A176D34D700EBE188 /* offbrand.h */; };
+		BC3693B9176D34D700EBE188 /* OBDeque_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36937C176D34D700EBE188 /* OBDeque_Private.h */; };
+		BC3693BA176D34D700EBE188 /* OBInt_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36937D176D34D700EBE188 /* OBInt_Private.h */; };
+		BC3693BB176D34D700EBE188 /* obj_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36937E176D34D700EBE188 /* obj_Private.h */; };
+		BC3693BC176D34D700EBE188 /* OBMap_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36937F176D34D700EBE188 /* OBMap_Private.h */; };
+		BC3693BD176D34D700EBE188 /* OBString_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369380176D34D700EBE188 /* OBString_Private.h */; };
+		BC3693BE176D34D700EBE188 /* OBTest_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369381176D34D700EBE188 /* OBTest_Private.h */; };
+		BC3693BF176D34D700EBE188 /* OBVector_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = BC369382176D34D700EBE188 /* OBVector_Private.h */; };
+		BC3693C1176D34D700EBE188 /* PrivateHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36938C176D34D700EBE188 /* PrivateHeader.h */; };
+		BC3693C2176D34D700EBE188 /* PublicHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = BC36938D176D34D700EBE188 /* PublicHeader.h */; };
+		BC3693C5176D34D700EBE188 /* OBDeque.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369392176D34D700EBE188 /* OBDeque.c */; };
+		BC3693C6176D34D700EBE188 /* OBInt.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369393176D34D700EBE188 /* OBInt.c */; };
+		BC3693C7176D34D700EBE188 /* OBMap.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369394176D34D700EBE188 /* OBMap.c */; };
+		BC3693C8176D34D700EBE188 /* OBString.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369395176D34D700EBE188 /* OBString.c */; };
+		BC3693C9176D34D700EBE188 /* OBTest.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369396176D34D700EBE188 /* OBTest.c */; };
+		BC3693CA176D34D700EBE188 /* OBVector.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369397176D34D700EBE188 /* OBVector.c */; };
+		BC3693CB176D34D700EBE188 /* offbrand_stdlib.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369398176D34D700EBE188 /* offbrand_stdlib.c */; };
+		BC3693CC176D34D700EBE188 /* OBDeque_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939A176D34D700EBE188 /* OBDeque_test.c */; };
+		BC3693CD176D34D700EBE188 /* OBInt_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939B176D34D700EBE188 /* OBInt_test.c */; };
+		BC3693CE176D34D700EBE188 /* OBMap_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939C176D34D700EBE188 /* OBMap_test.c */; };
+		BC3693CF176D34D700EBE188 /* OBString_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939D176D34D700EBE188 /* OBString_test.c */; };
+		BC3693D0176D34D700EBE188 /* OBTest_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939E176D34D700EBE188 /* OBTest_test.c */; };
+		BC3693D1176D34D700EBE188 /* OBVector_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939F176D34D700EBE188 /* OBVector_test.c */; };
+		BCEDDA22177024CF00040AE4 /* NCube.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36935C176D34D700EBE188 /* NCube.c */; };
+		BCEDDA23177024CF00040AE4 /* RTable.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36935D176D34D700EBE188 /* RTable.c */; };
+		BCEDDA24177024CF00040AE4 /* Term.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36935E176D34D700EBE188 /* Term.c */; };
+		BCEDDA25177024CF00040AE4 /* minlog_funct.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369360176D34D700EBE188 /* minlog_funct.c */; };
+		BCEDDA2C1770297200040AE4 /* libOffBrand.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC369342176D34AA00EBE188 /* libOffBrand.a */; };
+		BCEDDA2E17702B8E00040AE4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369361176D34D700EBE188 /* main.c */; };
+		BCEDDA3C17702C1C00040AE4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369366176D34D700EBE188 /* main.c */; };
+		BCEDDA3F17702CE100040AE4 /* libOffBrand.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC369342176D34AA00EBE188 /* libOffBrand.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BCEDDA291770293000040AE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC36933A176D34AA00EBE188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC369341176D34AA00EBE188;
+			remoteInfo = OffBrand;
+		};
+		BCEDDA3D17702CDD00040AE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC36933A176D34AA00EBE188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC369341176D34AA00EBE188;
+			remoteInfo = OffBrand;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BCEDDA17177024B200040AE4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		BCEDDA3117702BBF00040AE4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		BC369342176D34AA00EBE188 /* libOffBrand.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOffBrand.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC36934C176D34D700EBE188 /* minlog_funct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minlog_funct.h; sourceTree = "<group>"; };
+		BC36934D176D34D700EBE188 /* NCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCube.h; sourceTree = "<group>"; };
+		BC36934F176D34D700EBE188 /* NCube_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCube_Private.h; sourceTree = "<group>"; };
+		BC369350176D34D700EBE188 /* RTable_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTable_Private.h; sourceTree = "<group>"; };
+		BC369351176D34D700EBE188 /* Term_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Term_Private.h; sourceTree = "<group>"; };
+		BC369352176D34D700EBE188 /* RTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTable.h; sourceTree = "<group>"; };
+		BC369353176D34D700EBE188 /* Term.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Term.h; sourceTree = "<group>"; };
+		BC369354176D34D700EBE188 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		BC369355176D34D700EBE188 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		BC369357176D34D700EBE188 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		BC369358176D34D700EBE188 /* package */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = package; sourceTree = "<group>"; };
+		BC369359176D34D700EBE188 /* prepare */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = prepare; sourceTree = "<group>"; };
+		BC36935C176D34D700EBE188 /* NCube.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NCube.c; sourceTree = "<group>"; };
+		BC36935D176D34D700EBE188 /* RTable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RTable.c; sourceTree = "<group>"; };
+		BC36935E176D34D700EBE188 /* Term.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Term.c; sourceTree = "<group>"; };
+		BC369360176D34D700EBE188 /* minlog_funct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minlog_funct.c; sourceTree = "<group>"; };
+		BC369361176D34D700EBE188 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		BC369363176D34D700EBE188 /* NCube_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NCube_test.c; sourceTree = "<group>"; };
+		BC369364176D34D700EBE188 /* RTable_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RTable_test.c; sourceTree = "<group>"; };
+		BC369366176D34D700EBE188 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		BC369367176D34D700EBE188 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		BC36936A176D34D700EBE188 /* mainpage.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mainpage.dox; sourceTree = "<group>"; };
+		BC36936B176D34D700EBE188 /* OBDequeModule.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OBDequeModule.dox; sourceTree = "<group>"; };
+		BC36936C176D34D700EBE188 /* OBIntModule.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OBIntModule.dox; sourceTree = "<group>"; };
+		BC36936D176D34D700EBE188 /* OBMapModule.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OBMapModule.dox; sourceTree = "<group>"; };
+		BC36936E176D34D700EBE188 /* OBStringModule.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OBStringModule.dox; sourceTree = "<group>"; };
+		BC36936F176D34D700EBE188 /* OBTestModule.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OBTestModule.dox; sourceTree = "<group>"; };
+		BC369370176D34D700EBE188 /* OBVectorModule.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OBVectorModule.dox; sourceTree = "<group>"; };
+		BC369371176D34D700EBE188 /* stdlib.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = stdlib.dox; sourceTree = "<group>"; };
+		BC369372176D34D700EBE188 /* doxygen.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = doxygen.conf; sourceTree = "<group>"; };
+		BC369374176D34D700EBE188 /* OBDeque.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBDeque.h; sourceTree = "<group>"; };
+		BC369375176D34D700EBE188 /* OBInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBInt.h; sourceTree = "<group>"; };
+		BC369376176D34D700EBE188 /* OBMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBMap.h; sourceTree = "<group>"; };
+		BC369377176D34D700EBE188 /* OBString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBString.h; sourceTree = "<group>"; };
+		BC369378176D34D700EBE188 /* OBTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBTest.h; sourceTree = "<group>"; };
+		BC369379176D34D700EBE188 /* OBVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBVector.h; sourceTree = "<group>"; };
+		BC36937A176D34D700EBE188 /* offbrand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offbrand.h; sourceTree = "<group>"; };
+		BC36937C176D34D700EBE188 /* OBDeque_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBDeque_Private.h; sourceTree = "<group>"; };
+		BC36937D176D34D700EBE188 /* OBInt_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBInt_Private.h; sourceTree = "<group>"; };
+		BC36937E176D34D700EBE188 /* obj_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = obj_Private.h; sourceTree = "<group>"; };
+		BC36937F176D34D700EBE188 /* OBMap_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBMap_Private.h; sourceTree = "<group>"; };
+		BC369380176D34D700EBE188 /* OBString_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBString_Private.h; sourceTree = "<group>"; };
+		BC369381176D34D700EBE188 /* OBTest_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBTest_Private.h; sourceTree = "<group>"; };
+		BC369382176D34D700EBE188 /* OBVector_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBVector_Private.h; sourceTree = "<group>"; };
+		BC369383176D34D700EBE188 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.txt; path = ../LICENSE.txt; sourceTree = "<group>"; };
+		BC369384176D34D700EBE188 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
+		BC369385176D34D700EBE188 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.txt; path = ../README.txt; sourceTree = "<group>"; };
+		BC369387176D34D700EBE188 /* mkobc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mkobc; sourceTree = "<group>"; };
+		BC369388176D34D700EBE188 /* prepare */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = prepare; sourceTree = "<group>"; };
+		BC369389176D34D700EBE188 /* run_bin */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run_bin; sourceTree = "<group>"; };
+		BC36938B176D34D700EBE188 /* DocModule.dox */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DocModule.dox; sourceTree = "<group>"; };
+		BC36938C176D34D700EBE188 /* PrivateHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrivateHeader.h; sourceTree = "<group>"; };
+		BC36938D176D34D700EBE188 /* PublicHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicHeader.h; sourceTree = "<group>"; };
+		BC36938E176D34D700EBE188 /* Source.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Source.c; sourceTree = "<group>"; };
+		BC36938F176D34D700EBE188 /* Test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Test.c; sourceTree = "<group>"; };
+		BC369392176D34D700EBE188 /* OBDeque.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBDeque.c; sourceTree = "<group>"; };
+		BC369393176D34D700EBE188 /* OBInt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBInt.c; sourceTree = "<group>"; };
+		BC369394176D34D700EBE188 /* OBMap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBMap.c; sourceTree = "<group>"; };
+		BC369395176D34D700EBE188 /* OBString.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBString.c; sourceTree = "<group>"; };
+		BC369396176D34D700EBE188 /* OBTest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBTest.c; sourceTree = "<group>"; };
+		BC369397176D34D700EBE188 /* OBVector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBVector.c; sourceTree = "<group>"; };
+		BC369398176D34D700EBE188 /* offbrand_stdlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = offbrand_stdlib.c; sourceTree = "<group>"; };
+		BC36939A176D34D700EBE188 /* OBDeque_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBDeque_test.c; sourceTree = "<group>"; };
+		BC36939B176D34D700EBE188 /* OBInt_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBInt_test.c; sourceTree = "<group>"; };
+		BC36939C176D34D700EBE188 /* OBMap_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBMap_test.c; sourceTree = "<group>"; };
+		BC36939D176D34D700EBE188 /* OBString_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBString_test.c; sourceTree = "<group>"; };
+		BC36939E176D34D700EBE188 /* OBTest_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBTest_test.c; sourceTree = "<group>"; };
+		BC36939F176D34D700EBE188 /* OBVector_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OBVector_test.c; sourceTree = "<group>"; };
+		BC7978E9176E12290073143E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		BC7978EC176E12290073143E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		BC7978ED176E12290073143E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		BC7978EE176E12290073143E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BCEDDA19177024B200040AE4 /* minlog */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = minlog; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCEDDA3317702BBF00040AE4 /* pfinder */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pfinder; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BC36933F176D34AA00EBE188 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCEDDA16177024B200040AE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCEDDA2C1770297200040AE4 /* libOffBrand.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCEDDA3017702BBF00040AE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCEDDA3F17702CE100040AE4 /* libOffBrand.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BC369339176D34AA00EBE188 = {
+			isa = PBXGroup;
+			children = (
+				BC369349176D34D700EBE188 /* apps */,
+				BC369368176D34D700EBE188 /* docs */,
+				BC369373176D34D700EBE188 /* include */,
+				BC369383176D34D700EBE188 /* LICENSE.txt */,
+				BC369384176D34D700EBE188 /* Makefile */,
+				BC369385176D34D700EBE188 /* README.txt */,
+				BC369386176D34D700EBE188 /* scripts */,
+				BC369390176D34D700EBE188 /* src */,
+				BC7978E6176E12290073143E /* Frameworks */,
+				BC369343176D34AA00EBE188 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BC369343176D34AA00EBE188 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BC369342176D34AA00EBE188 /* libOffBrand.a */,
+				BCEDDA19177024B200040AE4 /* minlog */,
+				BCEDDA3317702BBF00040AE4 /* pfinder */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BC369349176D34D700EBE188 /* apps */ = {
+			isa = PBXGroup;
+			children = (
+				BC36934A176D34D700EBE188 /* minlog */,
+				BC369365176D34D700EBE188 /* pfinder */,
+			);
+			name = apps;
+			path = ../apps;
+			sourceTree = "<group>";
+		};
+		BC36934A176D34D700EBE188 /* minlog */ = {
+			isa = PBXGroup;
+			children = (
+				BC36934B176D34D700EBE188 /* include */,
+				BC369354176D34D700EBE188 /* Makefile */,
+				BC369355176D34D700EBE188 /* README.txt */,
+				BC369356176D34D700EBE188 /* scripts */,
+				BC36935A176D34D700EBE188 /* src */,
+			);
+			path = minlog;
+			sourceTree = "<group>";
+		};
+		BC36934B176D34D700EBE188 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				BC36934C176D34D700EBE188 /* minlog_funct.h */,
+				BC36934D176D34D700EBE188 /* NCube.h */,
+				BC36934E176D34D700EBE188 /* private */,
+				BC369352176D34D700EBE188 /* RTable.h */,
+				BC369353176D34D700EBE188 /* Term.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		BC36934E176D34D700EBE188 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				BC36934F176D34D700EBE188 /* NCube_Private.h */,
+				BC369350176D34D700EBE188 /* RTable_Private.h */,
+				BC369351176D34D700EBE188 /* Term_Private.h */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		BC369356176D34D700EBE188 /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				BC369357176D34D700EBE188 /* Makefile */,
+				BC369358176D34D700EBE188 /* package */,
+				BC369359176D34D700EBE188 /* prepare */,
+			);
+			path = scripts;
+			sourceTree = "<group>";
+		};
+		BC36935A176D34D700EBE188 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				BC36935B176D34D700EBE188 /* classes */,
+				BC36935F176D34D700EBE188 /* funct */,
+				BC369361176D34D700EBE188 /* main.c */,
+				BC369362176D34D700EBE188 /* tests */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		BC36935B176D34D700EBE188 /* classes */ = {
+			isa = PBXGroup;
+			children = (
+				BC36935C176D34D700EBE188 /* NCube.c */,
+				BC36935D176D34D700EBE188 /* RTable.c */,
+				BC36935E176D34D700EBE188 /* Term.c */,
+			);
+			path = classes;
+			sourceTree = "<group>";
+		};
+		BC36935F176D34D700EBE188 /* funct */ = {
+			isa = PBXGroup;
+			children = (
+				BC369360176D34D700EBE188 /* minlog_funct.c */,
+			);
+			path = funct;
+			sourceTree = "<group>";
+		};
+		BC369362176D34D700EBE188 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				BC369363176D34D700EBE188 /* NCube_test.c */,
+				BC369364176D34D700EBE188 /* RTable_test.c */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		BC369365176D34D700EBE188 /* pfinder */ = {
+			isa = PBXGroup;
+			children = (
+				BC369366176D34D700EBE188 /* main.c */,
+				BC369367176D34D700EBE188 /* Makefile */,
+			);
+			path = pfinder;
+			sourceTree = "<group>";
+		};
+		BC369368176D34D700EBE188 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				BC369369176D34D700EBE188 /* doxygen */,
+				BC369372176D34D700EBE188 /* doxygen.conf */,
+			);
+			name = docs;
+			path = ../docs;
+			sourceTree = "<group>";
+		};
+		BC369369176D34D700EBE188 /* doxygen */ = {
+			isa = PBXGroup;
+			children = (
+				BC36936A176D34D700EBE188 /* mainpage.dox */,
+				BC36936B176D34D700EBE188 /* OBDequeModule.dox */,
+				BC36936C176D34D700EBE188 /* OBIntModule.dox */,
+				BC36936D176D34D700EBE188 /* OBMapModule.dox */,
+				BC36936E176D34D700EBE188 /* OBStringModule.dox */,
+				BC36936F176D34D700EBE188 /* OBTestModule.dox */,
+				BC369370176D34D700EBE188 /* OBVectorModule.dox */,
+				BC369371176D34D700EBE188 /* stdlib.dox */,
+			);
+			path = doxygen;
+			sourceTree = "<group>";
+		};
+		BC369373176D34D700EBE188 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				BC369374176D34D700EBE188 /* OBDeque.h */,
+				BC369375176D34D700EBE188 /* OBInt.h */,
+				BC369376176D34D700EBE188 /* OBMap.h */,
+				BC369377176D34D700EBE188 /* OBString.h */,
+				BC369378176D34D700EBE188 /* OBTest.h */,
+				BC369379176D34D700EBE188 /* OBVector.h */,
+				BC36937A176D34D700EBE188 /* offbrand.h */,
+				BC36937B176D34D700EBE188 /* private */,
+			);
+			name = include;
+			path = ../include;
+			sourceTree = "<group>";
+		};
+		BC36937B176D34D700EBE188 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				BC36937C176D34D700EBE188 /* OBDeque_Private.h */,
+				BC36937D176D34D700EBE188 /* OBInt_Private.h */,
+				BC36937E176D34D700EBE188 /* obj_Private.h */,
+				BC36937F176D34D700EBE188 /* OBMap_Private.h */,
+				BC369380176D34D700EBE188 /* OBString_Private.h */,
+				BC369381176D34D700EBE188 /* OBTest_Private.h */,
+				BC369382176D34D700EBE188 /* OBVector_Private.h */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		BC369386176D34D700EBE188 /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				BC369387176D34D700EBE188 /* mkobc */,
+				BC369388176D34D700EBE188 /* prepare */,
+				BC369389176D34D700EBE188 /* run_bin */,
+				BC36938A176D34D700EBE188 /* templates */,
+			);
+			name = scripts;
+			path = ../scripts;
+			sourceTree = "<group>";
+		};
+		BC36938A176D34D700EBE188 /* templates */ = {
+			isa = PBXGroup;
+			children = (
+				BC36938B176D34D700EBE188 /* DocModule.dox */,
+				BC36938C176D34D700EBE188 /* PrivateHeader.h */,
+				BC36938D176D34D700EBE188 /* PublicHeader.h */,
+				BC36938E176D34D700EBE188 /* Source.c */,
+				BC36938F176D34D700EBE188 /* Test.c */,
+			);
+			path = templates;
+			sourceTree = "<group>";
+		};
+		BC369390176D34D700EBE188 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				BC369391176D34D700EBE188 /* classes */,
+				BC369398176D34D700EBE188 /* offbrand_stdlib.c */,
+				BC369399176D34D700EBE188 /* tests */,
+			);
+			name = src;
+			path = ../src;
+			sourceTree = "<group>";
+		};
+		BC369391176D34D700EBE188 /* classes */ = {
+			isa = PBXGroup;
+			children = (
+				BC369392176D34D700EBE188 /* OBDeque.c */,
+				BC369393176D34D700EBE188 /* OBInt.c */,
+				BC369394176D34D700EBE188 /* OBMap.c */,
+				BC369395176D34D700EBE188 /* OBString.c */,
+				BC369396176D34D700EBE188 /* OBTest.c */,
+				BC369397176D34D700EBE188 /* OBVector.c */,
+			);
+			path = classes;
+			sourceTree = "<group>";
+		};
+		BC369399176D34D700EBE188 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				BC36939A176D34D700EBE188 /* OBDeque_test.c */,
+				BC36939B176D34D700EBE188 /* OBInt_test.c */,
+				BC36939C176D34D700EBE188 /* OBMap_test.c */,
+				BC36939D176D34D700EBE188 /* OBString_test.c */,
+				BC36939E176D34D700EBE188 /* OBTest_test.c */,
+				BC36939F176D34D700EBE188 /* OBVector_test.c */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		BC7978E6176E12290073143E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC7978E9176E12290073143E /* Cocoa.framework */,
+				BC7978EB176E12290073143E /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BC7978EB176E12290073143E /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC7978EC176E12290073143E /* AppKit.framework */,
+				BC7978ED176E12290073143E /* CoreData.framework */,
+				BC7978EE176E12290073143E /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		BC369340176D34AA00EBE188 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC3693A0176D34D700EBE188 /* minlog_funct.h in Headers */,
+				BC3693A1176D34D700EBE188 /* NCube.h in Headers */,
+				BC3693A2176D34D700EBE188 /* NCube_Private.h in Headers */,
+				BC3693A3176D34D700EBE188 /* RTable_Private.h in Headers */,
+				BC3693A4176D34D700EBE188 /* Term_Private.h in Headers */,
+				BC3693A5176D34D700EBE188 /* RTable.h in Headers */,
+				BC3693A6176D34D700EBE188 /* Term.h in Headers */,
+				BC3693B2176D34D700EBE188 /* OBDeque.h in Headers */,
+				BC3693B3176D34D700EBE188 /* OBInt.h in Headers */,
+				BC3693B4176D34D700EBE188 /* OBMap.h in Headers */,
+				BC3693B5176D34D700EBE188 /* OBString.h in Headers */,
+				BC3693B6176D34D700EBE188 /* OBTest.h in Headers */,
+				BC3693B7176D34D700EBE188 /* OBVector.h in Headers */,
+				BC3693B8176D34D700EBE188 /* offbrand.h in Headers */,
+				BC3693B9176D34D700EBE188 /* OBDeque_Private.h in Headers */,
+				BC3693BA176D34D700EBE188 /* OBInt_Private.h in Headers */,
+				BC3693BB176D34D700EBE188 /* obj_Private.h in Headers */,
+				BC3693BC176D34D700EBE188 /* OBMap_Private.h in Headers */,
+				BC3693BD176D34D700EBE188 /* OBString_Private.h in Headers */,
+				BC3693BE176D34D700EBE188 /* OBTest_Private.h in Headers */,
+				BC3693BF176D34D700EBE188 /* OBVector_Private.h in Headers */,
+				BC3693C1176D34D700EBE188 /* PrivateHeader.h in Headers */,
+				BC3693C2176D34D700EBE188 /* PublicHeader.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		BC369341176D34AA00EBE188 /* OffBrand */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC369346176D34AA00EBE188 /* Build configuration list for PBXNativeTarget "OffBrand" */;
+			buildPhases = (
+				BC36933E176D34AA00EBE188 /* Sources */,
+				BC36933F176D34AA00EBE188 /* Frameworks */,
+				BC369340176D34AA00EBE188 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OffBrand;
+			productName = OffBrand;
+			productReference = BC369342176D34AA00EBE188 /* libOffBrand.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		BCEDDA18177024B200040AE4 /* minlog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCEDDA1F177024B200040AE4 /* Build configuration list for PBXNativeTarget "minlog" */;
+			buildPhases = (
+				BCEDDA15177024B200040AE4 /* Sources */,
+				BCEDDA16177024B200040AE4 /* Frameworks */,
+				BCEDDA17177024B200040AE4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BCEDDA2A1770293000040AE4 /* PBXTargetDependency */,
+			);
+			name = minlog;
+			productName = minlog;
+			productReference = BCEDDA19177024B200040AE4 /* minlog */;
+			productType = "com.apple.product-type.tool";
+		};
+		BCEDDA3217702BBF00040AE4 /* pfinder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCEDDA3917702BBF00040AE4 /* Build configuration list for PBXNativeTarget "pfinder" */;
+			buildPhases = (
+				BCEDDA2F17702BBF00040AE4 /* Sources */,
+				BCEDDA3017702BBF00040AE4 /* Frameworks */,
+				BCEDDA3117702BBF00040AE4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BCEDDA3E17702CDD00040AE4 /* PBXTargetDependency */,
+			);
+			name = pfinder;
+			productName = pfinder;
+			productReference = BCEDDA3317702BBF00040AE4 /* pfinder */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BC36933A176D34AA00EBE188 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = Softyards;
+			};
+			buildConfigurationList = BC36933D176D34AA00EBE188 /* Build configuration list for PBXProject "OffBrand" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = BC369339176D34AA00EBE188;
+			productRefGroup = BC369343176D34AA00EBE188 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BC369341176D34AA00EBE188 /* OffBrand */,
+				BCEDDA18177024B200040AE4 /* minlog */,
+				BCEDDA3217702BBF00040AE4 /* pfinder */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BC36933E176D34AA00EBE188 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC3693C5176D34D700EBE188 /* OBDeque.c in Sources */,
+				BC3693C6176D34D700EBE188 /* OBInt.c in Sources */,
+				BC3693C7176D34D700EBE188 /* OBMap.c in Sources */,
+				BC3693C8176D34D700EBE188 /* OBString.c in Sources */,
+				BC3693C9176D34D700EBE188 /* OBTest.c in Sources */,
+				BC3693CA176D34D700EBE188 /* OBVector.c in Sources */,
+				BC3693CB176D34D700EBE188 /* offbrand_stdlib.c in Sources */,
+				BC3693CC176D34D700EBE188 /* OBDeque_test.c in Sources */,
+				BC3693CD176D34D700EBE188 /* OBInt_test.c in Sources */,
+				BC3693CE176D34D700EBE188 /* OBMap_test.c in Sources */,
+				BC3693CF176D34D700EBE188 /* OBString_test.c in Sources */,
+				BC3693D0176D34D700EBE188 /* OBTest_test.c in Sources */,
+				BC3693D1176D34D700EBE188 /* OBVector_test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCEDDA15177024B200040AE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCEDDA22177024CF00040AE4 /* NCube.c in Sources */,
+				BCEDDA23177024CF00040AE4 /* RTable.c in Sources */,
+				BCEDDA24177024CF00040AE4 /* Term.c in Sources */,
+				BCEDDA25177024CF00040AE4 /* minlog_funct.c in Sources */,
+				BCEDDA2E17702B8E00040AE4 /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCEDDA2F17702BBF00040AE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCEDDA3C17702C1C00040AE4 /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BCEDDA2A1770293000040AE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC369341176D34AA00EBE188 /* OffBrand */;
+			targetProxy = BCEDDA291770293000040AE4 /* PBXContainerItemProxy */;
+		};
+		BCEDDA3E17702CDD00040AE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC369341176D34AA00EBE188 /* OffBrand */;
+			targetProxy = BCEDDA3D17702CDD00040AE4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		BC369344176D34AA00EBE188 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		BC369345176D34AA00EBE188 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		BC369347176D34AA00EBE188 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BC369348176D34AA00EBE188 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		BCEDDA20177024B200040AE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BCEDDA21177024B200040AE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		BCEDDA3A17702BBF00040AE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BCEDDA3B17702BBF00040AE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BC36933D176D34AA00EBE188 /* Build configuration list for PBXProject "OffBrand" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC369344176D34AA00EBE188 /* Debug */,
+				BC369345176D34AA00EBE188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC369346176D34AA00EBE188 /* Build configuration list for PBXNativeTarget "OffBrand" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC369347176D34AA00EBE188 /* Debug */,
+				BC369348176D34AA00EBE188 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCEDDA1F177024B200040AE4 /* Build configuration list for PBXNativeTarget "minlog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCEDDA20177024B200040AE4 /* Debug */,
+				BCEDDA21177024B200040AE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		BCEDDA3917702BBF00040AE4 /* Build configuration list for PBXNativeTarget "pfinder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCEDDA3A17702BBF00040AE4 /* Debug */,
+				BCEDDA3B17702BBF00040AE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BC36933A176D34AA00EBE188 /* Project object */;
+}

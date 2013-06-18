@@ -24,102 +24,102 @@ int main (){
   OBTest *test_array[ARRAY_SIZE];
   OBTest *test;
 
-  test_map = createMap(); 
-  a = createTest(1);
-  b = createTest(2);
-  c = createTest(3);
-  d = createTest(103923);
-  e = createTest(1+MAP_CAPACITIES[0]); /* ensures hash collision with a */
-  f = createTest(1+2*MAP_CAPACITIES[0]);
-  g = createTest(1+3*MAP_CAPACITIES[0]);
-  h = createTest(1+4*MAP_CAPACITIES[0]);
+  test_map = OBMapCreate(); 
+  a = OBTestCreate(1);
+  b = OBTestCreate(2);
+  c = OBTestCreate(3);
+  d = OBTestCreate(103923);
+  e = OBTestCreate(1+MAP_CAPACITIES[0]); /* ensures hash collision with a */
+  f = OBTestCreate(1+2*MAP_CAPACITIES[0]);
+  g = OBTestCreate(1+3*MAP_CAPACITIES[0]);
+  h = OBTestCreate(1+4*MAP_CAPACITIES[0]);
 
-  assert(hash((obj *)a)%MAP_CAPACITIES[0] == hash((obj *)e)%MAP_CAPACITIES[0]);
+  assert(OBHash((OBObjType *)a)%MAP_CAPACITIES[0] == OBHash((OBObjType *)e)%MAP_CAPACITIES[0]);
 
-  assert(lookupMapKey(test_map, (obj *)a) == NULL);
+  assert(OBMapGetValueForKey(test_map, (OBObjType *)a) == NULL);
 
-  addToMap(test_map, (obj *)a, (obj *)b);
-  test = (OBTest *)lookupMapKey(test_map, (obj *)a);
+  OBMapAdd(test_map, (OBObjType *)a, (OBObjType *)b);
+  test = (OBTest *)OBMapGetValueForKey(test_map, (OBObjType *)a);
 
   assert(test);
-  assert(compare((obj *)b, (obj *)test) == OB_EQUAL_TO);
-  assert(referenceCount((obj *)test) > 1);
+  assert(OBCompare((OBObjType *)b, (OBObjType *)test) == OB_EQUAL_TO);
+  assert(OBReferenceCount((OBObjType *)test) > 1);
 
-  addToMap(test_map, (obj *)e, (obj *)c);
-  addToMap(test_map, (obj *)f, (obj *)d);
-  addToMap(test_map, (obj *)g, (obj *)e);
-  addToMap(test_map, (obj *)h, (obj *)f);
-  test = (OBTest *)lookupMapKey(test_map, (obj *)a);
+  OBMapAdd(test_map, (OBObjType *)e, (OBObjType *)c);
+  OBMapAdd(test_map, (OBObjType *)f, (OBObjType *)d);
+  OBMapAdd(test_map, (OBObjType *)g, (OBObjType *)e);
+  OBMapAdd(test_map, (OBObjType *)h, (OBObjType *)f);
+  test = (OBTest *)OBMapGetValueForKey(test_map, (OBObjType *)a);
 
-  assert(compare((obj *)b, (obj *)test) == OB_EQUAL_TO);
-  assert(compare((obj *)c, (obj *)test) != OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)b, (OBObjType *)test) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)c, (OBObjType *)test) != OB_EQUAL_TO);
 
-  test = (OBTest *)lookupMapKey(test_map, (obj *)e);
+  test = (OBTest *)OBMapGetValueForKey(test_map, (OBObjType *)e);
   
-  assert(compare((obj *)c, (obj *)test) == OB_EQUAL_TO);
-  assert(compare((obj *)b, (obj *)test) != OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)c, (OBObjType *)test) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)b, (OBObjType *)test) != OB_EQUAL_TO);
   
-  test = (OBTest *)lookupMapKey(test_map, (obj *)a);
-  addToMap(test_map, (obj *)a, NULL); /* remove binding of a -> b */
+  test = (OBTest *)OBMapGetValueForKey(test_map, (OBObjType *)a);
+  OBMapAdd(test_map, (OBObjType *)a, NULL); /* remove binding of a -> b */
 
-  assert(lookupMapKey(test_map, (obj *)a) == NULL);
-  assert(referenceCount((obj *)test) == 1);
+  assert(OBMapGetValueForKey(test_map, (OBObjType *)a) == NULL);
+  assert(OBReferenceCount((OBObjType *)test) == 1);
   
-  test = (OBTest *)lookupMapKey(test_map, (obj *)h);
-  assert(compare((obj *)f, (obj *)test) == OB_EQUAL_TO);
+  test = (OBTest *)OBMapGetValueForKey(test_map, (OBObjType *)h);
+  assert(OBCompare((OBObjType *)f, (OBObjType *)test) == OB_EQUAL_TO);
 
-  map_copy = copyMap(test_map);
-  addToMap(test_map, (obj *)e, NULL); /* remove binding of e -> c */
-  test = (OBTest *)lookupMapKey(map_copy, (obj *)e);
+  map_copy = OBMapCopy(test_map);
+  OBMapAdd(test_map, (OBObjType *)e, NULL); /* remove binding of e -> c */
+  test = (OBTest *)OBMapGetValueForKey(map_copy, (OBObjType *)e);
 
-  assert(compare((obj *)test, (obj *)c) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)test, (OBObjType *)c) == OB_EQUAL_TO);
   
-  removeMapKey(test_map, (obj *)e);
-  test = (OBTest *)lookupMapKey(map_copy, (obj *)e);
+  OBMapRemoveKey(test_map, (OBObjType *)e);
+  test = (OBTest *)OBMapGetValueForKey(map_copy, (OBObjType *)e);
 
-  assert(compare((obj *)test, (obj *)c) == OB_EQUAL_TO);
+  assert(OBCompare((OBObjType *)test, (OBObjType *)c) == OB_EQUAL_TO);
 
-  test = (OBTest *)lookupMapKey(test_map, (obj *)e);
+  test = (OBTest *)OBMapGetValueForKey(test_map, (OBObjType *)e);
 
   assert(test == NULL);
 
-  assert(hash((obj *)test_map) != hash((obj *)map_copy));
-  assert(compare((obj *)test_map, (obj *)map_copy) != OB_EQUAL_TO);
+  assert(OBHash((OBObjType *)test_map) != OBHash((OBObjType *)map_copy));
+  assert(OBCompare((OBObjType *)test_map, (OBObjType *)map_copy) != OB_EQUAL_TO);
 
-  addToMap(test_map, (obj *)e, (obj *)c);
+  OBMapAdd(test_map, (OBObjType *)e, (OBObjType *)c);
 
-  assert(hash((obj *)test_map) == hash((obj *)map_copy));
-  assert(compare((obj *)test_map, (obj *)map_copy) == OB_EQUAL_TO);
+  assert(OBHash((OBObjType *)test_map) == OBHash((OBObjType *)map_copy));
+  assert(OBCompare((OBObjType *)test_map, (OBObjType *)map_copy) == OB_EQUAL_TO);
 
-  clearMap(map_copy);
+  OBMapClear(map_copy);
 
-  assert(lookupMapKey(map_copy, (obj *)e) == NULL);
-  assert(lookupMapKey(map_copy, (obj *)a) == NULL);
-  assert(lookupMapKey(map_copy, (obj *)f) == NULL);
+  assert(OBMapGetValueForKey(map_copy, (OBObjType *)e) == NULL);
+  assert(OBMapGetValueForKey(map_copy, (OBObjType *)a) == NULL);
+  assert(OBMapGetValueForKey(map_copy, (OBObjType *)f) == NULL);
 
   for(i=0; i<ARRAY_SIZE; i++){
-    test_array[i] = createTest(i);
-    addToMap(test_map, (obj *)test_array[i], (obj *)test_array[i]);
+    test_array[i] = OBTestCreate(i);
+    OBMapAdd(test_map, (OBObjType *)test_array[i], (OBObjType *)test_array[i]);
   }
 
   for(i=0; i<ARRAY_SIZE; i++)
-    assert(compare((obj *) test_array[i], 
-                   lookupMapKey(test_map, (obj *)test_array[i])) ==OB_EQUAL_TO);
+    assert(OBCompare((OBObjType *) test_array[i], 
+                   OBMapGetValueForKey(test_map, (OBObjType *)test_array[i])) ==OB_EQUAL_TO);
 
-  release((obj *)a);
-  release((obj *)b);
-  release((obj *)c);
-  release((obj *)d);
-  release((obj *)e);
-  release((obj *)f);
-  release((obj *)g);
-  release((obj *)h);
+  OBRelease((OBObjType *)a);
+  OBRelease((OBObjType *)b);
+  OBRelease((OBObjType *)c);
+  OBRelease((OBObjType *)d);
+  OBRelease((OBObjType *)e);
+  OBRelease((OBObjType *)f);
+  OBRelease((OBObjType *)g);
+  OBRelease((OBObjType *)h);
 
-  release((obj *)test_map);
-  release((obj *)map_copy);
+  OBRelease((OBObjType *)test_map);
+  OBRelease((OBObjType *)map_copy);
 
   for(i=0; i<ARRAY_SIZE; i++)
-    release((obj *)test_array[i]);
+    OBRelease((OBObjType *)test_array[i]);
     
   printf("OBMap_test: TESTS PASSED\n");
 

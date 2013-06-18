@@ -11,7 +11,7 @@
 /* DATA */
 
 struct NCube_struct{
-  obj base;
+  OBObjType base;
   uint32_t *terms;         /* array of all minterms or maxterms  contained in
                               the NCube */
   uint32_t dont_cares;     /* each bit of the uint32_t is associated with a
@@ -31,10 +31,10 @@ NCube * createNCubeWithOrder(uint8_t order);
 
 /* compare two instances of NCube, return 0 if they are equal, 1 if they are not
  * NCubes cannot be considered greater than or less than each other */
-int8_t compareNCubes(const obj *a, const obj *b);
+int8_t compareNCubes(OBTypeRef a, OBTypeRef b);
 
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */
-void deallocNCube(obj *to_dealloc);
+void deallocNCube(OBTypeRef to_dealloc);
 
 #endif

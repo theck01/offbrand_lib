@@ -16,8 +16,8 @@
  * an instance of OBVector
  */
 struct OBVector_struct{
-  obj base; /**< obj containing reference count and class membership data */
-  obj **array; /**< intenal dynamically sized array of pointers to Offbrand
+  OBObjType base; /**< obj containing reference count and class membership data */
+  OBTypeRef *array; /**< intenal dynamically sized array of pointers to Offbrand
                     compatible class instances */
   uint32_t length; /**< Integer size to find all objects stored in Vector */
   uint32_t capacity; /**< Integer count of the capacity of the internal array */
@@ -31,7 +31,7 @@ struct OBVector_struct{
  * @param initial_capacity Capacity of the vector to be created
  * @return A new, partially initialized instance of OBVector
  */
-OBVector * createDefaultVector(uint32_t initial_capacity);
+OBVector * OBVectorCreateDefault(uint32_t initial_capacity);
 
 /**
  * @brief Resizes a vector if the number of objects it contains is equal to its
@@ -39,7 +39,7 @@ OBVector * createDefaultVector(uint32_t initial_capacity);
  * @param v Pointer to an instance of OBVector
  * @param index Index that vector must be resized to contain
  */
-void resizeVector(OBVector *v, uint32_t index);
+void OBVectorResize(OBVector *v, uint32_t index);
 
 /**
  * @brief Internal merge sort implementation for an OBVector
@@ -58,15 +58,15 @@ void resizeVector(OBVector *v, uint32_t index);
  * sorting should use the publicly accessable function which calls this method
  * internally.
  */
-obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
-                             compare_fptr funct);
+OBTypeRef * recursiveSortContents(OBTypeRef *to_sort, uint32_t size, int8_t order,
+                             obcompare_fptr funct);
 
 /**
  * @brief Hash function for OBVector
  * @param to_hash An obj pointer to an instance of OBVector
  * @return Key value (hash) for the given obj pointer to an OBVector
  */
-obhash_t hashVector(const obj *to_hash);
+obhash_t OBVectorHash(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBVector
@@ -77,14 +77,14 @@ obhash_t hashVector(const obj *to_hash);
  * @retval OB_NOT_EQUAL a does not equal b
  * @retval OB_EQUAL_TO a equals b
  */
-int8_t compareVectors(const obj *a, const obj *b);
+int8_t OBVectorCompare(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Display function for an instance of OBString
  *
  * @param to_print A non-NULL obj pointer to type OBString
  */
-void displayVector(const obj *to_print);
+void OBVectorDisplay(OBTypeRef to_print);
 
 /** 
  * @brief Destructor for OBVector
@@ -93,7 +93,7 @@ void displayVector(const obj *to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocVector(obj *to_dealloc);
+void OBVectorDealloc(OBTypeRef to_dealloc);
 
 /* PRIVATE UTILITY METHODS */
 
@@ -107,6 +107,6 @@ void deallocVector(obj *to_dealloc);
  * @retval <UINT32_MAX Index where a non-NULL pointer was found
  * @retval UINT32_MAX No non-NULL pointer was found
  */
-uint32_t findValidPrecursorIndex(obj **array, uint32_t index);
+uint32_t findValidPrecursorIndex(OBTypeRef *array, uint32_t index);
 
 #endif

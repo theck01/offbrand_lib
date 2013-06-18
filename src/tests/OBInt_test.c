@@ -18,273 +18,273 @@ int main (){
 	OBString *str1, *str2;
 
   /* test machine integer creation and value methods */
-  a = createIntWithInt(1024);
-  assert(intValue(a) == 1024);
-  b = createIntWithInt(9581085);
-  assert(intValue(b) == 9581085);
-  c = createIntWithInt(-999);
-  assert(intValue(c) == -999);
+  a = OBIntCreate(1024);
+  assert(OBIntGetIntValue(a) == 1024);
+  b = OBIntCreate(9581085);
+  assert(OBIntGetIntValue(b) == 9581085);
+  c = OBIntCreate(-999);
+  assert(OBIntGetIntValue(c) == -999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
 	/* test string integer creation and value methods */
-	str1 = createString("12345");
-	a = intFromString(str1);
-	assert(intValue(a) == 12345);
-	str2 = stringFromInt(a);
-	assert(compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
+	str1 = OBStringCreate("12345");
+	a = OBIntCreateFromString(str1);
+	assert(OBIntGetIntValue(a) == 12345);
+	str2 = OBIntGetStringValue(a);
+	assert(OBCompare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
 	
-	release((obj *)a);
-	release((obj *)str1);
-	release((obj *)str2);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)str1);
+	OBRelease((OBObjType *)str2);
 
-	str1 = createString("-012345");
-	a = intFromString(str1);
-	release((obj *)str1);
-	assert(intValue(a) == -12345);
-	str1 = createString("-12345");
-	str2 = stringFromInt(a);
-	assert(compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
+	str1 = OBStringCreate("-012345");
+	a = OBIntCreateFromString(str1);
+	OBRelease((OBObjType *)str1);
+	assert(OBIntGetIntValue(a) == -12345);
+	str1 = OBStringCreate("-12345");
+	str2 = OBIntGetStringValue(a);
+	assert(OBCompare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
 
-	release((obj *)a);
-	release((obj *)str1);
-	release((obj *)str2);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)str1);
+	OBRelease((OBObjType *)str2);
 
 	/* test copy method */
-	a = createIntWithInt(918394);
-	b = copyInt(a);
-	assert(compare((obj *)a, (obj *)b) == OB_EQUAL_TO);
+	a = OBIntCreate(918394);
+	b = OBIntCopy(a);
+	assert(OBCompare((OBObjType *)a, (OBObjType *)b) == OB_EQUAL_TO);
 	assert(a != b);
 	assert(a->digits != b->digits);
 
-	release((obj *)a);
-	release((obj *)b);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
 
 	/* test integer zero and negative methods */
-	a = createIntWithInt(1948);
-	b = createIntWithInt(-1);
-	str1 = createString("-0");
-	c = intFromString(str1);
-	release((obj *)str1);
+	a = OBIntCreate(1948);
+	b = OBIntCreate(-1);
+	str1 = OBStringCreate("-0");
+	c = OBIntCreateFromString(str1);
+	OBRelease((OBObjType *)str1);
 	
-	assert(!isIntZero(a));
-	assert(!isIntZero(b));
-	assert(isIntZero(c));
+	assert(!OBIntIsZero(a));
+	assert(!OBIntIsZero(b));
+	assert(OBIntIsZero(c));
 
-	assert(!isIntNegative(a));
-	assert(isIntNegative(b));
-	assert(!isIntNegative(c));
+	assert(!OBIntIsNegative(a));
+	assert(OBIntIsNegative(b));
+	assert(!OBIntIsNegative(c));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
   /* test integer addition */
-  a = createIntWithInt(999);
-  b = addIntAndPrim(a, 1111);
-  assert(intValue(b) == 2110);
-  c = addInts(a, b);
-  assert(intValue(c) == 2110 + 999);
+  a = OBIntCreate(999);
+  b = OBIntAddPrimitive(a, 1111);
+  assert(OBIntGetIntValue(b) == 2110);
+  c = OBIntAdd(a, b);
+  assert(OBIntGetIntValue(c) == 2110 + 999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(-999);
-  b = addIntAndPrim(a, 1);
-  assert(intValue(b) == -998);
-  release((obj *)b);
-  b = addIntAndPrim(a, -1);
-  assert(intValue(b) == -1000);
-  release((obj *)b);
-  b = createIntWithInt(1000);
-  c = addInts(a, b);
-  assert(intValue(c) == 1);
+  a = OBIntCreate(-999);
+  b = OBIntAddPrimitive(a, 1);
+  assert(OBIntGetIntValue(b) == -998);
+  OBRelease((OBObjType *)b);
+  b = OBIntAddPrimitive(a, -1);
+  assert(OBIntGetIntValue(b) == -1000);
+  OBRelease((OBObjType *)b);
+  b = OBIntCreate(1000);
+  c = OBIntAdd(a, b);
+  assert(OBIntGetIntValue(c) == 1);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
   /* test integer subtraction */
-  a = createIntWithInt(999);
-  b = subtractIntWithPrim(a, 1111);
-  assert(intValue(b) == -112);
-  c = subtractInts(a, b);
-  assert(intValue(c) == 999 + 112);
+  a = OBIntCreate(999);
+  b = OBIntSubtractPrimitive(a, 1111);
+  assert(OBIntGetIntValue(b) == -112);
+  c = OBIntSubtract(a, b);
+  assert(OBIntGetIntValue(c) == 999 + 112);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(-999);
-  b = subtractIntWithPrim(a, 1);
-  assert(intValue(b) == -1000);
-  release((obj *)b);
-  b = subtractIntWithPrim(a, -1);
-  assert(intValue(b) == -998);
-  release((obj *)b);
-  b = createIntWithInt(1000);
-  c = subtractInts(a, b);
-  assert(intValue(c) == -1999);
+  a = OBIntCreate(-999);
+  b = OBIntSubtractPrimitive(a, 1);
+  assert(OBIntGetIntValue(b) == -1000);
+  OBRelease((OBObjType *)b);
+  b = OBIntSubtractPrimitive(a, -1);
+  assert(OBIntGetIntValue(b) == -998);
+  OBRelease((OBObjType *)b);
+  b = OBIntCreate(1000);
+  c = OBIntSubtract(a, b);
+  assert(OBIntGetIntValue(c) == -1999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
   /* test integer multiplication (size under digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = multiplyIntAndPrim(a, -999);
-  assert(intValue(b) == 999*-999);
-  c = multiplyInts(a, b);
-  assert(intValue(c) == 999*999*-999);
+  a = OBIntCreate(999);
+  b = OBIntMultiplyPrimitive(a, -999);
+  assert(OBIntGetIntValue(b) == 999*-999);
+  c = OBIntMultiply(a, b);
+  assert(OBIntGetIntValue(c) == 999*999*-999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(-1928491);
-  b = multiplyIntAndPrim(a, -58);
-  assert(intValue(b) == -1928491*-58);
-  release((obj *)b);
-  b = createIntWithInt(2);
-  c = multiplyInts(a, b);
-  assert(intValue(c) == -1928491*2);
+  a = OBIntCreate(-1928491);
+  b = OBIntMultiplyPrimitive(a, -58);
+  assert(OBIntGetIntValue(b) == -1928491*-58);
+  OBRelease((OBObjType *)b);
+  b = OBIntCreate(2);
+  c = OBIntMultiply(a, b);
+  assert(OBIntGetIntValue(c) == -1928491*2);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(29458);
-  b = multiplyIntAndPrim(a, 0);
-  assert(isIntZero(b) != 0);
+  a = OBIntCreate(29458);
+  b = OBIntMultiplyPrimitive(a, 0);
+  assert(OBIntIsZero(b) != 0);
 
-  release((obj *)a);
-  release((obj *)b);
+  OBRelease((OBObjType *)a);
+  OBRelease((OBObjType *)b);
 
   /* test integer division (size under digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = divideIntWithPrim(a, -999);
-  assert(intValue(b) == -1);
-  c = divideIntWithPrim(a, 33);
-  assert(intValue(c) == 999/33);
+  a = OBIntCreate(999);
+  b = OBIntDividePrimitive(a, -999);
+  assert(OBIntGetIntValue(b) == -1);
+  c = OBIntDividePrimitive(a, 33);
+  assert(OBIntGetIntValue(c) == 999/33);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(1940248);
-  b = divideIntWithPrim(a, -2848);
-  assert(intValue(b) == 1940248/(-2848));
-  c = divideInts(a, b);
-  assert(intValue(c) == 1940248/(1940248/(-2848)));
+  a = OBIntCreate(1940248);
+  b = OBIntDividePrimitive(a, -2848);
+  assert(OBIntGetIntValue(b) == 1940248/(-2848));
+  c = OBIntDivide(a, b);
+  assert(OBIntGetIntValue(c) == 1940248/(1940248/(-2848)));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
   /* test integer modulus (size under digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = modIntWithPrim(a, -999);
-  assert(intValue(b) == 999%(-999));
-  c = modIntWithPrim(a, 33);
-  assert(intValue(c) == 999%33);
+  a = OBIntCreate(999);
+  b = OBIntModPrimitive(a, -999);
+  assert(OBIntGetIntValue(b) == 999%(-999));
+  c = OBIntModPrimitive(a, 33);
+  assert(OBIntGetIntValue(c) == 999%33);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(1940248);
-  b = modIntWithPrim(a, -2848);
-  assert(intValue(b) == 1940248%(-2848));
-  c = modInts(a, b);
-  assert(intValue(c) == 1940248%(1940248%(-2848)));
+  a = OBIntCreate(1940248);
+  b = OBIntModPrimitive(a, -2848);
+  assert(OBIntGetIntValue(b) == 1940248%(-2848));
+  c = OBIntMod(a, b);
+  assert(OBIntGetIntValue(c) == 1940248%(1940248%(-2848)));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
   /* set digit limit for integer arithmetic low, for test purposes */
-  setMaxDigits(2);
+  OBIntSetMaxDigits(2);
 
   /* test integer multiplication (size over digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = multiplyIntAndPrim(a, -999);
-  assert(intValue(b) == 999*-999);
-  c = multiplyInts(a, b);
-  assert(intValue(c) == 999*999*-999);
+  a = OBIntCreate(999);
+  b = OBIntMultiplyPrimitive(a, -999);
+  assert(OBIntGetIntValue(b) == 999*-999);
+  c = OBIntMultiply(a, b);
+  assert(OBIntGetIntValue(c) == 999*999*-999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(-1928491);
-  b = multiplyIntAndPrim(a, -58);
-  assert(intValue(b) == -1928491*-58);
-  release((obj *)b);
-  b = createIntWithInt(2);
-  c = multiplyInts(a, b);
-  assert(intValue(c) == -1928491*2);
+  a = OBIntCreate(-1928491);
+  b = OBIntMultiplyPrimitive(a, -58);
+  assert(OBIntGetIntValue(b) == -1928491*-58);
+  OBRelease((OBObjType *)b);
+  b = OBIntCreate(2);
+  c = OBIntMultiply(a, b);
+  assert(OBIntGetIntValue(c) == -1928491*2);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(29458);
-  b = multiplyIntAndPrim(a, 0);
-  assert(isIntZero(b) != 0);
+  a = OBIntCreate(29458);
+  b = OBIntMultiplyPrimitive(a, 0);
+  assert(OBIntIsZero(b) != 0);
 
-  release((obj *)a);
-  release((obj *)b);
+  OBRelease((OBObjType *)a);
+  OBRelease((OBObjType *)b);
 
   /* test integer division (size under digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = divideIntWithPrim(a, -999);
-  assert(intValue(b) == -1);
-  c = divideIntWithPrim(a, 33);
-  assert(intValue(c) == 999/33);
+  a = OBIntCreate(999);
+  b = OBIntDividePrimitive(a, -999);
+  assert(OBIntGetIntValue(b) == -1);
+  c = OBIntDividePrimitive(a, 33);
+  assert(OBIntGetIntValue(c) == 999/33);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(1940248);
-  b = divideIntWithPrim(a, -2848);
-  assert(intValue(b) == 1940248/(-2848));
-  c = divideInts(a, b);
-  assert(intValue(c) == 1940248/(1940248/(-2848)));
+  a = OBIntCreate(1940248);
+  b = OBIntDividePrimitive(a, -2848);
+  assert(OBIntGetIntValue(b) == 1940248/(-2848));
+  c = OBIntDivide(a, b);
+  assert(OBIntGetIntValue(c) == 1940248/(1940248/(-2848)));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
   /* test integer modulus (size over digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = modIntWithPrim(a, -999);
-  assert(intValue(b) == 999%(-999));
-  c = modIntWithPrim(a, 33);
-  assert(intValue(c) == 999%33);
+  a = OBIntCreate(999);
+  b = OBIntModPrimitive(a, -999);
+  assert(OBIntGetIntValue(b) == 999%(-999));
+  c = OBIntModPrimitive(a, 33);
+  assert(OBIntGetIntValue(c) == 999%33);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
-  a = createIntWithInt(1940248);
-  b = modIntWithPrim(a, -2848);
-  assert(intValue(b) == 1940248%(-2848));
-  c = modInts(a, b);
-  assert(intValue(c) == 1940248%(1940248%(-2848)));
+  a = OBIntCreate(1940248);
+  b = OBIntModPrimitive(a, -2848);
+  assert(OBIntGetIntValue(b) == 1940248%(-2848));
+  c = OBIntMod(a, b);
+  assert(OBIntGetIntValue(c) == 1940248%(1940248%(-2848)));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+	OBRelease((OBObjType *)a);
+	OBRelease((OBObjType *)b);
+	OBRelease((OBObjType *)c);
 
   printf("OBInt_test: TESTS PASSED\n");
   return 0;

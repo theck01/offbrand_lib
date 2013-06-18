@@ -1,7 +1,7 @@
 /**
  * @file OBString.h
  * @brief OBString Public Interface
- * @author theck
+ * @author theck, danhd123
  */
 
 #ifndef OBSTRING_H
@@ -31,7 +31,7 @@ typedef struct OBString_struct OBString;
  * finite length, any C strings passed to the constructor should be known to
  * meet these constraints
  */
-OBString * createString(const char *str);
+OBString * OBStringCreate(const char *str);
 
 /**
  * @brief Copies a sequence of characters from an OBString to create a new
@@ -51,7 +51,7 @@ OBString * createString(const char *str);
  * bounds then any extension beyond the bounds will return only existing
  * characters in the range, an empty string if none exist
  */
-OBString * copySubstring(const OBString *s, int64_t start, uint32_t length);
+OBString * OBStringGetSubstringCopyRange(const OBString *s, int64_t start, size_t length);
 
 /**
  * @brief Gets the length of an OBString
@@ -60,7 +60,7 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length);
  *
  * @return Integer length of the OBString instance
  */
-uint32_t stringLength(const OBString *s);
+size_t OBStringGetLength(const OBString *s);
 
 /**
  * @brief returns the character at the specified index
@@ -72,8 +72,11 @@ uint32_t stringLength(const OBString *s);
  *
  * @return The character at the index within the string, '\0' if the character
  * is out of bounds
+ * @discussion Unlike CFStringGetCharacterAtIndex, OBStringGetCharAtIndex 
+ * does in fact return a char, not an abstract "character" (implemented as unichar
+ * so I'm okay with leaving this API as "Char"
  */
-char charAtStringIndex(const OBString *s, int64_t i);
+char OBStringGetCharAtIndex(const OBString *s, int64_t i);
 
 /**
  * @brief concatenates the two OBString instances into a new instance of
@@ -85,7 +88,7 @@ char charAtStringIndex(const OBString *s, int64_t i);
  * @return A pointer to an new instance of OBString that contains string 
  * s1+s2
  */
-OBString * concatenateStrings(const OBString *s1, const OBString *s2);
+OBString * OBStringConcatenate(const OBString *s1, const OBString *s2);
 
 /**
  * @brief Gets the C string representation of an OBString instance
@@ -98,7 +101,7 @@ OBString * concatenateStrings(const OBString *s1, const OBString *s2);
  * @warning The returned pointer is directed at an internal C string that should
  * not be altered, a new OBString should be created if an alteration is desired
  */
-const char * getCString(const OBString *s);
+const char * OBStringGetCString(const OBString *s);
 
 /**
  * @brief Tokenizes an OBString over a character sequence
@@ -117,7 +120,7 @@ const char * getCString(const OBString *s);
  * @warning Function does not attempt to verify that delim is in fact NUL
  * terminated
  */
-OBVector * splitString(const OBString *s, const char *delim);
+OBVector * OBStringComponentsSeparatedBy(const OBString *s, const char *delim);
 
 /**
  * @brief Searches for an substring in an OBString
@@ -132,7 +135,7 @@ OBVector * splitString(const OBString *s, const char *delim);
  * @warning Function does not attempt to verify that delim is in fact NUL
  * terminated
  */
-uint8_t findSubstring(const OBString *s, const char *to_find);
+uint8_t OBStringContains(const OBString *s, const char *to_find);
 
 /**
  * @brief Finds the pattern matching an expression in an OBString
@@ -149,7 +152,7 @@ uint8_t findSubstring(const OBString *s, const char *to_find);
  * @warning Function does not attempt to verify that delim is in fact NUL
  * terminated
  */
-OBString * matchStringRegex(const OBString *s, const char *regex);
+OBString * OBStringMatchRegex(const OBString *s, const char *regex);
 
 #endif
 

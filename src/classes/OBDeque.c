@@ -11,68 +11,68 @@
 /* PUBLIC METHODS */
 
 
-OBDeque * createDeque(void){
-  return createDefaultDeque();
+OBDeque * OBDequeCreate(void){
+  return OBDequeCreateDefault();
 }
 
 
-OBDeque * copyDeque(const OBDeque *to_copy){
+OBDeque * OBDequeCopy(const OBDeque *to_copy){
 
-  obj *element;
+  OBTypeRef element;
   OBDequeIterator *iter;
   OBDeque *copy;
   
   assert(to_copy);
 
-  copy = createDefaultDeque();
+  copy = OBDequeCreateDefault();
 
-  iter = getDequeHeadIt(to_copy);
+  iter = OBDequeGetHeadIterator(to_copy);
   
   if(!iter) return copy; /* if the list is empty, return empty copy */
 
   /* while there are elements in the deque to copy add to the tail of the
    * deque */
   do{
-    element = objAtDequeIt(to_copy, iter);
-    addDequeTail(copy, element);
-  } while(iterateDequeNext(to_copy, iter));
+    element = OBDequeGetObjectAtIterator(to_copy, iter);
+    OBDequeAddTail(copy, element);
+  } while(OBDequeIterateNext(to_copy, iter));
 
-  release((obj *)iter);
+  OBRelease(iter);
 
   return copy;
 }
 
 
-uint8_t isDequeEmpty(const OBDeque *deque){
+uint8_t OBDequeIsEmpty(const OBDeque *deque){
   assert(deque);
   return deque->length == 0;
 }
 
 
-uint64_t dequeLength(const OBDeque *deque){
+uint64_t OBDequeGetLength(const OBDeque *deque){
   assert(deque);
   return deque->length;
 }
 
 
-OBDequeIterator * getDequeHeadIt(const OBDeque *deque){
+OBDequeIterator * OBDequeGetHeadIterator(const OBDeque *deque){
   assert(deque);
-  return createDequeIterator(deque, deque->head);
+  return OBDequeIteratorCreate(deque, deque->head);
 }
 
 
-OBDequeIterator * getDequeTailIt(const OBDeque *deque){
+OBDequeIterator * OBDequeGetTailIterator(const OBDeque *deque){
   assert(deque);
-  return createDequeIterator(deque, deque->tail);
+  return OBDequeIteratorCreate(deque, deque->tail);
 }
 
 
-OBDequeIterator * copyDequeIterator(const OBDequeIterator *it){
-  return createDequeIterator(it->deque, it->node);
+OBDequeIterator * OBDequeIteratorCopy(const OBDequeIterator *it){
+  return OBDequeIteratorCreate(it->deque, it->node);
 }
 
 
-uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it){
+uint8_t OBDequeIterateNext(const OBDeque *deque, OBDequeIterator *it){
 
   assert(deque);
   assert(it);
@@ -82,8 +82,8 @@ uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it){
 
   /* update the iterator if the next node exists, and return 1 */
   if(it->node->next){
-    retain((obj *)it->node->next);
-    release((obj *)it->node);
+    OBRetain((OBObjType *)it->node->next);
+    OBRelease((OBObjType *)it->node);
     it->node = it->node->next;
     return 1;
   }
@@ -93,7 +93,7 @@ uint8_t iterateDequeNext(const OBDeque *deque, OBDequeIterator *it){
 }
 
 
-uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it){
+uint8_t OBDequeIteratePrevious(const OBDeque *deque, OBDequeIterator *it){
 
   assert(deque);
   assert(it);
@@ -103,8 +103,8 @@ uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it){
 
   /* update the iterator if the prev node exists, and return 1 */
   if(it->node->prev){
-    retain((obj *)it->node->prev);
-    release((obj *)it->node);
+    OBRetain((OBObjType *)it->node->prev);
+    OBRelease((OBObjType *)it->node);
     it->node = it->node->prev;
     return 1;
   }
@@ -114,7 +114,7 @@ uint8_t iterateDequePrev(const OBDeque *deque, OBDequeIterator *it){
 }
 
 
-void addDequeHead(OBDeque *deque, obj *to_add){
+void OBDequeAddHead(OBDeque *deque, OBTypeRef to_add){
   
   OBDequeNode *new_node;
   
@@ -123,7 +123,7 @@ void addDequeHead(OBDeque *deque, obj *to_add){
 
   /* creating deque node with to_add retains to account for the deque's
    * reference */
-  new_node = createDequeNode(to_add);
+  new_node = OBDequeNodeCreate(to_add);
 
   /* set node data */
   new_node->next = deque->head;
@@ -140,7 +140,7 @@ void addDequeHead(OBDeque *deque, obj *to_add){
 }
 
 
-void addDequeTail(OBDeque *deque, obj *to_add){
+void OBDequeAddTail(OBDeque *deque, OBTypeRef to_add){
 
   OBDequeNode *new_node;
   
@@ -149,7 +149,7 @@ void addDequeTail(OBDeque *deque, obj *to_add){
 
   /* creating deque node with to_add retains to account for the deque's
    * reference */
-  new_node = createDequeNode(to_add);
+  new_node = OBDequeNodeCreate(to_add);
 
   /* set node data */
   new_node->prev = deque->tail;
@@ -166,7 +166,7 @@ void addDequeTail(OBDeque *deque, obj *to_add){
 }
 
 
-void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
+void OBDeuqueAddAtIterator(OBDeque *deque, OBDequeIterator *it, OBTypeRef to_add){
 
   OBDequeNode *new_node;
   
@@ -176,13 +176,13 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
   assert(to_add);
 
   if(!it->node){
-    addDequeHead(deque, to_add);
+    OBDequeAddHead(deque, to_add);
     it->node = deque->head;
   }
 
   /* creating deque node with to_add retains to account for the deque's
    * reference */
-  new_node = createDequeNode(to_add);
+  new_node = OBDequeNodeCreate(to_add);
 
   /* set node data */
   new_node->prev = it->node->prev;
@@ -197,40 +197,40 @@ void addAtDequeIt(OBDeque *deque, OBDequeIterator *it, obj *to_add){
   if(it->node == deque->head) deque->head = new_node;
 
   /* update iterator to newly inserted node */
-  assert(iterateDequePrev(deque, it));
+  assert(OBDequeIteratePrevious(deque, it));
 
   return;
 }
 
 
-OBDeque * joinDeques(const OBDeque *d1, const OBDeque *d2){
+OBDeque * OBDequeJoin(const OBDeque *d1, const OBDeque *d2){
 
   OBDeque *joined;
   OBDequeIterator *it;
-  obj *element;
+  OBTypeRef element;
 
   assert(d1);
   assert(d2);
 
-  joined = copyDeque(d1);
+  joined = OBDequeCopy(d1);
 
-  it = getDequeHeadIt(d2);
+  it = OBDequeGetHeadIterator(d2);
   
   if(!it) return joined; /* if the list is empty, return joined list */
 
   /* while there are elements in the deque to copy add to the tail of the
    * deque */
   do{
-    element = objAtDequeIt(d2, it);
-    addDequeTail(joined, element);
-  } while(iterateDequeNext(d2, it));
+    element = OBDequeGetObjectAtIterator(d2, it);
+    OBDequeAddTail(joined, element);
+  } while(OBDequeIterateNext(d2, it));
 
-  release((obj *)it);
+  OBRelease((OBObjType *)it);
 
   return joined;
 }
 
-uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find){
+uint8_t OBDequeContains(const OBDeque *deque, OBTypeRef to_find){
 
   OBDequeIterator *it;
   uint8_t retval = 0;
@@ -238,28 +238,28 @@ uint8_t findObjInDeque(const OBDeque *deque, const obj *to_find){
   assert(deque);
   assert(to_find);
 
-  it = getDequeHeadIt(deque);
+  it = OBDequeGetHeadIterator(deque);
   if(!it) return 0; /* obj is not in an empty list */
   
   do{
-    if(compare(objAtDequeIt(deque, it), to_find) == OB_EQUAL_TO){
+    if(OBCompare(OBDequeGetObjectAtIterator(deque, it), to_find) == OB_EQUAL_TO){
       retval = 1;
       break;
     }
-  } while(iterateDequeNext(deque, it));
+  } while(OBDequeIterateNext(deque, it));
 
-  release((obj *)it);
+  OBRelease((OBObjType *)it);
 
   return retval;
 }
 
 
-void sortDeque(OBDeque *deque, int8_t order){
-  sortDequeWithFunct(deque, order, &compare);
+void OBDequeSort(OBDeque *deque, int8_t order){
+  OBDequeSortWithFunction(deque, order, &OBCompare);
 }
   
 
-void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct){
+void OBDequeSortWithFunction(OBDeque *deque, int8_t order, obcompare_fptr funct){
 
   OBDeque sorted; /* stack variable to remove internal memory management
                      burden */
@@ -268,7 +268,7 @@ void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct){
   assert(order == OB_LEAST_TO_GREATEST || order == OB_GREATEST_TO_LEAST);
   assert(funct);
 
-  sorted = recursiveSort(*deque, order, funct);
+  sorted = OBDequeSortRecursive(*deque, order, funct);
 
   /* connect head and tail of newly sorted list to deque */
   deque->head = sorted.head;
@@ -278,21 +278,21 @@ void sortDequeWithFunct(OBDeque *deque, int8_t order, compare_fptr funct){
 }
 
 
-obj * objAtDequeHead(const OBDeque *deque){
+OBTypeRef OBDequeGetFirstObject(const OBDeque *deque){
   assert(deque);
   if(deque->head) return deque->head->stored;
   return NULL;
 }
 
 
-obj * objAtDequeTail(const OBDeque *deque){
+OBTypeRef OBDequeGetLastObject(const OBDeque *deque){
   assert(deque);
   if(deque->tail) return deque->tail->stored;
   return NULL;
 }
 
 
-obj * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it){
+OBTypeRef OBDequeGetObjectAtIterator(const OBDeque *deque, const OBDequeIterator *it){
 
   assert(deque);
   assert(it);
@@ -303,7 +303,7 @@ obj * objAtDequeIt(const OBDeque *deque, const OBDequeIterator *it){
 }
 
 
-void removeDequeHead(OBDeque *deque){
+void OBDequeRemoveFirstObject(OBDeque *deque){
 
   OBDequeNode *temp_node;
 
@@ -324,13 +324,13 @@ void removeDequeHead(OBDeque *deque){
   temp_node->next = NULL;
   temp_node->prev = NULL;
 
-  release((obj *)temp_node);
+  OBRelease((OBObjType *)temp_node);
 
   return;
 }
 
 
-void removeDequeTail(OBDeque *deque){
+void OBDequeRemoveLastObject(OBDeque *deque){
 
   OBDequeNode *temp_node;
 
@@ -351,13 +351,13 @@ void removeDequeTail(OBDeque *deque){
   temp_node->next = NULL;
   temp_node->prev = NULL;
 
-  release((obj *)temp_node);
+  OBRelease((OBObjType *)temp_node);
 
   return;
 }
 
 
-void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
+void OBDequeRemoveObjectAtIterator(OBDeque *deque, OBDequeIterator *it){
 
   OBDequeNode *temp_node;
 
@@ -378,7 +378,7 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
   temp_node = it->node;
 
   /* advance iterator to next valid node */
-  if(!iterateDequeNext(deque, it) && !iterateDequePrev(deque, it))
+  if(!OBDequeIterateNext(deque, it) && !OBDequeIteratePrevious(deque, it))
     it->node = NULL;
 
   /* set temp_node next and prev to null, to separate the node completely from
@@ -386,13 +386,13 @@ void removeDequeAtIt(OBDeque *deque, OBDequeIterator *it){
   temp_node->next = NULL;
   temp_node->prev = NULL;
 
-  release((obj *)temp_node); /* release reference that deque holds on node */
+  OBRelease((OBObjType *)temp_node); /* release reference that deque holds on node */
 
   return;
 }
 
 
-void clearDeque(OBDeque *deque){
+void OBDequeClear(OBDeque *deque){
 
   OBDequeNode *tmp, *next;
 
@@ -409,7 +409,7 @@ void clearDeque(OBDeque *deque){
     tmp->next = NULL;
     tmp->prev = NULL;
 
-    release((obj *)tmp);
+    OBRelease((OBObjType *)tmp);
     tmp = next;
   }
 
@@ -426,7 +426,7 @@ void clearDeque(OBDeque *deque){
 
 /* OBDequeNode Private Methods */
 
-OBDequeNode * createDequeNode(obj *to_store){
+OBDequeNode * OBDequeNodeCreate(OBTypeRef to_store){
 
   static const char classname[] = "OBDequeNode";
   OBDequeNode *new_instance;
@@ -437,9 +437,9 @@ OBDequeNode * createDequeNode(obj *to_store){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDequeNode, NULL, NULL, NULL, classname);
+  OBInitBase((OBObjType *)new_instance, &OBDequeNodeDealloc, NULL, NULL, NULL, classname);
 
-  retain(to_store);
+  OBRetain(to_store);
   new_instance->stored = to_store;
   new_instance->next = NULL;
   new_instance->prev = NULL;
@@ -448,15 +448,15 @@ OBDequeNode * createDequeNode(obj *to_store){
 }
 
 
-void deallocDequeNode(obj *to_dealloc){
+void OBDequeNodeDealloc(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBDequeNode */
   OBDequeNode *instance = (OBDequeNode *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBDequeNode"));
+  assert(OBObjIsOfClass(to_dealloc, "OBDequeNode"));
 
-  release(instance->stored);
+  OBRelease(instance->stored);
 
   return;
 }
@@ -464,7 +464,7 @@ void deallocDequeNode(obj *to_dealloc){
 
 /* OBDequeIterator Private Methods */
 
-OBDequeIterator * createDequeIterator(const OBDeque *deque, OBDequeNode *node){
+OBDequeIterator * OBDequeIteratorCreate(const OBDeque *deque, OBDequeNode *node){
 
   static const char classname[] = "OBDequeIterator";
   OBDequeIterator *new_instance;
@@ -476,10 +476,10 @@ OBDequeIterator * createDequeIterator(const OBDeque *deque, OBDequeNode *node){
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDequeIterator, NULL, NULL, NULL,
+  OBInitBase((OBObjType *)new_instance, &OBDequeIteratorDealloc, NULL, NULL, NULL,
            classname);
 
-  retain((obj *)node);
+  OBRetain((OBObjType *)node);
   new_instance->node = node;
   new_instance->deque = deque;
 
@@ -487,15 +487,15 @@ OBDequeIterator * createDequeIterator(const OBDeque *deque, OBDequeNode *node){
 }
 
 
-void deallocDequeIterator(obj *to_dealloc){
+void OBDequeIteratorDealloc(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBDequeNode */
   OBDequeIterator *instance = (OBDequeIterator *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBDequeIterator"));
+  assert(OBObjIsOfClass(to_dealloc, "OBDequeIterator"));
 
-  release((obj *)instance->node);
+  OBRelease((OBObjType *)instance->node);
 
   return;
 }
@@ -505,15 +505,15 @@ void deallocDequeIterator(obj *to_dealloc){
 
 /* add arguments to complete initialization as needed, modify 
  * OBDeque_Private.h as well if modifications are made */
-OBDeque * createDefaultDeque(void){
+OBDeque * OBDequeCreateDefault(void){
 
   static const char classname[] = "OBDeque";
   OBDeque *new_instance = malloc(sizeof(OBDeque));
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocDeque, &hashDeque, &compareDeques,
-           &displayDeque, classname);
+  OBInitBase((OBObjType *)new_instance, &OBDequeDealloc, &OBDequeHash, &OBDequeCompare,
+           &OBDequeDisplay, classname);
 
   new_instance->head = NULL;
   new_instance->tail = NULL;
@@ -525,7 +525,7 @@ OBDeque * createDefaultDeque(void){
 
 /* private recursive sort method uses stack variables to take advantage of
  * static memory management */
-OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct){
+OBDeque OBDequeSortRecursive(OBDeque deque, int8_t order, obcompare_fptr funct){
 
   uint64_t i, half_length;
   OBDeque left_sorted, right_sorted;
@@ -553,8 +553,8 @@ OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct){
   right_sorted.length = deque.length - half_length;
 
   /* sort deque halves recursively */
-  right_sorted = recursiveSort(right_sorted, order, funct);
-  left_sorted = recursiveSort(left_sorted, order, funct);
+  right_sorted = OBDequeSortRecursive(right_sorted, order, funct);
+  left_sorted = OBDequeSortRecursive(left_sorted, order, funct);
 
   /* set the head of the combined list appropriately */
   if(funct(right_sorted.head->stored, left_sorted.head->stored) == order){
@@ -608,7 +608,7 @@ OBDeque recursiveSort(OBDeque deque, int8_t order, compare_fptr funct){
 }
 
 
-obhash_t hashDeque(const obj *to_hash){
+obhash_t OBDequeHash(OBTypeRef to_hash){
 
   static int8_t init = 0;
   obhash_t value;
@@ -617,7 +617,7 @@ obhash_t hashDeque(const obj *to_hash){
   OBDequeIterator *it;
 
   assert(to_hash);
-  assert(objIsOfClass(to_hash, "OBDeque"));
+  assert(OBObjIsOfClass(to_hash, "OBDeque"));
   
   if(init == 0){
     srand(time(NULL));
@@ -627,16 +627,16 @@ obhash_t hashDeque(const obj *to_hash){
 
   value = seed;
 
-  it = getDequeHeadIt(instance);
+  it = OBDequeGetHeadIterator(instance);
   if(!it) return value;
 
   do{
-    value += hash(objAtDequeIt(instance, it));
+    value += OBHash(OBDequeGetObjectAtIterator(instance, it));
     value += value << 10;
     value ^= value >> 6;
-  }while(iterateDequeNext(instance, it));
+  }while(OBDequeIterateNext(instance, it));
 
-  release((obj *)it);
+  OBRelease((OBObjType *)it);
 
   value += value << 3;
   value ^= value >> 11;
@@ -646,7 +646,7 @@ obhash_t hashDeque(const obj *to_hash){
 }
 
 
-int8_t compareDeques(const obj *a, const obj *b){
+int8_t OBDequeCompare(OBTypeRef a, OBTypeRef b){
 
   int8_t retval = OB_EQUAL_TO; /* assume equality and disprove if not */
   const OBDeque *comp_a = (OBDeque *)a;
@@ -655,53 +655,53 @@ int8_t compareDeques(const obj *a, const obj *b){
 
   assert(a);
   assert(b);
-  assert(objIsOfClass(a, "OBDeque"));
-  assert(objIsOfClass(b, "OBDeque"));
+  assert(OBObjIsOfClass(a, "OBDeque"));
+  assert(OBObjIsOfClass(b, "OBDeque"));
 
   if(comp_a->length != comp_b->length) return OB_NOT_EQUAL;
 
-  a_it = getDequeHeadIt(comp_a);
-  b_it = getDequeHeadIt(comp_b);
+  a_it = OBDequeGetHeadIterator(comp_a);
+  b_it = OBDequeGetHeadIterator(comp_b);
 
   if(!a_it && !b_it) return OB_EQUAL_TO;
 
   if(a_it && b_it){
     do{
-      if(compare(objAtDequeIt(comp_a, a_it), objAtDequeIt(comp_b, b_it)) !=
+      if(OBCompare(OBDequeGetObjectAtIterator(comp_a, a_it), OBDequeGetObjectAtIterator(comp_b, b_it)) !=
        OB_EQUAL_TO){
       retval = OB_NOT_EQUAL;
       break;
     }
-    }while(iterateDequeNext(comp_a, a_it) && iterateDequeNext(comp_b, b_it));
+    }while(OBDequeIterateNext(comp_a, a_it) && OBDequeIterateNext(comp_b, b_it));
   }
   else retval = OB_NOT_EQUAL;
 
-  release((obj *)a_it);
-  release((obj *)b_it);
+  OBRelease((OBObjType *)a_it);
+  OBRelease((OBObjType *)b_it);
   
   return retval;
 }
 
-void displayDeque(const obj *to_print){
+void OBDequeDisplay(OBTypeRef to_print){
   
   OBDeque *d = (OBDeque *)to_print;
   OBDequeIterator *it;
 
   assert(to_print != NULL);
-  assert(objIsOfClass(to_print, "OBDeque"));
+  assert(OBObjIsOfClass(to_print, "OBDeque"));
   fprintf(stderr, "OBDeque with %llu elements\n"
-                  "  [deque head]", dequeLength(d));
+                  "  [deque head]", OBDequeGetLength(d));
 
-  it = getDequeHeadIt(d);
+  it = OBDequeGetHeadIterator(d);
 
   if(!it) return;
 
   do{
-    display(objAtDequeIt(d, it));
+    OBDisplay(OBDequeGetObjectAtIterator(d, it));
     fprintf(stderr, "\n");
-  }while(iterateDequeNext(d, it));
+  }while(OBDequeIterateNext(d, it));
 
-  release((obj *)it);
+  OBRelease((OBObjType *)it);
 
   fprintf(stderr, "  [deque tail]\n");
 
@@ -709,15 +709,15 @@ void displayDeque(const obj *to_print){
 }
 
 
-void deallocDeque(obj *to_dealloc){
+void OBDequeDealloc(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBDeque */
   OBDeque *instance = (OBDeque *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBDeque"));
+  assert(OBObjIsOfClass(to_dealloc, "OBDeque"));
 
-  clearDeque(instance);
+  OBDequeClear(instance);
 
   return;
 }

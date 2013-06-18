@@ -5,3 +5,13 @@ apps/minlog/bin/
 apps/pfinder/pfinder
 docs/html
 
+
+OffBrand/.DS_Store
+
+*.xcuserstate
+
+*.xcsettings
+
+*.xcbkptlist
+
+.DS_Store

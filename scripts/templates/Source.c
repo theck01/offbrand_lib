@@ -24,7 +24,7 @@
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &dealloc%METHODCLASSNAME%, 
+  initBase(new_instance, &dealloc%METHODCLASSNAME%, 
            &hash%METHODCLASSNAME%, &compare%METHODCLASSNAME%s, 
            &display%METHODCLASSNAME%, classname);
 

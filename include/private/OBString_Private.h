@@ -16,9 +16,9 @@
  * an instance of OBString
  */
 struct OBString_struct{
-  obj base; /**< obj containing reference count and class membership data */
+  OBObjType base; /**< obj containing reference count and class membership data */
   char *str; /**< encapsulated NUL terminated C string */
-  uint32_t length; /**< integer tracking str length */
+  size_t length; /**< integer tracking str length */
 };
 
 
@@ -30,14 +30,14 @@ struct OBString_struct{
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBString * createDefaultString(void);
+OBString * OBStringCreateDefault(void);
 
 /**
  * @brief Hash function for OBString
  * @param to_hash An obj pointer to an instance of OBString
  * @return Key value (hash) for the given obj pointer to a OBString
  */
-obhash_t hashString(const obj *to_hash);
+obhash_t OBStringHash(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBString
@@ -49,14 +49,14 @@ obhash_t hashString(const obj *to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareStrings(const obj *a, const obj *b);
+int8_t OBStringCompare(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Display function for an instance of OBString
  *
  * @param str A non-NULL obj pointer to type OBString
  */
-void displayString(const obj *str);
+void OBStringDisplay(OBTypeRef str);
 
 /** 
  * @brief Destructor for OBString
@@ -65,7 +65,7 @@ void displayString(const obj *str);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocString(obj *to_dealloc);
+void OBStringDealloc(OBTypeRef to_dealloc);
 
 /* ADDITIONAL PRIVATE METHOD DECLARATIONS HERE*/
 

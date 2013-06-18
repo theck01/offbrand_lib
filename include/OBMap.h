@@ -1,7 +1,7 @@
 /**
  * @file OBMap.h
  * @brief OBMap Public Interface
- * @author theck
+ * @author theck, danhd123
  */
 
 #ifndef OBMAP_H
@@ -20,14 +20,14 @@ typedef struct OBMap_struct OBMap;
  * capacity
  * @return Pointer to the newly created OBMap instance
  */
-OBMap * createMap(void);
+OBMap * OBMapCreate(void);
 
 /**
  * @brief Constructor, creates a new, empty OBMap instance with capacity given
  * @param capacity Capacity required for OBMap instance
  * @return Pointer to the newly created OBMap instance
  */
-OBMap *createMapWithCapacity(uint32_t capacity);
+OBMap *OBMapCreateWithCapacity(uint32_t capacity);
 
 /**
  * @brief Copy constructor, creates a new OBMap with the exact same contents
@@ -35,7 +35,7 @@ OBMap *createMapWithCapacity(uint32_t capacity);
  * @param to_copy Pointer to an instance of OBMap to copy
  * @return A copy of the provided OBMap
  */
-OBMap * copyMap(const OBMap *to_copy);
+OBMap * OBMapCopy(const OBMap *to_copy);
 
 /**
  * @brief Add a key-value pair to an OBMap
@@ -47,7 +47,7 @@ OBMap * copyMap(const OBMap *to_copy);
  * @details If the key is already contained within the m then the old value
  * stored at that key is replaced with the new value
  */
-void addToMap(OBMap *m, obj *key, obj *value);
+void OBMapAdd(OBMap *m, OBTypeRef key, OBTypeRef value);
 
 /**
  * @brief Lookup the value stored at key in an OBMap
@@ -58,7 +58,7 @@ void addToMap(OBMap *m, obj *key, obj *value);
  * @retval NULL Key not found in OBMap instance or key bound to NULL value
  * @retval non-NULL Value found at key in OBMap
  */
-obj * lookupMapKey(const OBMap *m, const obj *key);
+OBTypeRef OBMapGetValueForKey(const OBMap *m, OBTypeRef key);
 
 /**
  * @brief Removes a key-value pair from an OBMap
@@ -71,7 +71,7 @@ obj * lookupMapKey(const OBMap *m, const obj *key);
  * @warning This function runs in O(n), and is inherently more expensive
  * than an add or lookup.
  */
-void removeMapKey(OBMap *m, obj *key);
+void OBMapRemoveKey(OBMap *m, OBTypeRef key);
 
 /**
  * @brief Rehashes all elements contained in an OBMap
@@ -81,7 +81,7 @@ void removeMapKey(OBMap *m, obj *key);
  * @details This method is useful for ensuring that mutable keys will still lead
  * to valid lookups of the associated values even after key(s) have been altered
  */
-void rehashMap(OBMap *m);
+void OBMapRehash(OBMap *m);
 
 /**
  * @brief Clears an OBMap of all key-value pairs, essentially restoring it
@@ -89,7 +89,7 @@ void rehashMap(OBMap *m);
  *
  * @param m Pointer to an instance of OBMap
  */
-void clearMap(OBMap *m);
+void OBMapClear(OBMap *m);
 
 #endif
 
