@@ -43,7 +43,53 @@
 		BC3693CF176D34D700EBE188 /* OBString_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939D176D34D700EBE188 /* OBString_test.c */; };
 		BC3693D0176D34D700EBE188 /* OBTest_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939E176D34D700EBE188 /* OBTest_test.c */; };
 		BC3693D1176D34D700EBE188 /* OBVector_test.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36939F176D34D700EBE188 /* OBVector_test.c */; };
+		BCEDDA22177024CF00040AE4 /* NCube.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36935C176D34D700EBE188 /* NCube.c */; };
+		BCEDDA23177024CF00040AE4 /* RTable.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36935D176D34D700EBE188 /* RTable.c */; };
+		BCEDDA24177024CF00040AE4 /* Term.c in Sources */ = {isa = PBXBuildFile; fileRef = BC36935E176D34D700EBE188 /* Term.c */; };
+		BCEDDA25177024CF00040AE4 /* minlog_funct.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369360176D34D700EBE188 /* minlog_funct.c */; };
+		BCEDDA2C1770297200040AE4 /* libOffBrand.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC369342176D34AA00EBE188 /* libOffBrand.a */; };
+		BCEDDA2E17702B8E00040AE4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369361176D34D700EBE188 /* main.c */; };
+		BCEDDA3C17702C1C00040AE4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BC369366176D34D700EBE188 /* main.c */; };
+		BCEDDA3F17702CE100040AE4 /* libOffBrand.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC369342176D34AA00EBE188 /* libOffBrand.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BCEDDA291770293000040AE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC36933A176D34AA00EBE188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC369341176D34AA00EBE188;
+			remoteInfo = OffBrand;
+		};
+		BCEDDA3D17702CDD00040AE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC36933A176D34AA00EBE188 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC369341176D34AA00EBE188;
+			remoteInfo = OffBrand;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BCEDDA17177024B200040AE4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		BCEDDA3117702BBF00040AE4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BC369342176D34AA00EBE188 /* libOffBrand.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOffBrand.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,6 +165,8 @@
 		BC7978EC176E12290073143E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		BC7978ED176E12290073143E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		BC7978EE176E12290073143E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BCEDDA19177024B200040AE4 /* minlog */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = minlog; sourceTree = BUILT_PRODUCTS_DIR; };
+		BCEDDA3317702BBF00040AE4 /* pfinder */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pfinder; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +174,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCEDDA16177024B200040AE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCEDDA2C1770297200040AE4 /* libOffBrand.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCEDDA3017702BBF00040AE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCEDDA3F17702CE100040AE4 /* libOffBrand.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +216,8 @@
 			isa = PBXGroup;
 			children = (
 				BC369342176D34AA00EBE188 /* libOffBrand.a */,
+				BCEDDA19177024B200040AE4 /* minlog */,
+				BCEDDA3317702BBF00040AE4 /* pfinder */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -445,6 +511,42 @@
 			productReference = BC369342176D34AA00EBE188 /* libOffBrand.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		BCEDDA18177024B200040AE4 /* minlog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCEDDA1F177024B200040AE4 /* Build configuration list for PBXNativeTarget "minlog" */;
+			buildPhases = (
+				BCEDDA15177024B200040AE4 /* Sources */,
+				BCEDDA16177024B200040AE4 /* Frameworks */,
+				BCEDDA17177024B200040AE4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BCEDDA2A1770293000040AE4 /* PBXTargetDependency */,
+			);
+			name = minlog;
+			productName = minlog;
+			productReference = BCEDDA19177024B200040AE4 /* minlog */;
+			productType = "com.apple.product-type.tool";
+		};
+		BCEDDA3217702BBF00040AE4 /* pfinder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BCEDDA3917702BBF00040AE4 /* Build configuration list for PBXNativeTarget "pfinder" */;
+			buildPhases = (
+				BCEDDA2F17702BBF00040AE4 /* Sources */,
+				BCEDDA3017702BBF00040AE4 /* Frameworks */,
+				BCEDDA3117702BBF00040AE4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BCEDDA3E17702CDD00040AE4 /* PBXTargetDependency */,
+			);
+			name = pfinder;
+			productName = pfinder;
+			productReference = BCEDDA3317702BBF00040AE4 /* pfinder */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -467,6 +569,8 @@
 			projectRoot = "";
 			targets = (
 				BC369341176D34AA00EBE188 /* OffBrand */,
+				BCEDDA18177024B200040AE4 /* minlog */,
+				BCEDDA3217702BBF00040AE4 /* pfinder */,
 			);
 		};
 /* End PBXProject section */
@@ -492,7 +596,40 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BCEDDA15177024B200040AE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCEDDA22177024CF00040AE4 /* NCube.c in Sources */,
+				BCEDDA23177024CF00040AE4 /* RTable.c in Sources */,
+				BCEDDA24177024CF00040AE4 /* Term.c in Sources */,
+				BCEDDA25177024CF00040AE4 /* minlog_funct.c in Sources */,
+				BCEDDA2E17702B8E00040AE4 /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BCEDDA2F17702BBF00040AE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCEDDA3C17702C1C00040AE4 /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BCEDDA2A1770293000040AE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC369341176D34AA00EBE188 /* OffBrand */;
+			targetProxy = BCEDDA291770293000040AE4 /* PBXContainerItemProxy */;
+		};
+		BCEDDA3E17702CDD00040AE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC369341176D34AA00EBE188 /* OffBrand */;
+			targetProxy = BCEDDA3D17702CDD00040AE4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		BC369344176D34AA00EBE188 /* Debug */ = {
@@ -570,6 +707,38 @@
 			};
 			name = Release;
 		};
+		BCEDDA20177024B200040AE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BCEDDA21177024B200040AE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		BCEDDA3A17702BBF00040AE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BCEDDA3B17702BBF00040AE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -590,6 +759,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		BCEDDA1F177024B200040AE4 /* Build configuration list for PBXNativeTarget "minlog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCEDDA20177024B200040AE4 /* Debug */,
+				BCEDDA21177024B200040AE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		BCEDDA3917702BBF00040AE4 /* Build configuration list for PBXNativeTarget "pfinder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCEDDA3A17702BBF00040AE4 /* Debug */,
+				BCEDDA3B17702BBF00040AE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

@@ -30,7 +30,7 @@ int main (){
 	OBRelease((OBObjType *)c);
 
 	/* test string integer creation and value methods */
-	str1 = createString("12345");
+	str1 = OBStringCreate("12345");
 	a = OBIntCreateFromString(str1);
 	assert(OBIntGetIntValue(a) == 12345);
 	str2 = OBIntGetStringValue(a);
@@ -40,11 +40,11 @@ int main (){
 	OBRelease((OBObjType *)str1);
 	OBRelease((OBObjType *)str2);
 
-	str1 = createString("-012345");
+	str1 = OBStringCreate("-012345");
 	a = OBIntCreateFromString(str1);
 	OBRelease((OBObjType *)str1);
 	assert(OBIntGetIntValue(a) == -12345);
-	str1 = createString("-12345");
+	str1 = OBStringCreate("-12345");
 	str2 = OBIntGetStringValue(a);
 	assert(OBCompare((OBObjType *)str1, (OBObjType *)str2) == OB_EQUAL_TO);
 
@@ -65,7 +65,7 @@ int main (){
 	/* test integer zero and negative methods */
 	a = OBIntCreate(1948);
 	b = OBIntCreate(-1);
-	str1 = createString("-0");
+	str1 = OBStringCreate("-0");
 	c = OBIntCreateFromString(str1);
 	OBRelease((OBObjType *)str1);
 	
@@ -209,7 +209,7 @@ int main (){
 	OBRelease((OBObjType *)c);
 
   /* set digit limit for integer arithmetic low, for test purposes */
-  setMaxDigits(2);
+  OBIntSetMaxDigits(2);
 
   /* test integer multiplication (size over digit limit for explicit integer
    * arithmetic) */

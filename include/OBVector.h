@@ -23,7 +23,7 @@ typedef struct OBVector_struct OBVector;
  *
  * @return Pointer to the newly created vector
  */
-OBVector * createVector(uint32_t initial_capacity);
+OBVector * OBVectorCreateWithCapacity(uint32_t initial_capacity);
 
 /**
  * @brief Copy Constructor, creates a new OBVector that is a copy of an instance
@@ -35,7 +35,7 @@ OBVector * createVector(uint32_t initial_capacity);
  * @param to_copy The OBVector instance to be copied
  * @return A new instance of OBVector that is a shallow copy of to_copy
  */
-OBVector * copyVector(const OBVector *to_copy); 
+OBVector * OBVectorCopy(const OBVector *to_copy); 
 
 /**
  * @brief Number of elements encompassed within the OBVector
@@ -45,7 +45,7 @@ OBVector * copyVector(const OBVector *to_copy);
  * @return An integer corresponding to the length required to span all elements
  * contained within the vector (including all NULL elements added by the user)
  */
-uint32_t vectorLength(const OBVector *v);
+uint32_t OBVectorGetLength(const OBVector *v);
 
 /**
  * @brief Stores the obj at the associated index in a vector, overwriting 
@@ -65,7 +65,7 @@ uint32_t vectorLength(const OBVector *v);
  * @warning Positive indexing can occur past vector length, negative indexing
  * is limited to the range [-1, -(length of v)]
  */
-void storeAtVectorIndex(OBVector *v, OBObjType *to_add, int64_t index);
+void OBVectorStoreAtIndex(OBVector *v, OBTypeRef, int64_t index);
 
 /**
  * @brief Accesses the Offbrand compatile class instance stored an index in an
@@ -85,7 +85,7 @@ void storeAtVectorIndex(OBVector *v, OBObjType *to_add, int64_t index);
  * @warning Positive indexing can occur past vector length, negative indexing
  * is limited to the range [-1, -(length of v)]
  */
-OBObjType * objAtVectorIndex(const OBVector *v, int64_t index);
+OBTypeRef OBVectorObjectAtIndex(const OBVector *v, int64_t index);
 
 /**
  * @brief Adds the contents of on vector to the end of another, concatenating
@@ -96,7 +96,7 @@ OBObjType * objAtVectorIndex(const OBVector *v, int64_t index);
  * @param to_append OBVector whos contents will be added to the end of 
  * destination
  */
-void catVectors(OBVector *destination, OBVector *to_append);
+void OBVectorConcatenateVector(OBVector *destination, OBVector *to_append);
 
 /**
  * @brief Searches for an instance of any Offbrand compatible class in an
@@ -112,7 +112,7 @@ void catVectors(OBVector *destination, OBVector *to_append);
  * known to contain instances of may different classes else the function will
  * likely cause the program to be aborted
  */
-uint8_t findObjInVector(const OBVector *v, const OBObjType *to_find);
+uint8_t OBVectorContains(const OBVector *v, const OBTypeRef to_find);
 
 /**
  * @brief Sorts an OBVector from least-to-greatest or greatest-to-least using
@@ -128,7 +128,7 @@ uint8_t findObjInVector(const OBVector *v, const OBObjType *to_find);
  * @warning Sorting may appear to shrink vector as NULL values interspersed with
  * valid objects will be consolidated and removed
  */
-void sortVector(OBVector *v, int8_t order);
+void OBVectorSort(OBVector *v, int8_t order);
 
 /**
  * @brief Sorts an OBVector from least-to-greatest or greatest-to-least using a
@@ -143,13 +143,13 @@ void sortVector(OBVector *v, int8_t order);
  * @warning Sorting may appear to shrink vector as NULL values interspersed with
  * valid objects will be consolidated and removed
  */
-void sortVectorWithFunct(OBVector *v, int8_t order, obcompare_fptr funct);
+void OBVectorSortWithFunction(OBVector *v, int8_t order, obcompare_fptr funct);
 
 /**
  * @brief Removes all objects from an OBVector, leaving it empty
  * @param v A pointer to an instance of OBVector
  */
-void clearVector(OBVector *v);
+void OBVectorClear(OBVector *v);
 
 #endif
 

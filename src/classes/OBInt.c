@@ -29,7 +29,7 @@ OBInt * OBIntCreate(int64_t num){
 
   ds = ds ? ds : 1;
 
-  instance = createDefaultInt(ds);
+  instance = OBIntCreateDefault(ds);
   if(num < 0){
     instance->sign = -1;
     num *= -1;
@@ -51,7 +51,7 @@ int64_t OBIntGetIntValue(const OBInt *a){
 
   assert(a != NULL);
 
-  most_sig = mostSig(a);
+  most_sig = OBIntGetMostSignificantDigit(a);
   val = 0;
   for(i=most_sig; i<= most_sig; i--){
     val *= 10;
@@ -73,8 +73,8 @@ OBInt * OBIntCreateFromString(const OBString *numstr){
 
   assert(numstr != NULL);
 
-  strlen = stringLength(numstr);
-  if(charAtStringIndex(numstr, 0) == '-'){
+  strlen = OBStringGetLength(numstr);
+  if(OBStringGetCharAtIndex(numstr, 0) == '-'){
     sign = -1;
     digits = strlen - 1;
     offset = 1;
@@ -86,10 +86,10 @@ OBInt * OBIntCreateFromString(const OBString *numstr){
   }
   assert(strlen > 0);
 
-  instance = createDefaultInt(digits);
+  instance = OBIntCreateDefault(digits);
   instance->sign = sign;
   for(i=0 ; i<digits; i++){
-    num = charAtStringIndex(numstr, i+offset) - '0';
+    num = OBStringGetCharAtIndex(numstr, i+offset) - '0';
     assert(num >= 0 && num <= 9);
     instance->digits[digits-i-1] = num;
   }
@@ -111,7 +111,7 @@ OBString * OBIntGetStringValue(const OBInt *a){
   assert(a != NULL);
 
   if(a->sign == -1) offset = 1;
-  most_sig = mostSig(a);
+  most_sig = OBIntGetMostSignificantDigit(a);
   str = malloc(sizeof(char)*(most_sig+2+offset));
 
   /* generate cstring from int */
@@ -119,7 +119,7 @@ OBString * OBIntGetStringValue(const OBInt *a){
   for(i=most_sig; i<=most_sig; i--) str[most_sig-i+offset] = a->digits[i] + '0';
   str[most_sig+1+offset] = '\0';
 
-  result = createString(str);
+  result = OBStringCreate(str);
   free(str);
 
   return result;
@@ -133,9 +133,9 @@ OBInt * OBIntCopy(const OBInt *a){
 
   assert(a != NULL);
 
-  most_sig = mostSig(a);
+  most_sig = OBIntGetMostSignificantDigit(a);
 
-  copy = createDefaultInt(most_sig+1);
+  copy = OBIntCreateDefault(most_sig+1);
   for(i=0; i<= most_sig; i++) copy->digits[i] = a->digits[i];
   copy->sign = a->sign;
 
@@ -149,7 +149,7 @@ uint8_t OBIntIsZero(const OBInt *a){
 
   assert(a != NULL);
 
-  most_sig = mostSig(a);
+  most_sig = OBIntGetMostSignificantDigit(a);
   return most_sig == 0 && a->digits[0] == 0;
 }
 
@@ -171,20 +171,20 @@ OBInt * OBIntAdd(const OBInt *a, const OBInt *b){
   /* a and b are  of same sign */
   if((OBIntIsNegative(a) && OBIntIsNegative(b)) || 
      (!OBIntIsNegative(a) && !OBIntIsNegative(b))){
-    result = addUnsignedInts(a,b);
+    result = OBIntAddUnsigned(a,b);
     result->sign = a->sign;
     return result;
   }
 
   /* a and b are of opposite sign */
-  cmp_result = compareMagnitudes(a,b);
+  cmp_result = OBIntCompareMagnitudes(a,b);
   if(cmp_result == OB_LESS_THAN){
-    result = subtractUnsignedInts(b,a);
+    result = OBIntSubtractUnsigned(b,a);
     result->sign = b->sign;
     return result;
   }
   else if(cmp_result == OB_GREATER_THAN){
-    result = subtractUnsignedInts(a,b);
+    result = OBIntSubtractUnsigned(a,b);
     result->sign = a->sign;
     return result;
   }
@@ -219,20 +219,20 @@ OBInt * OBIntSubtract(const OBInt *a, const OBInt *b){
   /* a and b are  of opposite sign */
   if((!OBIntIsNegative(a) && OBIntIsNegative(b)) || 
      (OBIntIsNegative(a) && !OBIntIsNegative(b))){
-    result = addUnsignedInts(a,b);
+    result = OBIntAddUnsigned(a,b);
     result->sign = a->sign;
     return result;
   }
 
   /* a and b are of same sign */
-  cmp_result = compareMagnitudes(a,b);
+  cmp_result = OBIntCompareMagnitudes(a,b);
   if(cmp_result == OB_LESS_THAN){
-    result = subtractUnsignedInts(b,a);
+    result = OBIntSubtractUnsigned(b,a);
     result->sign = b->sign * -1;
     return result;
   }
   else if(cmp_result == OB_GREATER_THAN){
-    result = subtractUnsignedInts(a,b);
+    result = OBIntSubtractUnsigned(a,b);
     result->sign = a->sign;
     return result;
   }
@@ -263,7 +263,7 @@ OBInt * OBIntMultiply(const OBInt *a, const OBInt *b){
   assert(a != NULL);
   assert(b != NULL);
 
-  result = multiplyUnsignedInts(a,b);
+  result = OBIntMultiplyUnsigned(a,b);
   result->sign = a->sign * b->sign;
 
   return result;
@@ -293,7 +293,7 @@ OBInt * OBIntDivide(const OBInt *a, const OBInt *b){
   assert(OBIntIsZero(b) == 0);
 
   seed = OBIntCreate(0);
-  result = reduceUnsignedInts(a, b, seed, 1);
+  result = OBIntReduceUnsigned(a, b, seed, 1);
   result->sign = a->sign * b->sign;
   OBRelease((OBObjType *)seed);
 
@@ -325,7 +325,7 @@ OBInt * OBIntMod(const OBInt *a, const OBInt *b){
   assert(OBIntIsZero(b) == 0);
 
   seed = OBIntCreate(0);
-  result = reduceUnsignedInts(a, b, seed, 0);
+  result = OBIntReduceUnsigned(a, b, seed, 0);
   result->sign = a->sign;
   OBRelease((OBObjType *)seed);
 
@@ -352,15 +352,15 @@ OBInt * OBIntModPrimitive(const OBInt *a, int64_t b){
 
 /* add arguments to complete initialization as needed, modify 
  * OBInt_Private.h as well if modifications are made */
-OBInt * createDefaultInt(uint64_t num_digits){
+OBInt * OBIntCreateDefault(uint64_t num_digits){
 
   static const char classname[] = "OBInt";
   OBInt *new_instance = malloc(sizeof(OBInt));
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  OBInitBase((OBObjType *)new_instance, &deallocInt, &hashInt, &compareInts, 
-           &displayInt, classname);
+  OBInitBase((OBObjType *)new_instance, &OBIntDealloc, &OBIntHash, &OBIntCompare, 
+           &OBIntDisplay, classname);
 
   new_instance->sign = 1; /* positive by default */
 
@@ -374,7 +374,7 @@ OBInt * createDefaultInt(uint64_t num_digits){
 }
 
 
-obhash_t hashInt(OBTypeRef to_hash){
+obhash_t OBIntHash(OBTypeRef to_hash){
 
   static int8_t init = 0;
   static obhash_t seed = 0;
@@ -394,7 +394,7 @@ obhash_t hashInt(OBTypeRef to_hash){
 
   value = seed;
 
-  i = mostSig(instance);
+  i = OBIntGetMostSignificantDigit(instance);
 
   /* A version of Jenkin's one at a time hash function */
   for( ; i<instance->num_digits; i--){
@@ -410,7 +410,7 @@ obhash_t hashInt(OBTypeRef to_hash){
 }
 
 
-int8_t compareInts(OBTypeRef a, OBTypeRef b){
+int8_t OBIntCompare(OBTypeRef a, OBTypeRef b){
   
   int8_t magnitude_comp;
   const OBInt *comp_a = (OBInt *)a;  
@@ -424,7 +424,7 @@ int8_t compareInts(OBTypeRef a, OBTypeRef b){
   /* if signs are equal magnitude comparision is required */
   if(comp_a->sign == comp_b->sign){
 
-    magnitude_comp = compareMagnitudes(comp_a, comp_b);
+    magnitude_comp = OBIntCompareMagnitudes(comp_a, comp_b);
 
     /* reverse magnitude comparision if both are negative */
     if(comp_a->sign == -1){
@@ -440,12 +440,12 @@ int8_t compareInts(OBTypeRef a, OBTypeRef b){
 }
 
 
-int8_t compareMagnitudes(const OBInt *a, const OBInt *b){
+int8_t OBIntCompareMagnitudes(const OBInt *a, const OBInt *b){
 
   uint64_t i,j;
 
-  i = mostSig(a);
-  j = mostSig(b);
+  i = OBIntGetMostSignificantDigit(a);
+  j = OBIntGetMostSignificantDigit(b);
 
   if(i < j) return OB_LESS_THAN;
   if(i > j) return OB_GREATER_THAN;
@@ -460,7 +460,7 @@ int8_t compareMagnitudes(const OBInt *a, const OBInt *b){
 }
 
 
-void displayInt(OBTypeRef to_print){
+void OBIntDisplay(OBTypeRef to_print){
 
   OBString *str;
   const OBInt *instance = (OBInt *)to_print;
@@ -469,7 +469,7 @@ void displayInt(OBTypeRef to_print){
   assert(OBObjIsOfClass(to_print, "OBInt"));
 
   str = OBIntGetStringValue(instance);
-  fprintf(stderr, "Value:\n  %s\n", getCString(str));
+  fprintf(stderr, "Value:\n  %s\n", OBStringGetCString(str));
   
   OBRelease((OBObjType *)str);
 
@@ -477,7 +477,7 @@ void displayInt(OBTypeRef to_print){
 }
 
 
-void deallocInt(OBTypeRef to_dealloc){
+void OBIntDealloc(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBInt */
   OBInt *instance = (OBInt *)to_dealloc;
@@ -491,22 +491,22 @@ void deallocInt(OBTypeRef to_dealloc){
 }
 
 
-OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
+OBInt * OBIntAddUnsigned(const OBInt *a, const OBInt *b){
 
   uint64_t i, large_most_sig, small_most_sig;
   int8_t carry = 0;
   OBInt *result;
   const OBInt *larger, *smaller;
 
-  larger = mostSig(a) > mostSig(b) ? a : b;
-  smaller = mostSig(a) <= mostSig(b) ? a : b;
+  larger = OBIntGetMostSignificantDigit(a) > OBIntGetMostSignificantDigit(b) ? a : b;
+  smaller = OBIntGetMostSignificantDigit(a) <= OBIntGetMostSignificantDigit(b) ? a : b;
 
-  large_most_sig = mostSig(larger);
-  small_most_sig = mostSig(smaller);
+  large_most_sig = OBIntGetMostSignificantDigit(larger);
+  small_most_sig = OBIntGetMostSignificantDigit(smaller);
 
   /* reserve enough space for the result, +2 required for actual size of larger
    * and possible extra digit needed to catch any addition overflow */
-  result = createDefaultInt(large_most_sig+2);
+  result = OBIntCreateDefault(large_most_sig+2);
 
   for(i=0; i<= small_most_sig; i++){
     result->digits[i] = (larger->digits[i] + smaller->digits[i] + carry)%10;
@@ -524,15 +524,15 @@ OBInt * addUnsignedInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
+OBInt * OBIntSubtractUnsigned(const OBInt *a, const OBInt *b){
 
   uint64_t i, a_most_sig, b_most_sig;
   OBInt *result;
 
   result = OBIntCopy(a);
 
-  a_most_sig = mostSig(a);
-  b_most_sig = mostSig(b);
+  a_most_sig = OBIntGetMostSignificantDigit(a);
+  b_most_sig = OBIntGetMostSignificantDigit(b);
 
   for(i=0; i<=b_most_sig; i++){
     /* perform borrow operation if needed */
@@ -555,7 +555,7 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
+OBInt * OBIntMultiplyUnsigned(const OBInt *a, const OBInt *b){
 
   uint64_t large_most_sig, small_most_sig, split_point;
   const OBInt *larger, *smaller;
@@ -564,26 +564,26 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
                                                   algorithm */
   OBInt *partial_result, *result;
 
-  larger = mostSig(a) > mostSig(b) ? a : b;
-  smaller = mostSig(a) <= mostSig(b) ? a : b;
+  larger = OBIntGetMostSignificantDigit(a) > OBIntGetMostSignificantDigit(b) ? a : b;
+  smaller = OBIntGetMostSignificantDigit(a) <= OBIntGetMostSignificantDigit(b) ? a : b;
 
-  large_most_sig = mostSig(larger);
-  small_most_sig = mostSig(smaller);
+  large_most_sig = OBIntGetMostSignificantDigit(larger);
+  small_most_sig = OBIntGetMostSignificantDigit(smaller);
 
   /* base case, a and b are single digits */
   if(large_most_sig + small_most_sig < int64_max_digits)
-    return OBIntCreate(unsignedValue(a) * unsignedValue(b));
+    return OBIntCreate(OBIntGetUnsignedValue(a) * OBIntGetUnsignedValue(b));
 
   split_point = large_most_sig/2+1;
-  splitInt(a, split_point, &x1, &x0);
-  splitInt(b, split_point, &y1, &y0);
+  OBIntSplit(a, split_point, &x1, &x0);
+  OBIntSplit(b, split_point, &y1, &y0);
 
-  z2 = multiplyUnsignedInts(x1, y1);
-  z0 = multiplyUnsignedInts(x0, y0);
+  z2 = OBIntMultiplyUnsigned(x1, y1);
+  z0 = OBIntMultiplyUnsigned(x0, y0);
 
-  z1a = addUnsignedInts(x1, x0);
-  z1b = addUnsignedInts(y1, y0);
-  z1c = multiplyUnsignedInts(z1a, z1b);
+  z1a = OBIntAddUnsigned(x1, x0);
+  z1b = OBIntAddUnsigned(y1, y0);
+  z1c = OBIntMultiplyUnsigned(z1a, z1b);
 
   OBRelease((OBObjType *)x0);
   OBRelease((OBObjType *)x1);
@@ -592,19 +592,19 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
   OBRelease((OBObjType *)z1a);
   OBRelease((OBObjType *)z1b);
 
-  z1d = subtractUnsignedInts(z1c, z2);
+  z1d = OBIntSubtractUnsigned(z1c, z2);
   OBRelease((OBObjType *)z1c);
-  z1 = subtractUnsignedInts(z1d, z0);
+  z1 = OBIntSubtractUnsigned(z1d, z0);
   OBRelease((OBObjType *)z1d);
 
-  shiftInt(z2, 2*split_point);
-  shiftInt(z1, split_point);
-  partial_result = addUnsignedInts(z2, z1);
+  OBIntShiftDigitsLeft(z2, 2*split_point);
+  OBIntShiftDigitsLeft(z1, split_point);
+  partial_result = OBIntAddUnsigned(z2, z1);
 
   OBRelease((OBObjType *) z2);
   OBRelease((OBObjType *) z1);
 
-  result = addUnsignedInts(partial_result, z0);
+  result = OBIntAddUnsigned(partial_result, z0);
   
   OBRelease((OBObjType *) partial_result);
   OBRelease((OBObjType *) z0);
@@ -613,7 +613,7 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b){
 }
 
 
-OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
+OBInt * OBIntReduceUnsigned(const OBInt *a, const OBInt *b, const OBInt *approx,
                            uint8_t quotient){
   
   int8_t comp_val;
@@ -625,14 +625,14 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   OBInt *new_dividend; /* reduced dividend */
   OBInt *result; /* approximation */
 
-  a_most_sig = mostSig(a);
-  b_most_sig = mostSig(b);
+  a_most_sig = OBIntGetMostSignificantDigit(a);
+  b_most_sig = OBIntGetMostSignificantDigit(b);
 
   /* if operation can be computed using integer arithmetic do so */
   if(a_most_sig < int64_max_digits && b_most_sig < int64_max_digits){
 
-    a_val = unsignedValue(a);
-    b_val = unsignedValue(b);
+    a_val = OBIntGetUnsignedValue(a);
+    b_val = OBIntGetUnsignedValue(b);
 
     if(quotient){
       result_val = a_val/b_val;
@@ -649,7 +649,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   }
 
   /* if a < b (so a/b = 0, a%b = a) */
-  comp_val = compareMagnitudes(a, b);
+  comp_val = OBIntCompareMagnitudes(a, b);
   if(comp_val == OB_LESS_THAN){
     if(quotient) return OBIntCopy(approx);
     else return OBIntCopy(a);
@@ -692,10 +692,10 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
   /* perform approximation division, shift into proper decimal place, and add
    * to approximation */
   partial = OBIntCreate(a_val/b_val);
-  shiftInt(partial, i-j);
-  product = multiplyUnsignedInts(partial, b);
+  OBIntShiftDigitsLeft(partial, i-j);
+  product = OBIntMultiplyUnsigned(partial, b);
 
-  comp_val = compareMagnitudes(product, a);
+  comp_val = OBIntCompareMagnitudes(product, a);
   
   /* if approximation is too great then increment b_val to account for remaining
    * portion of b that is causing over approximation */
@@ -705,16 +705,16 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
 
     b_val++; 
     partial = OBIntCreate(a_val/b_val);
-    shiftInt(partial, i-j);
-    product = multiplyUnsignedInts(partial, b);
+    OBIntShiftDigitsLeft(partial, i-j);
+    product = OBIntMultiplyUnsigned(partial, b);
   }
 
-  new_dividend = subtractUnsignedInts(a, product);
+  new_dividend = OBIntSubtractUnsigned(a, product);
   OBRelease((OBObjType *)product);
-  new_approx = addUnsignedInts(approx, partial);
+  new_approx = OBIntAddUnsigned(approx, partial);
   OBRelease((OBObjType *)partial);
 
-  result = reduceUnsignedInts(new_dividend, b, new_approx, quotient);
+  result = OBIntReduceUnsigned(new_dividend, b, new_approx, quotient);
 
   OBRelease((OBObjType *)new_approx);
   OBRelease((OBObjType *)new_dividend);
@@ -723,7 +723,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
 }
 
 
-uint64_t mostSig(const OBInt *a){
+uint64_t OBIntGetMostSignificantDigit(const OBInt *a){
 
   uint64_t i;
 
@@ -733,17 +733,17 @@ uint64_t mostSig(const OBInt *a){
 }
 
 
-void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0){
+void OBIntSplit(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0){
 
   if(a->num_digits <= i){
-    *b1 = createDefaultInt(1);
-    *b0 = createDefaultInt(a->num_digits);
+    *b1 = OBIntCreateDefault(1);
+    *b0 = OBIntCreateDefault(a->num_digits);
     memcpy((*b0)->digits, a->digits, a->num_digits);
   }
   else{
-    *b1 = createDefaultInt(a->num_digits - i);
+    *b1 = OBIntCreateDefault(a->num_digits - i);
     memcpy((*b1)->digits, (a->digits + i), a->num_digits-i);
-    *b0 = createDefaultInt(i);
+    *b0 = OBIntCreateDefault(i);
     memcpy((*b0)->digits, (a->digits), i);
   }
 
@@ -751,7 +751,7 @@ void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0){
 }
 
 
-void shiftInt(OBInt *a, uint64_t m){
+void OBIntShiftDigitsLeft(OBInt *a, uint64_t m){
 
   int8_t *digits;
 
@@ -772,12 +772,12 @@ void shiftInt(OBInt *a, uint64_t m){
 }
 
 
-int64_t unsignedValue(const OBInt *a){
+int64_t OBIntGetUnsignedValue(const OBInt *a){
   
   uint64_t i, most_sig;
   int64_t val;
 
-  most_sig = mostSig(a);
+  most_sig = OBIntGetMostSignificantDigit(a);
   val = 0;
 
   for(i=most_sig ; i <= most_sig; i--){
@@ -789,6 +789,6 @@ int64_t unsignedValue(const OBInt *a){
 }
 
 
-void setMaxDigits(uint8_t digits){
+void OBIntSetMaxDigits(uint8_t digits){
   if(digits >= 2 && digits <= 17) int64_max_digits = digits;
 }

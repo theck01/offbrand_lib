@@ -18,11 +18,11 @@ int main (){
 
   /* create test objects */
   test_deque_a = OBDequeCreate();
-  a = createTest(1);
-  b = createTest(2);
-  c = createTest(3);
-  d = createTest(4);
-  e = createTest(5);
+  a = OBTestCreate(1);
+  b = OBTestCreate(2);
+  c = OBTestCreate(3);
+  d = OBTestCreate(4);
+  e = OBTestCreate(5);
 
 
   /* test the empty deque */
@@ -37,16 +37,16 @@ int main (){
   assert(OBDequeIsEmpty(test_deque_a) == 0);
   assert(OBDequeGetLength(test_deque_a) == 1);
   assert(OBReferenceCount((OBObjType *)a) == 2);
-  assert(getTestID((OBTest *)OBDequeGetFirstObject(test_deque_a)) == 1);
-  assert(getTestID((OBTest *)OBDequeGetLastObject(test_deque_a)) == 1);
+  assert(OBTestGetID((OBTest *)OBDequeGetFirstObject(test_deque_a)) == 1);
+  assert(OBTestGetID((OBTest *)OBDequeGetLastObject(test_deque_a)) == 1);
 
   head_it = OBDequeGetHeadIterator(test_deque_a);
   tail_it = OBDequeGetTailIterator(test_deque_a);
 
   assert(head_it != NULL);
   assert(tail_it != NULL);
-  assert(getTestID((OBTest *)OBDequeGetObjectAtIterator(test_deque_a, head_it)) == 1);
-  assert(getTestID((OBTest *)OBDequeGetObjectAtIterator(test_deque_a, tail_it)) == 1);
+  assert(OBTestGetID((OBTest *)OBDequeGetObjectAtIterator(test_deque_a, head_it)) == 1);
+  assert(OBTestGetID((OBTest *)OBDequeGetObjectAtIterator(test_deque_a, tail_it)) == 1);
 
   assert(OBDequeContains(test_deque_a, (OBObjType *)a));
 
@@ -82,7 +82,7 @@ int main (){
 
   head_it = OBDequeGetHeadIterator(test_deque_a);
   do{
-    assert(getTestID((OBTest *)OBDequeGetObjectAtIterator(test_deque_a, head_it)) != 4);
+    assert(OBTestGetID((OBTest *)OBDequeGetObjectAtIterator(test_deque_a, head_it)) != 4);
   }while(OBDequeIterateNext(test_deque_a, head_it));
 
   OBRelease((OBObjType *)head_it);
@@ -103,7 +103,7 @@ int main (){
   i = 1;
   head_it = OBDequeGetHeadIterator(test_deque_a);
   do{
-    assert(getTestID((OBTest *)OBDequeGetObjectAtIterator(test_deque_a, head_it)) == i);
+    assert(OBTestGetID((OBTest *)OBDequeGetObjectAtIterator(test_deque_a, head_it)) == i);
     i++;
   }while(OBDequeIterateNext(test_deque_a, head_it));
 
@@ -136,7 +136,7 @@ int main (){
   
 
   for(i=0; i<10; i++){
-    assert(getTestID((OBTest *)OBDequeGetObjectAtIterator(joined_deque, tail_it)) == i/2+1);
+    assert(OBTestGetID((OBTest *)OBDequeGetObjectAtIterator(joined_deque, tail_it)) == i/2+1);
     if(i != 9) assert(OBDequeIteratePrevious(joined_deque, tail_it));
   }
 

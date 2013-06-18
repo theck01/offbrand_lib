@@ -196,7 +196,7 @@ NCube * createNCubeWithOrder(uint8_t order){
   assert(new_cube != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_cube, &deallocNCube, NULL, &compareNCubes, NULL,
+  OBInitBase(new_cube, &deallocNCube, NULL, &compareNCubes, NULL,
            classname);
 
   new_cube->terms = malloc(sizeof(uint32_t)*(1<<order));
@@ -212,14 +212,14 @@ NCube * createNCubeWithOrder(uint8_t order){
 }
 
 
-int8_t compareNCubes(const obj *a, const obj *b){
+int8_t compareNCubes(OBTypeRef a, OBTypeRef b){
   
   uint32_t i, max_i;
   NCube *comp_a = (NCube *)a;  
   NCube *comp_b = (NCube *)b;  
 
   assert(a != NULL && b != NULL);
-  assert(objIsOfClass(a, "NCube") && objIsOfClass(b, "NCube"));
+  assert(OBObjIsOfClass(a, "NCube") && OBObjIsOfClass(b, "NCube"));
 
   if(comp_a->order != comp_b->order){
     return OB_NOT_EQUAL;
@@ -236,11 +236,11 @@ int8_t compareNCubes(const obj *a, const obj *b){
 }
 
 
-void deallocNCube(obj *to_dealloc){
+void deallocNCube(OBTypeRef to_dealloc){
   /* cast generic obj to NCube */
   NCube *instance = (NCube *)to_dealloc;
   assert(instance != NULL);
-  assert(objIsOfClass(to_dealloc, "NCube"));
+  assert(OBObjIsOfClass(to_dealloc, "NCube"));
   free(instance->terms);
   return;
 }

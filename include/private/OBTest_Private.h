@@ -25,7 +25,7 @@ struct OBTest_struct{
  * @param to_hash An obj pointer to an instance of OBString
  * @return Key value (hash) for the given obj pointer to a OBString 
  */
-obhash_t hashTest(OBTypeRef to_hash);
+obhash_t OBTestHash(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBTest
@@ -37,14 +37,14 @@ obhash_t hashTest(OBTypeRef to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareTests(OBTypeRef a, OBTypeRef b);
+int8_t OBTestCompare(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Display function for an instance of OBTest
  *
  * @param test A non-NULL obj pointer to type OBTest
  */
-void displayTest(OBTypeRef test);
+void OBTestDisplay(OBTypeRef test);
 
 /**
  * @brief Destructor for OBTest
@@ -53,6 +53,6 @@ void displayTest(OBTypeRef test);
  * @warning Do not call manually, release will call automatically when
  * instance reference count drops to 0!
  */
-void deallocTest(OBTypeRef to_dealloc);
+void OBTestDealloc(OBTypeRef to_dealloc);
 
 #endif

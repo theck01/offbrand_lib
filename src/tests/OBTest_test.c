@@ -14,9 +14,9 @@ int main(){
 
   int i;
   OBTest *test_obj, *a, *b;
-  test_obj = createTest(1);
-  a = createTest(3);
-  b = createTest(3);
+  test_obj = OBTestCreate(1);
+  a = OBTestCreate(3);
+  b = OBTestCreate(3);
 
   /* retain object, reference count should be 4 */
   for(i=0; i<3; i++){

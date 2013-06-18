@@ -30,14 +30,14 @@ struct OBString_struct{
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBString * createDefaultString(void);
+OBString * OBStringCreateDefault(void);
 
 /**
  * @brief Hash function for OBString
  * @param to_hash An obj pointer to an instance of OBString
  * @return Key value (hash) for the given obj pointer to a OBString
  */
-obhash_t hashString(OBTypeRef to_hash);
+obhash_t OBStringHash(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBString
@@ -49,14 +49,14 @@ obhash_t hashString(OBTypeRef to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareStrings(OBTypeRef a, OBTypeRef b);
+int8_t OBStringCompare(OBTypeRef a, OBTypeRef b);
 
 /**
  * @brief Display function for an instance of OBString
  *
  * @param str A non-NULL obj pointer to type OBString
  */
-void displayString(OBTypeRef str);
+void OBStringDisplay(OBTypeRef str);
 
 /** 
  * @brief Destructor for OBString
@@ -65,7 +65,7 @@ void displayString(OBTypeRef str);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocString(OBTypeRef to_dealloc);
+void OBStringDealloc(OBTypeRef to_dealloc);
 
 /* ADDITIONAL PRIVATE METHOD DECLARATIONS HERE*/
 

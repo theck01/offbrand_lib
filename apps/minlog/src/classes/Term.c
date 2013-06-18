@@ -12,7 +12,7 @@ Term * createTerm(uint32_t term){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocTerm, NULL, &compareTerms, NULL, 
+  OBInitBase(new_instance, &deallocTerm, NULL, &compareTerms, NULL,
            classname);
 
   new_instance->term = term;
@@ -26,23 +26,23 @@ uint32_t getTermValue(Term *a){
 
 /* PRIVATE METHODS */
 
-int8_t compareTerms(const obj *a, const obj *b){
+int8_t compareTerms(OBTypeRef a, OBTypeRef b){
   
   Term *comp_a = (Term *)a;  
   Term *comp_b = (Term *)b;  
 
   assert(a != NULL && b != NULL);
-  assert(objIsOfClass(a, "Term") && objIsOfClass(b, "Term"));
+  assert(OBObjIsOfClass(a, "Term") && OBObjIsOfClass(b, "Term"));
 
   if(comp_a->term > comp_b->term) return OB_GREATER_THAN;
   else if(comp_a->term < comp_b->term) return OB_LESS_THAN;
   else return OB_EQUAL_TO;
 }
 
-void deallocTerm(obj *to_dealloc){
+void deallocTerm(OBTypeRef to_dealloc){
   /* cast generic obj to Term */
   Term *instance = (Term *)to_dealloc;
   assert(instance != NULL);
-  assert(objIsOfClass(to_dealloc, "Term"));
+  assert(OBObjIsOfClass(to_dealloc, "Term"));
   return;
 }

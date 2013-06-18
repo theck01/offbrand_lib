@@ -178,5 +178,10 @@ int8_t OBCompare(OBTypeRef a, OBTypeRef b);
  */
 void OBDisplay(OBTypeRef to_print);
 
+/* TODO: consider replacing OBDisplayWith OBDescription - something that returns an
+ * OBString or const char * that you can do with what you like instead of being
+ * limited to printing to stderr
+ */
+
 #endif
 

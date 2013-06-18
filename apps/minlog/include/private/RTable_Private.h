@@ -12,7 +12,7 @@
 /* DATA */
 
 struct RTable_struct{
-  obj base;
+  OBObjType base;
   OBVector *pis;         /* shorthand for Prime Implicants */
   OBVector *terms;
   OBVector *essential_pis;
@@ -28,7 +28,7 @@ struct RTable_struct{
 
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */
-void deallocRTable(obj *to_dealloc);
+void deallocRTable(OBTypeRef to_dealloc);
 
 /* used in constructor to determine which Terms covered by which NCubes and
  * which NCubes can be determined to be essential without extra effort */

@@ -9,7 +9,7 @@
 
 /* PUBLIC METHODS */
 
-OBVector * createVector(uint32_t initial_capacity){
+OBVector * OBVectorCreateWithCapacity(uint32_t initial_capacity){
 
   uint32_t i, new_cap;
 
@@ -17,14 +17,14 @@ OBVector * createVector(uint32_t initial_capacity){
   while(initial_capacity > new_cap) new_cap *= 2;
   if(new_cap > UINT32_MAX) new_cap = UINT32_MAX;
 
-  OBVector *new_instance = createDefaultVector(new_cap);
+  OBVector *new_instance = OBVectorCreateDefault(new_cap);
   for(i=0; i<new_cap; i++) new_instance->array[i] = NULL;
 
   return new_instance;
 }
 
 
-OBVector * copyVector(const OBVector *to_copy){
+OBVector * OBVectorCopy(const OBVector *to_copy){
 
   uint32_t i;
   OBVector *new_vec;
@@ -32,7 +32,7 @@ OBVector * copyVector(const OBVector *to_copy){
   /* if there is nothing to copy, do nothing */
   assert(to_copy);
 
-  new_vec = createDefaultVector(to_copy->capacity);
+  new_vec = OBVectorCreateDefault(to_copy->capacity);
   new_vec->length = to_copy->length;
 
   for(i=0; i<to_copy->capacity; i++){
@@ -44,13 +44,13 @@ OBVector * copyVector(const OBVector *to_copy){
 }
 
 
-uint32_t vectorLength(const OBVector *v){
+uint32_t OBVectorGetLength(const OBVector *v){
   assert(v != NULL);
   return v->length;
 }
 
 
-void storeAtVectorIndex(OBVector *v, OBObjType *to_store, int64_t index){
+void OBVectorStoreAtIndex(OBVector *v, OBTypeRef to_store, int64_t index){
 
   assert(v != NULL);
 
@@ -61,7 +61,7 @@ void storeAtVectorIndex(OBVector *v, OBObjType *to_store, int64_t index){
   assert(index >= 0); /* assert not negative indexing after offset */
 
   /* ensure vector can store element at index */
-  resizeVector(v, (uint32_t)index);
+  OBVectorResize(v, (uint32_t)index);
 
   OBRetain(to_store);
   OBRelease(v->array[index]);
@@ -75,7 +75,7 @@ void storeAtVectorIndex(OBVector *v, OBObjType *to_store, int64_t index){
 }
 
 
-OBObjType * objAtVectorIndex(const OBVector *v, int64_t index){
+OBTypeRef OBVectorObjectAtIndex(const OBVector *v, int64_t index){
 
   assert(v != NULL);
 
@@ -89,7 +89,7 @@ OBObjType * objAtVectorIndex(const OBVector *v, int64_t index){
 }
 
 
-void catVectors(OBVector *destination, OBVector *to_append){
+void OBVectorConcatenateVector(OBVector *destination, OBVector *to_append){
 
   uint64_t i;
 
@@ -99,7 +99,7 @@ void catVectors(OBVector *destination, OBVector *to_append){
   assert(destination->length + to_append->length >= destination->length);
  
   /* ensure vector can store all elements in to_append */
-  resizeVector(destination, destination->length + to_append->length - 1);
+  OBVectorResize(destination, destination->length + to_append->length - 1);
 
   /* copy contents of to_append */
   for(i=0; i<to_append->length; i++){
@@ -113,7 +113,7 @@ void catVectors(OBVector *destination, OBVector *to_append){
 }
 
 
-uint8_t findObjInVector(const OBVector *v, const OBObjType *to_find){
+uint8_t OBVectorContains(const OBVector *v, OBTypeRef to_find){
 
   uint32_t i;
 
@@ -131,14 +131,14 @@ uint8_t findObjInVector(const OBVector *v, const OBObjType *to_find){
 }
 
 
-void sortVector(OBVector *v, int8_t order){
-  sortVectorWithFunct(v, order, &OBCompare);
+void OBVectorSort(OBVector *v, int8_t order){
+  OBVectorSortWithFunction(v, order, &OBCompare);
 }
 
 
-void sortVectorWithFunct(OBVector *v, int8_t order, obcompare_fptr funct){
+void OBVectorSortWithFunction(OBVector *v, int8_t order, obcompare_fptr funct){
 
-  OBObjType **sorted;
+  OBTypeRef *sorted;
 
   assert(v != NULL);
   assert(funct != NULL);
@@ -154,7 +154,7 @@ void sortVectorWithFunct(OBVector *v, int8_t order, obcompare_fptr funct){
 }
 
 
-void clearVector(OBVector *v){
+void OBVectorClear(OBVector *v){
 
   uint32_t i;
 
@@ -173,7 +173,7 @@ void clearVector(OBVector *v){
 /* PRIVATE METHODS */
 
 
-OBVector * createDefaultVector(uint32_t initial_capacity){
+OBVector * OBVectorCreateDefault(uint32_t initial_capacity){
 
   static const char classname[] = "OBVector";
 
@@ -181,8 +181,8 @@ OBVector * createDefaultVector(uint32_t initial_capacity){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  OBInitBase((OBObjType *)new_instance, &deallocVector, &hashVector, &compareVectors,
-           &displayVector, classname);
+  OBInitBase((OBObjType *)new_instance, &OBVectorDealloc, &OBVectorHash, &OBVectorCompare,
+           &OBVectorDisplay, classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
@@ -200,11 +200,11 @@ OBVector * createDefaultVector(uint32_t initial_capacity){
 }
 
 
-void resizeVector(OBVector *v, uint32_t index){
+void OBVectorResize(OBVector *v, uint32_t index){
 
   uint32_t i;
   uint64_t new_cap;
-  OBObjType **array;
+  OBTypeRef *array;
 
   assert(index < UINT32_MAX);
 
@@ -229,12 +229,12 @@ void resizeVector(OBVector *v, uint32_t index){
 }
 
 
-OBObjType ** recursiveSortContents(OBObjType **to_sort, uint32_t size, int8_t order,
+OBTypeRef * recursiveSortContents(OBTypeRef *to_sort, uint32_t size, int8_t order,
                              obcompare_fptr funct){
   
   uint32_t i,j, split;
-  OBObjType **left_sorted, **right_sorted;
-  OBObjType **sorted;
+  OBTypeRef *left_sorted, *right_sorted;
+  OBTypeRef *sorted;
 
    /* base case, if the vector is of size one, its sorted */
   if(size <= 1){
@@ -297,7 +297,7 @@ OBObjType ** recursiveSortContents(OBObjType **to_sort, uint32_t size, int8_t or
 }
 
 
-obhash_t hashVector(OBTypeRef to_hash){
+obhash_t OBVectorHash(OBTypeRef to_hash){
 
   static int8_t init = 0;
   static obhash_t seed;
@@ -330,7 +330,7 @@ obhash_t hashVector(OBTypeRef to_hash){
 }
 
 
-int8_t compareVectors(OBTypeRef a, OBTypeRef b){
+int8_t OBVectorCompare(OBTypeRef a, OBTypeRef b){
 
   uint32_t i;
   const OBVector *comp_a = (OBVector *)a;
@@ -351,7 +351,7 @@ int8_t compareVectors(OBTypeRef a, OBTypeRef b){
 }
 
 
-void displayVector(OBTypeRef to_print){
+void OBVectorDisplay(OBTypeRef to_print){
 
   uint32_t i;
   OBVector *v = (OBVector *)to_print;
@@ -371,7 +371,7 @@ void displayVector(OBTypeRef to_print){
 
 
 
-void deallocVector(OBTypeRef to_dealloc){
+void OBVectorDealloc(OBTypeRef to_dealloc){
 
   /* cast generic obj to OBVector */
   OBVector *instance = (OBVector *)to_dealloc;
@@ -379,7 +379,7 @@ void deallocVector(OBTypeRef to_dealloc){
   assert(instance != NULL);
   assert(OBObjIsOfClass(to_dealloc, "OBVector"));
 
-  clearVector(instance); /* release all objs contained in vector */
+  OBVectorClear(instance); /* release all objs contained in vector */
   free(instance->array);
 
   return;
@@ -388,7 +388,7 @@ void deallocVector(OBTypeRef to_dealloc){
 
 /* PRIVATE UTILITY METHODS */
 
-uint32_t findValidPrecursorIndex(OBObjType **array, uint32_t index){
+uint32_t findValidPrecursorIndex(OBTypeRef *array, uint32_t index){
   while(index < UINT32_MAX && !array[index]) index--;
   return index;
 }

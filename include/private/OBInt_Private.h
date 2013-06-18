@@ -33,14 +33,14 @@ struct OBInt_struct{
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBInt * createDefaultInt(uint64_t num_digits);
+OBInt * OBIntCreateDefault(uint64_t num_digits);
 
 /**
  * @brief Hash function for OBInt
  * @param to_hash An obj pointer to an instance of OBInt
  * @return Key value (hash) for the given obj pointer to a OBInt
  */
-obhash_t hashInt(OBTypeRef to_hash);
+obhash_t OBIntHash(OBTypeRef to_hash);
 
 /**
  * @brief Compares two instances of OBInt
@@ -52,7 +52,7 @@ obhash_t hashInt(OBTypeRef to_hash);
  * @retval OB_GREATER_THAN obj a is greater than b
  * @retval OB_EQUAL_TO obj a is equal to b
  */
-int8_t compareInts(OBTypeRef a, OBTypeRef b);
+int8_t OBIntCompare(OBTypeRef a, OBTypeRef b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
 
@@ -65,7 +65,7 @@ int8_t compareInts(OBTypeRef a, OBTypeRef b);
  * @retval OB_GREATER_THAN Magnitude of a is greater than to b
  * @retval OB_EQUAL_TO Magnitude of a is equal to b
  */
-int8_t compareMagnitudes(const OBInt *a, const OBInt *b);
+int8_t OBIntCompareMagnitudes(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Descriptor for an instance of OBInt, prints relevant
@@ -74,7 +74,7 @@ int8_t compareMagnitudes(const OBInt *a, const OBInt *b);
  * @param to_print A non-NULL obj pointer to an instance of type
  * OBInt
  */
-void displayInt(OBTypeRef to_print);
+void OBIntDisplay(OBTypeRef to_print);
 
 /** 
  * @brief Destructor for OBInt
@@ -83,7 +83,7 @@ void displayInt(OBTypeRef to_print);
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocInt(OBTypeRef to_dealloc);
+void OBIntDealloc(OBTypeRef to_dealloc);
 
 /**
  * @brief Creates a new integer as a result of addition between two OBInts
@@ -94,7 +94,7 @@ void deallocInt(OBTypeRef to_dealloc);
  *
  * @return An instance of OBInt, which may or may not have proper sign
  */
-OBInt * addUnsignedInts(const OBInt *a, const OBInt *b);
+OBInt * OBIntAddUnsigned(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Creates a new integer as a result of subtraction between two OBInts
@@ -108,7 +108,7 @@ OBInt * addUnsignedInts(const OBInt *a, const OBInt *b);
  * @warning Proper results guaranteed only for a >= b, a < b will not work and
  * probably will cause segmentation faults
  */
-OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b);
+OBInt * OBIntSubtractUnsigned(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Creates a new integer as a result of multiplication between two OBInts
@@ -121,7 +121,7 @@ OBInt * subtractUnsignedInts(const OBInt *a, const OBInt *b);
  *
  * @details Multiplication performed using the Karatsuba multiplcation algorithm
  */
-OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b);
+OBInt * OBIntMultiplyUnsigned(const OBInt *a, const OBInt *b);
 
 /**
  * @brief Creates a new integer as a result of divison or modulus between two 
@@ -136,7 +136,7 @@ OBInt * multiplyUnsignedInts(const OBInt *a, const OBInt *b);
  *
  * @return An instance of OBInt, which may or may not have proper sign
  */
-OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx, 
+OBInt * OBIntReduceUnsigned(const OBInt *a, const OBInt *b, const OBInt *approx, 
                            uint8_t quotient);
 
 /**
@@ -148,7 +148,7 @@ OBInt * reduceUnsignedInts(const OBInt *a, const OBInt *b, const OBInt *approx,
  * @return An integer index where the most significant non-zero digit in a can
  * be found
  */
-uint64_t mostSig(const OBInt *a);
+uint64_t OBIntGetMostSignificantDigit(const OBInt *a);
 
 /**
  * @brief Splits the OBInt into two OBInt instances at given index.
@@ -165,7 +165,7 @@ uint64_t mostSig(const OBInt *a);
  * to a 0 OBInt and b2 is set to point to a copy of a. a is treated as unsigned
  * for this operation
  */
-void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0);
+void OBIntSplit(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0);
 
 /**int
  * @brief Shifts the OBInt the given number of digits to the left, in place, 
@@ -174,7 +174,7 @@ void splitInt(const OBInt *a, uint64_t i, OBInt **b1, OBInt **b0);
  * @param a A non-NULL pointer to type OBInt
  * @param m Number of digits to shift
  */
-void shiftInt(OBInt *a, uint64_t m);
+void OBIntShiftDigitsLeft(OBInt *a, uint64_t m);
 
 /**
  * @brief Returns the unsigned value of the OBInt 
@@ -183,7 +183,7 @@ void shiftInt(OBInt *a, uint64_t m);
  *
  * @return a positive int64_t representing the value of the argument OBInt
  */
-int64_t unsignedValue(const OBInt *a);
+int64_t OBIntGetUnsignedValue(const OBInt *a);
 
 /**
  * @brief Sets the number of digits operated on in a primitive from 1 to 17
@@ -195,7 +195,7 @@ int64_t unsignedValue(const OBInt *a);
  * @warning The default value of 17 is most efficient, this method exists for
  * testing purposes only!
  */
-void setMaxDigits(uint8_t digits);
+void OBIntSetMaxDigits(uint8_t digits);
 
 #endif
 

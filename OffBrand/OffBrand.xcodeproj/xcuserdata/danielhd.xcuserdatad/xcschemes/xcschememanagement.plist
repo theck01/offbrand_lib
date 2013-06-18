@@ -9,6 +9,16 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>minlog.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>pfinder.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -18,6 +28,16 @@
 			<true/>
 		</dict>
 		<key>BC7978E4176E12280073143E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BCEDDA18177024B200040AE4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BCEDDA3217702BBF00040AE4</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -11,7 +11,7 @@
 /* DATA */
 
 struct Term_struct{
-  obj base;
+  OBObjType base;
   uint32_t term;
 };
 
@@ -20,11 +20,11 @@ struct Term_struct{
 
 /* compare two instances of Term, return 1 if a > b, 0 if a == b, 
  * and -1 if a < b */
-int8_t compareTerms(const obj *a, const obj *b);
+int8_t compareTerms(OBTypeRef a, OBTypeRef b);
 
 /* deallocator, frees instance of class back to memory. Should not be called
  * manually, instance will be destroyed when reference count reaches 0 */
-void deallocTerm(obj *to_dealloc);
+void deallocTerm(OBTypeRef to_dealloc);
 
 
 #endif
