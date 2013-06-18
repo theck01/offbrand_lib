@@ -57,7 +57,7 @@ obj * release(obj *instance){
 }
 
 
-void retain(obj *instance){
+obj * retain(obj *instance){
 
   if(!instance) return;
 
@@ -65,7 +65,7 @@ void retain(obj *instance){
                                                    cannot be handled by lib */
   ++((*instance)->references);
 
-  return;
+  return instance;
 }
 
 

@@ -1,7 +1,7 @@
 /**
  * @file offbrand.h
  * @brief Offbrand Standard Library
- * 
+ *
  * @details
  * The standard library defines all data structures and function calls
  * required for memory management via reference count, class membership tests,
@@ -21,7 +21,7 @@
 #include <time.h>
 
 /** Comparison Constant, two elements are equal */
-#define OB_EQUAL_TO 0 
+#define OB_EQUAL_TO 0
 /** Comparison Constant, the first element is greater than the second */
 #define OB_GREATER_THAN 1
 /** Comparison Constant, the first element is less than the second */
@@ -35,16 +35,16 @@
 /** Sorting Order Constant, sort elements from greatest to least*/
 #define OB_GREATEST_TO_LEAST 1
 
-/** 
- * basic generic type used to track reference counts, store class specific 
+/**
+ * basic generic type used to track reference counts, store class specific
  * function pointers, and form the basis for all generic container classes
  * and functions.
  */
 typedef struct obj_struct * obj;
 
-/** 
+/**
  * reference count, tracks references to instances of Offbrand compatible
- * classes 
+ * classes
  */
 typedef uint32_t ref_count_t;
 
@@ -76,11 +76,11 @@ typedef void (*display_fptr)(const obj *);
  * name
  *
  * @param instance An newly allocated instance of any Offbrand compatible class
- * @param dealloc_funct Function pointer to the deallocator for the instances 
+ * @param dealloc_funct Function pointer to the deallocator for the instances
  * class
- * @param hash_funct Function pointer to the hash function for the instances 
+ * @param hash_funct Function pointer to the hash function for the instances
  * class
- * @param compare_funct Function pointer to the compare function for the 
+ * @param compare_funct Function pointer to the compare function for the
  * instances class
  * @param display_funct Function pointer to the display function for the
  * instances class
@@ -107,8 +107,10 @@ obj * release(obj *instance);
  * calling code has "referenced" that instance for later use.
  *
  * @param instance An instance of any Offbrand compatible class
+ *
+ * @return instance, to the argument
  */
-void retain(obj *instance);
+obj * retain(obj *instance);
 
 /**
  * @brief Returns the current reference count of the given instance.
@@ -123,7 +125,7 @@ uint32_t referenceCount(obj *instance);
  *
  * @param a An instance of any Offbrand compatible class
  * @param classname An C string describing a class name
- * 
+ *
  * @retval 0 a is not an instance of classname
  * @retval non-zero a is an instance of classname
  */
