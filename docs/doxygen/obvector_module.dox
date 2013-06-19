@@ -1,5 +1,5 @@
 /**
- * @addtogroup OBVector
+ * @addtogroup obvector
  * @brief  An array that dynamically resizes when full.
  *
  * @details The vector maintains a collection of any Offbrand compatible
@@ -8,10 +8,10 @@
  * sorting may require the vector to be a homogenous collection.
  *
  * @{
- * @file OBVector.h
- * @file OBVector_Private.h
- * @file OBVector.c
- * @file OBVector_test.c
+ * @file obvector.h
+ * @file obvector_private.h
+ * @file obvector.c
+ * @file obvector_test.c
  * @}
  */
 

@@ -29,14 +29,14 @@ struct %CLASSNAME%_struct{
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-%CLASSNAME% * createDefault%METHODCLASSNAME%(void);
+%CLASSNAME% * %CLASSNAME%_create_default(void);
 
 /**
  * @brief Hash function for %CLASSNAME%
  * @param to_hash An obj pointer to an instance of %CLASSNAME%
  * @return Key value (hash) for the given obj pointer to a %CLASSNAME%
  */
-obhash_t hash%METHODCLASSNAME%(const obj *to_hash);
+ob_hash_t %CLASSNAME%_hash(const obj *to_hash);
 
 /**
  * @brief Compares two instances of %CLASSNAME%
@@ -48,7 +48,7 @@ obhash_t hash%METHODCLASSNAME%(const obj *to_hash);
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compare%METHODCLASSNAME%s(const obj *a, const obj *b);
+int8_t %CLASSNAME%_compare(const obj *a, const obj *b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
 
@@ -59,16 +59,16 @@ int8_t compare%METHODCLASSNAME%s(const obj *a, const obj *b);
  * @param to_print A non-NULL obj pointer to an instance of type
  * %CLASSNAME%
  */
-void display%METHODCLASSNAME%(const obj *to_print);
+void %CLASSNAME%_display(const obj *to_print);
 
-/** 
+/**
  * @brief Destructor for %CLASSNAME%
  * @param to_dealloc An obj pointer to an instance of %CLASSNAME% with
  * reference count of 0
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void dealloc%METHODCLASSNAME%(obj *to_dealloc);
+void %CLASSNAME%_destroy(obj *to_dealloc);
 
 /* ADDITIONAL PRIVATE METHOD DECLARATIONS HERE*/
 

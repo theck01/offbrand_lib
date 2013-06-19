@@ -1,17 +1,17 @@
 /**
- * @file OBMap_Private.h
- * @brief OBMap Private Interface
+ * @file obmap_Private.h
+ * @brief obmap Private Interface
  * @author theck
  */
 
 #ifndef OBMAP_PRIVATE_H
 #define OBMAP_PRIVATE_H
 
-#include "../OBMap.h"
-#include "../OBVector.h"
-#include "../OBDeque.h"
+#include "../obmap.h"
+#include "../obvector.h"
+#include "../obdeque.h"
 
-/* OBMap PRIVATE CONSTANTS */
+/* obmap PRIVATE CONSTANTS */
 
 /**
  * Map capacity table, where capacities are the nearest prime numbers less than
@@ -23,183 +23,183 @@ extern const uint32_t MAP_CAPACITIES[];
  */
 extern const uint32_t NUM_CAPACITIES;
 /**
- * Maximum load factor of an OBMap before the map will be resized.
+ * Maximum load factor of an obmap before the map will be resized.
  */
 extern const double MAX_LOAD_FACTOR;
 
 
-/* OBMapPair DATA */
+/* obmap_pair DATA */
 
 /**
- * @brief OBMap pair internal structure, encapsulates a key-value pair for the
+ * @brief obmap pair internal structure, encapsulates a key-value pair for the
  * given map
  */
-typedef struct OBMapPair_struct{
+typedef struct obmap_pair_struct{
   obj base; /**< obj containing reference count and class membership data */
   obj *key; /**< obj pointer to the key used to lookup within the hash */
   obj *value; /**< obj pointer to the value stored in the hash */
-} OBMapPair;
+} obmap_pair;
 
-/* OBMapPair PRIVATE METHODS */
+/* obmap_pair PRIVATE METHODS */
 
 /**
- * @brief Default constructor for an OBMapPair
+ * @brief Default constructor for an obmap_pair
  *
  * @param key Offbrand compatible class instance used to lookup value within
  * hash table
- * @param value Offbrand compatible class stored within the OBMap at a position
+ * @param value Offbrand compatible class stored within the obmap at a position
  * denoted by key
  *
- * @return An instance of class OBMapPair
+ * @return An instance of class obmap_pair
  *
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBMapPair * createMapPair(obj *key, obj *value);
+obmap_pair * obmap_new_pair(obj *key, obj *value);
 
 /**
- * @brief Copy constructor, creates a new OBMapPair with the same key-value of
- * an existing OBMapPair
+ * @brief Copy constructor, creates a new obmap_pair with the same key-value of
+ * an existing obmap_pair
  *
- * @param mp The OBMap instance to copy
- * 
- * @return An instance of class OBMapPair that contains the same key-value as
+ * @param mp The obmap instance to copy
+ *
+ * @return An instance of class obmap_pair that contains the same key-value as
  * mp
  */
-OBMapPair * copyMapPair(OBMapPair *mp);
+obmap_pair * obmap_copy_pair(obmap_pair *mp);
 
 /**
- * @brief Replaces existing value in an OBMapPair with the supplied value
- * 
- * @param mp An instance of OBMapPair
+ * @brief Replaces existing value in an obmap_pair with the supplied value
+ *
+ * @param mp An instance of obmap_pair
  * @param value The new value to replace the existing value
  */
-void replaceMapPairValue(OBMapPair *mp, obj *value);
+void obmap_replace_pair_value(obmap_pair *mp, obj *value);
 
 /**
- * @brief Hash function for OBMapPair
+ * @brief Hash function for obmap_pair
  *
- * @param to_hash An obj pointer to an instance of OBMapPair
+ * @param to_hash An obj pointer to an instance of obmap_pair
  *
- * @return Key value (hash) for the given obj pointer to a OBMapPair
+ * @return Key value (hash) for the given obj pointer to a obmap_pair
  */
-obhash_t hashMapPair(const obj *to_hash);
+ob_hash_t obmap_hash_pair(const obj *to_hash);
 
 /**
- * @brief Displays an instance of OBMapPair to stderr
+ * @brief Displays an instance of obmap_pair to stderr
  *
- * @param to_print A non-NULL obj pointer to type OBMapPair
+ * @param to_print A non-NULL obj pointer to type obmap_pair
  */
-void displayMapPair(const obj *to_print);
+void obmap_display_pair(const obj *to_print);
 
-/** 
- * @brief Destructor for OBMapPair
+/**
+ * @brief Destructor for obmap_pair
  *
- * @param to_dealloc An obj pointer to an instance of OBMap with
+ * @param to_dealloc An obj pointer to an instance of obmap with
  * reference count of 0
  *
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocMapPair(obj *to_dealloc); 
+void obmap_destroy_pair(obj *to_dealloc);
 
 
-/* OBMap DATA */
+/* obmap DATA */
 
 /**
- * @brief OBMap internal structure, encapsulating all data needed for
- * an instance of OBMap
+ * @brief obmap internal structure, encapsulating all data needed for
+ * an instance of obmap
  */
-struct OBMap_struct{
+struct obmap_struct{
   obj base; /**< obj containing reference count and class membership data */
   uint8_t cap_idx; /**< index within MAP_CAPACITIES used as lookup for
                      capacity of map */
-  OBVector *hash_table; /**< map lookup table */
-  OBDeque *pairs; /**< A dense list of all MapPairs within the map, for speedy
+  obvector *hash_table; /**< map lookup table */
+  obdeque *pairs; /**< A dense list of all MapPairs within the map, for speedy
                     rehash */
   uint32_t collisions; /**< variable that tracks the number of hashing
                          colisions encountered when adding keys to the table */
 };
 
-/* OBMap PRIVATE METHODS */
+/* obmap PRIVATE METHODS */
 
 /**
- * @brief Default constructor for OBMap
+ * @brief Default constructor for obmap
  *
- * @return An instance of class OBMap
+ * @return An instance of class obmap
  *
  * @warning All public constructors should call this constructor and intialize
  * individual members as needed, so that all base data is initialized properly.
  */
-OBMap * createDefaultMap(void);
+obmap * obmap_create_default(void);
 
 /**
- * @brief Hash function for OBMap
+ * @brief Hash function for obmap
  *
- * @param to_hash An obj pointer to an instance of OBMap
+ * @param to_hash An obj pointer to an instance of obmap
  *
- * @return Key value (hash) for the given obj pointer to a OBMap
+ * @return Key value (hash) for the given obj pointer to a obmap
  */
-obhash_t hashMap(const obj *to_hash);
+ob_hash_t obmap_hash(const obj *to_hash);
 
 /**
- * @brief Compares two instances of OBMap
+ * @brief Compares two instances of obmap
  *
- * @param a A non-NULL obj pointer to type OBMap
- * @param b A non-NULL obj pointer to type OBMap
+ * @param a A non-NULL obj pointer to type obmap
+ * @param b A non-NULL obj pointer to type obmap
  *
  * @retval OB_LESS_THAN obj a is less than b
  * @retval OB_GREATER_THAN obj a is equivalent to b
  * @retval OB_EQUAL_TO obj a is greater than b
  */
-int8_t compareMaps(const obj *a, const obj *b);
+int8_t obmap_compare(const obj *a, const obj *b);
 /* Arguments are obj * so that a function pointer can be used for container
  * class sorting/search */
 
 /**
- * @brief Displays an instance of OBMap to stderr
+ * @brief Displays an instance of obmap to stderr
  *
- * @param to_print A non-NULL obj pointer to type OBMap
+ * @param to_print A non-NULL obj pointer to type obmap
  */
-void displayMap(const obj *to_print);
+void obmap_display(const obj *to_print);
 
-/** 
- * @brief Destructor for OBMap
+/**
+ * @brief Destructor for obmap
  *
- * @param to_dealloc An obj pointer to an instance of OBMap with
+ * @param to_dealloc An obj pointer to an instance of obmap with
  * reference count of 0
  *
  * @warning Do not call manually, release will call automatically when the
  * instances reference count drops to 0!
  */
-void deallocMap(obj *to_dealloc);
+void obmap_destroy(obj *to_dealloc);
 
 /**
- * @brief Increases the size of the map to the next capacity within 
+ * @brief Increases the size of the map to the next capacity within
  * MAP_CAPACITIES array
  *
- * @param to_size OBMap to resize
+ * @param to_size obmap to resize
  */
-void increaseMapSize(OBMap *to_size);
+void obmap_increase_size(obmap *to_size);
 
 /**
- * @brief Adds an OBDequeIterator to the proper location within the OBMap
+ * @brief Adds an obdeque_iterator to the proper location within the obmap
  *
- * @param m The OBMap to add the iterator to
- * @param it The OBDequeIterator to add to the hash table
+ * @param m The obmap to add the iterator to
+ * @param it The obdeque_iterator to add to the hash table
  */
-void addToHashTable(OBMap *m, OBDequeIterator *it);
+void obmap_add_to_table(obmap *m, obdeque_iterator *it);
 
 /**
  * @brief Finds a key within the hash table, it exists
  *
- * @param m The OBMap in which to search for the key
- * @param key The key to serach for within the OBMap
+ * @param m The obmap in which to search for the key
+ * @param key The key to serach for within the obmap
  *
  * @return Index in the hash_table where a result can be found or where a NULL
  * value resides if key was not found
  */
-obhash_t findKeyInHashTable(const OBMap *m, const obj *key);
+ob_hash_t obmap_find_key(const obmap *m, const obj *key);
 
 /**
  * @brief Generates an offset from the hash value to rectify collisions
@@ -209,7 +209,7 @@ obhash_t findKeyInHashTable(const OBMap *m, const obj *key);
  *
  * @return New offset to the next possible location to insert within table
  */
-obhash_t collisionOffset(obhash_t prev_offset);
+ob_hash_t obmap_offset_collision(ob_hash_t prev_offset);
 
 #endif
 

@@ -12,8 +12,8 @@ Term * createTerm(uint32_t term){
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocTerm, NULL, &compareTerms, NULL, 
-           classname);
+  ob_init_base((obj *)new_instance, &deallocTerm, NULL, &compareTerms, NULL,
+               classname);
 
   new_instance->term = term;
   return new_instance;
@@ -27,12 +27,12 @@ uint32_t getTermValue(Term *a){
 /* PRIVATE METHODS */
 
 int8_t compareTerms(const obj *a, const obj *b){
-  
-  Term *comp_a = (Term *)a;  
-  Term *comp_b = (Term *)b;  
+
+  Term *comp_a = (Term *)a;
+  Term *comp_b = (Term *)b;
 
   assert(a != NULL && b != NULL);
-  assert(objIsOfClass(a, "Term") && objIsOfClass(b, "Term"));
+  assert(ob_has_class(a, "Term") && ob_has_class(b, "Term"));
 
   if(comp_a->term > comp_b->term) return OB_GREATER_THAN;
   else if(comp_a->term < comp_b->term) return OB_LESS_THAN;
@@ -43,6 +43,6 @@ void deallocTerm(obj *to_dealloc){
   /* cast generic obj to Term */
   Term *instance = (Term *)to_dealloc;
   assert(instance != NULL);
-  assert(objIsOfClass(to_dealloc, "Term"));
+  assert(ob_has_class(to_dealloc, "Term"));
   return;
 }

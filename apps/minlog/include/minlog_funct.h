@@ -8,7 +8,7 @@
 #define MISC_FUNCTIONS_H
 
 #include "../../../include/offbrand.h"
-#include "../../../include/OBVector.h"
+#include "../../../include/obvector.h"
 
 #define MINLOG_MINTERMS 0
 #define MINLOG_MAXTERMS 1
@@ -26,21 +26,21 @@ uint8_t testBit(uint32_t num, uint8_t bit_num);
  * MINTERMS if equation is represented by minterms, MAXTERMS if the equation is
  * represented by MAXTERMS. If verbose flag is non-zero print out detailed
  * information about terms parsed from string */
-uint8_t parseEqnString(const char *eqnstr, OBVector *terms, 
-                       OBVector *dont_cares, uint8_t verbose);
+uint8_t parseEqnString(const char *eqnstr, obvector *terms,
+                       obvector *dont_cares, uint8_t verbose);
 
-/* function takes an OBVector containing all the Term objects required to
+/* function takes an obvector containing all the Term objects required to
  * represent the unminimized function (either minterms or maxterms), and returns
  * a vector of the largest possible NCubes that completely cover all of the
  * terms */
-OBVector * findLargestPrimeImplicants(const OBVector *terms,
-                                      const OBVector *dont_cares);
+obvector * findLargestPrimeImplicants(const obvector *terms,
+                                      const obvector *dont_cares);
 
 /* function prints the equation represented by the vector of essential prime
  * implicant NCubes, essential_pis, in Sum of Products form if is_sop != 0, or
  * Product of Sums form if is_sop = 0, with the give number of variables.
  * Function prints to STDOUT */
-void printEqnVector(const OBVector *essential_pis, uint8_t is_sop,
+void printEqnVector(const obvector *essential_pis, uint8_t is_sop,
                     uint32_t num_var);
 
 

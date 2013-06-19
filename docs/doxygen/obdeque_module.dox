@@ -1,5 +1,5 @@
 /**
- * @addtogroup OBDeque
+ * @addtogroup obdeque
  * @brief  A double ended queue container.
  *
  * @details The deque maintains a dense collection of objects within a doubly
@@ -8,10 +8,10 @@
  * collection.
  *
  * @{
- * @file OBDeque.h
- * @file OBDeque_Private.h
- * @file OBDeque.c
- * @file OBDeque_test.c
+ * @file obdeque.h
+ * @file obdeque_private.h
+ * @file obdeque.c
+ * @file obdeque_test.c
  * @}
  */
 

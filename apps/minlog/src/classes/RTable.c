@@ -8,7 +8,7 @@
 
 /* add arguments to complete initialization as needed, modify RTable.h
  * as well if modifications are made */
-RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
+RTable * createRTable(const obvector *prime_implicants, const obvector *terms){
 
   static const char classname[] = "RTable";
 
@@ -18,30 +18,31 @@ RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
   assert(new_instance != NULL);
 
   /* initialize reference counting base of class */
-  initBase((obj *)new_instance, &deallocRTable, NULL, NULL, NULL, classname);
+  ob_init_base((obj *)new_instance, &deallocRTable, NULL, NULL, NULL,
+               classname);
 
-  new_instance->pis = copyVector(prime_implicants);
-  new_instance->terms = copyVector(terms);
+  new_instance->pis = obvector_copy(prime_implicants);
+  new_instance->terms = obvector_copy(terms);
 
-  num_pis = vectorLength(new_instance->pis);
-  num_terms = vectorLength(new_instance->terms);
+  num_pis = obvector_length(new_instance->pis);
+  num_terms = obvector_length(new_instance->terms);
 
   /* verify vectors are of proper format and allocate/initialize 2D array */
   for(i=0; i<num_pis; i++){
-    assert(objIsOfClass(objAtVectorIndex(new_instance->pis,i), "NCube"));
+    assert(ob_has_class(obvector_obj_at_index(new_instance->pis,i), "NCube"));
   }
-  
+
   new_instance->cover_flags = malloc(sizeof(uint8_t *)*num_terms);
-  
+
   for(i=0; i<num_terms; i++){
 
-    assert(objIsOfClass(objAtVectorIndex(new_instance->terms,i), "Term"));
+    assert(ob_has_class(obvector_obj_at_index(new_instance->terms,i), "Term"));
 
     new_instance->cover_flags[i] = malloc(sizeof(uint8_t)*num_pis);
     assert(new_instance->cover_flags[i] != NULL);
 
-    term_num = getTermValue((Term *)objAtVectorIndex(new_instance->terms,i));
-    
+    term_num = getTermValue((Term *)obvector_obj_at_index(new_instance->terms,i));
+
     initTermCoverArray(new_instance->pis, term_num,
                        new_instance->cover_flags[i]);
   }
@@ -52,29 +53,29 @@ RTable * createRTable(const OBVector *prime_implicants, const OBVector *terms){
 }
 
 
-OBVector * findEssentialPIs(RTable *table, uint8_t num_var){
+obvector * findEssentialPIs(RTable *table, uint8_t num_var){
 
   uint32_t i, j, num_terms, num_pis, is_resolved;
-  OBVector *unknown_pis, *unresolved_terms, *sub_essentials;
+  obvector *unknown_pis, *unresolved_terms, *sub_essentials;
   RTable *sub_table;
 
   assert(table != NULL);
 
   /* if the essential pis have already been found */
   if(table->essential_pis){
-    return copyVector(table->essential_pis);
+    return obvector_copy(table->essential_pis);
   }
 
   /* create vectors */
-  table->essential_pis = createVector(1);
+  table->essential_pis = obvector_new(1);
   assert(table->essential_pis != NULL);
-  unresolved_terms = createVector(1);
+  unresolved_terms = obvector_new(1);
   assert(unresolved_terms != NULL);
-  unknown_pis = createVector(1);
+  unknown_pis = obvector_new(1);
   assert(unknown_pis != NULL);
 
-  num_pis = vectorLength(table->pis);
-  num_terms = vectorLength(table->terms);
+  num_pis = obvector_length(table->pis);
+  num_terms = obvector_length(table->terms);
 
   /* find terms that are not covered by a known essential pi */
   for(i=0; i<num_terms; i++){
@@ -83,9 +84,9 @@ OBVector * findEssentialPIs(RTable *table, uint8_t num_var){
     is_resolved = 0;
     for(j=0; j<num_pis; j++){
       /* if term is covered by a known essential cube it is resolved */
-      if(table->cover_flags[i][j] == 1 && 
-         isNCubeEssential((NCube *)objAtVectorIndex(table->pis, j))){
-        is_resolved = 1; 
+      if(table->cover_flags[i][j] == 1 &&
+         isNCubeEssential((NCube *)obvector_obj_at_index(table->pis, j))){
+        is_resolved = 1;
         break;
       }
     }
@@ -93,44 +94,44 @@ OBVector * findEssentialPIs(RTable *table, uint8_t num_var){
     /* if cube is not covered by a known essential cube, add it to the vector
      * of unresolved terms */
     if(!is_resolved){
-      storeAtVectorIndex(unresolved_terms, objAtVectorIndex(table->terms, i),
-                         vectorLength(unresolved_terms));
+      obvector_store_at_index(unresolved_terms, obvector_obj_at_index(table->terms, i),
+                         obvector_length(unresolved_terms));
     }
   }
 
   /* compose essential and unknown NCube vectors */
   for(i=0; i<num_pis; i++){
-    if(isNCubeEssential((NCube *)objAtVectorIndex(table->pis, i)))
-      storeAtVectorIndex(table->essential_pis, objAtVectorIndex(table->pis, i),
-                         vectorLength(table->essential_pis));
-    else storeAtVectorIndex(unknown_pis, objAtVectorIndex(table->pis, i),
-                            vectorLength(unknown_pis));
+    if(isNCubeEssential((NCube *)obvector_obj_at_index(table->pis, i)))
+      obvector_store_at_index(table->essential_pis, obvector_obj_at_index(table->pis, i),
+                         obvector_length(table->essential_pis));
+    else obvector_store_at_index(unknown_pis, obvector_obj_at_index(table->pis, i),
+                            obvector_length(unknown_pis));
   }
 
   /* if all terms are unresolved, resort to brute force combination
    * checking via Petricks Method */
-  if(vectorLength(unresolved_terms) == vectorLength(table->terms)){
+  if(obvector_length(unresolved_terms) == obvector_length(table->terms)){
     sub_essentials = petricksReduce(unknown_pis, unresolved_terms, num_var);
-    catVectors(table->essential_pis, sub_essentials);
-    sub_essentials = (OBVector *)release((obj *)sub_essentials);
+    obvector_concat(table->essential_pis, sub_essentials);
+    sub_essentials = (obvector *)ob_release((obj *)sub_essentials);
   }
   /* else if only some terms are resolved, but not all, recursively create a sub
    * RTable and use it to further reduce pis */
-  else if(vectorLength(unresolved_terms) > 0){
+  else if(obvector_length(unresolved_terms) > 0){
     sub_table = createRTable(unknown_pis, unresolved_terms);
     sub_essentials = findEssentialPIs(sub_table, num_var);
-    sub_table = (RTable *)release((obj *)sub_table);
-    catVectors(table->essential_pis, sub_essentials);
-    sub_essentials = (OBVector *)release((obj *)sub_essentials);
+    sub_table = (RTable *)ob_release((obj *)sub_table);
+    obvector_concat(table->essential_pis, sub_essentials);
+    sub_essentials = (obvector *)ob_release((obj *)sub_essentials);
   }
 
   /* all terms are resolved, and all essential NCubes found */
 
-  /* release unneeded vectors */
-  release((obj *)unresolved_terms);
-  release((obj *)unknown_pis);
+  /* ob_release unneeded vectors */
+  ob_release((obj *)unresolved_terms);
+  ob_release((obj *)unknown_pis);
 
-  return copyVector(table->essential_pis);
+  return obvector_copy(table->essential_pis);
 }
 
 
@@ -143,34 +144,34 @@ void deallocRTable(obj *to_dealloc){
   /* cast generic obj to RTable */
   RTable *instance = (RTable *)to_dealloc;
 
-  assert(to_dealloc && objIsOfClass(to_dealloc, "RTable"));
+  assert(to_dealloc && ob_has_class(to_dealloc, "RTable"));
 
-  num_terms = vectorLength(instance->terms);
+  num_terms = obvector_length(instance->terms);
   for(i=0; i<num_terms; i++){
     free(instance->cover_flags[i]);
   }
 
   free(instance->cover_flags);
-  release((obj *)instance->pis);
-  release((obj *)instance->terms);
-  release((obj *)instance->essential_pis);
+  ob_release((obj *)instance->pis);
+  ob_release((obj *)instance->terms);
+  ob_release((obj *)instance->essential_pis);
 
   return;
 }
 
 
-void initTermCoverArray(const OBVector *cubes, uint32_t term, uint8_t *array){
-  
+void initTermCoverArray(const obvector *cubes, uint32_t term, uint8_t *array){
+
   NCube *candidate;
   uint32_t i, num_cubes, num_match;
 
-  num_cubes = vectorLength(cubes);
+  num_cubes = obvector_length(cubes);
   num_match = 0;
   for(i=0; i<num_cubes; i++){
-    if(nCubeCoversTerm((NCube *)objAtVectorIndex(cubes, i), term)){
+    if(nCubeCoversTerm((NCube *)obvector_obj_at_index(cubes, i), term)){
       array[i] = 1;
       num_match++;
-      candidate = (NCube *)objAtVectorIndex(cubes, i);
+      candidate = (NCube *)obvector_obj_at_index(cubes, i);
     }
     else array[i] = 0;
   }
@@ -185,19 +186,19 @@ void initTermCoverArray(const OBVector *cubes, uint32_t term, uint8_t *array){
 }
 
 
-OBVector * petricksReduce(const OBVector *unresolved_cubes,
-                          const OBVector *unresolved_terms, uint8_t num_var){
+obvector * petricksReduce(const obvector *unresolved_cubes,
+                          const obvector *unresolved_terms, uint8_t num_var){
 
   NCube ***petricks_cubes, *tmp;
   uint32_t i, num_terms, *counts, *cur_idxs;
   uint64_t total_combos;
-  OBVector *cur_group, *best_group; /* group of NCubes that completely covers
+  obvector *cur_group, *best_group; /* group of NCubes that completely covers
                                        given terms */
   uint64_t cur_total_order, best_total_order; /* the better the total_order, the
                                                  better the cube grouping */
 
   best_group = NULL;
-  num_terms = vectorLength(unresolved_terms);
+  num_terms = obvector_length(unresolved_terms);
 
   counts = malloc(sizeof(uint32_t)*num_terms);
   assert(counts != NULL);
@@ -226,8 +227,8 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
   /* iterate through all possible combinations of cubes that completely cover
    * the given terms */
   while(1){
-    
-    cur_group = createVector(num_terms);
+
+    cur_group = obvector_new(num_terms);
     cur_total_order = 0;
 
     /* get current group, and sum of orders */
@@ -237,21 +238,21 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
 
       /* if the NCube is not already in the group (and accounted for) then add
        * it */
-      if(!findObjInVector(cur_group, (obj *)tmp)){
-        storeAtVectorIndex(cur_group, (obj *)tmp, vectorLength(cur_group));
+      if(!obvector_find_obj(cur_group, (obj *)tmp)){
+        obvector_store_at_index(cur_group, (obj *)tmp, obvector_length(cur_group));
         cur_total_order += num_var - orderOfNCube(tmp);
-      } 
+      }
     }
 
     /* if the total order of cur_group is better than best_group, there is a new
      * best group */
     if(cur_total_order < best_total_order){
       best_total_order = cur_total_order;
-      if(best_group) release((obj *)best_group);
+      if(best_group) ob_release((obj *)best_group);
       best_group = cur_group;
     }
-    /* else release the current group, its not the best */
-    else release((obj *)cur_group);
+    /* else ob_release the current group, its not the best */
+    else ob_release((obj *)cur_group);
 
     if(nextCoverCombo(counts, cur_idxs, num_terms)) break;
   }
@@ -263,19 +264,19 @@ OBVector * petricksReduce(const OBVector *unresolved_cubes,
   free(petricks_cubes);
   free(counts);
   free(cur_idxs);
-  
+
   return best_group;
 }
 
 
-NCube *** initPetricksData(const OBVector *unresolved_cubes,
-                           const OBVector *unresolved_terms, uint32_t *counts){
+NCube *** initPetricksData(const obvector *unresolved_cubes,
+                           const obvector *unresolved_terms, uint32_t *counts){
 
   NCube ***petricks_cubes;
   uint32_t i, j, k, cur_term, num_terms, num_cubes;
 
-  num_terms = vectorLength(unresolved_terms);
-  num_cubes = vectorLength(unresolved_cubes);
+  num_terms = obvector_length(unresolved_terms);
+  num_cubes = obvector_length(unresolved_cubes);
 
   petricks_cubes = malloc(sizeof(NCube *)*num_terms);
   assert(petricks_cubes != NULL);
@@ -285,14 +286,14 @@ NCube *** initPetricksData(const OBVector *unresolved_cubes,
 
     /* init count (number of cubes matching term) to 0 */
     counts[i] = 0;
-    cur_term = getTermValue((Term *)objAtVectorIndex(unresolved_terms, i));
+    cur_term = getTermValue((Term *)obvector_obj_at_index(unresolved_terms, i));
 
     /* for all unresolved cubes, count matching */
     for(j=0; j<num_cubes; j++){
-      if(nCubeCoversTerm((NCube *)objAtVectorIndex(unresolved_cubes, j),
+      if(nCubeCoversTerm((NCube *)obvector_obj_at_index(unresolved_cubes, j),
                          cur_term)) counts[i]++;
     }
-    
+
     assert(counts[i] > 0);
 
     petricks_cubes[i] = malloc(sizeof(NCube *)*counts[i]);
@@ -302,9 +303,9 @@ NCube *** initPetricksData(const OBVector *unresolved_cubes,
 
     /* for all unresolved cubes, add to petricks_cubes if cube covers term */
     for(j=0; j<num_cubes; j++){
-      if(nCubeCoversTerm((NCube *)objAtVectorIndex(unresolved_cubes, j),
+      if(nCubeCoversTerm((NCube *)obvector_obj_at_index(unresolved_cubes, j),
                          cur_term))
-        petricks_cubes[i][k++] = (NCube *)objAtVectorIndex(unresolved_cubes,j);
+        petricks_cubes[i][k++] = (NCube *)obvector_obj_at_index(unresolved_cubes,j);
     }
   }
 

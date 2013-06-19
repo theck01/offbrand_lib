@@ -1,7 +1,7 @@
 
 /**
- * @file OBTest.h
- * @brief OBTest Public Interface
+ * @file obtest.h
+ * @brief obtest Public Interface
  * @author theck
  */
 
@@ -11,21 +11,21 @@
 #include "offbrand.h"
 
 /** Class type declaration */
-typedef struct OBTest_struct OBTest;
+typedef struct obtest_struct obtest;
 
 /**
- * @brief Constructor, creates an instance of OBTest with a specified id
- * @param id Integer id for the created OBTest
- * @return Instance of OBTest with id as given by parameter
+ * @brief Constructor, creates an instance of obtest with a specified id
+ * @param id Integer id for the created obtest
+ * @return Instance of obtest with id as given by parameter
  */
-OBTest * createTest(uint32_t id);
+obtest * obtest_new(uint32_t id);
 
 /**
- * @brief Returns the id of an OBTest instance
- * @param a Pointer to an instance of OBTest
- * @return id value of the OBTest argument
+ * @brief Returns the id of an obtest instance
+ * @param a Pointer to an instance of obtest
+ * @return id value of the obtest argument
  */
-uint32_t getTestID(OBTest *a);
+uint32_t obtest_id(obtest *a);
 
 #endif
 

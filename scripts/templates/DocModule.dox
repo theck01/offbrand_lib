@@ -6,7 +6,7 @@
  *
  * @{
  * @file %CLASSNAME%.h
- * @file %CLASSNAME%_Private.h
+ * @file %CLASSNAME%_private.h
  * @file %CLASSNAME%.c
  * @file %CLASSNAME%_test.c
  * @}

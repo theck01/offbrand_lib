@@ -8,7 +8,7 @@
 NCube * createNCube(uint32_t term, uint8_t is_dont_care){
 
   NCube *new_instance;
-  
+
   assert(term < (1 << 27));
 
   new_instance = createNCubeWithOrder(0);
@@ -91,7 +91,7 @@ uint8_t nCubeCoversTerm(const NCube *a, uint32_t term){
   uint32_t i, max_i;
 
   assert(a != NULL);
-  
+
   max_i = 1 << a->order;
   for(i=0; i<max_i; i++){
     if(a->terms[i] == term){
@@ -134,7 +134,7 @@ char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
   char *str;
   char curvar = 'A'; /* assumes that curvar can be incremented, resulting in B,
                         C, D ... */
-  
+
   assert(a != NULL && num_var < 27);
 
   str = malloc(sizeof(char) * 256);
@@ -151,7 +151,7 @@ char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
   if(!is_sop) str[k++] = '(';
 
   for(i=num_var-1; i<num_var; i--){
-    
+
     /* if the current variable is not a dont care, add it to string */
     if(!testBit(a->dont_cares, i)){
       /* add the char representation of the variable */
@@ -185,7 +185,7 @@ char * nCubeStr(const NCube *a, uint8_t is_sop, uint8_t num_var){
 /* PRIVATE METHODS */
 
 NCube * createNCubeWithOrder(uint8_t order){
-  
+
   static const char classname[] = "NCube";
 
   NCube *new_cube;
@@ -196,8 +196,8 @@ NCube * createNCubeWithOrder(uint8_t order){
   assert(new_cube != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_cube, &deallocNCube, NULL, &compareNCubes, NULL,
-           classname);
+  ob_init_base((obj *)new_cube, &deallocNCube, NULL, &compareNCubes, NULL,
+               classname);
 
   new_cube->terms = malloc(sizeof(uint32_t)*(1<<order));
   assert(new_cube->terms != NULL);
@@ -213,13 +213,13 @@ NCube * createNCubeWithOrder(uint8_t order){
 
 
 int8_t compareNCubes(const obj *a, const obj *b){
-  
+
   uint32_t i, max_i;
-  NCube *comp_a = (NCube *)a;  
-  NCube *comp_b = (NCube *)b;  
+  NCube *comp_a = (NCube *)a;
+  NCube *comp_b = (NCube *)b;
 
   assert(a != NULL && b != NULL);
-  assert(objIsOfClass(a, "NCube") && objIsOfClass(b, "NCube"));
+  assert(ob_has_class(a, "NCube") && ob_has_class(b, "NCube"));
 
   if(comp_a->order != comp_b->order){
     return OB_NOT_EQUAL;
@@ -240,7 +240,7 @@ void deallocNCube(obj *to_dealloc){
   /* cast generic obj to NCube */
   NCube *instance = (NCube *)to_dealloc;
   assert(instance != NULL);
-  assert(objIsOfClass(to_dealloc, "NCube"));
+  assert(ob_has_class(to_dealloc, "NCube"));
   free(instance->terms);
   return;
 }

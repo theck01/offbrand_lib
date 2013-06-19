@@ -3,16 +3,16 @@
 #include "../include/NCube.h"
 #include "../include/RTable.h"
 #include "../include/minlog_funct.h"
-#include "../../../include/OBVector.h"
+#include "../../../include/obvector.h"
 
 #define MAX_EQN_SIZE 2048
 
 int main(int argc, char **argv){
 
-  OBVector *terms, *dont_cares, *pis, *essential_pis;
+  obvector *terms, *dont_cares, *pis, *essential_pis;
   RTable *reduction_table;
   uint8_t is_minterms, num_var;
-  uint32_t max_term, numchar, substrlen; 
+  uint32_t max_term, numchar, substrlen;
   int i;
   char eqnstr[MAX_EQN_SIZE];
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv){
             "  VALID:   %s m 1 2 3 4 d 5 6 \n"
             "  VALID:   %s d 1 4 5 6 M 8 9\n"
             "  INVALID: %s M 1 4 5 m 3 7 10 d 12 14\n"
-            "  INVALID: %s 10 4 d 58 39 M\n\n", argv[0], argv[0], argv[0], 
+            "  INVALID: %s 10 4 d 58 39 M\n\n", argv[0], argv[0], argv[0],
                                                 argv[0], argv[0], argv[0]);
     exit(1);
   }
@@ -47,7 +47,7 @@ int main(int argc, char **argv){
   numchar = 0;
   for(i=1; i<argc; i++){
 
-    /* verify that copying the argv string into eqnstr will not overflow 
+    /* verify that copying the argv string into eqnstr will not overflow
      * array */
     substrlen = strlen(argv[i]);
     assert(numchar+substrlen < MAX_EQN_SIZE);
@@ -57,9 +57,9 @@ int main(int argc, char **argv){
     eqnstr[numchar++] = ' ';
   }
   eqnstr[numchar] = '\0'; /* add null terminator to string */
-    
-  terms = createVector(32);
-  dont_cares = createVector(32);
+
+  terms = obvector_new(32);
+  dont_cares = obvector_new(32);
 
 
   /* parse verbosely for testing */
@@ -67,8 +67,8 @@ int main(int argc, char **argv){
 
   /* find largest term, found by sorting and picking first term. Inefficient but
    * concise compared to iterating through each term and checking results */
-  sortVector(terms, OB_GREATEST_TO_LEAST);
-  max_term = getTermValue((Term *)objAtVectorIndex(terms, 0));
+  obvector_sort(terms, OB_GREATEST_TO_LEAST);
+  max_term = getTermValue((Term *)obvector_obj_at_index(terms, 0));
   num_var = 0;
   /* increase number of variables until 2^num_var > max_term */
   while(1u<<num_var <= max_term) num_var++;
@@ -76,25 +76,25 @@ int main(int argc, char **argv){
   /* find prime implicants */
   pis = findLargestPrimeImplicants(terms, dont_cares);
 
-  dont_cares = (OBVector *)release((obj *)dont_cares);
+  dont_cares = (obvector *)ob_release((obj *)dont_cares);
 
   /* create the table used to reduce the prime implicants to the minimal
    * essential prime implicants */
   reduction_table = createRTable(pis, terms);
-  
-  terms = (OBVector *)release((obj *)terms);
-  pis = (OBVector *)release((obj *)pis);
+
+  terms = (obvector *)ob_release((obj *)terms);
+  pis = (obvector *)ob_release((obj *)pis);
 
   /* find the minimal function representation */
-  essential_pis = findEssentialPIs(reduction_table, num_var); 
+  essential_pis = findEssentialPIs(reduction_table, num_var);
 
-  reduction_table = (RTable *)release((obj *)reduction_table);
-  
+  reduction_table = (RTable *)ob_release((obj *)reduction_table);
+
   /* print the result to stdout */
   printEqnVector(essential_pis, !is_minterms, num_var);
 
-  essential_pis = (OBVector *)release((obj *)essential_pis);
+  essential_pis = (obvector *)ob_release((obj *)essential_pis);
 
   return 0;
 }
-  
+

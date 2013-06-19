@@ -1,15 +1,15 @@
 /**
- * @addtogroup OBInt
+ * @addtogroup obint
  * @brief  Offbrand compatible integer class
  *
  * @details An immutable integer with size bound only by available system 
  * memory. 
  *
  * @{
- * @file OBInt.h
- * @file OBInt_Private.h
- * @file OBInt.c
- * @file OBInt_test.c
+ * @file obint.h
+ * @file obint_private.h
+ * @file obint.c
+ * @file obint_test.c
  * @}
  */
 

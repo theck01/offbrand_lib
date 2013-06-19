@@ -1,6 +1,6 @@
 /**
  * @file offbrand.h
- * @brief Offbrand Standard Library
+ * @brief offbrand Standard Library
  *
  * @details
  * The standard library defines all data structures and function calls
@@ -43,39 +43,39 @@
 typedef struct obj_struct * obj;
 
 /**
- * reference count, tracks references to instances of Offbrand compatible
+ * reference count, tracks references to instances of offbrand compatible
  * classes
  */
-typedef uint32_t ref_count_t;
+typedef uint32_t ob_ref_count_t;
 
 /** function pointer to a deallocator for any OffBrand compatible class */
-typedef void (*dealloc_fptr)(obj *);
+typedef void (*ob_dealloc_fptr)(obj *);
 
 /** hash value, used returned from hash functions */
-typedef size_t obhash_t;
+typedef size_t ob_hash_t;
 
 /** function pointer to a hash function for any offbrand compatible class */
-typedef obhash_t (*hash_fptr)(const obj *);
+typedef ob_hash_t (*ob_hash_fptr)(const obj *);
 
 /**
  * function pointer to a comparision function that takes pointers to any two
- * Offbrand compatible classes and returns one of the comparision constants
+ * offbrand compatible classes and returns one of the comparision constants
  * listed in the constants section.
  */
-typedef int8_t (*compare_fptr)(const obj *, const obj *);
+typedef int8_t (*ob_compare_fptr)(const obj *, const obj *);
 
 /** function pointer to a display function for any offbrand compatible class */
-typedef void (*display_fptr)(const obj *);
+typedef void (*ob_display_fptr)(const obj *);
 
 
 /* OFFBRAND STANDARD LIB */
 
 /**
- * @brief Initializes instances of all Offbrand compatible classes with a
+ * @brief Initializes instances of all offbrand compatible classes with a
  * reference count of 1, a deallocator, a hash function, and the provided class
  * name
  *
- * @param instance An newly allocated instance of any Offbrand compatible class
+ * @param instance An newly allocated instance of any offbrand compatible class
  * @param dealloc_funct Function pointer to the deallocator for the instances
  * class
  * @param hash_funct Function pointer to the hash function for the instances
@@ -86,76 +86,76 @@ typedef void (*display_fptr)(const obj *);
  * instances class
  * @param classname C string containing instances classname.
  */
-void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
-              compare_fptr compare_funct, display_fptr display_funct,
-              const char *classname);
+void ob_init_base(obj *instance, ob_dealloc_fptr dealloc_funct,
+                  ob_hash_fptr hash_funct, ob_compare_fptr compare_funct,
+                  ob_display_fptr display_funct, const char *classname);
 
 /**
  * @brief Decrements the instances reference count by 1. If the reference count
  * is reduced to 0 then release automatically calls the instances deallocator.
  *
- * @param instance An instance of any Offbrand compatible class
+ * @param instance An instance of any offbrand compatible class
  * @retval &instance Reference count was decremented but the instance is still
  * referenced
  * @retval NULL Reference count was decremented to 0 and deallocator was called
  * on instance
  */
-obj * release(obj *instance);
+obj * ob_release(obj *instance);
 
 /**
  * @brief Increments the instances reference count by 1, indicating that the
  * calling code has "referenced" that instance for later use.
  *
- * @param instance An instance of any Offbrand compatible class
+ * @param instance An instance of any offbrand compatible class
  *
  * @return instance, to the argument
  */
-obj * retain(obj *instance);
+obj * ob_retain(obj *instance);
 
 /**
  * @brief Returns the current reference count of the given instance.
  *
- * @param instance An instance of any Offbrand compatible class
+ * @param instance An instance of any offbrand compatible class
  * @return An unsigned integer reference count
  */
-uint32_t referenceCount(obj *instance);
+uint32_t ob_reference_count(obj *instance);
 
 /**
  * @brief Checks that the given obj is of the provided class
  *
- * @param a An instance of any Offbrand compatible class
+ * @param a An instance of any offbrand compatible class
  * @param classname An C string describing a class name
  *
  * @retval 0 a is not an instance of classname
  * @retval non-zero a is an instance of classname
  */
-uint8_t objIsOfClass(const obj *a, const char *classname);
+uint8_t ob_has_class(const obj *a, const char *classname);
 
 /**
  * @brief Checks that two objs are of the same class
  *
- * @param a An instance of any Offbrand compatible class
- * @param b An instance of any Offbrand compatible class
+ * @param a An instance of any offbrand compatible class
+ * @param b An instance of any offbrand compatible class
  *
  * @retval 0 a and b are not of the same class
  * @retval non-zero a and b are of the same class
  */
-uint8_t sameClass(const obj *a, const obj *b);
+uint8_t ob_has_same_class(const obj *a, const obj *b);
 
 /**
  * @brief Computes the hash value of the instance using a class specific hash
  * function if one is available or the defaultHash function if not
  *
- * @param to_hash An instance of any Offbrand compatible class
+ * @param to_hash An instance of any offbrand compatible class
  * @return Hash value
  */
-obhash_t hash(const obj *to_hash);
+ob_hash_t ob_hash(const obj *to_hash);
 
 /**
- * @brief comparision operator between any two Offbrand compatible classes
+ * @brief comparision operator between any two offbrand compatible classes
  *
- * @param a An instance of any Offbrand compatible class
- * @param b An instance of any Offbrand compatible class
+ * @param a An instance of any offbrand compatible class
+ * @param b An instance of any offbrand compatible class
  *
  * @retval OB_LESS_THAN obj a is less than b
  * @retval OB_GREATER_THAN obj a is equivalent to b
@@ -163,15 +163,15 @@ obhash_t hash(const obj *to_hash);
  * @retval OB_NOT_EQUAL obj a is not equal to b, but no other relationship can
  * be infered
  */
-int8_t compare(const obj *a, const obj *b);
+int8_t ob_compare(const obj *a, const obj *b);
 
 /**
  * @brief display operation prints information about the instance of any
- * Offbrand compatible class to stderr
+ * offbrand compatible class to stderr, for debug
  *
- * @param to_print An instance of any Offbrand compativle class
+ * @param to_print An instance of any offbrand compativle class
  */
-void display(const obj *to_print);
+void ob_display(const obj *to_print);
 
 #endif
 

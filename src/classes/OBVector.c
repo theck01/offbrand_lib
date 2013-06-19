@@ -1,15 +1,15 @@
 /**
- * @file OBVector.c
- * @brief OBVector Method Implementation
+ * @file obvector.c
+ * @brief obvector Method Implementation
  * @author theck
  */
 
-#include "../../include/OBVector.h"
-#include "../../include/private/OBVector_Private.h"
+#include "../../include/obvector.h"
+#include "../../include/private/obvector_private.h"
 
 /* PUBLIC METHODS */
 
-OBVector * createVector(uint32_t initial_capacity){
+obvector * obvector_new(uint32_t initial_capacity){
 
   uint32_t i, new_cap;
 
@@ -17,26 +17,26 @@ OBVector * createVector(uint32_t initial_capacity){
   while(initial_capacity > new_cap) new_cap *= 2;
   if(new_cap > UINT32_MAX) new_cap = UINT32_MAX;
 
-  OBVector *new_instance = createDefaultVector(new_cap);
+  obvector *new_instance = obvector_create_default(new_cap);
   for(i=0; i<new_cap; i++) new_instance->array[i] = NULL;
 
   return new_instance;
 }
 
 
-OBVector * copyVector(const OBVector *to_copy){
+obvector * obvector_copy(const obvector *to_copy){
 
   uint32_t i;
-  OBVector *new_vec;
+  obvector *new_vec;
 
   /* if there is nothing to copy, do nothing */
   assert(to_copy);
 
-  new_vec = createDefaultVector(to_copy->capacity);
+  new_vec = obvector_create_default(to_copy->capacity);
   new_vec->length = to_copy->length;
 
   for(i=0; i<to_copy->capacity; i++){
-    retain(to_copy->array[i]);
+    ob_retain(to_copy->array[i]);
     new_vec->array[i] = to_copy->array[i];
   }
 
@@ -44,43 +44,43 @@ OBVector * copyVector(const OBVector *to_copy){
 }
 
 
-uint32_t vectorLength(const OBVector *v){
+uint32_t obvector_length(const obvector *v){
   assert(v != NULL);
   return v->length;
 }
 
 
-void storeAtVectorIndex(OBVector *v, obj *to_store, int64_t index){
+void obvector_store_at_index(obvector *v, obj *to_store, int64_t index){
 
   assert(v != NULL);
 
   /* if negatively indexing, index from the end of the array backwards */
-  if(index < 0) index += v->length; 
+  if(index < 0) index += v->length;
 
   assert(index < UINT32_MAX); /* assert not indexing beyond capacity */
   assert(index >= 0); /* assert not negative indexing after offset */
 
   /* ensure vector can store element at index */
-  resizeVector(v, (uint32_t)index);
+  obvector_resize(v, (uint32_t)index);
 
-  retain(to_store);
-  release(v->array[index]);
+  ob_retain(to_store);
+  ob_release(v->array[index]);
   v->array[index] = to_store;
 
   /* find vector length if modifying beyond known length */
-  if(index+1 >= v->length) 
-    v->length = findValidPrecursorIndex(v->array, index) + 1;
+  if(index+1 >= v->length)
+    v->length = obvector_find_valid_precursor(v->array, index) + 1;
 
   return;
 }
 
 
-obj * objAtVectorIndex(const OBVector *v, int64_t index){
+obj * obvector_obj_at_index(const obvector *v, int64_t index){
 
   assert(v != NULL);
 
   /* if negatively indexing, index from the end of the array backwards */
-  if(index < 0) index += v->length; 
+  if(index < 0) index += v->length;
   assert(index < UINT32_MAX); /* assert not indexing beyond capacity */
   assert(index >= 0); /* assert not negative indexing beyond 0 index */
 
@@ -89,7 +89,7 @@ obj * objAtVectorIndex(const OBVector *v, int64_t index){
 }
 
 
-void catVectors(OBVector *destination, OBVector *to_append){
+void obvector_concat(obvector *destination, obvector *to_append){
 
   uint64_t i;
 
@@ -97,13 +97,13 @@ void catVectors(OBVector *destination, OBVector *to_append){
   assert(to_append != NULL);
   /* make sure that the two vectors will not overflow when concatenated */
   assert(destination->length + to_append->length >= destination->length);
- 
+
   /* ensure vector can store all elements in to_append */
-  resizeVector(destination, destination->length + to_append->length - 1);
+  obvector_resize(destination, destination->length + to_append->length - 1);
 
   /* copy contents of to_append */
   for(i=0; i<to_append->length; i++){
-    retain((obj *)to_append->array[i]);
+    ob_retain((obj *)to_append->array[i]);
     destination->array[i+destination->length] = to_append->array[i];
   }
 
@@ -113,7 +113,7 @@ void catVectors(OBVector *destination, OBVector *to_append){
 }
 
 
-uint8_t findObjInVector(const OBVector *v, const obj *to_find){
+uint8_t obvector_find_obj(const obvector *v, const obj *to_find){
 
   uint32_t i;
 
@@ -122,7 +122,7 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find){
 
   for(i=0; i<v->length; i++){
     /* if the object exists in the vector */
-    if(compare(to_find, v->array[i]) == OB_EQUAL_TO){
+    if(ob_compare(to_find, v->array[i]) == OB_EQUAL_TO){
       return 1;
     }
   }
@@ -131,12 +131,12 @@ uint8_t findObjInVector(const OBVector *v, const obj *to_find){
 }
 
 
-void sortVector(OBVector *v, int8_t order){
-  sortVectorWithFunct(v, order, &compare);
+void obvector_sort(obvector *v, int8_t order){
+  obvector_sort_with_funct(v, order, &ob_compare);
 }
 
 
-void sortVectorWithFunct(OBVector *v, int8_t order, compare_fptr funct){
+void obvector_sort_with_funct(obvector *v, int8_t order, ob_compare_fptr funct){
 
   obj **sorted;
 
@@ -144,24 +144,24 @@ void sortVectorWithFunct(OBVector *v, int8_t order, compare_fptr funct){
   assert(funct != NULL);
   assert(order == OB_LEAST_TO_GREATEST || order == OB_GREATEST_TO_LEAST);
 
-  sorted = recursiveSortContents(v->array, v->capacity, order, funct);
+  sorted = obvector_recursive_sort(v->array, v->capacity, order, funct);
 
   free(v->array);
   v->array = sorted;
-  v->length = findValidPrecursorIndex(v->array, v->length-1) + 1;
+  v->length = obvector_find_valid_precursor(v->array, v->length-1) + 1;
 
   return;
 }
 
 
-void clearVector(OBVector *v){
+void obvector_clear(obvector *v){
 
   uint32_t i;
 
   assert(v != NULL);
 
   for(i=0; i<v->capacity; i++){
-    release(v->array[i]);
+    ob_release(v->array[i]);
   }
 
   v->length = 0;
@@ -173,16 +173,16 @@ void clearVector(OBVector *v){
 /* PRIVATE METHODS */
 
 
-OBVector * createDefaultVector(uint32_t initial_capacity){
+obvector * obvector_create_default(uint32_t initial_capacity){
 
-  static const char classname[] = "OBVector";
+  static const char classname[] = "obvector";
 
-  OBVector *new_instance = malloc(sizeof(OBVector));
+  obvector *new_instance = malloc(sizeof(obvector));
   assert(new_instance != NULL);
 
   /* initialize reference counting base data */
-  initBase((obj *)new_instance, &deallocVector, &hashVector, &compareVectors,
-           &displayVector, classname);
+  ob_init_base((obj *)new_instance, &obvector_destroy, &obvector_hash, &obvector_compare,
+           &obvector_display, classname);
 
   /* a vector with zero capacity cannot be created, create one with a capacity
    * of one */
@@ -200,7 +200,7 @@ OBVector * createDefaultVector(uint32_t initial_capacity){
 }
 
 
-void resizeVector(OBVector *v, uint32_t index){
+void obvector_resize(obvector *v, uint32_t index){
 
   uint32_t i;
   uint64_t new_cap;
@@ -229,9 +229,9 @@ void resizeVector(OBVector *v, uint32_t index){
 }
 
 
-obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
-                             compare_fptr funct){
-  
+obj ** obvector_recursive_sort(obj **to_sort, uint32_t size, int8_t order,
+                             ob_compare_fptr funct){
+
   uint32_t i,j, split;
   obj **left_sorted, **right_sorted;
   obj **sorted;
@@ -243,14 +243,14 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
     *sorted = *to_sort;
     return sorted;
   }
-  
+
   split = size/2;
 
   /* sort left half and right half of array */
-  left_sorted = recursiveSortContents(to_sort, split, order, funct);
-  right_sorted = recursiveSortContents(to_sort+split, size-split, 
+  left_sorted = obvector_recursive_sort(to_sort, split, order, funct);
+  right_sorted = obvector_recursive_sort(to_sort+split, size-split,
                                        order, funct);
-  
+
   sorted = malloc(sizeof(obj *)*size);
   assert(sorted != NULL);
 
@@ -260,11 +260,11 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
 
   /* while there are elements in both halves to be added to sorted */
   while(i < split && j < (size-split)){
-    
+
     /* if the comparison of the left to the right matches the desired order,
      * then the next item to go in the sorted array is from the left. Ensure
      * that NULL is left at the tail of the sorted array as well */
-    if(funct(left_sorted[i], right_sorted[j]) == order || 
+    if(funct(left_sorted[i], right_sorted[j]) == order ||
         right_sorted[j] == NULL){
       sorted[i+j] = left_sorted[i];
       i++;
@@ -297,27 +297,27 @@ obj ** recursiveSortContents(obj **to_sort, uint32_t size, int8_t order,
 }
 
 
-obhash_t hashVector(const obj *to_hash){
+ob_hash_t obvector_hash(const obj *to_hash){
 
   static int8_t init = 0;
-  static obhash_t seed;
+  static ob_hash_t seed;
 
   uint32_t i;
-  obhash_t value;
-  OBVector *instance = (OBVector *)to_hash;
+  ob_hash_t value;
+  obvector *instance = (obvector *)to_hash;
 
   assert(to_hash);
-  assert(objIsOfClass(to_hash, "OBVector"));
+  assert(ob_has_class(to_hash, "obvector"));
 
   if(init == 0){
     srand(time(NULL));
     seed = rand();
     init = 1;
   }
-  
+
   value = seed;
   for(i=0; i<instance->length; i++){
-    value += hash(instance->array[i]);
+    value += ob_hash(instance->array[i]);
     value += value << 10;
     value ^= value >> 6;
   }
@@ -330,39 +330,39 @@ obhash_t hashVector(const obj *to_hash){
 }
 
 
-int8_t compareVectors(const obj *a, const obj *b){
+int8_t obvector_compare(const obj *a, const obj *b){
 
   uint32_t i;
-  const OBVector *comp_a = (OBVector *)a;
-  const OBVector *comp_b = (OBVector *)b;
+  const obvector *comp_a = (obvector *)a;
+  const obvector *comp_b = (obvector *)b;
 
   assert(a);
   assert(b);
-  assert(objIsOfClass(a, "OBVector"));
-  assert(objIsOfClass(b, "OBVector"));
+  assert(ob_has_class(a, "obvector"));
+  assert(ob_has_class(b, "obvector"));
 
   if(comp_a->length != comp_b->length) return OB_NOT_EQUAL;
 
   for(i=0; i<comp_a->length; i++)
-    if(compare(comp_a->array[i], comp_b->array[i]) != OB_EQUAL_TO)
+    if(ob_compare(comp_a->array[i], comp_b->array[i]) != OB_EQUAL_TO)
       return OB_NOT_EQUAL;
 
   return OB_EQUAL_TO;
 }
 
 
-void displayVector(const obj *to_print){
+void obvector_display(const obj *to_print){
 
   uint32_t i;
-  OBVector *v = (OBVector *)to_print;
+  obvector *v = (obvector *)to_print;
 
   assert(to_print != NULL);
-  assert(objIsOfClass(to_print, "OBVector"));
-  fprintf(stderr, "OBVector with %u elements\n", v->length);
+  assert(ob_has_class(to_print, "obvector"));
+  fprintf(stderr, "obvector with %u elements\n", v->length);
 
   for(i=0; i<v->length; i++){
     fprintf(stderr, "[index: %u]\n", i);
-    display(v->array[i]);
+    ob_display(v->array[i]);
     fprintf(stderr, "\n");
   }
 
@@ -371,15 +371,15 @@ void displayVector(const obj *to_print){
 
 
 
-void deallocVector(obj *to_dealloc){
+void obvector_destroy(obj *to_dealloc){
 
-  /* cast generic obj to OBVector */
-  OBVector *instance = (OBVector *)to_dealloc;
+  /* cast generic obj to obvector */
+  obvector *instance = (obvector *)to_dealloc;
 
   assert(instance != NULL);
-  assert(objIsOfClass(to_dealloc, "OBVector"));
+  assert(ob_has_class(to_dealloc, "obvector"));
 
-  clearVector(instance); /* release all objs contained in vector */
+  obvector_clear(instance); /* ob_release all objs contained in vector */
   free(instance->array);
 
   return;
@@ -388,7 +388,7 @@ void deallocVector(obj *to_dealloc){
 
 /* PRIVATE UTILITY METHODS */
 
-uint32_t findValidPrecursorIndex(obj **array, uint32_t index){
+uint32_t obvector_find_valid_precursor(obj **array, uint32_t index){
   while(index < UINT32_MAX && !array[index]) index--;
   return index;
 }

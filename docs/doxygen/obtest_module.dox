@@ -1,5 +1,5 @@
 /**
- * @addtogroup OBTest
+ * @addtogroup obtest
  * @brief  Small class used to test large container classes
  *
  * @details Class simply acts as a number that can be stored in various
@@ -8,10 +8,10 @@
  * such as sorting
  *
  * @{
- * @file OBTest.h
- * @file OBTest_Private.h
- * @file OBTest.c
- * @file OBTest_test.c
+ * @file obtest.h
+ * @file obtest_private.h
+ * @file obtest.c
+ * @file obtest_test.c
  * @}
  */
 

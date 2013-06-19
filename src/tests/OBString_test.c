@@ -1,11 +1,11 @@
 /**
- * @file OBString_test.c
- * @brief OBString Unit Tests
+ * @file obstring_test.c
+ * @brief obstring Unit Tests
  * @author theck
  */
 
 #include "../../include/offbrand.h"
-#include "../../include/OBString.h"
+#include "../../include/obstring.h"
 #include "../../include/OBTest.h"
 
 /**
@@ -13,105 +13,105 @@
  */
 int main (){
 
-  OBString *str1, *str2, *str3, *null_str;
-  OBVector *tokens;
+  obstring *str1, *str2, *str3, *null_str;
+  obvector *tokens;
   const char *contents;
 
-  str1 = createString("Hello, World!");
+  str1 = obstring_new("Hello, World!");
 
-  /* Test createString and getCString */
-  contents = getCString(str1);
-  assert(strcmp(contents, "Hello, World!") == 0);
-  
-
-  /* Test copySubstring and stringLength */
-  str2 = copySubstring(str1, 0, 5);
-  contents = getCString(str2);
-  assert(strcmp(contents, "Hello") == 0);
-
-  release((obj *)str2);
-
-  str2 = copySubstring(str1, -15, 7);
-  contents = getCString(str2);
-  assert(strcmp(contents, "Hello") == 0);
-
-  release((obj *)str2);
-
-  str2 = copySubstring(str1, 0, stringLength(str1));
-  contents = getCString(str2);
+  /* Test obstring_new and obstring_cstring */
+  contents = obstring_cstring(str1);
   assert(strcmp(contents, "Hello, World!") == 0);
 
-  release((obj *)str2);
 
-  null_str = copySubstring(str1, 20, 2);
-  assert(stringLength(null_str) == 0);
+  /* Test obstring_copy_substring and obstring_length */
+  str2 = obstring_copy_substring(str1, 0, 5);
+  contents = obstring_cstring(str2);
+  assert(strcmp(contents, "Hello") == 0);
 
-  /* Test charAtStringIndex */
-  assert(charAtStringIndex(str1, 0) == 'H');
-  assert(charAtStringIndex(str1, -5) == 'o');
-  assert(charAtStringIndex(str1, -20) == '\0');
-  assert(charAtStringIndex(str1, 20) == '\0');
-  assert(charAtStringIndex(null_str, 0) == '\0');
+  ob_release((obj *)str2);
+
+  str2 = obstring_copy_substring(str1, -15, 7);
+  contents = obstring_cstring(str2);
+  assert(strcmp(contents, "Hello") == 0);
+
+  ob_release((obj *)str2);
+
+  str2 = obstring_copy_substring(str1, 0, obstring_length(str1));
+  contents = obstring_cstring(str2);
+  assert(strcmp(contents, "Hello, World!") == 0);
+
+  ob_release((obj *)str2);
+
+  null_str = obstring_copy_substring(str1, 20, 2);
+  assert(obstring_length(null_str) == 0);
+
+  /* Test obstring_char_at_index */
+  assert(obstring_char_at_index(str1, 0) == 'H');
+  assert(obstring_char_at_index(str1, -5) == 'o');
+  assert(obstring_char_at_index(str1, -20) == '\0');
+  assert(obstring_char_at_index(str1, 20) == '\0');
+  assert(obstring_char_at_index(null_str, 0) == '\0');
 
   /* Test String Concatenation */
-  str2 = createString(" And hello again!");
-  str3 = concatenateStrings(str1, str2);
-  contents = getCString(str3);
+  str2 = obstring_new(" And hello again!");
+  str3 = obstring_concat(str1, str2);
+  contents = obstring_cstring(str3);
   assert(strcmp(contents, "Hello, World! And hello again!") == 0);
 
-  release((obj *)str2);
+  ob_release((obj *)str2);
 
-  str2 = concatenateStrings(null_str, str1);
-  contents = getCString(str2);
+  str2 = obstring_concat(null_str, str1);
+  contents = obstring_cstring(str2);
   assert(strcmp(contents, "Hello, World!") == 0);
 
   /* Test String Comparision */
-  assert(compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
-  assert(compare((obj *)str1, (obj *)str3) == OB_LESS_THAN);
-  assert(compare((obj *)str1, (obj *)null_str) == OB_GREATER_THAN);
+  assert(ob_compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
+  assert(ob_compare((obj *)str1, (obj *)str3) == OB_LESS_THAN);
+  assert(ob_compare((obj *)str1, (obj *)null_str) == OB_GREATER_THAN);
 
-  release((obj *)str2);
-  release((obj *)str3);
+  ob_release((obj *)str2);
+  ob_release((obj *)str3);
 
   /* Test String Splits */
-  str2 = createString("Testing string split   into#!many");
-  tokens = splitString(str2, " ");
-  assert(strcmp(getCString((OBString *)objAtVectorIndex(tokens, 0)), "Testing")
+  str2 = obstring_new("Testing string split   into#!many");
+  tokens = obstring_split(str2, " ");
+  assert(strcmp(obstring_cstring((obstring *)obvector_obj_at_index(tokens, 0)), "Testing")
          == 0);
-  assert(strcmp(getCString((OBString *)objAtVectorIndex(tokens, 3)),
+  assert(strcmp(obstring_cstring((obstring *)obvector_obj_at_index(tokens, 3)),
                            "into#!many") == 0);
 
-  release((obj *)tokens);
+  ob_release((obj *)tokens);
 
-  tokens = splitString(str2, "#!");
-  assert(strcmp(getCString((OBString *)objAtVectorIndex(tokens, 0)),
+  tokens = obstring_split(str2, "#!");
+  assert(strcmp(obstring_cstring((obstring *)obvector_obj_at_index(tokens, 0)),
                            "Testing string split   into") == 0);
-  assert(strcmp(getCString((OBString *)objAtVectorIndex(tokens, 1)), "many")
+  assert(strcmp(obstring_cstring((obstring *)obvector_obj_at_index(tokens, 1)), "many")
          == 0);
 
-  release((obj *)tokens);
+  ob_release((obj *)tokens);
 
   /* Test String Search */
 
-  assert(findSubstring(str2, "Testing") != 0);
-  assert(findSubstring(str2, "#!many") != 0);
-  assert(findSubstring(str2, "Hello World") == 0);
+  assert(obstring_find_substring(str2, "Testing") != 0);
+  assert(obstring_find_substring(str2, "#!many") != 0);
+  assert(obstring_find_substring(str2, "Hello World") == 0);
 
   /* Test Regex Match */
-  str3 = matchStringRegex(str1, "[Hh]el{1,2}.");
-  assert(strcmp(getCString(str3), "Hello") == 0);
-  release((obj *)str3);
+  str3 = obstring_match_regex(str1, "[Hh]el{1,2}.");
+  assert(strcmp(obstring_cstring(str3), "Hello") == 0);
+  ob_release((obj *)str3);
 
-  str3 = matchStringRegex(str2, " *into[#!]{2,2}.*$");
-  assert(strcmp(getCString(str3), "   into#!many") == 0);
+  str3 = obstring_match_regex(str2, " *into[#!]{2,2}.*$");
+  assert(strcmp(obstring_cstring(str3), "   into#!many") == 0);
 
-  release((obj *)str3);
-  release((obj *)str2);
-  release((obj *)str1);
-  release((obj *)null_str);
-    
+  ob_release((obj *)str3);
+  ob_release((obj *)str2);
+  ob_release((obj *)str1);
+  ob_release((obj *)null_str);
+
   /* TESTS COMPLETE */
-  printf("OBString_test: TESTS PASSED\n");
+  printf("obstring: TESTS PASSED\n");
 
   return 0;
 }

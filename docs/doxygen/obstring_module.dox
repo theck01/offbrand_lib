@@ -1,16 +1,16 @@
 /**
- * @addtogroup OBString
+ * @addtogroup obstring
  * @brief Container class designed to store an immutable sequence of characters.
  *
- * @details The OBString class is intended to encapsulate traditional C strings
+ * @details The obstring class is intended to encapsulate traditional C strings
  * into an Offbrand compatible class, while also providing an easy to understand
  * interface for interacting with the immutable encapsulated string.
  *
  * @{
- * @file OBString.h
- * @file OBString_Private.h
- * @file OBString.c
- * @file OBString_test.c
+ * @file obstring.h
+ * @file obstring_private.h
+ * @file obstring.c
+ * @file obstring_test.c
  * @}
  */
 

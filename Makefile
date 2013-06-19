@@ -43,7 +43,7 @@ $(BIN_OBJECT)/offbrand_stdlib.o: $(SRC)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
 	$(CC) $(OFLAGS) $< -o $@
 
 # Build class objects
-$(BIN_OBJECT)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
+$(BIN_OBJECT)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_private.h
 	$(CC) $(OFLAGS) $< -o $@
 
 # Build tests executables (special builds encountered first)

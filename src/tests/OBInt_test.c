@@ -1,291 +1,291 @@
 /**
- * @file OBInt_test.c
- * @brief OBInt Unit Tests
+ * @file obint_test.c
+ * @brief obint Unit Tests
  * @author theck
  */
 
 #include "../../include/offbrand.h"
-#include "../../include/OBInt.h"
-#include "../../include/private/OBInt_Private.h"
-#include "../../include/OBString.h"
+#include "../../include/obint.h"
+#include "../../include/private/obint_Private.h"
+#include "../../include/obstring.h"
 
 /**
  * @brief Main unit testing routine
  */
 int main (){
 
-  OBInt *a, *b, *c;
-	OBString *str1, *str2;
+  obint *a, *b, *c;
+  obstring *str1, *str2;
 
   /* test machine integer creation and value methods */
-  a = createIntWithInt(1024);
-  assert(intValue(a) == 1024);
-  b = createIntWithInt(9581085);
-  assert(intValue(b) == 9581085);
-  c = createIntWithInt(-999);
-  assert(intValue(c) == -999);
+  a = obint_new(1024);
+  assert(obint_value(a) == 1024);
+  b = obint_new(9581085);
+  assert(obint_value(b) == 9581085);
+  c = obint_new(-999);
+  assert(obint_value(c) == -999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-	/* test string integer creation and value methods */
-	str1 = createString("12345");
-	a = intFromString(str1);
-	assert(intValue(a) == 12345);
-	str2 = stringFromInt(a);
-	assert(compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
-	
-	release((obj *)a);
-	release((obj *)str1);
-	release((obj *)str2);
+  /* test string integer creation and value methods */
+  str1 = obstring_new("12345");
+  a = obint_from_string(str1);
+  assert(obint_value(a) == 12345);
+  str2 = obint_to_string(a);
+  assert(ob_compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
 
-	str1 = createString("-012345");
-	a = intFromString(str1);
-	release((obj *)str1);
-	assert(intValue(a) == -12345);
-	str1 = createString("-12345");
-	str2 = stringFromInt(a);
-	assert(compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
+  ob_release((obj *)a);
+  ob_release((obj *)str1);
+  ob_release((obj *)str2);
 
-	release((obj *)a);
-	release((obj *)str1);
-	release((obj *)str2);
+  str1 = obstring_new("-012345");
+  a = obint_from_string(str1);
+  ob_release((obj *)str1);
+  assert(obint_value(a) == -12345);
+  str1 = obstring_new("-12345");
+  str2 = obint_to_string(a);
+  assert(ob_compare((obj *)str1, (obj *)str2) == OB_EQUAL_TO);
 
-	/* test copy method */
-	a = createIntWithInt(918394);
-	b = copyInt(a);
-	assert(compare((obj *)a, (obj *)b) == OB_EQUAL_TO);
-	assert(a != b);
-	assert(a->digits != b->digits);
+  ob_release((obj *)a);
+  ob_release((obj *)str1);
+  ob_release((obj *)str2);
 
-	release((obj *)a);
-	release((obj *)b);
+  /* test copy method */
+  a = obint_new(918394);
+  b = obint_copy(a);
+  assert(ob_compare((obj *)a, (obj *)b) == OB_EQUAL_TO);
+  assert(a != b);
+  assert(a->digits != b->digits);
 
-	/* test integer zero and negative methods */
-	a = createIntWithInt(1948);
-	b = createIntWithInt(-1);
-	str1 = createString("-0");
-	c = intFromString(str1);
-	release((obj *)str1);
-	
-	assert(!isIntZero(a));
-	assert(!isIntZero(b));
-	assert(isIntZero(c));
+  ob_release((obj *)a);
+  ob_release((obj *)b);
 
-	assert(!isIntNegative(a));
-	assert(isIntNegative(b));
-	assert(!isIntNegative(c));
+  /* test integer zero and negative methods */
+  a = obint_new(1948);
+  b = obint_new(-1);
+  str1 = obstring_new("-0");
+  c = obint_from_string(str1);
+  ob_release((obj *)str1);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  assert(!obint_is_zero(a));
+  assert(!obint_is_zero(b));
+  assert(obint_is_zero(c));
+
+  assert(!obint_is_negative(a));
+  assert(obint_is_negative(b));
+  assert(!obint_is_negative(c));
+
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
   /* test integer addition */
-  a = createIntWithInt(999);
-  b = addIntAndPrim(a, 1111);
-  assert(intValue(b) == 2110);
-  c = addInts(a, b);
-  assert(intValue(c) == 2110 + 999);
+  a = obint_new(999);
+  b = obint_add_primitive(a, 1111);
+  assert(obint_value(b) == 2110);
+  c = obint_add(a, b);
+  assert(obint_value(c) == 2110 + 999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(-999);
-  b = addIntAndPrim(a, 1);
-  assert(intValue(b) == -998);
-  release((obj *)b);
-  b = addIntAndPrim(a, -1);
-  assert(intValue(b) == -1000);
-  release((obj *)b);
-  b = createIntWithInt(1000);
-  c = addInts(a, b);
-  assert(intValue(c) == 1);
+  a = obint_new(-999);
+  b = obint_add_primitive(a, 1);
+  assert(obint_value(b) == -998);
+  ob_release((obj *)b);
+  b = obint_add_primitive(a, -1);
+  assert(obint_value(b) == -1000);
+  ob_release((obj *)b);
+  b = obint_new(1000);
+  c = obint_add(a, b);
+  assert(obint_value(c) == 1);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
   /* test integer subtraction */
-  a = createIntWithInt(999);
-  b = subtractIntWithPrim(a, 1111);
-  assert(intValue(b) == -112);
-  c = subtractInts(a, b);
-  assert(intValue(c) == 999 + 112);
+  a = obint_new(999);
+  b = obint_subtract_primitive(a, 1111);
+  assert(obint_value(b) == -112);
+  c = obint_subtract(a, b);
+  assert(obint_value(c) == 999 + 112);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(-999);
-  b = subtractIntWithPrim(a, 1);
-  assert(intValue(b) == -1000);
-  release((obj *)b);
-  b = subtractIntWithPrim(a, -1);
-  assert(intValue(b) == -998);
-  release((obj *)b);
-  b = createIntWithInt(1000);
-  c = subtractInts(a, b);
-  assert(intValue(c) == -1999);
+  a = obint_new(-999);
+  b = obint_subtract_primitive(a, 1);
+  assert(obint_value(b) == -1000);
+  ob_release((obj *)b);
+  b = obint_subtract_primitive(a, -1);
+  assert(obint_value(b) == -998);
+  ob_release((obj *)b);
+  b = obint_new(1000);
+  c = obint_subtract(a, b);
+  assert(obint_value(c) == -1999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
   /* test integer multiplication (size under digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = multiplyIntAndPrim(a, -999);
-  assert(intValue(b) == 999*-999);
-  c = multiplyInts(a, b);
-  assert(intValue(c) == 999*999*-999);
+  a = obint_new(999);
+  b = obint_multiply_primitive(a, -999);
+  assert(obint_value(b) == 999*-999);
+  c = obint_multiply(a, b);
+  assert(obint_value(c) == 999*999*-999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(-1928491);
-  b = multiplyIntAndPrim(a, -58);
-  assert(intValue(b) == -1928491*-58);
-  release((obj *)b);
-  b = createIntWithInt(2);
-  c = multiplyInts(a, b);
-  assert(intValue(c) == -1928491*2);
+  a = obint_new(-1928491);
+  b = obint_multiply_primitive(a, -58);
+  assert(obint_value(b) == -1928491*-58);
+  ob_release((obj *)b);
+  b = obint_new(2);
+  c = obint_multiply(a, b);
+  assert(obint_value(c) == -1928491*2);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(29458);
-  b = multiplyIntAndPrim(a, 0);
-  assert(isIntZero(b) != 0);
+  a = obint_new(29458);
+  b = obint_multiply_primitive(a, 0);
+  assert(obint_is_zero(b) != 0);
 
-  release((obj *)a);
-  release((obj *)b);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
 
   /* test integer division (size under digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = divideIntWithPrim(a, -999);
-  assert(intValue(b) == -1);
-  c = divideIntWithPrim(a, 33);
-  assert(intValue(c) == 999/33);
+  a = obint_new(999);
+  b = obint_divide_primitive(a, -999);
+  assert(obint_value(b) == -1);
+  c = obint_divide_primitive(a, 33);
+  assert(obint_value(c) == 999/33);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(1940248);
-  b = divideIntWithPrim(a, -2848);
-  assert(intValue(b) == 1940248/(-2848));
-  c = divideInts(a, b);
-  assert(intValue(c) == 1940248/(1940248/(-2848)));
+  a = obint_new(1940248);
+  b = obint_divide_primitive(a, -2848);
+  assert(obint_value(b) == 1940248/(-2848));
+  c = obint_divide(a, b);
+  assert(obint_value(c) == 1940248/(1940248/(-2848)));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
   /* test integer modulus (size under digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = modIntWithPrim(a, -999);
-  assert(intValue(b) == 999%(-999));
-  c = modIntWithPrim(a, 33);
-  assert(intValue(c) == 999%33);
+  a = obint_new(999);
+  b = obint_mod_primitive(a, -999);
+  assert(obint_value(b) == 999%(-999));
+  c = obint_mod_primitive(a, 33);
+  assert(obint_value(c) == 999%33);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(1940248);
-  b = modIntWithPrim(a, -2848);
-  assert(intValue(b) == 1940248%(-2848));
-  c = modInts(a, b);
-  assert(intValue(c) == 1940248%(1940248%(-2848)));
+  a = obint_new(1940248);
+  b = obint_mod_primitive(a, -2848);
+  assert(obint_value(b) == 1940248%(-2848));
+  c = obint_mod(a, b);
+  assert(obint_value(c) == 1940248%(1940248%(-2848)));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
   /* set digit limit for integer arithmetic low, for test purposes */
-  setMaxDigits(2);
+  obint_set_max_digits(2);
 
   /* test integer multiplication (size over digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = multiplyIntAndPrim(a, -999);
-  assert(intValue(b) == 999*-999);
-  c = multiplyInts(a, b);
-  assert(intValue(c) == 999*999*-999);
+  a = obint_new(999);
+  b = obint_multiply_primitive(a, -999);
+  assert(obint_value(b) == 999*-999);
+  c = obint_multiply(a, b);
+  assert(obint_value(c) == 999*999*-999);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(-1928491);
-  b = multiplyIntAndPrim(a, -58);
-  assert(intValue(b) == -1928491*-58);
-  release((obj *)b);
-  b = createIntWithInt(2);
-  c = multiplyInts(a, b);
-  assert(intValue(c) == -1928491*2);
+  a = obint_new(-1928491);
+  b = obint_multiply_primitive(a, -58);
+  assert(obint_value(b) == -1928491*-58);
+  ob_release((obj *)b);
+  b = obint_new(2);
+  c = obint_multiply(a, b);
+  assert(obint_value(c) == -1928491*2);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(29458);
-  b = multiplyIntAndPrim(a, 0);
-  assert(isIntZero(b) != 0);
+  a = obint_new(29458);
+  b = obint_multiply_primitive(a, 0);
+  assert(obint_is_zero(b) != 0);
 
-  release((obj *)a);
-  release((obj *)b);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
 
   /* test integer division (size under digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = divideIntWithPrim(a, -999);
-  assert(intValue(b) == -1);
-  c = divideIntWithPrim(a, 33);
-  assert(intValue(c) == 999/33);
+  a = obint_new(999);
+  b = obint_divide_primitive(a, -999);
+  assert(obint_value(b) == -1);
+  c = obint_divide_primitive(a, 33);
+  assert(obint_value(c) == 999/33);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(1940248);
-  b = divideIntWithPrim(a, -2848);
-  assert(intValue(b) == 1940248/(-2848));
-  c = divideInts(a, b);
-  assert(intValue(c) == 1940248/(1940248/(-2848)));
+  a = obint_new(1940248);
+  b = obint_divide_primitive(a, -2848);
+  assert(obint_value(b) == 1940248/(-2848));
+  c = obint_divide(a, b);
+  assert(obint_value(c) == 1940248/(1940248/(-2848)));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
   /* test integer modulus (size over digit limit for explicit integer
    * arithmetic) */
-  a = createIntWithInt(999);
-  b = modIntWithPrim(a, -999);
-  assert(intValue(b) == 999%(-999));
-  c = modIntWithPrim(a, 33);
-  assert(intValue(c) == 999%33);
+  a = obint_new(999);
+  b = obint_mod_primitive(a, -999);
+  assert(obint_value(b) == 999%(-999));
+  c = obint_mod_primitive(a, 33);
+  assert(obint_value(c) == 999%33);
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  a = createIntWithInt(1940248);
-  b = modIntWithPrim(a, -2848);
-  assert(intValue(b) == 1940248%(-2848));
-  c = modInts(a, b);
-  assert(intValue(c) == 1940248%(1940248%(-2848)));
+  a = obint_new(1940248);
+  b = obint_mod_primitive(a, -2848);
+  assert(obint_value(b) == 1940248%(-2848));
+  c = obint_mod(a, b);
+  assert(obint_value(c) == 1940248%(1940248%(-2848)));
 
-	release((obj *)a);
-	release((obj *)b);
-	release((obj *)c);
+  ob_release((obj *)a);
+  ob_release((obj *)b);
+  ob_release((obj *)c);
 
-  printf("OBInt_test: TESTS PASSED\n");
+  printf("obint: TESTS PASSED\n");
   return 0;
 }

@@ -1,25 +1,24 @@
 /**
- * @file OBString.c
- * @brief OBString Method Implementation
+ * @file obstring.c
+ * @brief obstring Method Implementation
  * @author theck
  */
 
-#include "../../include/OBString.h"
-#include "../../include/private/OBString_Private.h"
-#include <regex.h>
+#include "../../include/obstring.h"
+#include "../../include/private/obstring_private.h"
 
 /** Buffer size for a string to print on a regex error */
 #define REGEX_ERROR_BUFFER_SIZE 256
 
 /* PUBLIC METHODS */
 
-OBString *createString(const char *str){
+obstring *obstring_new(const char *str){
 
-  OBString *instance;
-  
+  obstring *instance;
+
   assert(str);
 
-  instance = createDefaultString();
+  instance = obstring_create_default();
 
   instance->length = strlen(str);
   instance->str = realloc(instance->str, (instance->length+1)*sizeof(char));
@@ -31,13 +30,13 @@ OBString *createString(const char *str){
 }
 
 
-OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
-  
-  OBString *instance;
+obstring * obstring_copy_substring(const obstring *s, int64_t start, uint32_t length){
+
+  obstring *instance;
 
   assert(s);
 
-  instance = createDefaultString();
+  instance = obstring_create_default();
 
   /* account for negative indexing */
   if(start < 0) start += s->length;
@@ -47,8 +46,8 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
     length += start; /* shrink length to not copy out of range space */
     start = 0;
   }
-  
-  /* if indexing beyond end of string then shrink lenght to not copy out of 
+
+  /* if indexing beyond end of string then shrink lenght to not copy out of
    * range space */
   if(start+length > s->length) length = s->length - start;
 
@@ -67,13 +66,13 @@ OBString * copySubstring(const OBString *s, int64_t start, uint32_t length){
 }
 
 
-uint32_t stringLength(const OBString *s){
-  assert(s);  
+uint32_t obstring_length(const obstring *s){
+  assert(s);
   return s->length;
 }
 
 
-char charAtStringIndex(const OBString *s, int64_t i){
+char obstring_char_at_index(const obstring *s, int64_t i){
 
   assert(s);
 
@@ -83,14 +82,14 @@ char charAtStringIndex(const OBString *s, int64_t i){
 }
 
 
-OBString * concatenateStrings(const OBString *s1, const OBString *s2){
+obstring * obstring_concat(const obstring *s1, const obstring *s2){
 
-  OBString *concatted;
+  obstring *concatted;
 
   assert(s1);
   assert(s2);
 
-  concatted = createDefaultString();
+  concatted = obstring_create_default();
   concatted->length = s1->length + s2->length;
 
   if(concatted->length == 0) return concatted;
@@ -105,16 +104,16 @@ OBString * concatenateStrings(const OBString *s1, const OBString *s2){
 }
 
 
-const char * getCString(const OBString *s){
+const char * obstring_cstring(const obstring *s){
   assert(s);
   return s->str;
 }
 
 
-OBVector * splitString(const OBString *s, const char *delim){
+obvector * obstring_split(const obstring *s, const char *delim){
 
-  OBVector *tokens;
-  OBString *copy, *substring;
+  obvector *tokens;
+  obstring *copy, *substring;
   char *marker;
   uint32_t i, delim_len, substrs;
 
@@ -122,8 +121,8 @@ OBVector * splitString(const OBString *s, const char *delim){
   assert(s);
   assert(delim);
 
-  tokens = createVector(1);
-  copy = copySubstring(s, 0, s->length);
+  tokens = obvector_new(1);
+  copy = obstring_copy_substring(s, 0, s->length);
   delim_len = strlen(delim);
   marker = copy->str;
 
@@ -137,22 +136,22 @@ OBVector * splitString(const OBString *s, const char *delim){
 
   marker = copy->str;
 
-  /* copy all found substrings into new OBStrings for Vector */
+  /* copy all found substrings into new obstrings for Vector */
   substrs=0;
   while(marker < copy->str+copy->length){
-    substring = createString(marker);
+    substring = obstring_new(marker);
     marker += substring->length;
-    storeAtVectorIndex(tokens, (obj *)substring, substrs++);
-    release((obj *)substring); /* only tokens vector needs a reference */
+    obvector_store_at_index(tokens, (obj *)substring, substrs++);
+    ob_release((obj *)substring); /* only tokens vector needs a reference */
     while(*marker == '\0' && marker < copy->str + copy->length) marker++;
   }
 
-  release((obj *)copy);
+  ob_release((obj *)copy);
   return tokens;
 }
 
 
-uint8_t findSubstring(const OBString *s, const char *substring){
+uint8_t obstring_find_substring(const obstring *s, const char *substring){
 
   uint32_t sublen;
   char *marker;
@@ -161,7 +160,7 @@ uint8_t findSubstring(const OBString *s, const char *substring){
   assert(substring);
 
   sublen = strlen(substring);
-  
+
   for(marker = s->str; marker <= s->str +(s->length - sublen); marker++)
     if(strncmp(marker, substring, sublen) == 0) return 1;
 
@@ -169,7 +168,7 @@ uint8_t findSubstring(const OBString *s, const char *substring){
 }
 
 
-OBString * matchStringRegex(const OBString *s, const char *regex){
+obstring * obstring_match_regex(const obstring *s, const char *regex){
 
   regex_t comp_regex;
   regmatch_t match;
@@ -182,39 +181,39 @@ OBString * matchStringRegex(const OBString *s, const char *regex){
   /* compile regex */
   if((errcode = regcomp(&comp_regex, regex, REG_EXTENDED))){
     regerror(errcode, &comp_regex, errbuf, REGEX_ERROR_BUFFER_SIZE);
-    fprintf(stderr, "OBString::matchStringRegex recieved improper regex\n"
+    fprintf(stderr, "obstring::obstring_match_regex recieved improper regex\n"
                     "Regex supplied: %s\nError string:%s\n", regex, errbuf);
 
     regfree(&comp_regex);
-    return createString("");
+    return obstring_new("");
   }
 
   /* match regex, returning empty string if no match was found */
   if(regexec(&comp_regex, s->str, 1, &match, 0)){
     regfree(&comp_regex);
-    return createString("");
+    return obstring_new("");
   }
 
   regfree(&comp_regex);
 
   /* return a new string containing the matching range */
-  return copySubstring(s, match.rm_so, match.rm_eo - match.rm_so);
+  return obstring_copy_substring(s, match.rm_so, match.rm_eo - match.rm_so);
 }
 
 
 /* PRIVATE METHODS */
 
-/* add arguments to complete initialization as needed, modify 
- * OBString_Private.h as well if modifications are made */
-OBString * createDefaultString(void){
+/* add arguments to complete initialization as needed, modify
+ * obstring_Private.h as well if modifications are made */
+obstring * obstring_create_default(void){
 
-  static const char classname[] = "OBString";
-  OBString *new_instance = malloc(sizeof(OBString));
+  static const char classname[] = "obstring";
+  obstring *new_instance = malloc(sizeof(obstring));
   assert(new_instance != NULL);
 
   /* initialize base class data */
-  initBase((obj *)new_instance, &deallocString, &hashString, &compareStrings,
-           &displayString, classname);
+  ob_init_base((obj *)new_instance, &obstring_destroy, &obstring_hash,
+               &obstring_compare, &obstring_display, classname);
 
   new_instance->str = malloc(sizeof(char));
   assert(new_instance->str);
@@ -225,24 +224,24 @@ OBString * createDefaultString(void){
 }
 
 
-obhash_t hashString(const obj *to_hash){
-  
-  static int8_t init = 0;
-  static obhash_t seed;
+ob_hash_t obstring_hash(const obj *to_hash){
 
-  OBString *instance = (OBString *)to_hash;
-  obhash_t value;
+  static int8_t init = 0;
+  static ob_hash_t seed;
+
+  obstring *instance = (obstring *)to_hash;
+  ob_hash_t value;
   char *pos;
 
   assert(to_hash);
-  assert(objIsOfClass(to_hash, "OBString"));
+  assert(ob_has_class(to_hash, "obstring"));
 
   if(init == 0){
     srand(time(NULL));
     seed = rand();
     init = 1;
   }
-  
+
   value = seed;
 
   /* A version of Jenkin's one at a time hash function */
@@ -260,16 +259,16 @@ obhash_t hashString(const obj *to_hash){
 }
 
 
-int8_t compareStrings(const obj *a, const obj *b){
-  
+int8_t obstring_compare(const obj *a, const obj *b){
+
   uint32_t i;
-  const OBString *comp_a = (OBString *)a;  
-  const OBString *comp_b = (OBString *)b;  
+  const obstring *comp_a = (obstring *)a;
+  const obstring *comp_b = (obstring *)b;
 
   assert(a);
   assert(b);
-  assert(objIsOfClass(a, "OBString"));
-  assert(objIsOfClass(b, "OBString"));
+  assert(ob_has_class(a, "obstring"));
+  assert(ob_has_class(b, "obstring"));
 
   /* compare string contents where both have characters */
   for(i=0; i<comp_a->length && i<comp_b->length; i++){
@@ -284,20 +283,20 @@ int8_t compareStrings(const obj *a, const obj *b){
 }
 
 
-void displayString(const obj *str){
+void obstring_display(const obj *str){
   assert(str != NULL);
-  assert(objIsOfClass(str, "OBString"));
-  fprintf(stderr, "OBString with Contents:\n  %s\n", ((OBString *)str)->str);
+  assert(ob_has_class(str, "obstring"));
+  fprintf(stderr, "obstring with Contents:\n  %s\n", ((obstring *)str)->str);
 }
 
 
-void deallocString(obj *to_dealloc){
+void obstring_destroy(obj *to_dealloc){
 
-  /* cast generic obj to OBString */
-  OBString *instance = (OBString *)to_dealloc;
+  /* cast generic obj to obstring */
+  obstring *instance = (obstring *)to_dealloc;
 
   assert(to_dealloc);
-  assert(objIsOfClass(to_dealloc, "OBString"));
+  assert(ob_has_class(to_dealloc, "obstring"));
 
   if(instance->str) free(instance->str);
 

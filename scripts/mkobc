@@ -27,10 +27,6 @@ function printUsage() {
   echo "   author's name contains any spaces. Default value is \"anonymous\""
   echo "-h"
   echo "   Print usage and exit"
-  echo "-m <method classname>"
-  echo "   Classname to use for methods of the class. This is useful for"
-  echo "   classnames with unnecessary prefixes in method names (such as"
-  echo "   OBVector, whose method classname would simply be Vector)"
   echo "-t <template directory>"
   echo "   Directory where offbrand class template files can be located. By"
   echo "   default this directory is set to scripts/templates, which is the"
@@ -42,7 +38,6 @@ function printUsage() {
 #option variables
 classname=
 author_name="anonymous"
-method_classname=
 temp_dir="scripts/templates"
 temp_default=
 
@@ -53,7 +48,6 @@ do
   c)  classname="$OPTARG" ;;
   h)  printUsage
       exit 0;;
-  m)  method_classname="$OPTARG" ;;
   t)  temp_dir="$OPTARG"
       temp_default=1 ;;
   ?)  printUsage
@@ -68,11 +62,6 @@ then
   echo "Class name was not specified"
   printUsage
   exit 1
-fi
-
-if [[ ! $method_classname ]]
-then
-  method_classname=$classname
 fi
 
 if [[ ! -d $temp_dir ]]
@@ -101,9 +90,9 @@ source_template="$(dirname $temp_dir)/$(basename $temp_dir)/$SOURCE_TEMPLATE"
 test_template="$(dirname $temp_dir)/$(basename $temp_dir)/$TEST_TEMPLATE"
 
 #output filenames
-doc_module=$classname"Module.dox"
+doc_module=$classname"_module.dox"
 public_header=$classname".h"
-private_header=$classname"_Private.h"
+private_header=$classname"_private.h"
 source_file=$classname".c"
 test_file=$classname"_test.c"
 
@@ -115,8 +104,7 @@ if [[ -e $module_template ]]
 then
   cat $module_template | sed "s/%CLASSNAME%/$classname/g" | \
     sed "s/%CLASSAUTHOR%/$author_name/g" | \
-    sed "s/%MACRONAME%/$file_name/g" | \
-    sed "s/%METHODCLASSNAME%/$method_classnamename/g" > $doc_module
+    sed "s/%MACRONAME%/$file_name/g" > $doc_module
   echo "Add class description to newly created Doxygen Module: $doc_module"
 else
   echo "Module documentation template does not exist in $temp_dir"
@@ -127,8 +115,7 @@ if [[ -e $public_template ]]
 then
   cat $public_template | sed "s/%CLASSNAME%/$classname/g" | \
     sed "s/%CLASSAUTHOR%/$author_name/g" | \
-    sed "s/%MACRONAME%/$file_name/g" | \
-    sed "s/%METHODCLASSNAME%/$method_classname/g" > $public_header
+    sed "s/%MACRONAME%/$file_name/g" > $public_header
   echo "Add public class method declarations to newly created file:"
   echo "$public_header"
 else
@@ -140,8 +127,7 @@ if [[ -e $private_template ]]
 then
   cat $private_template | sed "s/%CLASSNAME%/$classname/g" | \
     sed "s/%CLASSAUTHOR%/$author_name/g" | \
-    sed "s/%MACRONAME%/$file_name/g" | \
-    sed "s/%METHODCLASSNAME%/$method_classname/g" > $private_header
+    sed "s/%MACRONAME%/$file_name/g" > $private_header
   echo "Add private class method declarations and members to newly created"
   echo "file:  $private_header"
 else
@@ -153,8 +139,7 @@ if [[ -e $source_template ]]
 then
   cat $source_template | sed "s/%CLASSNAME%/$classname/g" | \
     sed "s/%CLASSAUTHOR%/$author_name/g" | \
-    sed "s/%MACRONAME%/$file_name/g" | \
-    sed "s/%METHODCLASSNAME%/$method_classname/g" > $source_file
+    sed "s/%MACRONAME%/$file_name/g" > $source_file
   echo "Add method implementation to newly created file: $source_file"
 else
   echo "Source file template does not exist in $temp_dir"
@@ -165,8 +150,7 @@ if [[ -e $test_template ]]
 then
   cat $test_template | sed "s/%CLASSNAME%/$classname/g" | \
     sed "s/%CLASSAUTHOR%/$author_name/g" | \
-    sed "s/%MACRONAME%/$file_name/g" | \
-    sed "s/%METHODCLASSNAME%/$method_classname/g" > $test_file
+    sed "s/%MACRONAME%/$file_name/g" > $test_file
   echo "Add unit tests to newly created file: $test_file"
 else
   echo "Test file template does not exist in $temp_dir"

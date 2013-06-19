@@ -1,6 +1,6 @@
 /**
- * @file OBInt.h
- * @brief OBInt Public Interface
+ * @file obint.h
+ * @brief obint Public Interface
  * @author theck
  */
 
@@ -8,194 +8,194 @@
 #define OBINT_H
 
 #include "offbrand.h"
-#include "OBString.h"
+#include "obstring.h"
 
 /** Class type declaration */
-typedef struct OBInt_struct OBInt;
+typedef struct obint_struct obint;
 
 
 /* PUBLIC METHODS */
 
 /**
- * @brief Creates a new OBInt with the given integer
+ * @brief Creates a new obint with the given integer
  *
- * @param num Integer value for new OBInt
+ * @param num Integer value for new obint
  *
- * @return An instance of OBInt with value given by num
+ * @return An instance of obint with value given by num
  */
-OBInt * createIntWithInt(int64_t num);
+obint * obint_new(int64_t num);
 
 /**
- * @brief Returns the value stored in OBInt as an integer
+ * @brief Returns the value stored in obint as an integer
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  *
  * @return A signed 64 bit integer representing value stored in a
  *
- * @warning If the value of the OBInt cannot be represented in 64 bits then
- * returned value will not represent the true value of the OBInt
+ * @warning If the value of the obint cannot be represented in 64 bits then
+ * returned value will not represent the true value of the obint
  */
-int64_t intValue(const OBInt *a);
+int64_t obint_value(const obint *a);
 
 /**
- * @brief Creates a new OBInt with value indicated by given string
+ * @brief Creates a new obint with value indicated by given string
  *
- * @param numstr A non-NULL pointer to an OBString instance containing only 
- * digit characters and possibly one '-' character at the beginning of the 
+ * @param numstr A non-NULL pointer to an obstring instance containing only
+ * digit characters and possibly one '-' character at the beginning of the
  * string to indicate a negative value
  *
- * @return An instance of OBInt with value given by numstr
+ * @return An instance of obint with value given by numstr
  */
-OBInt * intFromString(const OBString *numstr);
+obint * obint_from_string(const obstring *numstr);
 
 /**
- * @brief Creates an instance of OBString containing a string representation
- * of the value of an OBInt
+ * @brief Creates an instance of obstring containing a string representation
+ * of the value of an obint
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  *
- * @return An instance of OBString
+ * @return An instance of obstring
  */
-OBString * stringFromInt(const OBInt *a);
+obstring * obint_to_string(const obint *a);
 
 /**
- * @brief Creates an instance of OBInt with the same value as the argument
- * OBInt
+ * @brief Creates an instance of obint with the same value as the argument
+ * obint
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  *
- * @return A copy of the argument OBInt
+ * @return A copy of the argument obint
  */
-OBInt * copyInt(const OBInt *a);
+obint * obint_copy(const obint *a);
 
 /**
- * @brief Checks if an instance of OBInt is zero and returns the boolean truth
+ * @brief Checks if an instance of obint is zero and returns the boolean truth
  * value
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  *
  * @retval 0 The argument is non-zero
  * @retval non-zero The argument is zero
  */
-uint8_t isIntZero(const OBInt *a);
+uint8_t obint_is_zero(const obint *a);
 
 /**
- * @brief Checks if an instance of OBInt is negative and returns the boolean
+ * @brief Checks if an instance of obint is negative and returns the boolean
  * truth value
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  *
  * @retval 0 The argument is positive
  * @retval non-zero The argument is negative
  */
-uint8_t isIntNegative(const OBInt *a);
+uint8_t obint_is_negative(const obint *a);
 
 /**
- * @brief Creates a new OBInt containing the sum of two OBInt values
+ * @brief Creates a new obint containing the sum of two obint values
  *
- * @param a A non-NULL pointer to type OBInt
- * @param b A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
+ * @param b A non-NULL pointer to type obint
  *
- * @return An instance of OBInt with value given by a+b
+ * @return An instance of obint with value given by a+b
  */
-OBInt * addInts(const OBInt *a, const OBInt *b);
+obint * obint_add(const obint *a, const obint *b);
 
 /**
- * @brief Creates a new OBInt containing the sum of an OBInt and a machine
+ * @brief Creates a new obint containing the sum of an obint and a machine
  * integer
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  * @param b A signed 64 bit machine integer
  *
- * @return An instance of OBInt with value given by a+b
+ * @return An instance of obint with value given by a+b
  */
-OBInt * addIntAndPrim(const OBInt *a, int64_t b);
+obint * obint_add_primitive(const obint *a, int64_t b);
 
 /**
- * @brief Creates a new OBInt containing the difference of two OBInt values
+ * @brief Creates a new obint containing the difference of two obint values
  *
- * @param a A non-NULL pointer to type OBInt
- * @param b A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
+ * @param b A non-NULL pointer to type obint
  *
- * @return An instance of OBInt with value given by a-b
+ * @return An instance of obint with value given by a-b
  */
-OBInt * subtractInts(const OBInt *a, const OBInt *b);
+obint * obint_subtract(const obint *a, const obint *b);
 
 /**
- * @brief Creates a new OBInt containing the difference of an OBInt and a 
+ * @brief Creates a new obint containing the difference of an obint and a
  * machine integer
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  * @param b A signed 64 bit machine integer
  *
- * @return An instance of OBInt with value given by a-b
+ * @return An instance of obint with value given by a-b
  */
-OBInt * subtractIntWithPrim(const OBInt *a, int64_t b);
+obint * obint_subtract_primitive(const obint *a, int64_t b);
 
 /**
- * @brief Creates a new OBInt containing the product of two OBInt values
+ * @brief Creates a new obint containing the product of two obint values
  *
- * @param a A non-NULL pointer to type OBInt
- * @param b A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
+ * @param b A non-NULL pointer to type obint
  *
- * @return An instance of OBInt with value given by a*b
+ * @return An instance of obint with value given by a*b
  */
-OBInt * multiplyInts(const OBInt *a, const OBInt *b);
+obint * obint_multiply(const obint *a, const obint *b);
 
 /**
- * @brief Creates a new OBInt containing the product of an OBInt and a 
+ * @brief Creates a new obint containing the product of an obint and a
  * machine integer
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  * @param b A signed 64 bit machine integer
  *
- * @return An instance of OBInt with value given by a*b
+ * @return An instance of obint with value given by a*b
  */
-OBInt * multiplyIntAndPrim(const OBInt *a, int64_t b);
+obint * obint_multiply_primitive(const obint *a, int64_t b);
 
 /**
- * @brief Creates a new OBInt containing the quotient resule of integer division
- * between two OBInt values,
+ * @brief Creates a new obint containing the quotient resule of integer division
+ * between two obint values,
  *
- * @param a A non-NULL pointer to type OBInt
- * @param b A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
+ * @param b A non-NULL pointer to type obint
  *
- * @return An instance of OBInt with value given by a/b
+ * @return An instance of obint with value given by a/b
  */
-OBInt * divideInts(const OBInt *a, const OBInt *b);
+obint * obint_divide(const obint *a, const obint *b);
 
 /**
- * @brief Creates a new OBInt containing the quotient of an OBInt and a 
+ * @brief Creates a new obint containing the quotient of an obint and a
  * machine integer
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  * @param b A signed 64 bit machine integer
  *
- * @return An instance of OBInt with value given by a/b
+ * @return An instance of obint with value given by a/b
  */
-OBInt * divideIntWithPrim(const OBInt *a, int64_t b);
+obint * obint_divide_primitive(const obint *a, int64_t b);
 
 /**
- * @brief Creates a new OBInt containing the remainder of integer division
- * between two OBInt values,
+ * @brief Creates a new obint containing the remainder of integer division
+ * between two obint values,
  *
- * @param a A non-NULL pointer to type OBInt
- * @param b A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
+ * @param b A non-NULL pointer to type obint
  *
- * @return An instance of OBInt with value given by a%b
+ * @return An instance of obint with value given by a%b
  */
-OBInt * modInts(const OBInt *a, const OBInt *b);
+obint * obint_mod(const obint *a, const obint *b);
 
 /**
- * @brief Creates a new OBInt containing the remainder of integer division
- * of an OBInt and a machine integer
+ * @brief Creates a new obint containing the remainder of integer division
+ * of an obint and a machine integer
  *
- * @param a A non-NULL pointer to type OBInt
+ * @param a A non-NULL pointer to type obint
  * @param b A signed 64 bit machine integer
  *
- * @return An instance of OBInt with value given by a%b
+ * @return An instance of obint with value given by a%b
  */
-OBInt * modIntWithPrim(const OBInt *a, int64_t b);
+obint * obint_mod_primitive(const obint *a, int64_t b);
 
 #endif
 

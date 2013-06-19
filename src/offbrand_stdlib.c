@@ -7,9 +7,9 @@
 #include "../include/offbrand.h"
 #include "../include/private/obj_Private.h"
 
-void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
-              compare_fptr compare_funct, display_fptr display_funct,
-              const char *classname){
+void ob_init_base(obj *instance, ob_dealloc_fptr dealloc_funct,
+                  ob_hash_fptr hash_funct, ob_compare_fptr compare_funct,
+                  ob_display_fptr display_funct, const char *classname){
 
   assert(classname != NULL);
 
@@ -21,13 +21,13 @@ void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
 
   (*instance)->dealloc = dealloc_funct;
 
-  if(hash_funct != &hash) (*instance)->hash = hash_funct;
+  if(hash_funct != &ob_hash) (*instance)->hash = hash_funct;
   else (*instance)->hash = NULL;
 
-  if(compare_funct != &compare) (*instance)->compare = compare_funct;
+  if(compare_funct != &ob_compare) (*instance)->compare = compare_funct;
   else (*instance)->compare = NULL;
 
-  if(display_funct != &display) (*instance)->display = display_funct;
+  if(display_funct != &ob_display) (*instance)->display = display_funct;
   else (*instance)->display = NULL;
 
   (*instance)->classname = classname;
@@ -36,7 +36,7 @@ void initBase(obj *instance, dealloc_fptr dealloc_funct, hash_fptr hash_funct,
 }
 
 
-obj * release(obj *instance){
+obj * ob_release(obj *instance){
 
   if(!instance) return NULL;
 
@@ -57,9 +57,9 @@ obj * release(obj *instance){
 }
 
 
-obj * retain(obj *instance){
+obj * ob_retain(obj *instance){
 
-  if(!instance) return;
+  if(!instance) return instance;
 
   assert((*instance)->references < UINT32_MAX); /* reference count > UINT32_MAX
                                                    cannot be handled by lib */
@@ -69,13 +69,13 @@ obj * retain(obj *instance){
 }
 
 
-uint32_t referenceCount(obj *instance){
+uint32_t ob_reference_count(obj *instance){
   if(!instance) return 0;
   return (*instance)->references;
 }
 
 
-uint8_t objIsOfClass(const obj *a, const char *classname){
+uint8_t ob_has_class(const obj *a, const char *classname){
 
   if(!a){
     if(strcmp(classname, "NULL") == 0) return 1;
@@ -86,23 +86,23 @@ uint8_t objIsOfClass(const obj *a, const char *classname){
 }
 
 
-uint8_t sameClass(const obj *a, const obj *b){
+uint8_t ob_has_same_class(const obj *a, const obj *b){
   /* if both NULL, both are of the "NULL" class */
   if(!a && !b) return 1;
   else if(!a || !b) return 0;
-  return objIsOfClass(a, (*b)->classname);
+  return ob_has_class(a, (*b)->classname);
 }
 
 
-obhash_t hash(const obj *to_hash){
+ob_hash_t ob_hash(const obj *to_hash){
 
-  obhash_t retval;
+  ob_hash_t retval;
 
   if(!to_hash) return 0;
 
   if((*to_hash)->hash) retval = (*to_hash)->hash(to_hash);
   else{
-    retval = (obhash_t)to_hash;
+    retval = (ob_hash_t)to_hash;
     retval += (retval << 6);
     retval ^= (retval >> 10);
     retval += (retval >> 7);
@@ -113,7 +113,7 @@ obhash_t hash(const obj *to_hash){
 }
 
 
-int8_t compare(const obj *a, const obj *b){
+int8_t ob_compare(const obj *a, const obj *b){
 
   int8_t retval;
 
@@ -121,7 +121,7 @@ int8_t compare(const obj *a, const obj *b){
   else if(a == NULL || b == NULL) return OB_NOT_EQUAL;
 
 
-  if(sameClass(a, b) && (*a)->compare != NULL)
+  if(ob_has_same_class(a, b) && (*a)->compare != NULL)
     retval = (*a)->compare(a, b);
   else if(a == b) retval = OB_EQUAL_TO;
   else retval = OB_NOT_EQUAL;
@@ -130,7 +130,7 @@ int8_t compare(const obj *a, const obj *b){
 }
 
 
-void display(const obj *to_print){
+void ob_display(const obj *to_print){
   if(!to_print){
     fprintf(stderr, "NULL value\n");
     return;

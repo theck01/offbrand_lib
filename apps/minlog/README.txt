@@ -12,3 +12,6 @@ The bin/minlog command will output the usage of the minlog app. To run the
 actual version run:
 $ bin/minlog [boolean equation]
 
+NOTE:
+The coding style of this application does not follow the standard style
+of the offbrand library.
