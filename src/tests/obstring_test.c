@@ -6,7 +6,6 @@
 
 #include "../../include/offbrand.h"
 #include "../../include/obstring.h"
-#include "../../include/OBTest.h"
 
 /**
  * @brief Main unit testing routine

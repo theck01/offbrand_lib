@@ -6,7 +6,7 @@
 
 #include "../../include/offbrand.h"
 #include "../../include/obint.h"
-#include "../../include/private/obint_Private.h"
+#include "../../include/private/obint_private.h"
 #include "../../include/obstring.h"
 
 /**

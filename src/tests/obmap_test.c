@@ -6,7 +6,7 @@
 
 #include "../../include/offbrand.h"
 #include "../../include/obmap.h"
-#include "../../include/private/obmap_Private.h"
+#include "../../include/private/obmap_private.h"
 #include "../../include/obtest.h"
 
 /** Size of array to use in testing larger Map capacities */

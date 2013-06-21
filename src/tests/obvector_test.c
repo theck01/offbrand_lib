@@ -6,7 +6,7 @@
 
 #include "../../include/offbrand.h"
 #include "../../include/obvector.h"
-#include "../../include/private/obvector_Private.h" /* For testing purposes
+#include "../../include/private/obvector_private.h" /* For testing purposes
                                                        only */
 #include "../../include/obtest.h"
 

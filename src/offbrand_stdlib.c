@@ -5,7 +5,7 @@
  */
 
 #include "../include/offbrand.h"
-#include "../include/private/obj_Private.h"
+#include "../include/private/obj_private.h"
 
 void ob_init_base(obj *instance, ob_dealloc_fptr dealloc_funct,
                   ob_hash_fptr hash_funct, ob_compare_fptr compare_funct,
