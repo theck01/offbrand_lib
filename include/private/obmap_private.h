@@ -1,5 +1,5 @@
 /**
- * @file obmap_Private.h
+ * @file obmap_private.h
  * @brief obmap Private Interface
  * @author theck
  */

@@ -1,5 +1,5 @@
 /**
- * @file obint_Private.h
+ * @file obint_private.h
  * @brief obint Private Interface
  * @author theck
  */

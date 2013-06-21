@@ -278,7 +278,7 @@
   future:
 
   - A red-black tree datastructure
-  - The ability to build library as a shared library and install to .so and
+  - The ability to build as a shared library and install the resulting .so and
     headers to system
   - A better error handling mechanism (other than aborting on unexpected values)
   - Unicode support for obstring

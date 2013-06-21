@@ -1,5 +1,5 @@
 /**
- * @file obj_Private.h
+ * @file obj_private.h
  * @brief Base type for all Offbrand compatible classes.
  *
  * @details
