@@ -1,5 +1,5 @@
 /**
- * @addtogroup obint
+ * @defgroup obint obint
  * @brief  Offbrand compatible integer class
  *
  * @details An immutable integer with size bound only by available system 

@@ -108,7 +108,7 @@ obj * ob_release(obj *instance);
  *
  * @param instance An instance of any offbrand compatible class
  *
- * @return instance, to the argument
+ * @return A reference to the argument instance.
  */
 obj * ob_retain(obj *instance);
 

@@ -1,5 +1,5 @@
 /**
- * @addtogroup obtest
+ * @defgroup obtest obtest
  * @brief  Small class used to test large container classes
  *
  * @details Class simply acts as a number that can be stored in various

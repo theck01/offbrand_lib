@@ -1,5 +1,5 @@
 /**
- * @addtogroup obstring
+ * @defgroup obstring obstring
  * @brief Container class designed to store an immutable sequence of characters.
  *
  * @details The obstring class is intended to encapsulate traditional C strings

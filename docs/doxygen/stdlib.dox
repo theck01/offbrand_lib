@@ -1,5 +1,5 @@
 /**
- * @addtogroup Offbrand Standard Library
+ * @defgroup stdlib Standard Library
  * @brief Collection of functions and types that are common to all Offbrand
  * applications.
  *

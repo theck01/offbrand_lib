@@ -1,5 +1,5 @@
 /**
- * @addtogroup obdeque
+ * @defgroup obdeque obdeque
  * @brief  A double ended queue container.
  *
  * @details The deque maintains a dense collection of objects within a doubly

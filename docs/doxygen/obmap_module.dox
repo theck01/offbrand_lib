@@ -1,5 +1,5 @@
 /**
- * @addtogroup obmap
+ * @defgroup obmap obmap
  * @brief Container class that stores an Offbrand compatible class instance
  * using another Offbrand compatible class instance as a key
  *

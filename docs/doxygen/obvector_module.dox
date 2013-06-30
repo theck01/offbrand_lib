@@ -1,5 +1,5 @@
 /**
- * @addtogroup obvector
+ * @defgroup obvector obvector
  * @brief  An array that dynamically resizes when full.
  *
  * @details The vector maintains a collection of any Offbrand compatible
