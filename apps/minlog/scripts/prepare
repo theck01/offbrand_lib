@@ -25,15 +25,21 @@ then
   mesgstr="$mesgstr bin/classes"
 fi
 
-if [[ ! -d "bin/tests" ]]
-then
-  mkdir bin/tests
-  mesgstr="$mesgstr bin/tests"
-fi
-
 if [[ ! -d "bin/funct" ]]
 then
   mkdir bin/funct
+  mesgstr="$mesgstr bin/funct"
+fi
+
+if [[ ! -d "bin/objects" ]]
+then
+  mkdir bin/objects
+  mesgstr="$mesgstr bin/objects"
+fi
+
+if [[ ! -d "bin/tests" ]]
+then
+  mkdir bin/tests
   mesgstr="$mesgstr bin/tests"
 fi
 

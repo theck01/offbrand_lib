@@ -35,8 +35,12 @@ $(BIN_FUNCT)/offbrand_stdlib.o: $(FUNCTS)/offbrand_stdlib.c $(PUBLIC)/offbrand.h
 $(BIN_FUNCT)/%.o: $(FUNCTS)/%.c $(PUBLIC)/%.h
 	$(CC) $(OFLAGS) $< -o $@
 
-# Classes Build
+# Minlog classes Build
 $(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_Private.h
+	$(CC) $(OFLAGS) $< -o $@
+
+# offbrand classes Build
+$(BIN_CLASS)/%.o: $(CLASSES)/%.c $(PUBLIC)/%.h $(PRIVATE)/%_private.h
 	$(CC) $(OFLAGS) $< -o $@
 
 # main program build

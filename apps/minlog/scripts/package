@@ -25,11 +25,10 @@ cp scripts/Makefile minlog
 # Copy all offbrand library files to the staging directory
 cp ../../include/offbrand.h minlog/include
 cp ../../src/offbrand_stdlib.c minlog/src/funct
-cp ../../include/obj.h minlog/include
-cp ../../include/private/obj_Private.h minlog/include/private
-cp ../../include/OBVector.h minlog/include
-cp ../../include/private/OBVector_Private.h minlog/include/private
-cp ../../src/classes/OBVector.c minlog/src/classes
+cp ../../include/private/obj_private.h minlog/include/private
+cp ../../include/obvector.h minlog/include
+cp ../../include/private/obvector_private.h minlog/include/private
+cp ../../src/classes/obvector.c minlog/src/classes
 
 # edit include statements of headers in include directories to account for new
 # directory structure
@@ -47,7 +46,7 @@ sed -i 's/\.\.\//\.\.\/\.\.\//g' minlog/src/funct/offbrand_stdlib.c
 sed -i 's/\.\.\/\.\.\/\.\.\//\.\.\//g' minlog/src/main.c
 
 # pack the staging directory into a tarball
-tar -cvzf minlog.tgz minlog/
+tar -czf minlog.tgz minlog/
 
 # remove the staging directory files
 rm -rf minlog

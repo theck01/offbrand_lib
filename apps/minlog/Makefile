@@ -70,11 +70,12 @@ debug: CFLAGS += -g
 debug: all
 
 prepare:
-	@../../scripts/prepare
+	@scripts/prepare
+
+package:
+	@scripts/package
 
 clean: prepare
 	rm -f $(ALL_FUNCTS)
 	rm -f $(ALL_CLASSES)
 	rm -f $(ALL_TESTS)
-
-
